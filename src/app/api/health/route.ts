@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/db";
 import { createResponse, createErrorResponse } from "@/lib/api-response";
+
+// Build sırasında prerender edilmesin — her istekte DB sağlığı kontrol edilir
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {

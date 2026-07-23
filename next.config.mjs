@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  // Docker imajında minimal runtime için standalone çıktı
+  output: "standalone",
 };
 
 export default nextConfig;
