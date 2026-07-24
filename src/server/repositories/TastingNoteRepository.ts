@@ -1,0 +1,143 @@
+/**
+ * @file TastingNoteRepository.ts
+ * @description TastingNote koleksiyonu için MongoDB erişim katmanı.
+ * Tüm sorgular kullanıcı bazlıdır — bir kullanıcının notu başka kullanıcıya sızmaz.
+ */
+
+import mongoose from "mongoose";
+import TastingNote, { ITastingNote } from "../models/TastingNote";
+import type { PaginatedResult } from "./WhiskeyRepository";
+import type { CreateTastingNoteDTO, UpdateTastingNoteDTO } from "../validations/tasting-note.schema";
+
+export interface TastingNoteFilterOptions {
+  whiskeyId?: string;
+  onlyFavorites?: boolean;
+}
+
+export interface TastingNotePaginationOptions {
+  page?: number;
+  limit?: number;
+  sortBy?: "tastingDate" | "rating" | "createdAt";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface UserTastingStats {
+  totalNotes: number;
+  distinctWhiskeys: number;
+  averageRating: number | null;
+  favoriteCount: number;
+  topFlavorTags: { tag: string; count: number }[];
+}
+
+export class TastingNoteRepository {
+  // ---------- READ ----------
+
+  /** Kullanıcının notlarını getir (viski bilgisi populate edilmiş, sayfalı) */
+  async findByUser(
+    userId: string,
+    filters?: TastingNoteFilterOptions,
+    pagination?: TastingNotePaginationOptions
+  ): Promise<PaginatedResult<ITastingNote>> {
+    const page = Math.max(1, pagination?.page ?? 1);
+    const limit = Math.min(100, pagination?.limit ?? 20);
+    const skip = (page - 1) * limit;
+
+    const query: Record<string, unknown> = { user: userId };
+    if (filters?.whiskeyId) query.whiskey = filters.whiskeyId;
+    if (filters?.onlyFavorites) query.isFavorite = true;
+
+    const sortField = pagination?.sortBy ?? "tastingDate";
+    const sortDir = pagination?.sortOrder === "asc" ? 1 : -1;
+
+    const [data, total] = await Promise.all([
+      TastingNote.find(query)
+        .sort({ [sortField]: sortDir, createdAt: sortDir })
+        .skip(skip)
+        .limit(limit)
+        .populate("whiskey")
+        .lean() as unknown as Promise<ITastingNote[]>,
+      TastingNote.countDocuments(query),
+    ]);
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  async findById(id: string): Promise<ITastingNote | null> {
+    return await TastingNote.findById(id).populate("whiskey").lean() as unknown as ITastingNote | null;
+  }
+
+  /** Kullanıcının belirli bir viskiye yazdığı tüm notlar (detay sayfası için) */
+  async findByUserAndWhiskey(userId: string, whiskeyId: string): Promise<ITastingNote[]> {
+    return await TastingNote.find({ user: userId, whiskey: whiskeyId })
+      .sort({ tastingDate: -1 })
+      .lean() as unknown as ITastingNote[];
+  }
+
+  /** Dashboard istatistikleri — tek aggregate turu */
+  async getStatsByUser(userId: string): Promise<UserTastingStats> {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const [result] = await TastingNote.aggregate([
+      { $match: { user: userObjectId } },
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: null,
+                totalNotes: { $sum: 1 },
+                averageRating: { $avg: "$rating" },
+                favoriteCount: { $sum: { $cond: ["$isFavorite", 1, 0] } },
+                whiskeys: { $addToSet: "$whiskey" },
+              },
+            },
+          ],
+          tags: [
+            {
+              $project: {
+                allTags: { $concatArrays: ["$noseTags", "$palateTags", "$finishTags"] },
+              },
+            },
+            { $unwind: "$allTags" },
+            { $group: { _id: "$allTags", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 8 },
+          ],
+        },
+      },
+    ]);
+
+    const totals = result?.totals?.[0];
+    return {
+      totalNotes: totals?.totalNotes ?? 0,
+      distinctWhiskeys: totals?.whiskeys?.length ?? 0,
+      averageRating: totals?.averageRating != null ? Math.round(totals.averageRating * 10) / 10 : null,
+      favoriteCount: totals?.favoriteCount ?? 0,
+      topFlavorTags: (result?.tags ?? []).map((t: { _id: string; count: number }) => ({
+        tag: t._id,
+        count: t.count,
+      })),
+    };
+  }
+
+  // ---------- WRITE ----------
+
+  async create(userId: string, data: CreateTastingNoteDTO): Promise<ITastingNote> {
+    const note = new TastingNote({ ...data, user: userId });
+    const saved = await note.save();
+    return saved.toObject() as unknown as ITastingNote;
+  }
+
+  async update(id: string, data: UpdateTastingNoteDTO): Promise<ITastingNote | null> {
+    return await TastingNote.findByIdAndUpdate(id, { $set: data }, { new: true })
+      .populate("whiskey")
+      .lean() as unknown as ITastingNote | null;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await TastingNote.findByIdAndDelete(id);
+    return result !== null;
+  }
+}
+
+export const tastingNoteRepository = new TastingNoteRepository();

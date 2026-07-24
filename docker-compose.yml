@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    container_name: caskkeeper-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/caskkeeper
+      # ÜRETİMDE MUTLAKA DEĞİŞTİRİN: openssl rand -base64 48
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET tanimlanmali - .env dosyasina ekleyin}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7
+    container_name: caskkeeper-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  mongo-data:

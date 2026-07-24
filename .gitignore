@@ -1,0 +1,20 @@
+# Bağımlılıklar
+node_modules
+
+# Next.js
+.next
+out
+next-env.d.ts
+
+# Ortam değişkenleri (örnek dosya hariç)
+.env
+.env.local
+.env.*.local
+
+# Loglar
+logs
+*.log
+
+# İşletim sistemi / editör
+.DS_Store
+Thumbs.db

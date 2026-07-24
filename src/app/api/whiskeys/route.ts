@@ -1,15 +1,37 @@
 import { NextRequest } from "next/server";
-import { createResponse, createErrorResponse } from "@/lib/api-response";
+import { createResponse, handleApiError } from "@/lib/api-response";
 import connectToDatabase from "@/lib/db";
 import { whiskeyService } from "@/server/services/WhiskeyService";
+import type { WhiskeyFilterOptions, WhiskeyPaginationOptions } from "@/server/repositories/WhiskeyRepository";
 
-export async function GET() {
+/**
+ * GET /api/whiskeys
+ * Query parametreleri: search, type, region, country, limitedEdition, page, limit, sortBy, sortOrder
+ */
+export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
-    const whiskeys = await whiskeyService.getAllWhiskeys();
-    return createResponse(whiskeys, "Whiskeys fetched successfully");
-  } catch (error: any) {
-    return createErrorResponse(error.message, "Failed to fetch whiskeys");
+    const params = req.nextUrl.searchParams;
+
+    const filters: WhiskeyFilterOptions = {
+      search: params.get("search") ?? undefined,
+      type: params.get("type") ?? undefined,
+      region: params.get("region") ?? undefined,
+      country: params.get("country") ?? undefined,
+      limitedEdition: params.get("limitedEdition") === "true" ? true : undefined,
+    };
+
+    const pagination: WhiskeyPaginationOptions = {
+      page: params.get("page") ? Number(params.get("page")) : undefined,
+      limit: params.get("limit") ? Number(params.get("limit")) : undefined,
+      sortBy: (params.get("sortBy") as WhiskeyPaginationOptions["sortBy"]) ?? undefined,
+      sortOrder: (params.get("sortOrder") as "asc" | "desc") ?? undefined,
+    };
+
+    const whiskeys = await whiskeyService.getAllWhiskeys(filters, pagination);
+    return createResponse(whiskeys, "Viskiler listelendi");
+  } catch (error) {
+    return handleApiError(error);
   }
 }
 
@@ -17,15 +39,11 @@ export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
     const body = await req.json();
-    
-    // Pass strictly to service
+
     const newWhiskey = await whiskeyService.createWhiskey(body);
-    
-    return createResponse(newWhiskey, "Whiskey created successfully", 201);
-  } catch (error: any) {
-    if (error.message.includes("Validation Error")) {
-      return createErrorResponse(error.message, "Invalid data", 400);
-    }
-    return createErrorResponse(error.message, "Failed to create whiskey");
+
+    return createResponse(newWhiskey, "Viski oluşturuldu", 201);
+  } catch (error) {
+    return handleApiError(error);
   }
 }

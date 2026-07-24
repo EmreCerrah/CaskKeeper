@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { AppError, ValidationError } from "@/lib/errors";
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message?: string;
   data?: T;
-  error?: any;
+  error?: unknown;
 }
 
 export function createResponse<T>(data: T, message?: string, status: number = 200) {
@@ -18,7 +19,7 @@ export function createResponse<T>(data: T, message?: string, status: number = 20
   );
 }
 
-export function createErrorResponse(error: any, message: string = "An error occurred", status: number = 500) {
+export function createErrorResponse(error: unknown, message: string = "Bir hata oluştu", status: number = 500) {
   return NextResponse.json(
     {
       success: false,
@@ -27,4 +28,19 @@ export function createErrorResponse(error: any, message: string = "An error occu
     } as ApiResponse<null>,
     { status }
   );
+}
+
+/**
+ * Service katmanından fırlatılan tipli hataları tutarlı HTTP yanıtlarına çevirir.
+ * Bilinmeyen hatalar 500 olarak döner; iç detaylar istemciye sızdırılmaz.
+ */
+export function handleApiError(error: unknown) {
+  if (error instanceof ValidationError) {
+    return createErrorResponse(error.details ?? error.code, error.message, error.status);
+  }
+  if (error instanceof AppError) {
+    return createErrorResponse(error.code, error.message, error.status);
+  }
+  console.error("[api] Beklenmeyen hata:", error);
+  return createErrorResponse("INTERNAL_ERROR", "Beklenmeyen bir hata oluştu", 500);
 }
