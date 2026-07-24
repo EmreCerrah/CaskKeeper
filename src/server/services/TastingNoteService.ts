@@ -11,6 +11,7 @@ import type {
   TastingNotePaginationOptions,
 } from "../repositories/TastingNoteRepository";
 import { whiskeyRepository } from "../repositories/WhiskeyRepository";
+import { followRepository } from "../repositories/FollowRepository";
 import {
   CreateTastingNoteSchema,
   UpdateTastingNoteSchema,
@@ -59,6 +60,25 @@ export class TastingNoteService {
   async getNotesForWhiskey(userId: string, whiskeyId: string): Promise<TastingNoteDTO[]> {
     const notes = await tastingNoteRepository.findByUserAndWhiskey(userId, whiskeyId);
     return notes.map(toTastingNoteDTO);
+  }
+
+  /** Herkese açık profilde gösterilen notlar (yalnızca public) */
+  async getPublicNotesByUser(
+    userId: string,
+    pagination?: TastingNotePaginationOptions
+  ): Promise<PaginatedNotes> {
+    const result = await tastingNoteRepository.findPublicByUser(userId, pagination);
+    return { ...result, data: result.data.map(toTastingNoteDTO) };
+  }
+
+  /**
+   * Aktivite akışı: kullanıcının takip ettiği kişilerin herkese açık notları.
+   * Takip edilen kimse yoksa boş liste döner.
+   */
+  async getFeed(userId: string, pagination?: TastingNotePaginationOptions): Promise<PaginatedNotes> {
+    const followingIds = await followRepository.getFollowingIds(userId);
+    const result = await tastingNoteRepository.findFeed(followingIds, pagination);
+    return { ...result, data: result.data.map(toTastingNoteDTO) };
   }
 
   async getDashboardStats(userId: string): Promise<DashboardStatsDTO> {
