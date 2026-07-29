@@ -21,6 +21,9 @@ import Whiskey from "../src/server/models/Whiskey";
 import User from "../src/server/models/User";
 import TastingNote from "../src/server/models/TastingNote";
 import Follow from "../src/server/models/Follow";
+import Like from "../src/server/models/Like";
+import Comment from "../src/server/models/Comment";
+import Notification from "../src/server/models/Notification";
 
 const MONGO_URI = process.env.MONGODB_URI;
 
@@ -34,6 +37,9 @@ const MODELS = [
   { name: "User", model: User },
   { name: "TastingNote", model: TastingNote },
   { name: "Follow", model: Follow },
+  { name: "Like", model: Like },
+  { name: "Comment", model: Comment },
+  { name: "Notification", model: Notification },
 ];
 
 async function main() {

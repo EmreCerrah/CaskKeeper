@@ -3,6 +3,7 @@ import { GlassWater } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "./UserMenu";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 /**
  * Üst gezinme çubuğu (server component — oturumu doğrudan okur).
@@ -47,11 +48,14 @@ export async function Navbar() {
 
         <div className="flex items-center gap-2">
           {session ? (
-            <UserMenu
-              name={session.name}
-              userId={session.userId}
-              isAdmin={session.role === "admin"}
-            />
+            <>
+              <NotificationBell userId={session.userId} />
+              <UserMenu
+                name={session.name}
+                userId={session.userId}
+                isAdmin={session.role === "admin"}
+              />
+            </>
           ) : (
             <>
               <Button asChild variant="ghost" size="sm">

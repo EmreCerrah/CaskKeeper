@@ -9,6 +9,8 @@
 import type { IWhiskey } from "@/server/models/Whiskey";
 import type { ITastingNote } from "@/server/models/TastingNote";
 import type { IUser } from "@/server/models/User";
+import type { IComment } from "@/server/models/Comment";
+import type { INotification, NotificationType } from "@/server/models/Notification";
 
 /** Listelerde/kartlarda gösterilen minimal kullanıcı bilgisi (herkese açık) */
 export interface PublicUserDTO {
@@ -45,6 +47,51 @@ export interface WhiskeyDTO {
   tags: string[];
 }
 
+/**
+ * Bir tadım notunun etkileşim özeti.
+ * Yalnızca herkese açık görünümlerde (akış, profil, not sayfası) doldurulur —
+ * alan yoksa etkileşim çubuğu gösterilmez, "0 beğeni" yanılgısı oluşmaz.
+ */
+export interface NoteInteractionsDTO {
+  likeCount: number;
+  commentCount: number;
+  /** İsteği yapan kullanıcı bu notu beğenmiş mi (giriş yapmamışsa false) */
+  isLikedByViewer: boolean;
+}
+
+export interface CommentDTO {
+  id: string;
+  tastingNoteId: string;
+  author: PublicUserDTO;
+  body: string;
+  createdAt: string; // ISO
+  /** İsteği yapan kullanıcı bu yorumu silebilir mi (yazarı ya da not sahibi) */
+  canDelete: boolean;
+}
+
+export interface NotificationDTO {
+  id: string;
+  type: NotificationType;
+  actor: PublicUserDTO;
+  isRead: boolean;
+  createdAt: string; // ISO
+  /** like/comment bildirimlerinde ilgili tadım notu */
+  tastingNoteId?: string;
+  /** Bildirim metninde gösterilen viski adı ("Lagavulin 16") */
+  whiskeyLabel?: string;
+  /** comment bildiriminde yorumun kısaltılmış metni */
+  commentExcerpt?: string;
+}
+
+export interface NotificationListDTO {
+  data: NotificationDTO[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  unreadCount: number;
+}
+
 export interface TastingNoteDTO {
   id: string;
   userId: string;
@@ -53,6 +100,8 @@ export interface TastingNoteDTO {
   whiskey?: WhiskeyDTO;
   /** Akış ve herkese açık profillerde notu yazan kullanıcı (populate edilmişse) */
   author?: PublicUserDTO;
+  /** Beğeni/yorum özeti — yalnızca herkese açık görünümlerde doldurulur */
+  interactions?: NoteInteractionsDTO;
   tastingDate: string; // ISO
   rating: number;
   noseTags: string[];
@@ -203,6 +252,64 @@ export function toTastingNoteDTO(doc: ITastingNote | LeanDoc): TastingNoteDTO {
     isFavorite: n.isFavorite ?? false,
     createdAt: new Date(n.createdAt).toISOString(),
     updatedAt: new Date(n.updatedAt).toISOString(),
+  };
+}
+
+/**
+ * @param canDelete Silme yetkisi service katmanında hesaplanır (yazar ya da not sahibi)
+ */
+export function toCommentDTO(doc: IComment | LeanDoc, canDelete = false): CommentDTO {
+  const c = doc as IComment;
+  const userRef = c.user as unknown;
+  const userPopulated = isPopulatedRef(userRef, "name");
+
+  return {
+    id: String(c._id),
+    tastingNoteId: String(c.tastingNote),
+    author: userPopulated
+      ? toPublicUserDTO(userRef as LeanDoc)
+      : { id: String(c.user), name: "Bilinmeyen kullanıcı" },
+    body: c.body,
+    createdAt: new Date(c.createdAt).toISOString(),
+    canDelete,
+  };
+}
+
+const COMMENT_EXCERPT_LENGTH = 80;
+
+export function toNotificationDTO(doc: INotification | LeanDoc): NotificationDTO {
+  const n = doc as INotification;
+
+  const actorRef = n.actor as unknown;
+  const actorPopulated = isPopulatedRef(actorRef, "name");
+
+  // tastingNote populate edildiğinde içindeki whiskey de populate edilir
+  const noteRef = n.tastingNote as unknown;
+  const notePopulated = isPopulatedRef(noteRef, "whiskey");
+  const whiskeyRef = notePopulated ? (noteRef as LeanDoc).whiskey : undefined;
+  const whiskeyPopulated = isPopulatedRef(whiskeyRef, "brand");
+  const whiskey = whiskeyPopulated ? (whiskeyRef as unknown as IWhiskey) : undefined;
+
+  const commentRef = n.comment as unknown;
+  const commentPopulated = isPopulatedRef(commentRef, "body");
+  const commentBody = commentPopulated ? String((commentRef as LeanDoc).body) : undefined;
+
+  return {
+    id: String(n._id),
+    type: n.type,
+    actor: actorPopulated
+      ? toPublicUserDTO(actorRef as LeanDoc)
+      : { id: String(n.actor), name: "Bilinmeyen kullanıcı" },
+    isRead: n.isRead ?? false,
+    createdAt: new Date(n.createdAt).toISOString(),
+    tastingNoteId: n.tastingNote
+      ? String(notePopulated ? (noteRef as LeanDoc)._id : n.tastingNote)
+      : undefined,
+    whiskeyLabel: whiskey ? `${whiskey.brand} ${whiskey.name}` : undefined,
+    commentExcerpt:
+      commentBody && commentBody.length > COMMENT_EXCERPT_LENGTH
+        ? `${commentBody.slice(0, COMMENT_EXCERPT_LENGTH)}…`
+        : commentBody,
   };
 }
 

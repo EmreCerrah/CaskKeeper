@@ -12,6 +12,8 @@ import type {
 } from "../repositories/TastingNoteRepository";
 import { whiskeyRepository } from "../repositories/WhiskeyRepository";
 import { followRepository } from "../repositories/FollowRepository";
+import { userRepository } from "../repositories/UserRepository";
+import { interactionService } from "./InteractionService";
 import {
   CreateTastingNoteSchema,
   UpdateTastingNoteSchema,
@@ -19,6 +21,7 @@ import {
 import { ForbiddenError, NotFoundError, ValidationError } from "@/lib/errors";
 import {
   toTastingNoteDTO,
+  toPublicUserDTO,
   type TastingNoteDTO,
   type DashboardStatsDTO,
 } from "@/lib/types/dto";
@@ -65,10 +68,14 @@ export class TastingNoteService {
   /** Herkese açık profilde gösterilen notlar (yalnızca public) */
   async getPublicNotesByUser(
     userId: string,
-    pagination?: TastingNotePaginationOptions
+    pagination?: TastingNotePaginationOptions,
+    viewerId?: string
   ): Promise<PaginatedNotes> {
     const result = await tastingNoteRepository.findPublicByUser(userId, pagination);
-    return { ...result, data: result.data.map(toTastingNoteDTO) };
+    return {
+      ...result,
+      data: await this.withInteractions(result.data.map(toTastingNoteDTO), viewerId),
+    };
   }
 
   /**
@@ -78,7 +85,59 @@ export class TastingNoteService {
   async getFeed(userId: string, pagination?: TastingNotePaginationOptions): Promise<PaginatedNotes> {
     const followingIds = await followRepository.getFollowingIds(userId);
     const result = await tastingNoteRepository.findFeed(followingIds, pagination);
-    return { ...result, data: result.data.map(toTastingNoteDTO) };
+    return {
+      ...result,
+      data: await this.withInteractions(result.data.map(toTastingNoteDTO), userId),
+    };
+  }
+
+  /**
+   * Tek bir tadım notunun herkese açık görünümü (kalıcı bağlantı sayfası).
+   * Not herkese açık değilse yalnızca sahibi görebilir; başkası için NotFound.
+   */
+  async getPublicNote(noteId: string, viewerId?: string): Promise<TastingNoteDTO> {
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      throw new NotFoundError("Tadım notu bulunamadı");
+    }
+
+    const note = await tastingNoteRepository.findById(noteId);
+    if (!note) throw new NotFoundError("Tadım notu bulunamadı");
+
+    const authorId = String(note.user);
+    if (note.visibility !== "public" && authorId !== viewerId) {
+      throw new NotFoundError("Tadım notu bulunamadı");
+    }
+
+    const dto = toTastingNoteDTO(note);
+
+    // findById yazarı populate etmez — kart başlığı için ayrıca çekilir
+    const author = await userRepository.findById(authorId);
+    if (author) dto.author = toPublicUserDTO(author);
+
+    dto.interactions = await interactionService.getInteractionsForNote(noteId, viewerId);
+    return dto;
+  }
+
+  /** Not listesine beğeni/yorum özetini toplu olarak ekler (N+1 önlenir). */
+  private async withInteractions(
+    notes: TastingNoteDTO[],
+    viewerId?: string
+  ): Promise<TastingNoteDTO[]> {
+    if (notes.length === 0) return notes;
+
+    const summaries = await interactionService.getInteractionsFor(
+      notes.map((n) => n.id),
+      viewerId
+    );
+
+    return notes.map((note) => ({
+      ...note,
+      interactions: summaries.get(note.id) ?? {
+        likeCount: 0,
+        commentCount: 0,
+        isLikedByViewer: false,
+      },
+    }));
   }
 
   async getDashboardStats(userId: string): Promise<DashboardStatsDTO> {
@@ -134,6 +193,9 @@ export class TastingNoteService {
 
     const deleted = await tastingNoteRepository.delete(noteId);
     if (!deleted) throw new NotFoundError("Tadım notu bulunamadı");
+
+    // Nota bağlı beğeni, yorum ve bildirimler artık öksüz kalmamalı
+    await interactionService.removeNoteInteractions(noteId);
   }
 }
 

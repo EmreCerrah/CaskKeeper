@@ -5,7 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36be260f-8382-4eb0-a4f9-b1d74e2c107b" name="Changes" comment="chore: add local Docker Compose override for MongoDB and IntelliJ IDEA configuration files&#10;&#10;- Introduced `docker-compose.override.yml` for local testing, exposing MongoDB port on the host.&#10;- Added IntelliJ IDEA project files to streamline development setup.">
+      <change afterPath="$PROJECT_DIR$/src/app/api/comments/[id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/notifications/[id]/read/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/notifications/read-all/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/notifications/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/tasting-notes/[id]/comments/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/tasting-notes/[id]/like/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/bildirimler/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/tadimlar/[id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/notifications/MarkAllReadButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/notifications/NotificationBell.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/notifications/NotificationItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/tasting/NoteInteractions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/utils/date.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/models/Comment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/models/Like.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/models/Notification.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/repositories/CommentRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/repositories/LikeRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/repositories/NotificationRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/services/InteractionService.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/services/InteractionService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/services/NotificationService.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/services/NotificationService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/server/validations/comment.schema.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/caskkeeper-whiskies-seed-500.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/sample-data.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/sync-indexes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sync-indexes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/whiskeys-2026-07.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/whiskies-seed.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/whiskies-seed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/akis/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/akis/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/kullanicilar/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/kullanicilar/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Navbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tasting/TastingNoteCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/tasting/TastingNoteCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/types/dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/types/dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/services/FollowService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/services/FollowService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/services/TastingNoteService.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/services/TastingNoteService.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/services/TastingNoteService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/services/TastingNoteService.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,13 +51,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="110" />
+    <option name="cachedIndexableFilesCount" value="145" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feat/phase-2-social" />
+        <entry key="$PROJECT_DIR$" value="data/whiskey-seed" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -69,12 +107,14 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feat/admin-catalog-management",
+    "git-widget-placeholder": "feat/interactions",
+    "git.auto.fetch.suggestion.counter": "1",
     "ignore.virus.scanning.warn.message": "true",
+    "javascript.preferred.runtime.type.id": "node",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Users/Emre CERRAH/Folders/Emre/CaskKeeper",
+    "last_opened_file_path": "C:/Users/Emre CERRAH/Folders/Emre/CaskKeeper/scripts",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -85,6 +125,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Emre CERRAH\Folders\Emre\CaskKeeper\scripts" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -137,6 +182,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="chore: add IntelliJ IDEA project configuration files" />

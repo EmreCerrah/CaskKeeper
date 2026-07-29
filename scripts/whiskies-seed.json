@@ -1,7 +1,7 @@
 [
   {
     "brand": "Lagavulin",
-    "name": "10 Year Old — PX Sherry",
+    "name": "10 Year Old",
     "distillery": "Lagavulin Distillery",
     "type": "Single Malt",
     "region": "Islay",
@@ -29,7 +29,7 @@
   },
   {
     "brand": "Ardbeg",
-    "name": "16 Year Old — PX Sherry",
+    "name": "10 Year Old",
     "distillery": "Ardbeg Distillery",
     "type": "Single Malt",
     "region": "Islay",
@@ -37,7 +37,7 @@
     "abv": 54.2,
     "caskType": "PX Sherry",
     "limitedEdition": false,
-    "description": "Ardbeg 16 Year Old expression.",
+    "description": "Ardbeg 10 Year Old expression.",
     "flavorProfile": [
       "raisin",
       "citrus",
@@ -51,13 +51,13 @@
       "peated",
       "coastal"
     ],
-    "externalId": "ardbeg-distillery-ardbeg-16-year-old-px-sherry",
+    "externalId": "ardbeg-distillery-ardbeg-10-year-old-px-sherry",
     "source": "seed",
     "age": 16
   },
   {
     "brand": "Laphroaig",
-    "name": "Quarter Cask — Rum",
+    "name": "Quarter Cask",
     "distillery": "Laphroaig Distillery",
     "type": "Single Malt",
     "region": "Islay",

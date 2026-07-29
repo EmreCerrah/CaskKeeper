@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { CalendarDays, Wind, Wine, Hourglass } from "lucide-react";
-import type { TastingNoteDTO } from "@/lib/types/dto";
+import type { CommentDTO, TastingNoteDTO } from "@/lib/types/dto";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RatingBadge } from "@/components/shared/RatingBadge";
 import { NoteActions } from "./NoteActions";
+import { NoteInteractions } from "./NoteInteractions";
 import { UserAvatar } from "@/components/social/UserAvatar";
 
 const FINISH_LABELS: Record<string, string> = {
@@ -21,6 +22,15 @@ interface TastingNoteCardProps {
   showActions?: boolean;
   /** Akış gibi görünümlerde notu yazan kullanıcıyı göster */
   showAuthor?: boolean;
+  /**
+   * Etkileşim çubuğunu (beğeni/yorum) etkinleştirir. Yalnızca `note.interactions`
+   * doldurulmuş herkese açık görünümlerde anlamlıdır.
+   */
+  viewerIsAuthenticated?: boolean;
+  /** Not sayfasında yorumlar açık gelir */
+  commentsOpen?: boolean;
+  /** Sunucuda çekilmiş yorumlar (kalıcı bağlantı sayfası) */
+  initialComments?: CommentDTO[];
 }
 
 /** Tadım notu kartı — kişisel listelerde, akışta ve herkese açık profillerde kullanılır. */
@@ -29,6 +39,9 @@ export function TastingNoteCard({
   hideWhiskey = false,
   showActions = true,
   showAuthor = false,
+  viewerIsAuthenticated = false,
+  commentsOpen = false,
+  initialComments,
 }: TastingNoteCardProps) {
   const formattedDate = new Date(note.tastingDate).toLocaleDateString("tr-TR", {
     day: "numeric",
@@ -133,6 +146,16 @@ export function TastingNoteCard({
           <blockquote className="border-l-2 border-primary/40 pl-3 text-sm italic text-muted-foreground">
             {note.personalNotes}
           </blockquote>
+        )}
+
+        {note.interactions && (
+          <NoteInteractions
+            noteId={note.id}
+            interactions={note.interactions}
+            isAuthenticated={viewerIsAuthenticated}
+            defaultOpen={commentsOpen}
+            initialComments={initialComments}
+          />
         )}
       </CardContent>
     </Card>

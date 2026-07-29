@@ -44,7 +44,11 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
   }
 
   const page = Math.max(1, Number(searchParams.sayfa) || 1);
-  const notes = await tastingNoteService.getPublicNotesByUser(params.id, { page, limit: 10 });
+  const notes = await tastingNoteService.getPublicNotesByUser(
+    params.id,
+    { page, limit: 10 },
+    session?.userId
+  );
 
   const memberSince = new Date(profile.createdAt).toLocaleDateString("tr-TR", {
     month: "long",
@@ -119,7 +123,12 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
         {notes.data.length > 0 ? (
           <>
             {notes.data.map((note) => (
-              <TastingNoteCard key={note.id} note={note} showActions={false} />
+              <TastingNoteCard
+                key={note.id}
+                note={note}
+                showActions={false}
+                viewerIsAuthenticated={Boolean(session)}
+              />
             ))}
             <Pagination
               page={notes.page}

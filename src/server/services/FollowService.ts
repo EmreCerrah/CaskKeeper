@@ -5,6 +5,7 @@
 
 import { followRepository } from "../repositories/FollowRepository";
 import { userRepository } from "../repositories/UserRepository";
+import { notificationService } from "./NotificationService";
 import { NotFoundError, ValidationError } from "@/lib/errors";
 import { toPublicUserDTO, type PublicUserDTO } from "@/lib/types/dto";
 import mongoose from "mongoose";
@@ -27,11 +28,24 @@ export class FollowService {
     if (!target) throw new NotFoundError("Kullanıcı bulunamadı");
 
     await followRepository.create(followerId, targetId);
+
+    await notificationService.notify({
+      recipientId: targetId,
+      actorId: followerId,
+      type: "follow",
+    });
   }
 
   async unfollow(followerId: string, targetId: string): Promise<void> {
     this.assertValidId(targetId);
     await followRepository.delete(followerId, targetId);
+
+    // Takip bırakıldığında bildirim de kalkar; tekrar takipte yenisi üretilir
+    await notificationService.revoke({
+      recipientId: targetId,
+      actorId: followerId,
+      type: "follow",
+    });
   }
 
   async isFollowing(followerId: string, targetId: string): Promise<boolean> {

@@ -38,7 +38,13 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
         <>
           <div className="space-y-4">
             {feed.data.map((note) => (
-              <TastingNoteCard key={note.id} note={note} showActions={false} showAuthor />
+              <TastingNoteCard
+                key={note.id}
+                note={note}
+                showActions={false}
+                showAuthor
+                viewerIsAuthenticated
+              />
             ))}
           </div>
           <Pagination page={feed.page} totalPages={feed.totalPages} basePath="/akis" />

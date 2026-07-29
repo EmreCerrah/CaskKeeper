@@ -27,9 +27,22 @@ vi.mock("../repositories/WhiskeyRepository", () => ({
   },
 }));
 
+// Not silindiğinde beğeni/yorum/bildirim temizliği çağrılır — burada
+// yalnızca çağrıldığı doğrulanır, davranışı InteractionService.test.ts'de test edilir.
+vi.mock("./InteractionService", () => ({
+  interactionService: {
+    getInteractionsFor: vi.fn().mockResolvedValue(new Map()),
+    getInteractionsForNote: vi
+      .fn()
+      .mockResolvedValue({ likeCount: 0, commentCount: 0, isLikedByViewer: false }),
+    removeNoteInteractions: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
 const { tastingNoteService } = await import("./TastingNoteService");
 const { tastingNoteRepository } = await import("../repositories/TastingNoteRepository");
 const { whiskeyRepository } = await import("../repositories/WhiskeyRepository");
+const { interactionService } = await import("./InteractionService");
 
 const OWNER_ID = "aaaaaaaaaaaaaaaaaaaaaaaa";
 const OTHER_USER_ID = "bbbbbbbbbbbbbbbbbbbbbbbb";
@@ -143,6 +156,24 @@ describe("deleteNote — sahiplik kontrolü", () => {
     await tastingNoteService.deleteNote(NOTE_ID, OWNER_ID);
 
     expect(tastingNoteRepository.delete).toHaveBeenCalledWith(NOTE_ID);
+  });
+
+  it("silinen notun beğeni, yorum ve bildirimlerini temizler", async () => {
+    vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
+    vi.mocked(tastingNoteRepository.delete).mockResolvedValue(true);
+
+    await tastingNoteService.deleteNote(NOTE_ID, OWNER_ID);
+
+    expect(interactionService.removeNoteInteractions).toHaveBeenCalledWith(NOTE_ID);
+  });
+
+  it("silme başarısız olursa etkileşimleri temizlemez", async () => {
+    vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
+    vi.mocked(tastingNoteRepository.delete).mockResolvedValue(false);
+
+    await expect(tastingNoteService.deleteNote(NOTE_ID, OWNER_ID)).rejects.toThrow(NotFoundError);
+
+    expect(interactionService.removeNoteInteractions).not.toHaveBeenCalled();
   });
 });
 
