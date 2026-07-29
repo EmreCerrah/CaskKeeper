@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createResponse, handleApiError } from "@/lib/api-response";
 import connectToDatabase from "@/lib/db";
+import { requireAdminUser } from "@/lib/auth/admin";
 import { whiskeyService } from "@/server/services/WhiskeyService";
 import type { WhiskeyFilterOptions, WhiskeyPaginationOptions } from "@/server/repositories/WhiskeyRepository";
 
@@ -35,9 +36,11 @@ export async function GET(req: NextRequest) {
   }
 }
 
+/** POST /api/whiskeys — kataloğa viski ekle (yalnızca yönetici) */
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
+    await requireAdminUser();
     const body = await req.json();
 
     const newWhiskey = await whiskeyService.createWhiskey(body);

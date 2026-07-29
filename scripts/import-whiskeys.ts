@@ -12,6 +12,12 @@
  *   IMPORT_LOG_FILE=logs/import.log npm run seed:whiskeys  → dosyaya da loglar
  */
 
+//! 2. Önce prova et (hiçbir şey yazılmaz):
+//? npx tsx scripts/import-whiskeys.ts --file=scripts/whiskeys-2026-07.json --dry-run
+
+//! 3. Sorun yoksa yükle:
+//? npx tsx scripts/import-whiskeys.ts --file=scripts/whiskeys-2026-07.json
+
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 

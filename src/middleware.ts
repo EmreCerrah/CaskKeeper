@@ -8,7 +8,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken, SESSION_COOKIE } from "@/lib/auth/session";
 
-const PROTECTED_PREFIXES = ["/panel", "/tadimlarim", "/favoriler", "/profil", "/akis"];
+// /yonetim de korumalıdır; ayrıca rol kontrolü yonetim/layout.tsx içinde yapılır
+const PROTECTED_PREFIXES = ["/panel", "/tadimlarim", "/favoriler", "/profil", "/akis", "/yonetim"];
 const AUTH_PAGES = ["/giris", "/kayit"];
 
 export async function middleware(req: NextRequest) {
@@ -40,6 +41,7 @@ export const config = {
     "/favoriler/:path*",
     "/profil/:path*",
     "/akis/:path*",
+    "/yonetim/:path*",
     "/giris",
     "/kayit",
   ],

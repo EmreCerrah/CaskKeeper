@@ -181,8 +181,8 @@ export class WhiskeyRepository {
     return { doc: previous, isNew: previous === null };
   }
 
-  /** ID ile güncelle */
-  async update(id: string, data: UpdateWhiskeyDTO): Promise<IWhiskey | null> {
+  /** ID ile güncelle (slug service tarafından yeniden üretilebilir) */
+  async update(id: string, data: UpdateWhiskeyDTO & { slug?: string }): Promise<IWhiskey | null> {
     return await Whiskey.findByIdAndUpdate(id, { $set: data }, { new: true }).lean() as unknown as IWhiskey | null;
   }
 

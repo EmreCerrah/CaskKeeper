@@ -9,6 +9,7 @@ export interface CreateUserInput {
   name: string;
   email: string;
   passwordHash: string;
+  role?: "user" | "admin";
 }
 
 export interface UpdateUserInput {
@@ -35,6 +36,26 @@ export class UserRepository {
 
   async existsByEmail(email: string): Promise<boolean> {
     return !!(await User.exists({ email: email.toLowerCase() }));
+  }
+
+  /** Toplam kullanıcı sayısı — ilk kaydın admin olması için kullanılır */
+  async count(): Promise<number> {
+    return await User.countDocuments();
+  }
+
+  /** Yönetim panelinde kullanıcı listesi (en yeni önce) */
+  async findAll(): Promise<IUser[]> {
+    return await User.find().sort({ createdAt: -1 }).lean() as unknown as IUser[];
+  }
+
+  /** Kaç admin var — son admini düşürmeyi engellemek için */
+  async countAdmins(): Promise<number> {
+    return await User.countDocuments({ role: "admin" });
+  }
+
+  async updateRole(id: string, role: "user" | "admin"): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(id, { $set: { role } }, { new: true })
+      .lean() as unknown as IUser | null;
   }
 
   async create(data: CreateUserInput): Promise<IUser> {

@@ -1,0 +1,19 @@
+[
+  {
+    "brand": "Talisker",
+    "expression": "10 Year Old",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 45.8,
+    "age": 10,
+    "caskType": "Ex-Bourbon Casks",
+    "description": "Deniz tuzu, biber ve hafif turba dumanı.",
+    "flavorProfile": ["pepper", "sea salt", "smoke", "citrus"],
+    "tags": ["peated", "coastal", "skye"],
+    "imageUrl": "https://...",
+    "externalId": "talisker-10",
+    "source": "manual"
+  }
+]
