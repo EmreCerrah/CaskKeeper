@@ -10,6 +10,13 @@ import type { IWhiskey } from "@/server/models/Whiskey";
 import type { ITastingNote } from "@/server/models/TastingNote";
 import type { IUser } from "@/server/models/User";
 
+/** Listelerde/kartlarda gösterilen minimal kullanıcı bilgisi (herkese açık) */
+export interface PublicUserDTO {
+  id: string;
+  name: string;
+  profilePicture?: string;
+}
+
 // ---------------------------------------------------------------------------
 // DTO Tipleri
 // ---------------------------------------------------------------------------
@@ -44,6 +51,8 @@ export interface TastingNoteDTO {
   whiskeyId: string;
   /** Populate edilmişse dolu gelir */
   whiskey?: WhiskeyDTO;
+  /** Akış ve herkese açık profillerde notu yazan kullanıcı (populate edilmişse) */
+  author?: PublicUserDTO;
   tastingDate: string; // ISO
   rating: number;
   noseTags: string[];
@@ -68,6 +77,22 @@ export interface UserDTO {
   bio?: string;
   role: "user" | "admin";
   createdAt: string; // ISO
+}
+
+/** Başka kullanıcıların görebildiği herkese açık profil (e-posta içermez) */
+export interface PublicProfileDTO {
+  id: string;
+  name: string;
+  profilePicture?: string;
+  bio?: string;
+  createdAt: string; // ISO
+  followerCount: number;
+  followingCount: number;
+  publicNoteCount: number;
+  /** İsteği yapan kullanıcı bu profili takip ediyor mu (giriş yapmışsa) */
+  isFollowedByViewer: boolean;
+  /** Görüntülenen profil, isteği yapan kullanıcının kendisi mi */
+  isOwnProfile: boolean;
 }
 
 export interface DashboardStatsDTO {
@@ -112,20 +137,35 @@ export function toWhiskeyDTO(doc: IWhiskey | LeanDoc): WhiskeyDTO {
   };
 }
 
+/** Bir referans alanının populate edilip edilmediğini, verilen anahtara göre anlar */
+function isPopulatedRef(ref: unknown, key: string): ref is LeanDoc {
+  return ref !== null && typeof ref === "object" && key in (ref as Record<string, unknown>);
+}
+
+export function toPublicUserDTO(doc: IUser | LeanDoc): PublicUserDTO {
+  const u = doc as IUser;
+  return {
+    id: String(u._id),
+    name: u.name,
+    profilePicture: u.profilePicture ?? undefined,
+  };
+}
+
 export function toTastingNoteDTO(doc: ITastingNote | LeanDoc): TastingNoteDTO {
   const n = doc as ITastingNote;
-  // whiskey alanı populate edilmiş olabilir (obje) veya ObjectId olabilir
+  // whiskey ve user alanları populate edilmiş (obje) veya ObjectId olabilir
   const whiskeyRef = n.whiskey as unknown;
-  const isPopulated =
-    whiskeyRef !== null &&
-    typeof whiskeyRef === "object" &&
-    "slug" in (whiskeyRef as Record<string, unknown>);
+  const whiskeyPopulated = isPopulatedRef(whiskeyRef, "slug");
+
+  const userRef = n.user as unknown;
+  const userPopulated = isPopulatedRef(userRef, "name");
 
   return {
     id: String(n._id),
-    userId: String(n.user),
-    whiskeyId: isPopulated ? String((whiskeyRef as LeanDoc)._id) : String(n.whiskey),
-    whiskey: isPopulated ? toWhiskeyDTO(whiskeyRef as LeanDoc) : undefined,
+    userId: userPopulated ? String((userRef as LeanDoc)._id) : String(n.user),
+    whiskeyId: whiskeyPopulated ? String((whiskeyRef as LeanDoc)._id) : String(n.whiskey),
+    whiskey: whiskeyPopulated ? toWhiskeyDTO(whiskeyRef as LeanDoc) : undefined,
+    author: userPopulated ? toPublicUserDTO(userRef as LeanDoc) : undefined,
     tastingDate: new Date(n.tastingDate).toISOString(),
     rating: n.rating,
     noseTags: n.noseTags ?? [],

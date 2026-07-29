@@ -18,3 +18,6 @@ logs
 # İşletim sistemi / editör
 .DS_Store
 Thumbs.db
+
+# Yerel Docker override (seed icin mongo portu acar)
+docker-compose.override.yml

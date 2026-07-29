@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken, SESSION_COOKIE } from "@/lib/auth/session";
 
-const PROTECTED_PREFIXES = ["/panel", "/tadimlarim", "/favoriler", "/profil"];
+const PROTECTED_PREFIXES = ["/panel", "/tadimlarim", "/favoriler", "/profil", "/akis"];
 const AUTH_PAGES = ["/giris", "/kayit"];
 
 export async function middleware(req: NextRequest) {
@@ -34,5 +34,13 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/panel/:path*", "/tadimlarim/:path*", "/favoriler/:path*", "/profil/:path*", "/giris", "/kayit"],
+  matcher: [
+    "/panel/:path*",
+    "/tadimlarim/:path*",
+    "/favoriler/:path*",
+    "/profil/:path*",
+    "/akis/:path*",
+    "/giris",
+    "/kayit",
+  ],
 };

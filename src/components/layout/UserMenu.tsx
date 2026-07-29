@@ -3,15 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CircleUserRound, LogOut, User } from "lucide-react";
+import { CircleUserRound, LogOut, User, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UserMenuProps {
   name: string;
+  userId: string;
 }
 
 /** Sağ üst kullanıcı menüsü — profil linki ve çıkış. */
-export function UserMenu({ name }: UserMenuProps) {
+export function UserMenu({ name, userId }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -51,13 +52,22 @@ export function UserMenu({ name }: UserMenuProps) {
           className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border bg-popover shadow-lg"
         >
           <Link
+            href={`/kullanicilar/${userId}`}
+            role="menuitem"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent"
+            onClick={() => setOpen(false)}
+          >
+            <UserCircle className="h-4 w-4" aria-hidden />
+            Herkese Açık Profilim
+          </Link>
+          <Link
             href="/profil"
             role="menuitem"
             className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent"
             onClick={() => setOpen(false)}
           >
             <User className="h-4 w-4" aria-hidden />
-            Profilim
+            Profil Ayarları
           </Link>
           <button
             role="menuitem"

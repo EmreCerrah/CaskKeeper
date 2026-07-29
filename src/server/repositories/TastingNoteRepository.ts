@@ -73,6 +73,66 @@ export class TastingNoteRepository {
       .lean() as unknown as ITastingNote[];
   }
 
+  /** Bir kullanıcının HERKESE AÇIK notları (başkaları görebilir) */
+  async findPublicByUser(
+    userId: string,
+    pagination?: TastingNotePaginationOptions
+  ): Promise<PaginatedResult<ITastingNote>> {
+    const page = Math.max(1, pagination?.page ?? 1);
+    const limit = Math.min(100, pagination?.limit ?? 20);
+    const skip = (page - 1) * limit;
+
+    const query = { user: userId, visibility: "public" };
+
+    const [data, total] = await Promise.all([
+      TastingNote.find(query)
+        .sort({ tastingDate: -1, createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate("whiskey")
+        .lean() as unknown as Promise<ITastingNote[]>,
+      TastingNote.countDocuments(query),
+    ]);
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  async countPublicByUser(userId: string): Promise<number> {
+    return await TastingNote.countDocuments({ user: userId, visibility: "public" });
+  }
+
+  /**
+   * Aktivite akışı: verilen kullanıcıların HERKESE AÇIK notları,
+   * en yeni önce. Viski ve yazar bilgisi populate edilir.
+   */
+  async findFeed(
+    authorIds: mongoose.Types.ObjectId[],
+    pagination?: TastingNotePaginationOptions
+  ): Promise<PaginatedResult<ITastingNote>> {
+    const page = Math.max(1, pagination?.page ?? 1);
+    const limit = Math.min(100, pagination?.limit ?? 20);
+    const skip = (page - 1) * limit;
+
+    if (authorIds.length === 0) {
+      return { data: [], total: 0, page, limit, totalPages: 0 };
+    }
+
+    const query = { user: { $in: authorIds }, visibility: "public" };
+
+    const [data, total] = await Promise.all([
+      TastingNote.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate("whiskey")
+        .populate("user", "name profilePicture")
+        .lean() as unknown as Promise<ITastingNote[]>,
+      TastingNote.countDocuments(query),
+    ]);
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
   /** Dashboard istatistikleri — tek aggregate turu */
   async getStatsByUser(userId: string): Promise<UserTastingStats> {
     const userObjectId = new mongoose.Types.ObjectId(userId);

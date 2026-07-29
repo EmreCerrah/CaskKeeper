@@ -30,6 +30,9 @@ export async function Navbar() {
                 <Link href="/panel">Panelim</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
+                <Link href="/akis">Akış</Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm">
                 <Link href="/tadimlarim">Tadımlarım</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
@@ -41,7 +44,7 @@ export async function Navbar() {
 
         <div className="flex items-center gap-2">
           {session ? (
-            <UserMenu name={session.name} />
+            <UserMenu name={session.name} userId={session.userId} />
           ) : (
             <>
               <Button asChild variant="ghost" size="sm">
@@ -63,6 +66,9 @@ export async function Navbar() {
           </Button>
           <Button asChild variant="ghost" size="sm">
             <Link href="/panel">Panelim</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/akis">Akış</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
             <Link href="/tadimlarim">Tadımlarım</Link>
