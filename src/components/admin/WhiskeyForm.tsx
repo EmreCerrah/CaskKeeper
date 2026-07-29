@@ -24,7 +24,7 @@ function toList(value?: string): string[] {
 const WhiskeyFormSchema = z.object({
   brand: z.string().min(2, "Marka en az 2 karakter olmalı"),
   name: z.string().min(2, "Ürün adı en az 2 karakter olmalı"),
-  distillery: z.string().optional(),
+  distillery: z.string().min(2, "Damıtımevi zorunludur"),
   type: z.string().min(2, "Tip zorunludur"),
   region: z.string().min(2, "Bölge zorunludur"),
   country: z.string().min(2, "Ülke zorunludur"),
@@ -115,6 +115,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
     const payload: Record<string, unknown> = {
       brand: values.brand,
       name: values.name,
+      distillery: values.distillery,
       type: values.type,
       region: values.region,
       country: values.country,
@@ -125,7 +126,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
       tags: toList(values.tags),
     };
 
-    const optionalText = { distillery: values.distillery, subRegion: values.subRegion, caskType: values.caskType, description: values.description, imageUrl: values.imageUrl, officialUrl: values.officialUrl, externalId: values.externalId };
+    const optionalText = { subRegion: values.subRegion, caskType: values.caskType, description: values.description, imageUrl: values.imageUrl, officialUrl: values.officialUrl, externalId: values.externalId };
     for (const [key, val] of Object.entries(optionalText)) {
       if (val) payload[key] = val;
     }
@@ -171,8 +172,14 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
             {errors.name && <p className="text-xs text-destructive-foreground/90">{errors.name.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="distillery">Damıtımevi</Label>
+            <Label htmlFor="distillery">Damıtımevi *</Label>
             <Input id="distillery" {...register("distillery")} />
+            {errors.distillery && (
+              <p className="text-xs text-destructive-foreground/90">{errors.distillery.message}</p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Bilinmiyorsa üreticiyi yazın — kimliğin parçasıdır, boş bırakılamaz.
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="externalId">Dış Kimlik (externalId)</Label>

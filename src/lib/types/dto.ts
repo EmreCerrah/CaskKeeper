@@ -26,7 +26,7 @@ export interface WhiskeyDTO {
   brand: string;
   name: string;
   slug: string;
-  distillery?: string;
+  distillery: string;
   type: string;
   region: string;
   country: string;
@@ -140,7 +140,7 @@ export function toWhiskeyDTO(doc: IWhiskey | LeanDoc): WhiskeyDTO {
     brand: w.brand,
     name: w.name,
     slug: w.slug,
-    distillery: w.distillery ?? undefined,
+    distillery: w.distillery,
     type: w.type,
     region: w.region,
     country: w.country,

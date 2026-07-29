@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:sync-indexes": "npx tsx scripts/sync-indexes.ts",
     "seed:whiskeys": "npx tsx scripts/import-whiskeys.ts",
     "seed:whiskeys:dry": "npx tsx scripts/import-whiskeys.ts --dry-run",
     "seed:whiskeys:insert": "npx tsx scripts/import-whiskeys.ts --insert-only",
@@ -47,6 +50,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
