@@ -7,7 +7,9 @@ import { z } from "zod";
 export const CreateWhiskeySchema = z.object({
   brand:          z.string().min(2, "Marka adı en az 2 karakter olmalı").trim(),
   name:           z.string().min(2, "Ürün adı en az 2 karakter olmalı").trim(),
-  distillery:     z.string().trim().optional(),
+  // Damıtımevi zorunludur: katalog kimliğinin (slug) parçasıdır ve aynı
+  // marka/ürün adıyla farklı üreticileri ayırt etmeyi sağlar.
+  distillery:     z.string().min(2, "Damıtımevi zorunludur").trim(),
   type:           z.string().min(2, "Tip zorunludur").trim(),
   region:         z.string().min(2, "Bölge zorunludur").trim(),
   country:        z.string().trim().default("Scotland"),

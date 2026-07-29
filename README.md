@@ -76,6 +76,28 @@ npm run seed:whiskeys:file
 npm run dev
 ```
 
+## Test
+
+```bash
+npm test          # tüm testleri bir kez çalıştırır
+npm run test:watch
+```
+
+Testler **Vitest** ile yazılır ve veritabanı gerektirmez — service katmanı,
+repository'ler mock'lanarak izole edilir. Kapsanan kritik kurallar: tadım notu
+sahipliği, rol korumaları, kimlik doğrulama ve katalog kimliği (slug) mantığı.
+
+## Veritabanı İndeksleri
+
+Bir modelin indeks tanımı değiştiğinde, dağıtımdan sonra bir kez çalıştırın:
+
+```bash
+npm run db:sync-indexes
+```
+
+Mongoose yeni indeksleri otomatik oluşturur ancak **şemadan kaldırılan
+indeksleri düşürmez**; bu komut farkı kapatır.
+
 ## API Endpoint'leri
 
 | Metot | Yol | Açıklama | Auth |

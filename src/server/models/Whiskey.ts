@@ -17,7 +17,8 @@ export interface IWhiskey extends Document {
   slug: string;           // duplicate prevention & URL-safe
 
   // Sınıflandırma
-  distillery?: string;
+  /** Zorunlu — katalog kimliğinin parçasıdır (slug'a girer) */
+  distillery: string;
   type: string;
   region: string;
   country: string;
@@ -60,7 +61,7 @@ const WhiskeySchema = new Schema<IWhiskey>(
     slug:        { type: String, required: true, unique: true, index: true, lowercase: true },
 
     // Sınıflandırma
-    distillery:  { type: String, trim: true },
+    distillery:  { type: String, required: true, trim: true },
     type:        { type: String, required: true, trim: true, index: true },
     region:      { type: String, required: true, trim: true },
     country:     { type: String, required: true, trim: true, default: "Scotland" },
@@ -98,8 +99,11 @@ const WhiskeySchema = new Schema<IWhiskey>(
 // İndeksler
 // ---------------------------------------------------------------------------
 
-// Catalog'da arama için compound unique index (slug zaten unique ama bu daha okunabilir)
-WhiskeySchema.index({ brand: 1, name: 1 }, { unique: true });
+// Katalog kimliği: damıtımevi + marka + ürün adı birlikte benzersizdir.
+// Damıtımevi bilinçli olarak dahildir — aynı marka ve ürün adıyla farklı
+// damıtımevlerinden çıkan ürünler (bağımsız şişelemeler) ayrı kayıtlardır.
+// Bu, slug'ın türetildiği üçlüyle birebir aynıdır.
+WhiskeySchema.index({ brand: 1, name: 1, distillery: 1 }, { unique: true });
 
 // Tip + bölge bazlı filtreleme için
 WhiskeySchema.index({ type: 1, region: 1 });
