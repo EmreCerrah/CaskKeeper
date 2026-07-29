@@ -8,7 +8,7 @@
 
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { UnauthorizedError } from "@/lib/errors";
+import { ForbiddenError, UnauthorizedError } from "@/lib/errors";
 
 export const SESSION_COOKIE = "caskkeeper_session";
 const SESSION_DURATION_DAYS = 7;
@@ -70,6 +70,18 @@ export async function getSession(): Promise<SessionPayload | null> {
 export async function requireSession(): Promise<SessionPayload> {
   const session = await getSession();
   if (!session) throw new UnauthorizedError();
+  return session;
+}
+
+/**
+ * Yönetici işlemleri için: oturum yoksa 401, admin değilse 403 fırlatır.
+ * Rol oturum token'ından okunur; rol değişiminde token tazelenir.
+ */
+export async function requireAdmin(): Promise<SessionPayload> {
+  const session = await requireSession();
+  if (session.role !== "admin") {
+    throw new ForbiddenError("Bu işlem için yönetici yetkisi gerekli");
+  }
   return session;
 }
 

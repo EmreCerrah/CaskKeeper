@@ -8,7 +8,7 @@ import { userRepository } from "../repositories/UserRepository";
 import { followRepository } from "../repositories/FollowRepository";
 import { tastingNoteRepository } from "../repositories/TastingNoteRepository";
 import { UpdateProfileSchema } from "../validations/user.schema";
-import { NotFoundError, ValidationError } from "@/lib/errors";
+import { ForbiddenError, NotFoundError, ValidationError } from "@/lib/errors";
 import { toUserDTO, type UserDTO, type PublicProfileDTO } from "@/lib/types/dto";
 
 export class UserService {
@@ -52,6 +52,43 @@ export class UserService {
       isFollowedByViewer,
       isOwnProfile,
     };
+  }
+
+  // ---------- Yönetim ----------
+
+  /** Yönetim panelindeki kullanıcı listesi */
+  async listUsers(): Promise<UserDTO[]> {
+    const users = await userRepository.findAll();
+    return users.map(toUserDTO);
+  }
+
+  /**
+   * Bir kullanıcının rolünü değiştirir (yalnızca admin çağırmalı).
+   * İki koruma: yönetici kendi rolünü düşüremez ve sistemdeki son admin
+   * yetkisini kaybedemez — aksi halde kimse yönetime erişemez.
+   */
+  async setRole(actorId: string, targetId: string, role: "user" | "admin"): Promise<UserDTO> {
+    if (!mongoose.Types.ObjectId.isValid(targetId)) {
+      throw new NotFoundError("Kullanıcı bulunamadı");
+    }
+
+    const target = await userRepository.findById(targetId);
+    if (!target) throw new NotFoundError("Kullanıcı bulunamadı");
+
+    if (actorId === targetId && role === "user") {
+      throw new ForbiddenError("Kendi yönetici yetkinizi kaldıramazsınız");
+    }
+
+    if (target.role === "admin" && role === "user") {
+      const adminCount = await userRepository.countAdmins();
+      if (adminCount <= 1) {
+        throw new ForbiddenError("Sistemdeki son yöneticinin yetkisi kaldırılamaz");
+      }
+    }
+
+    const updated = await userRepository.updateRole(targetId, role);
+    if (!updated) throw new NotFoundError("Kullanıcı bulunamadı");
+    return toUserDTO(updated);
   }
 
   async updateProfile(userId: string, data: unknown): Promise<UserDTO> {

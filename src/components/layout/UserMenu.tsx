@@ -3,16 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CircleUserRound, LogOut, User, UserCircle } from "lucide-react";
+import { CircleUserRound, LogOut, ShieldCheck, User, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UserMenuProps {
   name: string;
   userId: string;
+  isAdmin?: boolean;
 }
 
-/** Sağ üst kullanıcı menüsü — profil linki ve çıkış. */
-export function UserMenu({ name, userId }: UserMenuProps) {
+/** Sağ üst kullanıcı menüsü — profil linkleri, yönetim ve çıkış. */
+export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -69,9 +70,20 @@ export function UserMenu({ name, userId }: UserMenuProps) {
             <User className="h-4 w-4" aria-hidden />
             Profil Ayarları
           </Link>
+          {isAdmin && (
+            <Link
+              href="/yonetim"
+              role="menuitem"
+              className="flex items-center gap-2 border-t border-border/60 px-4 py-2.5 text-sm text-primary hover:bg-accent"
+              onClick={() => setOpen(false)}
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden />
+              Yönetim
+            </Link>
+          )}
           <button
             role="menuitem"
-            className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-destructive-foreground/90 hover:bg-accent"
+            className="flex w-full items-center gap-2 border-t border-border/60 px-4 py-2.5 text-left text-sm text-destructive-foreground/90 hover:bg-accent"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" aria-hidden />

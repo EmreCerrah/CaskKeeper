@@ -108,11 +108,5 @@
     "flavorProfile": ["caramel", "vanilla", "mint", "molasses", "oak"],
     "tags": ["bourbon", "kentucky", "value", "approachable"],
     "source": "manual"
-  },
-  {
-    "brand": "Eksik Verili Viski",
-    "type": "Blend",
-    "region": "Bilinmiyor",
-    "_note": "Bu kayıt fallback mekanizmasını test etmek içindir — name/expression eksik"
   }
 ]

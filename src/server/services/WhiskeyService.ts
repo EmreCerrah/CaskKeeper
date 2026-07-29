@@ -102,9 +102,60 @@ export class WhiskeyService {
     return toWhiskeyDTO(updated);
   }
 
+  /**
+   * Slug ile güncelleme (yönetim paneli ve API için).
+   * Marka/isim/damıtımevi değişirse slug yeniden üretilir; yeni slug başka bir
+   * kayda aitse çakışma hatası verilir (sessizce üzerine yazılmaz).
+   */
+  async updateWhiskeyBySlug(slug: string, data: unknown): Promise<WhiskeyDTO> {
+    const parsed = UpdateWhiskeySchema.safeParse(data);
+    if (!parsed.success) {
+      throw new ValidationError("Geçersiz viski verisi", parsed.error.flatten().fieldErrors);
+    }
+
+    const existing = await whiskeyRepository.findBySlug(slug);
+    if (!existing) throw new NotFoundError(`Viski bulunamadı: ${slug}`);
+
+    const dto = { ...parsed.data } as UpdateWhiskeyDTO & { slug?: string };
+
+    if (dto.type) dto.type = normalizeWhiskeyType(dto.type);
+
+    // Kimlik alanlarından biri değiştiyse slug'ı tazele
+    const identityChanged =
+      (dto.brand !== undefined && dto.brand !== existing.brand) ||
+      (dto.name !== undefined && dto.name !== existing.name) ||
+      (dto.distillery !== undefined && dto.distillery !== existing.distillery);
+
+    if (identityChanged) {
+      const nextSlug = generateWhiskeySlug(
+        dto.brand ?? existing.brand,
+        dto.name ?? existing.name,
+        dto.distillery ?? existing.distillery
+      );
+
+      if (nextSlug !== slug) {
+        const clash = await whiskeyRepository.findBySlug(nextSlug);
+        if (clash) {
+          throw new ConflictError(`Bu bilgilerle başka bir viski zaten mevcut (slug: ${nextSlug})`);
+        }
+        dto.slug = nextSlug;
+      }
+    }
+
+    const updated = await whiskeyRepository.update(String(existing._id), dto);
+    if (!updated) throw new NotFoundError("Viski bulunamadı");
+    return toWhiskeyDTO(updated);
+  }
+
   async deleteWhiskey(id: string): Promise<void> {
     const deleted = await whiskeyRepository.delete(id);
     if (!deleted) throw new NotFoundError("Viski bulunamadı");
+  }
+
+  async deleteWhiskeyBySlug(slug: string): Promise<void> {
+    const existing = await whiskeyRepository.findBySlug(slug);
+    if (!existing) throw new NotFoundError(`Viski bulunamadı: ${slug}`);
+    await whiskeyRepository.delete(String(existing._id));
   }
 }
 

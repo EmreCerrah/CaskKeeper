@@ -27,7 +27,17 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-    const user = await userRepository.create({ name, email, passwordHash });
+
+    // Sistemdeki ilk kullanıcı otomatik olarak yönetici olur (bootstrap).
+    // Sonraki adminler mevcut bir admin tarafından atanır.
+    const isFirstUser = (await userRepository.count()) === 0;
+
+    const user = await userRepository.create({
+      name,
+      email,
+      passwordHash,
+      role: isFirstUser ? "admin" : "user",
+    });
 
     return toUserDTO(user);
   }
