@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { slugify, generateWhiskeySlug, toTitleCase, normalizeWhiskeyType } from "./normalize";
+import {
+  slugify,
+  generateWhiskeySlug,
+  toTitleCase,
+  normalizeWhiskeyType,
+  escapeRegex,
+} from "./normalize";
 
 describe("slugify", () => {
   it("Türkçe karakterleri ASCII karşılığına çevirir", () => {
@@ -65,6 +71,24 @@ describe("normalizeWhiskeyType", () => {
   it("tip verilmezse 'Other' döner", () => {
     expect(normalizeWhiskeyType(undefined)).toBe("Other");
     expect(normalizeWhiskeyType("")).toBe("Other");
+  });
+});
+
+describe("escapeRegex", () => {
+  it("regex özel karakterlerini kaçırır", () => {
+    expect(escapeRegex("a.*b")).toBe("a\\.\\*b");
+    expect(escapeRegex("(test)")).toBe("\\(test\\)");
+  });
+
+  it("kaçırılan desen literal olarak eşleşir — joker gibi davranmaz", () => {
+    const rx = new RegExp(escapeRegex(".*"), "i");
+
+    expect(rx.test("herhangi bir kullanıcı adı")).toBe(false);
+    expect(rx.test("literal .* içeren metin")).toBe(true);
+  });
+
+  it("normal metni değiştirmez", () => {
+    expect(escapeRegex("Emre Cerrah")).toBe("Emre Cerrah");
   });
 });
 

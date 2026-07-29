@@ -30,10 +30,11 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 
 | Aşama | Durum | PR |
 |---|---|---|
+| Ara iş — Test altyapısı & katalog kimliği | ✅ Tamamlandı | #7 |
 | Faz 1 — Temel uygulama | ✅ Tamamlandı | #1 |
 | Faz 2 · Dilim 1 — Sosyal katman | ✅ Tamamlandı | #2 |
 | Ara iş — Admin & katalog yönetimi | ✅ Tamamlandı | #4 |
-| Faz 2 · Dilim 2 — Kullanıcı arama & arkadaşlık | 🟡 PR açık | #5 |
+| Faz 2 · Dilim 2 — Kullanıcı arama & arkadaşlık | ✅ Tamamlandı | #5 |
 | Faz 2 · Dilim 3 — Etkileşim | ⬜ Sıradaki | — |
 | Faz 3 — Gelişmiş özellikler | ⬜ Planlanan | — |
 
@@ -61,7 +62,7 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 - [x] Takipçi / takip edilen listeleri
 - [x] Aktivite akışı (`/akis`)
 
-### Dilim 2 — Kullanıcı arama & arkadaşlık 🟡
+### Dilim 2 — Kullanıcı arama & arkadaşlık ✅
 
 - [x] Kullanıcı arama sayfası (`/kullanicilar`)
 - [x] Keşfet listesi (arama boşken yeni katılanlar)
@@ -94,16 +95,24 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 
 Öncelik sırasına göre:
 
-### 1. Test altyapısı yok — *yüksek*
-Projede hiç test dosyası yok. Kritik iş kuralları (sahiplik kontrolü, slug
-üretimi, rol korumaları, görünürlük filtreleri) test edilmiyor. Faz 2 kapanmadan
-en azından service katmanı için test eklenmeli.
+### ~~1. Test altyapısı yok~~ ✅ *çözüldü (PR #7)*
+Vitest kuruldu; service katmanı ve normalizasyon yardımcıları test ediliyor.
+Kapsanan kritik kurallar: tadım notu sahipliği, rol korumaları (kendi yetkisini
+kaldırma / son yönetici), ilk kullanıcının admin olması, parola hash'leme,
+katalog kimliği ve slug yeniden üretimi.
+`npm test` · `npm run test:watch`
 
-### 2. Katalog kimlik indeksleri tutarsız — *orta*
-`slug` damıtımevini içerir, ancak `{brand, name}` unique indeksi içermez.
-Sonuç: aynı marka+isimli farklı damıtımevi ürünleri (bağımsız şişelemeler)
-farklı slug üretir ama compound indeks tarafından reddedilir.
-Karar gerekiyor: indeks damıtımevini de kapsasın mı, yoksa kaldırılsın mı?
+> Kalan iş: repository katmanı için `mongodb-memory-server` ile entegrasyon
+> testleri. Şu an repository'ler mock'lanıyor, yani sorguların kendisi
+> (filtreler, aggregate'ler, populate) test kapsamı dışında.
+
+### ~~2. Katalog kimlik indeksleri tutarsız~~ ✅ *çözüldü (PR #7)*
+`distillery` zorunlu hale getirildi ve unique indeks `{brand, name, distillery}`
+olarak güncellendi — slug'ın türetildiği üçlüyle birebir aynı. Bağımsız
+şişelemeler (aynı marka+ürün adı, farklı damıtımevi) artık eklenebiliyor.
+
+> İndeks tanımı değişirse dağıtımdan sonra bir kez `npm run db:sync-indexes`
+> çalıştırılmalı — Mongoose kaldırılan indeksleri kendiliğinden düşürmez.
 
 ### 3. Import script mimariyi atlıyor — *orta*
 `scripts/import-whiskeys.ts` doğrudan Mongoose modeline yazıyor; repository ve

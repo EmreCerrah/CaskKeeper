@@ -1,0 +1,4725 @@
+[
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — PX Sherry",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "mallow",
+      "pepper",
+      "dried fruit",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "smoky",
+      "cask-strength"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-px-sherry",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — PX Sherry",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "raisin",
+      "citrus",
+      "apple",
+      "sea salt",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "peated",
+      "coastal"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-px-sherry",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Rum",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 46,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "caramel",
+      "dried fruit",
+      "sea salt",
+      "apple",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "limited",
+      "coastal"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Oloroso Sherry",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "smoke",
+      "dried fruit",
+      "mallow",
+      "raisin",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "single-cask",
+      "spicy"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Virgin Oak",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "coffee",
+      "smoke",
+      "vanilla",
+      "pepper",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "single-cask",
+      "limited"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Virgin Oak",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "peat",
+      "dark chocolate",
+      "vanilla",
+      "caramel",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "limited",
+      "smoky"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Oloroso Sherry",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "pepper",
+      "smoke",
+      "spice",
+      "vanilla",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "spicy",
+      "cask-strength"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — PX Sherry",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "apple",
+      "coffee",
+      "raisin",
+      "oak",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "cask-strength",
+      "spicy"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-px-sherry",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Rum",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 56.5,
+    "caskType": "Rum",
+    "limitedEdition": true,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "toffee",
+      "dried fruit",
+      "orange",
+      "spice",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "cask-strength",
+      "limited"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-rum",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Madeira",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 51.4,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "spice",
+      "honey",
+      "citrus",
+      "raisin",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "value",
+      "spicy"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Oloroso Sherry",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 51.4,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "caramel",
+      "smoke",
+      "raisin",
+      "dried fruit",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "limited",
+      "cask-strength"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Port",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 45.8,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "sea salt",
+      "pear",
+      "orange",
+      "dark chocolate",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "fruity",
+      "peated"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Oloroso Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 40,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": true,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "sea salt",
+      "oak",
+      "pepper",
+      "orange",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "value",
+      "peated"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Wine Finish",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "honey",
+      "vanilla",
+      "nutmeg",
+      "orange",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "classic",
+      "spicy"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Madeira",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 51.4,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "nutmeg",
+      "caramel",
+      "coffee",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "value",
+      "coastal"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-madeira",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — PX Sherry",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 46,
+    "caskType": "PX Sherry",
+    "limitedEdition": true,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "coffee",
+      "nutmeg",
+      "dark chocolate",
+      "pear",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "sherried",
+      "single-cask"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-px-sherry",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Ex-Bourbon",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "citrus",
+      "raisin",
+      "oak",
+      "coffee",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "fruity",
+      "spicy"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Oloroso Sherry",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 54.2,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "pear",
+      "apple",
+      "mallow",
+      "spice",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "sherried",
+      "fruity"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Ex-Bourbon & Sherry",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "oak",
+      "spice",
+      "coffee",
+      "honey",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "cask-strength",
+      "smoky"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — PX Sherry",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 45.8,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "peat",
+      "orange",
+      "pepper",
+      "citrus",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "starward-distillery-starward-classic-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Ex-Bourbon & Sherry",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "pear",
+      "honey",
+      "peat",
+      "spice",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "classic",
+      "beginner-friendly"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-ex-bourbon-sherry",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Port",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Port",
+    "limitedEdition": true,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "vanilla",
+      "smoke",
+      "dried fruit",
+      "peat",
+      "dark chocolate"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-port",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Wine Finish",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 48,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "raisin",
+      "coffee",
+      "dark chocolate",
+      "toffee",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "limited",
+      "sherried"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Ex-Bourbon & Sherry",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "toffee",
+      "sea salt",
+      "honey",
+      "raisin",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "classic",
+      "value"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Oloroso Sherry",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "honey",
+      "sea salt",
+      "dried fruit",
+      "orange",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "beginner-friendly",
+      "value"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — PX Sherry",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "spice",
+      "orange",
+      "dried fruit",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "peated",
+      "sherried"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Virgin Oak",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "coffee",
+      "peat",
+      "orange",
+      "toffee",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "limited",
+      "classic"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Wine Finish",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "smoke",
+      "apple",
+      "nutmeg",
+      "pear",
+      "toffee"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "cask-strength",
+      "smoky"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-wine-finish",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Ex-Bourbon",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 43,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "coffee",
+      "nutmeg",
+      "caramel",
+      "pepper",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "limited",
+      "spicy"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Virgin Oak",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 40,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "caramel",
+      "honey",
+      "apple",
+      "pepper",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "cask-strength",
+      "coastal"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Port",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 48,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "sea salt",
+      "coffee",
+      "nutmeg",
+      "spice",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "fruity",
+      "peated"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Madeira",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 51.4,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "orange",
+      "vanilla",
+      "pear",
+      "spice",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "peated",
+      "fruity"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Wine Finish",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 51.4,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "spice",
+      "toffee",
+      "pear",
+      "mallow",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "spicy",
+      "value"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Virgin Oak",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "honey",
+      "caramel",
+      "coffee",
+      "sea salt",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "sherried",
+      "peated"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Wine Finish",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 40,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "spice",
+      "sea salt",
+      "coffee",
+      "oak",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "limited",
+      "fruity"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-wine-finish",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Rum",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "raisin",
+      "caramel",
+      "mallow",
+      "vanilla",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "coastal",
+      "limited"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Oloroso Sherry",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 45.8,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "spice",
+      "dark chocolate",
+      "vanilla",
+      "caramel",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "value",
+      "spicy"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Ex-Bourbon",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 43,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "spice",
+      "apple",
+      "mallow",
+      "citrus",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "spicy",
+      "peated"
+    ],
+    "externalId": "starward-distillery-starward-classic-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Oloroso Sherry",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 46,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": true,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "apple",
+      "dried fruit",
+      "nutmeg",
+      "coffee",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "coastal",
+      "beginner-friendly"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-oloroso-sherry",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Port",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "nutmeg",
+      "raisin",
+      "vanilla",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "cask-strength",
+      "peated"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Virgin Oak",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "honey",
+      "pear",
+      "coffee",
+      "peat",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "smoky",
+      "classic"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Wine Finish",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "smoke",
+      "nutmeg",
+      "mallow",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "cask-strength",
+      "coastal"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Madeira",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "smoke",
+      "sea salt",
+      "nutmeg",
+      "mallow",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "sherried",
+      "fruity"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Ex-Bourbon & Sherry",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "apple",
+      "nutmeg",
+      "orange",
+      "spice",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "classic",
+      "peated"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Rum",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "peat",
+      "vanilla",
+      "smoke",
+      "dark chocolate",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "cask-strength",
+      "coastal"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-rum",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Port",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 50,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "smoke",
+      "caramel",
+      "orange",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "sherried",
+      "classic"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-port",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Port",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 43,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "apple",
+      "sea salt",
+      "orange",
+      "dark chocolate",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "beginner-friendly",
+      "cask-strength"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Ex-Bourbon",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 50,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "coffee",
+      "caramel",
+      "sea salt",
+      "honey",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "limited",
+      "peated"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Virgin Oak",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 40,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "apple",
+      "sea salt",
+      "peat",
+      "dark chocolate",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "spicy",
+      "peated"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-virgin-oak",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Madeira",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "oak",
+      "honey",
+      "raisin",
+      "vanilla",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "smoky",
+      "classic"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-madeira",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — PX Sherry",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 51.4,
+    "caskType": "PX Sherry",
+    "limitedEdition": true,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "peat",
+      "smoke",
+      "sea salt",
+      "apple",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "beginner-friendly",
+      "cask-strength"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Ex-Bourbon & Sherry",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 54.2,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "oak",
+      "spice",
+      "dark chocolate",
+      "raisin",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "smoky",
+      "single-cask"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Ex-Bourbon",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 56.5,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "orange",
+      "honey",
+      "pear",
+      "apple",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "beginner-friendly",
+      "coastal"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Rum",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 43,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "oak",
+      "sea salt",
+      "orange",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "cask-strength",
+      "classic"
+    ],
+    "externalId": "starward-distillery-starward-classic-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Ex-Bourbon & Sherry",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 45.8,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "spice",
+      "caramel",
+      "peat",
+      "nutmeg",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "beginner-friendly",
+      "limited"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — PX Sherry",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 46,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "mallow",
+      "orange",
+      "dark chocolate",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "cask-strength",
+      "fruity"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Virgin Oak",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 50,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "caramel",
+      "sea salt",
+      "mallow",
+      "pepper",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "classic",
+      "coastal"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-virgin-oak",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Wine Finish",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 51.4,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "pepper",
+      "oak",
+      "dried fruit",
+      "caramel",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "sherried",
+      "fruity"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Wine Finish",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 50,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "spice",
+      "vanilla",
+      "apple",
+      "raisin",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "classic",
+      "smoky"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Wine Finish",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 46,
+    "caskType": "Wine Finish",
+    "limitedEdition": true,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "toffee",
+      "coffee",
+      "nutmeg",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "spicy",
+      "sherried"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Ex-Bourbon & Sherry",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 43,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "pear",
+      "peat",
+      "mallow",
+      "spice",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "limited",
+      "value"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Wine Finish",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 45.8,
+    "caskType": "Wine Finish",
+    "limitedEdition": true,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "vanilla",
+      "spice",
+      "dried fruit",
+      "raisin",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "cask-strength",
+      "classic"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-wine-finish",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Virgin Oak",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 45.8,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "spice",
+      "smoke",
+      "apple",
+      "mallow",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "beginner-friendly",
+      "peated"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Rum",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 56.5,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "oak",
+      "vanilla",
+      "smoke",
+      "caramel",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Oloroso Sherry",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 50,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "smoke",
+      "dried fruit",
+      "pepper",
+      "toffee",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "coastal",
+      "smoky"
+    ],
+    "externalId": "starward-distillery-starward-classic-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Oloroso Sherry",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "apple",
+      "pear",
+      "citrus",
+      "smoke",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "smoky",
+      "single-cask"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Port",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 45.8,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "caramel",
+      "raisin",
+      "nutmeg",
+      "smoke",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "classic",
+      "sherried"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Rum",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "pepper",
+      "vanilla",
+      "orange",
+      "oak",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "peated",
+      "sherried"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Port",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Port",
+    "limitedEdition": true,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "pepper",
+      "raisin",
+      "citrus",
+      "spice",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "fruity",
+      "cask-strength"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Oloroso Sherry",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 45.8,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "raisin",
+      "dried fruit",
+      "pepper",
+      "mallow",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "cask-strength",
+      "beginner-friendly"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Ex-Bourbon & Sherry",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "mallow",
+      "nutmeg",
+      "pear",
+      "citrus",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "spicy",
+      "peated"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Virgin Oak",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 45.8,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "pear",
+      "raisin",
+      "vanilla",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "sherried",
+      "beginner-friendly"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — PX Sherry",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "sea salt",
+      "dried fruit",
+      "coffee",
+      "peat",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "limited",
+      "coastal"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Rum",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "citrus",
+      "pepper",
+      "apple",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "spicy",
+      "peated"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-rum",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Port",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "peat",
+      "smoke",
+      "spice",
+      "toffee",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "beginner-friendly",
+      "sherried"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-port",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Virgin Oak",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 56.5,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "honey",
+      "oak",
+      "toffee",
+      "orange",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "coastal",
+      "smoky"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Port",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 43,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "caramel",
+      "pear",
+      "apple",
+      "orange",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "spicy",
+      "limited"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Wine Finish",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 46,
+    "caskType": "Wine Finish",
+    "limitedEdition": true,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "mallow",
+      "coffee",
+      "sea salt",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "sherried",
+      "value"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Madeira",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 43,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "pear",
+      "caramel",
+      "nutmeg",
+      "smoke",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "single-cask",
+      "cask-strength"
+    ],
+    "externalId": "starward-distillery-starward-classic-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Rum",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "smoke",
+      "pepper",
+      "raisin",
+      "toffee",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "value",
+      "smoky"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-rum",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Rum",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "peat",
+      "sea salt",
+      "honey",
+      "mallow",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-rum",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Madeira",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "honey",
+      "spice",
+      "caramel",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "classic",
+      "spicy"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Ex-Bourbon",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "pear",
+      "dark chocolate",
+      "dried fruit",
+      "pepper",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "coastal",
+      "fruity"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Wine Finish",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "citrus",
+      "smoke",
+      "dark chocolate",
+      "oak",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "value",
+      "peated"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Rum",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 45.8,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "pepper",
+      "apple",
+      "citrus",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "value",
+      "peated"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Ex-Bourbon",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 45.8,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "toffee",
+      "apple",
+      "coffee",
+      "spice",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "fruity",
+      "value"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Virgin Oak",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 43,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "sea salt",
+      "raisin",
+      "peat",
+      "dark chocolate",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "fruity",
+      "peated"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Port",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 54.2,
+    "caskType": "Port",
+    "limitedEdition": true,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "peat",
+      "pepper",
+      "orange",
+      "dark chocolate",
+      "toffee"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "coastal",
+      "single-cask"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Port",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 51.4,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "pepper",
+      "honey",
+      "sea salt",
+      "nutmeg",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "classic",
+      "smoky"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Port",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 48,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "pear",
+      "sea salt",
+      "mallow",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "fruity",
+      "single-cask"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Ex-Bourbon & Sherry",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 50,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "oak",
+      "apple",
+      "sea salt",
+      "orange",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "cask-strength",
+      "limited"
+    ],
+    "externalId": "starward-distillery-starward-classic-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Ex-Bourbon",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 48,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "pepper",
+      "peat",
+      "raisin",
+      "honey",
+      "dark chocolate"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "value",
+      "coastal"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Madeira",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "smoke",
+      "pear",
+      "mallow",
+      "sea salt",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "spicy",
+      "coastal"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Ex-Bourbon & Sherry",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": true,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "pepper",
+      "smoke",
+      "oak",
+      "vanilla",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "beginner-friendly",
+      "limited"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-ex-bourbon-sherry",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — PX Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 43,
+    "caskType": "PX Sherry",
+    "limitedEdition": true,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "caramel",
+      "vanilla",
+      "pepper",
+      "pear",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "smoky",
+      "coastal"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Madeira",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 51.4,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "citrus",
+      "nutmeg",
+      "vanilla",
+      "sea salt",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "cask-strength",
+      "classic"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Ex-Bourbon",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 56.5,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "vanilla",
+      "dark chocolate",
+      "peat",
+      "dried fruit",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "value",
+      "limited"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Port",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 46,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "mallow",
+      "sea salt",
+      "orange",
+      "oak",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "sherried",
+      "beginner-friendly"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — PX Sherry",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 40,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "citrus",
+      "apple",
+      "smoke",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "single-cask",
+      "coastal"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Virgin Oak",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 50,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "coffee",
+      "citrus",
+      "pepper",
+      "pear",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "coastal",
+      "cask-strength"
+    ],
+    "externalId": "starward-distillery-starward-classic-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Ex-Bourbon",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "honey",
+      "toffee",
+      "apple",
+      "smoke",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "value",
+      "cask-strength"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Port",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "caramel",
+      "dark chocolate",
+      "toffee",
+      "citrus",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "cask-strength",
+      "spicy"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Ex-Bourbon",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "raisin",
+      "apple",
+      "dark chocolate",
+      "honey",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "classic",
+      "peated"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Oloroso Sherry",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "citrus",
+      "spice",
+      "apple",
+      "dark chocolate",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "single-cask",
+      "fruity"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — PX Sherry",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 51.4,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "oak",
+      "pear",
+      "sea salt",
+      "apple",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "peated",
+      "limited"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Madeira",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 45.8,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "peat",
+      "dark chocolate",
+      "pepper",
+      "mallow",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "fruity",
+      "classic"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Rum",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 48,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "coffee",
+      "honey",
+      "mallow",
+      "raisin",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "peated",
+      "limited"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Ex-Bourbon & Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "toffee",
+      "pear",
+      "apple",
+      "oak",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "classic",
+      "spicy"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Oloroso Sherry",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 43,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "pear",
+      "raisin",
+      "vanilla",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "value",
+      "classic"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Ex-Bourbon",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "smoke",
+      "coffee",
+      "oak",
+      "dark chocolate",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "peated",
+      "coastal"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Virgin Oak",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "toffee",
+      "caramel",
+      "pear",
+      "dark chocolate"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "sherried",
+      "classic"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — PX Sherry",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "citrus",
+      "spice",
+      "toffee",
+      "sea salt",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "peated",
+      "classic"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Ex-Bourbon & Sherry",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "peat",
+      "nutmeg",
+      "smoke",
+      "dark chocolate",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "spicy",
+      "fruity"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Ex-Bourbon & Sherry",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "spice",
+      "toffee",
+      "nutmeg",
+      "dried fruit",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "smoky",
+      "cask-strength"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Ex-Bourbon",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "sea salt",
+      "coffee",
+      "oak",
+      "orange",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "sherried",
+      "fruity"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Oloroso Sherry",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 56.5,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "spice",
+      "citrus",
+      "caramel",
+      "honey",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "value",
+      "coastal"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-oloroso-sherry",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Virgin Oak",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 51.4,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "citrus",
+      "orange",
+      "smoke",
+      "mallow",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "value",
+      "spicy"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Ex-Bourbon",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "pepper",
+      "toffee",
+      "caramel",
+      "citrus",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "single-cask",
+      "classic"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-ex-bourbon",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Virgin Oak",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 40,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "pepper",
+      "caramel",
+      "nutmeg",
+      "honey",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "spicy",
+      "fruity"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-virgin-oak",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Wine Finish",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "smoke",
+      "honey",
+      "vanilla",
+      "caramel",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "single-cask",
+      "fruity"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Wine Finish",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 56.5,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "pepper",
+      "dark chocolate",
+      "orange",
+      "peat",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "spicy",
+      "sherried"
+    ],
+    "externalId": "starward-distillery-starward-classic-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Wine Finish",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "spice",
+      "dried fruit",
+      "oak",
+      "peat",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "beginner-friendly",
+      "smoky"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-wine-finish",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Rum",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "caramel",
+      "sea salt",
+      "mallow",
+      "honey",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "fruity",
+      "value"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — PX Sherry",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "mallow",
+      "peat",
+      "sea salt",
+      "orange",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "fruity",
+      "peated"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — PX Sherry",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 46,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "spice",
+      "vanilla",
+      "smoke",
+      "honey",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Oloroso Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 56.5,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": true,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "spice",
+      "pear",
+      "sea salt",
+      "orange",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "smoky",
+      "fruity"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Rum",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "peat",
+      "sea salt",
+      "smoke",
+      "oak",
+      "toffee"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "single-cask",
+      "smoky"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-rum",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Rum",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 46,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "citrus",
+      "toffee",
+      "vanilla",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "limited",
+      "smoky"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Wine Finish",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "smoke",
+      "dark chocolate",
+      "orange",
+      "raisin",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "value",
+      "classic"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-wine-finish",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Virgin Oak",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "sea salt",
+      "coffee",
+      "vanilla",
+      "dried fruit",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "coastal",
+      "sherried"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-virgin-oak",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Wine Finish",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 40,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "coffee",
+      "dark chocolate",
+      "vanilla",
+      "raisin",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "classic",
+      "coastal"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-wine-finish",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Ex-Bourbon & Sherry",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "sea salt",
+      "smoke",
+      "dark chocolate",
+      "dried fruit",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "fruity",
+      "cask-strength"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Madeira",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "vanilla",
+      "mallow",
+      "dark chocolate",
+      "caramel",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "peated",
+      "smoky"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Ex-Bourbon",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 51.4,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "spice",
+      "oak",
+      "orange",
+      "dark chocolate",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "value",
+      "smoky"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Virgin Oak",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 45.8,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "sea salt",
+      "oak",
+      "orange",
+      "apple",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "spicy",
+      "beginner-friendly"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-virgin-oak",
+    "source": "seed"
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Virgin Oak",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 45.8,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "citrus",
+      "toffee",
+      "spice",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "single-cask",
+      "cask-strength"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-virgin-oak",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Balvenie",
+    "name": "From the Barrel — Wine Finish",
+    "distillery": "Balvenie Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Balvenie From the Barrel expression.",
+    "flavorProfile": [
+      "mallow",
+      "oak",
+      "pepper",
+      "citrus",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "beginner-friendly",
+      "coastal"
+    ],
+    "externalId": "balvenie-distillery-balvenie-from-the-barrel-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Madeira",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "vanilla",
+      "orange",
+      "citrus",
+      "pepper",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "spicy",
+      "classic"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-madeira",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Madeira",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 45.8,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "caramel",
+      "pepper",
+      "vanilla",
+      "coffee",
+      "sea salt"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "sherried",
+      "spicy"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-madeira",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Rum",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "Rum",
+    "limitedEdition": true,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "citrus",
+      "orange",
+      "caramel",
+      "oak",
+      "pepper"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "spicy",
+      "classic"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Port",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 40,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "peat",
+      "honey",
+      "dried fruit",
+      "orange",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "value",
+      "smoky"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-port",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Oloroso Sherry",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "coffee",
+      "mallow",
+      "sea salt",
+      "orange",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "sherried",
+      "single-cask"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-oloroso-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Madeira",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 50,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "coffee",
+      "vanilla",
+      "pear",
+      "mallow",
+      "toffee"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "single-cask",
+      "sherried"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Starward",
+    "name": "Classic — Port",
+    "distillery": "Starward Distillery",
+    "type": "Single Malt",
+    "region": "Melbourne",
+    "country": "Australia",
+    "abv": 40,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Starward Classic expression.",
+    "flavorProfile": [
+      "dark chocolate",
+      "coffee",
+      "toffee",
+      "caramel",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "limited",
+      "spicy"
+    ],
+    "externalId": "starward-distillery-starward-classic-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Madeira",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "toffee",
+      "pepper",
+      "raisin",
+      "citrus",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "beginner-friendly",
+      "single-cask"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-madeira",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — Ex-Bourbon",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "pear",
+      "sea salt",
+      "oak",
+      "dried fruit",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "peated",
+      "beginner-friendly"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Talisker",
+    "name": "Sherry Oak — Wine Finish",
+    "distillery": "Talisker Distillery",
+    "type": "Single Malt",
+    "region": "Isle of Skye",
+    "country": "Scotland",
+    "abv": 40,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Talisker Sherry Oak expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "coffee",
+      "smoke",
+      "sea salt",
+      "apple"
+    ],
+    "awards": [],
+    "tags": [
+      "single-cask",
+      "value",
+      "sherried"
+    ],
+    "externalId": "talisker-distillery-talisker-sherry-oak-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Macallan",
+    "name": "Single Barrel — Port",
+    "distillery": "Macallan Distillery",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Macallan Single Barrel expression.",
+    "flavorProfile": [
+      "vanilla",
+      "toffee",
+      "nutmeg",
+      "orange",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "classic",
+      "spicy"
+    ],
+    "externalId": "macallan-distillery-macallan-single-barrel-port",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Oloroso Sherry",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "pear",
+      "dark chocolate",
+      "raisin",
+      "caramel",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "limited",
+      "beginner-friendly"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-oloroso-sherry",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — Wine Finish",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 51.4,
+    "caskType": "Wine Finish",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "honey",
+      "raisin",
+      "vanilla",
+      "sea salt",
+      "toffee"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "sherried",
+      "beginner-friendly"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-wine-finish",
+    "source": "seed"
+  },
+  {
+    "brand": "Amrut",
+    "name": "Small Batch — Madeira",
+    "distillery": "Amrut Distillery",
+    "type": "Single Malt",
+    "region": "Bengaluru",
+    "country": "India",
+    "abv": 45.8,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Amrut Small Batch expression.",
+    "flavorProfile": [
+      "oak",
+      "coffee",
+      "apple",
+      "spice",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "value",
+      "smoky",
+      "coastal"
+    ],
+    "externalId": "amrut-distillery-amrut-small-batch-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Virgin Oak",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Virgin Oak",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "coffee",
+      "orange",
+      "raisin",
+      "peat",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "classic",
+      "value"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-virgin-oak",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Laphroaig",
+    "name": "Quarter Cask — PX Sherry",
+    "distillery": "Laphroaig Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 50,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Laphroaig Quarter Cask expression.",
+    "flavorProfile": [
+      "pear",
+      "pepper",
+      "honey",
+      "raisin",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "smoky",
+      "value"
+    ],
+    "externalId": "laphroaig-distillery-laphroaig-quarter-cask-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Glenfiddich",
+    "name": "Cask Strength — Madeira",
+    "distillery": "William Grant & Sons",
+    "type": "Single Malt",
+    "region": "Speyside",
+    "country": "Scotland",
+    "abv": 56.5,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Glenfiddich Cask Strength expression.",
+    "flavorProfile": [
+      "pepper",
+      "raisin",
+      "nutmeg",
+      "spice",
+      "pear"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "cask-strength",
+      "classic"
+    ],
+    "externalId": "william-grant-sons-glenfiddich-cask-strength-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Ex-Bourbon & Sherry",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "sea salt",
+      "apple",
+      "coffee",
+      "citrus",
+      "honey"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "limited",
+      "peated"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-ex-bourbon-sherry",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Madeira",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 40,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "orange",
+      "honey",
+      "apple",
+      "sea salt",
+      "peat"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "beginner-friendly",
+      "spicy"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-madeira",
+    "source": "seed"
+  },
+  {
+    "brand": "Kavalan",
+    "name": "PX Finish — PX Sherry",
+    "distillery": "Kavalan Distillery",
+    "type": "Single Malt",
+    "region": "Yilan",
+    "country": "Taiwan",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Kavalan PX Finish expression.",
+    "flavorProfile": [
+      "apple",
+      "oak",
+      "nutmeg",
+      "coffee",
+      "smoke"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "single-cask",
+      "cask-strength"
+    ],
+    "externalId": "kavalan-distillery-kavalan-px-finish-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — PX Sherry",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "coffee",
+      "honey",
+      "mallow",
+      "peat",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "limited",
+      "single-cask",
+      "coastal"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-px-sherry",
+    "source": "seed",
+    "age": 15
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Oloroso Sherry",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "orange",
+      "toffee",
+      "smoke",
+      "coffee"
+    ],
+    "awards": [],
+    "tags": [
+      "peated",
+      "value",
+      "single-cask"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-oloroso-sherry",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — Ex-Bourbon & Sherry",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 54.2,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "citrus",
+      "mallow",
+      "dark chocolate",
+      "peat",
+      "spice"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "single-cask",
+      "value"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-ex-bourbon-sherry",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Maker's Mark",
+    "name": "21 Year Old — Ex-Bourbon & Sherry",
+    "distillery": "Maker's Mark Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 48,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Maker's Mark 21 Year Old expression.",
+    "flavorProfile": [
+      "spice",
+      "mallow",
+      "coffee",
+      "sea salt",
+      "dark chocolate"
+    ],
+    "awards": [],
+    "tags": [
+      "classic",
+      "sherried",
+      "peated"
+    ],
+    "externalId": "makers-mark-distillery-makers-mark-21-year-old-ex-bourbon-sherry",
+    "source": "seed",
+    "age": 21
+  },
+  {
+    "brand": "Ardbeg",
+    "name": "16 Year Old — Madeira",
+    "distillery": "Ardbeg Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 46,
+    "caskType": "Madeira",
+    "limitedEdition": false,
+    "description": "Ardbeg 16 Year Old expression.",
+    "flavorProfile": [
+      "orange",
+      "pear",
+      "caramel",
+      "dark chocolate",
+      "vanilla"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "cask-strength",
+      "sherried"
+    ],
+    "externalId": "ardbeg-distillery-ardbeg-16-year-old-madeira",
+    "source": "seed",
+    "age": 16
+  },
+  {
+    "brand": "Yamazaki",
+    "name": "Double Cask — Rum",
+    "distillery": "Yamazaki Distillery",
+    "type": "Japanese",
+    "region": "Osaka",
+    "country": "Japan",
+    "abv": 45.8,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Yamazaki Double Cask expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "vanilla",
+      "caramel",
+      "smoke",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "peated",
+      "beginner-friendly"
+    ],
+    "externalId": "yamazaki-distillery-yamazaki-double-cask-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — PX Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 54.2,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "spice",
+      "dried fruit",
+      "pear",
+      "dark chocolate",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "coastal",
+      "limited",
+      "sherried"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-px-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Buffalo Trace",
+    "name": "Signature — Ex-Bourbon",
+    "distillery": "Buffalo Trace Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Ex-Bourbon",
+    "limitedEdition": false,
+    "description": "Buffalo Trace Signature expression.",
+    "flavorProfile": [
+      "vanilla",
+      "spice",
+      "mallow",
+      "smoke",
+      "raisin"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "value",
+      "limited"
+    ],
+    "externalId": "buffalo-trace-distillery-buffalo-trace-signature-ex-bourbon",
+    "source": "seed"
+  },
+  {
+    "brand": "Bulleit",
+    "name": "Triple Cask — Ex-Bourbon & Sherry",
+    "distillery": "Bulleit Distilling Co.",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 56.5,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": true,
+    "description": "Bulleit Triple Cask expression.",
+    "flavorProfile": [
+      "citrus",
+      "coffee",
+      "mallow",
+      "oak",
+      "caramel"
+    ],
+    "awards": [],
+    "tags": [
+      "spicy",
+      "cask-strength",
+      "value"
+    ],
+    "externalId": "bulleit-distilling-co-bulleit-triple-cask-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Lagavulin",
+    "name": "10 Year Old — Port",
+    "distillery": "Lagavulin Distillery",
+    "type": "Single Malt",
+    "region": "Islay",
+    "country": "Scotland",
+    "abv": 54.2,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Lagavulin 10 Year Old expression.",
+    "flavorProfile": [
+      "sea salt",
+      "honey",
+      "coffee",
+      "pepper",
+      "mallow"
+    ],
+    "awards": [],
+    "tags": [
+      "smoky",
+      "sherried",
+      "coastal"
+    ],
+    "externalId": "lagavulin-distillery-lagavulin-10-year-old-port",
+    "source": "seed",
+    "age": 10
+  },
+  {
+    "brand": "Redbreast",
+    "name": "Distiller's Edition — Ex-Bourbon & Sherry",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 56.5,
+    "caskType": "Ex-Bourbon & Sherry",
+    "limitedEdition": false,
+    "description": "Redbreast Distiller's Edition expression.",
+    "flavorProfile": [
+      "honey",
+      "toffee",
+      "pear",
+      "apple",
+      "nutmeg"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "cask-strength",
+      "limited"
+    ],
+    "externalId": "midleton-distillery-redbreast-distillers-edition-ex-bourbon-sherry",
+    "source": "seed"
+  },
+  {
+    "brand": "Jameson",
+    "name": "Reserve — Rum",
+    "distillery": "Midleton Distillery",
+    "type": "Irish",
+    "region": "County Cork",
+    "country": "Ireland",
+    "abv": 43,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Jameson Reserve expression.",
+    "flavorProfile": [
+      "toffee",
+      "spice",
+      "pear",
+      "honey",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "classic",
+      "value"
+    ],
+    "externalId": "midleton-distillery-jameson-reserve-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Highland Park",
+    "name": "12 Year Old — Port",
+    "distillery": "Highland Park Distillery",
+    "type": "Single Malt",
+    "region": "Orkney",
+    "country": "Scotland",
+    "abv": 43,
+    "caskType": "Port",
+    "limitedEdition": false,
+    "description": "Highland Park 12 Year Old expression.",
+    "flavorProfile": [
+      "citrus",
+      "coffee",
+      "mallow",
+      "peat",
+      "orange"
+    ],
+    "awards": [],
+    "tags": [
+      "sherried",
+      "limited",
+      "coastal"
+    ],
+    "externalId": "highland-park-distillery-highland-park-12-year-old-port",
+    "source": "seed",
+    "age": 12
+  },
+  {
+    "brand": "Nikka",
+    "name": "18 Year Old — PX Sherry",
+    "distillery": "Miyagikyo & Yoichi",
+    "type": "Japanese",
+    "region": "Hokkaido & Miyagi",
+    "country": "Japan",
+    "abv": 48,
+    "caskType": "PX Sherry",
+    "limitedEdition": false,
+    "description": "Nikka 18 Year Old expression.",
+    "flavorProfile": [
+      "honey",
+      "sea salt",
+      "citrus",
+      "pear",
+      "dried fruit"
+    ],
+    "awards": [],
+    "tags": [
+      "fruity",
+      "spicy",
+      "smoky"
+    ],
+    "externalId": "miyagikyo-yoichi-nikka-18-year-old-px-sherry",
+    "source": "seed",
+    "age": 18
+  },
+  {
+    "brand": "Hakushu",
+    "name": "Port Finish — Rum",
+    "distillery": "Hakushu Distillery",
+    "type": "Japanese",
+    "region": "Yamanashi",
+    "country": "Japan",
+    "abv": 40,
+    "caskType": "Rum",
+    "limitedEdition": false,
+    "description": "Hakushu Port Finish expression.",
+    "flavorProfile": [
+      "dried fruit",
+      "coffee",
+      "orange",
+      "oak",
+      "citrus"
+    ],
+    "awards": [],
+    "tags": [
+      "cask-strength",
+      "classic",
+      "value"
+    ],
+    "externalId": "hakushu-distillery-hakushu-port-finish-rum",
+    "source": "seed"
+  },
+  {
+    "brand": "Wild Turkey",
+    "name": "15 Year Old — Oloroso Sherry",
+    "distillery": "Wild Turkey Distillery",
+    "type": "Bourbon",
+    "region": "Kentucky",
+    "country": "USA",
+    "abv": 50,
+    "caskType": "Oloroso Sherry",
+    "limitedEdition": false,
+    "description": "Wild Turkey 15 Year Old expression.",
+    "flavorProfile": [
+      "nutmeg",
+      "sea salt",
+      "toffee",
+      "peat",
+      "oak"
+    ],
+    "awards": [],
+    "tags": [
+      "beginner-friendly",
+      "fruity",
+      "cask-strength"
+    ],
+    "externalId": "wild-turkey-distillery-wild-turkey-15-year-old-oloroso-sherry",
+    "source": "seed",
+    "age": 15
+  }
+]
