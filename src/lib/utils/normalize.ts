@@ -77,6 +77,14 @@ export const generateWhiskeySlug = (
 };
 
 /**
+ * Kullanıcı girdisini güvenli bir RegExp parçasına dönüştürür.
+ * Arama kutusuna yazılan `.` `*` `(` gibi karakterlerin regex olarak
+ * yorumlanmasını (ve beklenmedik sonuç/ReDoS riskini) engeller.
+ */
+export const escapeRegex = (text: string): string =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
  * Verilen metni başlık formatına (Title Case) dönüştürür.
  * "single malt scotch" → "Single Malt Scotch"
  */

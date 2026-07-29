@@ -24,6 +24,9 @@ export async function Navbar() {
           <Button asChild variant="ghost" size="sm">
             <Link href="/viskiler">Viskiler</Link>
           </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/kullanicilar">Kişiler</Link>
+          </Button>
           {session && (
             <>
               <Button asChild variant="ghost" size="sm">
@@ -69,7 +72,7 @@ export async function Navbar() {
             <Link href="/viskiler">Viskiler</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/panel">Panelim</Link>
+            <Link href="/kullanicilar">Kişiler</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
             <Link href="/akis">Akış</Link>

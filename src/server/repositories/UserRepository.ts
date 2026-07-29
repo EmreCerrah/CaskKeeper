@@ -4,6 +4,7 @@
  */
 
 import User, { IUser } from "../models/User";
+import { escapeRegex } from "@/lib/utils/normalize";
 
 export interface CreateUserInput {
   name: string;
@@ -46,6 +47,31 @@ export class UserRepository {
   /** Yönetim panelinde kullanıcı listesi (en yeni önce) */
   async findAll(): Promise<IUser[]> {
     return await User.find().sort({ createdAt: -1 }).lean() as unknown as IUser[];
+  }
+
+  /**
+   * İsme göre kullanıcı arar (büyük/küçük harf duyarsız, kısmi eşleşme).
+   * E-posta üzerinden arama bilinçli olarak desteklenmez — kullanıcıların
+   * e-postaları başkaları tarafından keşfedilebilir olmamalı.
+   */
+  async searchByName(query: string, limit = 20, excludeId?: string): Promise<IUser[]> {
+    const filter: Record<string, unknown> = { name: new RegExp(escapeRegex(query), "i") };
+    if (excludeId) filter._id = { $ne: excludeId };
+
+    return await User.find(filter)
+      .sort({ name: 1 })
+      .limit(limit)
+      .lean() as unknown as IUser[];
+  }
+
+  /** Keşfet listesi: arama yapılmadığında gösterilecek kullanıcılar */
+  async findRecent(limit = 20, excludeIds: string[] = []): Promise<IUser[]> {
+    const filter = excludeIds.length ? { _id: { $nin: excludeIds } } : {};
+
+    return await User.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .lean() as unknown as IUser[];
   }
 
   /** Kaç admin var — son admini düşürmeyi engellemek için */

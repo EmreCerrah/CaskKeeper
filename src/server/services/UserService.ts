@@ -9,7 +9,13 @@ import { followRepository } from "../repositories/FollowRepository";
 import { tastingNoteRepository } from "../repositories/TastingNoteRepository";
 import { UpdateProfileSchema } from "../validations/user.schema";
 import { ForbiddenError, NotFoundError, ValidationError } from "@/lib/errors";
-import { toUserDTO, type UserDTO, type PublicProfileDTO } from "@/lib/types/dto";
+import {
+  toUserDTO,
+  type UserDTO,
+  type PublicProfileDTO,
+  type UserSearchResultDTO,
+} from "@/lib/types/dto";
+import type { IUser } from "../models/User";
 
 export class UserService {
   async getById(id: string): Promise<UserDTO> {
@@ -33,12 +39,16 @@ export class UserService {
 
     const isOwnProfile = viewerId === userId;
 
-    const [followerCount, followingCount, publicNoteCount, isFollowedByViewer] = await Promise.all([
-      followRepository.countFollowers(userId),
-      followRepository.countFollowing(userId),
-      tastingNoteRepository.countPublicByUser(userId),
-      viewerId && !isOwnProfile ? followRepository.exists(viewerId, userId) : Promise.resolve(false),
-    ]);
+    const canHaveRelation = Boolean(viewerId) && !isOwnProfile;
+
+    const [followerCount, followingCount, publicNoteCount, isFollowedByViewer, isFollowingViewer] =
+      await Promise.all([
+        followRepository.countFollowers(userId),
+        followRepository.countFollowing(userId),
+        tastingNoteRepository.countPublicByUser(userId),
+        canHaveRelation ? followRepository.exists(viewerId!, userId) : Promise.resolve(false),
+        canHaveRelation ? followRepository.exists(userId, viewerId!) : Promise.resolve(false),
+      ]);
 
     return {
       id: String(user._id),
@@ -50,8 +60,59 @@ export class UserService {
       followingCount,
       publicNoteCount,
       isFollowedByViewer,
+      isFollowingViewer,
+      isMutual: isFollowedByViewer && isFollowingViewer,
       isOwnProfile,
     };
+  }
+
+  // ---------- Keşfet / Arama ----------
+
+  /**
+   * İsme göre kullanıcı arar. Arama boşsa keşfet listesi (en yeni üyeler)
+   * döner. Takip ilişkileri ve not sayıları toplu sorgularla çözülür.
+   *
+   * @param viewerId Giriş yapmış kullanıcı — kendisi sonuçlara dahil edilmez
+   */
+  async searchUsers(query: string, viewerId?: string, limit = 20): Promise<UserSearchResultDTO[]> {
+    const trimmed = query.trim();
+
+    const users = trimmed
+      ? await userRepository.searchByName(trimmed, limit, viewerId)
+      : await userRepository.findRecent(limit, viewerId ? [viewerId] : []);
+
+    return await this.decorateUsers(users, viewerId);
+  }
+
+  /** Kullanıcı listesine takip ilişkisi ve not sayısı bilgisini ekler. */
+  private async decorateUsers(users: IUser[], viewerId?: string): Promise<UserSearchResultDTO[]> {
+    if (users.length === 0) return [];
+
+    const ids = users.map((u) => String(u._id));
+
+    const [noteCounts, relations] = await Promise.all([
+      tastingNoteRepository.countPublicByUsers(ids),
+      viewerId
+        ? followRepository.getRelationSets(viewerId)
+        : Promise.resolve({ following: new Set<string>(), followers: new Set<string>() }),
+    ]);
+
+    return users.map((user) => {
+      const id = String(user._id);
+      const isFollowedByViewer = relations.following.has(id);
+      const isFollowingViewer = relations.followers.has(id);
+
+      return {
+        id,
+        name: user.name,
+        profilePicture: user.profilePicture ?? undefined,
+        bio: user.bio ?? undefined,
+        publicNoteCount: noteCounts.get(id) ?? 0,
+        isFollowedByViewer,
+        isFollowingViewer,
+        isMutual: isFollowedByViewer && isFollowingViewer,
+      };
+    });
   }
 
   // ---------- Yönetim ----------

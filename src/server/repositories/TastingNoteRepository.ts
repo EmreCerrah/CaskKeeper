@@ -102,6 +102,23 @@ export class TastingNoteRepository {
   }
 
   /**
+   * Birden çok kullanıcının herkese açık not sayısını tek aggregate ile döndürür.
+   * Arama/keşfet listelerinde kullanıcı başına ayrı sayım yapmamak içindir.
+   */
+  async countPublicByUsers(userIds: string[]): Promise<Map<string, number>> {
+    if (userIds.length === 0) return new Map();
+
+    const objectIds = userIds.map((id) => new mongoose.Types.ObjectId(id));
+
+    const rows = await TastingNote.aggregate<{ _id: mongoose.Types.ObjectId; count: number }>([
+      { $match: { user: { $in: objectIds }, visibility: "public" } },
+      { $group: { _id: "$user", count: { $sum: 1 } } },
+    ]);
+
+    return new Map(rows.map((r) => [String(r._id), r.count]));
+  }
+
+  /**
    * Aktivite akışı: verilen kullanıcıların HERKESE AÇIK notları,
    * en yeni önce. Viski ve yazar bilgisi populate edilir.
    */

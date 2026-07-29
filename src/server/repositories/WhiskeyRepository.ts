@@ -6,6 +6,7 @@
 
 import Whiskey, { IWhiskey } from "../models/Whiskey";
 import { CreateWhiskeyDTO, UpdateWhiskeyDTO } from "../validations/whiskey.schema";
+import { escapeRegex } from "@/lib/utils/normalize";
 
 // ---------------------------------------------------------------------------
 // Sorgu Tipleri
@@ -67,7 +68,7 @@ export class WhiskeyRepository {
     const query: Record<string, unknown> = {};
 
     if (filters?.search) {
-      const rx = new RegExp(filters.search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      const rx = new RegExp(escapeRegex(filters.search), "i");
       query.$or = [{ brand: rx }, { name: rx }, { distillery: rx }];
     }
     if (filters?.type)            query.type     = filters.type;

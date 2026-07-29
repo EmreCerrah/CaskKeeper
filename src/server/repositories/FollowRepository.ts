@@ -41,6 +41,28 @@ export class FollowRepository {
     return (docs as Pick<IFollow, "following">[]).map((d) => d.following);
   }
 
+  /** Kullanıcıyı takip edenlerin id listesi */
+  async getFollowerIds(userId: string): Promise<mongoose.Types.ObjectId[]> {
+    const docs = await Follow.find({ following: userId }).select("follower").lean();
+    return (docs as Pick<IFollow, "follower">[]).map((d) => d.follower);
+  }
+
+  /**
+   * Bir kullanıcının takip/takipçi ilişkilerini tek turda küme olarak döndürür.
+   * Arama sonuçlarında her satır için ayrı sorgu atmamak içindir (N+1 önlenir).
+   */
+  async getRelationSets(userId: string): Promise<{ following: Set<string>; followers: Set<string> }> {
+    const [followingIds, followerIds] = await Promise.all([
+      this.getFollowingIds(userId),
+      this.getFollowerIds(userId),
+    ]);
+
+    return {
+      following: new Set(followingIds.map(String)),
+      followers: new Set(followerIds.map(String)),
+    };
+  }
+
   /** Bir kullanıcıyı takip eden kişiler (User dokümanları) */
   async getFollowers(userId: string): Promise<IUser[]> {
     const follows = await Follow.find({ following: userId })
