@@ -102,5 +102,10 @@ npm run dev
 
 ## Yol Haritası
 
-- **Faz 2 — Topluluk:** herkese açık profiller ve notlar, takip, beğeni, yorum, akış, bildirimler
-- **Faz 3 — Gelişmiş:** istatistikler, aroma analitiği, öneri motoru, viski karşılaştırma, koleksiyon/istek listesi, içe-dışa aktarma
+Güncel durum, planlanan özellikler ve bilinen teknik borçlar için
+**[ROADMAP.md](ROADMAP.md)** dosyasına bakın.
+
+Özet:
+- **Faz 1 — Temel uygulama:** ✅ tamamlandı
+- **Faz 2 — Topluluk:** profiller, takip, akış ve kullanıcı arama tamam; beğeni/yorum/bildirim sırada
+- **Faz 3 — Gelişmiş:** istatistikler, öneri motoru, karşılaştırma, koleksiyon/istek listesi
