@@ -16,6 +16,8 @@
     "seed:whiskeys:logged": "cross-env IMPORT_LOG_FILE=logs/import.log npx tsx scripts/import-whiskeys.ts",
     "seed:whiskeys:url": "npx tsx scripts/import-whiskeys.ts --url=https://example.com/whiskeys.json",
     "seed:whiskeys:file": "npx tsx scripts/import-whiskeys.ts --file=scripts/sample-data.json",
+    "seed:catalog": "npx tsx scripts/import-whiskeys.ts --file=scripts/whiskies-seed.json",
+    "seed:catalog:dry": "npx tsx scripts/import-whiskeys.ts --file=scripts/whiskies-seed.json --dry-run",
     "seed:debug": "cross-env DEBUG=true npx tsx scripts/import-whiskeys.ts"
   },
   "dependencies": {
