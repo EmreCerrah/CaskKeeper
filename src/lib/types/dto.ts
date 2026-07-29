@@ -79,6 +79,25 @@ export interface UserDTO {
   createdAt: string; // ISO
 }
 
+/**
+ * Kullanıcı arama / keşfet listesindeki bir satır.
+ * Takip ilişkisi çift yönlü tutulur: her iki taraf da birbirini takip
+ * ediyorsa arayüzde "Arkadaş" olarak gösterilir.
+ */
+export interface UserSearchResultDTO {
+  id: string;
+  name: string;
+  profilePicture?: string;
+  bio?: string;
+  publicNoteCount: number;
+  /** İsteği yapan kullanıcı bu kişiyi takip ediyor mu */
+  isFollowedByViewer: boolean;
+  /** Bu kişi isteği yapan kullanıcıyı takip ediyor mu */
+  isFollowingViewer: boolean;
+  /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
+  isMutual: boolean;
+}
+
 /** Başka kullanıcıların görebildiği herkese açık profil (e-posta içermez) */
 export interface PublicProfileDTO {
   id: string;
@@ -91,6 +110,10 @@ export interface PublicProfileDTO {
   publicNoteCount: number;
   /** İsteği yapan kullanıcı bu profili takip ediyor mu (giriş yapmışsa) */
   isFollowedByViewer: boolean;
+  /** Bu profil, isteği yapan kullanıcıyı takip ediyor mu */
+  isFollowingViewer: boolean;
+  /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
+  isMutual: boolean;
   /** Görüntülenen profil, isteği yapan kullanıcının kendisi mi */
   isOwnProfile: boolean;
 }

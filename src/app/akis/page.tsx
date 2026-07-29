@@ -51,7 +51,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
             Diğer tutkunları takip ederek onların herkese açık tadımlarını burada görün.
           </p>
           <Button asChild className="mt-4">
-            <Link href="/viskiler">Kataloğu Keşfet</Link>
+            <Link href="/kullanicilar">Kişileri Keşfet</Link>
           </Button>
         </div>
       )}

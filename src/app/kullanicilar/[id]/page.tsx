@@ -10,6 +10,7 @@ import { AppError } from "@/lib/errors";
 import { Card } from "@/components/ui/card";
 import { UserAvatar } from "@/components/social/UserAvatar";
 import { FollowButton } from "@/components/social/FollowButton";
+import { FriendBadge } from "@/components/social/FriendBadge";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { Pagination } from "@/components/shared/Pagination";
 
@@ -64,7 +65,15 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
           <div className="flex items-center gap-4">
             <UserAvatar name={profile.name} src={profile.profilePicture} size="lg" />
             <div className="space-y-1">
-              <h1 className="font-serif text-2xl font-bold">{profile.name}</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-serif text-2xl font-bold">{profile.name}</h1>
+                {!profile.isOwnProfile && (
+                  <FriendBadge
+                    isMutual={profile.isMutual}
+                    isFollowingViewer={profile.isFollowingViewer}
+                  />
+                )}
+              </div>
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <CalendarDays className="h-3.5 w-3.5" aria-hidden />
                 {memberSince} tarihinden beri üye
