@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RatingBadge } from "@/components/shared/RatingBadge";
 import { NoteActions } from "./NoteActions";
+import { UserAvatar } from "@/components/social/UserAvatar";
 
 const FINISH_LABELS: Record<string, string> = {
   short: "Kısa bitiş",
@@ -16,10 +17,19 @@ interface TastingNoteCardProps {
   note: TastingNoteDTO;
   /** Viski detay sayfasında viski başlığını tekrarlamamak için */
   hideWhiskey?: boolean;
+  /** Sahip aksiyonlarını (favori/düzenle/sil) göster. Salt-okunur görünümlerde false. */
+  showActions?: boolean;
+  /** Akış gibi görünümlerde notu yazan kullanıcıyı göster */
+  showAuthor?: boolean;
 }
 
-/** Tadım notu kartı — listelerde ve viski detayında kullanılır. */
-export function TastingNoteCard({ note, hideWhiskey = false }: TastingNoteCardProps) {
+/** Tadım notu kartı — kişisel listelerde, akışta ve herkese açık profillerde kullanılır. */
+export function TastingNoteCard({
+  note,
+  hideWhiskey = false,
+  showActions = true,
+  showAuthor = false,
+}: TastingNoteCardProps) {
   const formattedDate = new Date(note.tastingDate).toLocaleDateString("tr-TR", {
     day: "numeric",
     month: "long",
@@ -28,30 +38,42 @@ export function TastingNoteCard({ note, hideWhiskey = false }: TastingNoteCardPr
 
   return (
     <Card>
-      <CardHeader className="flex-row items-start justify-between space-y-0 pb-3">
-        <div className="min-w-0 space-y-1">
-          {!hideWhiskey && note.whiskey && (
-            <Link
-              href={`/viskiler/${note.whiskey.slug}`}
-              className="block truncate font-serif text-lg font-semibold hover:text-primary"
-            >
-              {note.whiskey.brand} {note.whiskey.name}
-            </Link>
-          )}
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <CalendarDays className="h-3.5 w-3.5" aria-hidden />
-            {formattedDate}
-            {note.visibility === "public" && (
-              <Badge variant="outline" className="ml-1">
-                Herkese açık
-              </Badge>
-            )}
-          </p>
-        </div>
+      <CardHeader className="space-y-3 pb-3">
+        {showAuthor && note.author && (
+          <Link
+            href={`/kullanicilar/${note.author.id}`}
+            className="flex w-fit items-center gap-2 text-sm hover:text-primary"
+          >
+            <UserAvatar name={note.author.name} src={note.author.profilePicture} size="sm" />
+            <span className="font-medium">{note.author.name}</span>
+          </Link>
+        )}
 
-        <div className="flex shrink-0 items-center gap-3">
-          <RatingBadge rating={note.rating} />
-          <NoteActions noteId={note.id} isFavorite={note.isFavorite} />
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            {!hideWhiskey && note.whiskey && (
+              <Link
+                href={`/viskiler/${note.whiskey.slug}`}
+                className="block truncate font-serif text-lg font-semibold hover:text-primary"
+              >
+                {note.whiskey.brand} {note.whiskey.name}
+              </Link>
+            )}
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <CalendarDays className="h-3.5 w-3.5" aria-hidden />
+              {formattedDate}
+              {note.visibility === "public" && (
+                <Badge variant="outline" className="ml-1">
+                  Herkese açık
+                </Badge>
+              )}
+            </p>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-3">
+            <RatingBadge rating={note.rating} />
+            {showActions && <NoteActions noteId={note.id} isFavorite={note.isFavorite} />}
+          </div>
         </div>
       </CardHeader>
 
