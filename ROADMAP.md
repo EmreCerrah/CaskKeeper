@@ -247,6 +247,6 @@ Model       → Mongoose şemaları
 ### Stack (sabit)
 
 Next.js (App Router) · React · TypeScript · MongoDB + Mongoose · Zod ·
-React Hook Form · Tailwind CSS · shadcn/ui deseni · Zustand
+React Hook Form · Tailwind CSS · shadcn/ui deseni
 
 Gereksiz yeni teknoloji eklenmez.

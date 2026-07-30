@@ -1,7 +1,0 @@
-# Yerel test kolaylığı — Docker Compose bu dosyayı otomatik birleştirir.
-# MongoDB portunu host'a açar ki seed script'i (npm run seed:whiskeys:file)
-# host'tan konteynerdeki veritabanına bağlanabilsin. Commit edilmez.
-services:
-  mongo:
-    ports:
-      - "27017:27017"

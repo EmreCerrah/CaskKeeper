@@ -73,27 +73,12 @@ const WHSKEY_AROMA_WHEEL: AromaCategory[] = [
   }
 ];
 
-// Frontend'de Dropdown veya Tag seçici komşular için spesifik olarak da ayrılabilir.
-// Viski dünyasında genel olarak aynı tekerlek kullanılır, ancak kullanım kolaylığı için export ediyoruz.
-
-export const NOSE_TAG_CATEGORIES = [...WHSKEY_AROMA_WHEEL];
-export const PALATE_TAG_CATEGORIES = [...WHSKEY_AROMA_WHEEL];
-export const FINISH_TAG_CATEGORIES = [...WHSKEY_AROMA_WHEEL];
-
 /**
- * Frontend tarafında select list veya search yapıları için düzleştirilmiş liste
- * @returns { id: string, label: string, category: string, color: string }[]
+ * Burun, damak ve bitiş için aynı aroma çarkı kullanılır — viski tadımında
+ * üçü de aynı nota kümesinden seçilir. `FlavorTagPicker` üç alan için de bunu
+ * kullanır.
  */
-export const getFlatTags = () => {
-  return WHSKEY_AROMA_WHEEL.flatMap((cat) =>
-    cat.tags.map((tag) => ({
-      id: tag, // Benzersiz olması için tag adını id olarak kullanabiliriz
-      label: tag,
-      category: cat.label,
-      color: cat.color,
-    }))
-  );
-};
+export const AROMA_TAG_CATEGORIES = WHSKEY_AROMA_WHEEL;
 
 // ---------------------------------------------------------------------------
 // İstatistik grafikleri için kategorik renk paleti

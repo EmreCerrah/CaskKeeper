@@ -19,5 +19,5 @@ logs
 .DS_Store
 Thumbs.db
 
-# Yerel Docker override (seed icin mongo portu acar)
-docker-compose.override.yml
+# JetBrains oturum durumu (proje ayarları takip edilir, oturum durumu edilmez)
+.idea/workspace.xml
