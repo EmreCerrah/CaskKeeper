@@ -51,7 +51,7 @@ export default async function TastingNotePage({ params }: NotePageProps) {
       {note.author && (
         <Link
           href={`/kullanicilar/${note.author.id}`}
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+          className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
           {note.author.name} profiline dön

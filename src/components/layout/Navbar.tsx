@@ -14,7 +14,7 @@ export async function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex min-h-11 items-center gap-2 md:min-h-0">
           <GlassWater className="h-6 w-6 text-primary" aria-hidden />
           <span className="font-serif text-xl font-bold tracking-tight text-gold-gradient">
             CaskKeeper
@@ -72,26 +72,6 @@ export async function Navbar() {
         </div>
       </div>
 
-      {/* Mobil gezinme */}
-      {session && (
-        <nav className="flex items-center justify-around border-t border-border/60 py-1 md:hidden">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/viskiler">Viskiler</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/kullanicilar">Kişiler</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/akis">Akış</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/tadimlarim">Tadımlarım</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/favoriler">Favoriler</Link>
-          </Button>
-        </nav>
-      )}
     </header>
   );
 }

@@ -32,7 +32,7 @@ export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps
               key={tag}
               type="button"
               onClick={() => toggleTag(tag)}
-              className="inline-flex items-center rounded-full border border-primary/40 bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary hover:bg-primary/25"
+              className="inline-flex min-h-11 items-center rounded-full border border-primary/40 bg-primary/15 px-3 py-2 text-xs font-medium text-primary hover:bg-primary/25"
               title="Kaldırmak için tıklayın"
             >
               {tag} ✕
@@ -50,7 +50,7 @@ export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps
             <div key={category.category}>
               <button
                 type="button"
-                className="flex w-full items-center justify-between px-3 py-2.5 text-sm hover:bg-accent/50"
+                className="flex min-h-11 w-full items-center justify-between px-3 py-2.5 text-sm hover:bg-accent/50"
                 onClick={() => setOpenCategory(isOpen ? null : category.category)}
                 aria-expanded={isOpen}
               >
@@ -78,7 +78,9 @@ export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps
                         type="button"
                         onClick={() => toggleTag(tag)}
                         className={cn(
-                          "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                          // min-h-11 (44px): mobilde parmakla güvenli seçim için
+                          // WCAG 2.5.5 dokunma hedefi eşiği
+                          "inline-flex min-h-11 items-center rounded-full border px-3 py-2 text-xs transition-colors",
                           selected
                             ? "border-primary/50 bg-primary/20 text-primary"
                             : "border-border bg-secondary/50 text-muted-foreground hover:border-primary/30 hover:text-foreground"
