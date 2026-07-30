@@ -10,15 +10,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "db:sync-indexes": "npx tsx scripts/sync-indexes.ts",
-    "seed:whiskeys": "npx tsx scripts/import-whiskeys.ts",
-    "seed:whiskeys:dry": "npx tsx scripts/import-whiskeys.ts --dry-run",
-    "seed:whiskeys:insert": "npx tsx scripts/import-whiskeys.ts --insert-only",
-    "seed:whiskeys:logged": "cross-env IMPORT_LOG_FILE=logs/import.log npx tsx scripts/import-whiskeys.ts",
-    "seed:whiskeys:url": "npx tsx scripts/import-whiskeys.ts --url=https://example.com/whiskeys.json",
-    "seed:whiskeys:file": "npx tsx scripts/import-whiskeys.ts --file=scripts/sample-data.json",
-    "seed:catalog": "npx tsx scripts/import-whiskeys.ts --file=scripts/whiskies-seed.json",
-    "seed:catalog:dry": "npx tsx scripts/import-whiskeys.ts --file=scripts/whiskies-seed.json --dry-run",
-    "seed:debug": "cross-env DEBUG=true npx tsx scripts/import-whiskeys.ts"
+    "seed:catalog": "npx tsx scripts/import-whiskeys.ts --dir=data",
+    "seed:catalog:dry": "npx tsx scripts/import-whiskeys.ts --dir=data --dry-run",
+    "seed:catalog:insert": "npx tsx scripts/import-whiskeys.ts --dir=data --insert-only",
+    "seed:catalog:reset": "npx tsx scripts/import-whiskeys.ts --dir=data --reset",
+    "seed:catalog:logged": "cross-env IMPORT_LOG_FILE=logs/import.log npx tsx scripts/import-whiskeys.ts --dir=data",
+    "seed:catalog:debug": "cross-env DEBUG=true npx tsx scripts/import-whiskeys.ts --dir=data",
+    "seed:whiskeys": "npx tsx scripts/import-whiskeys.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

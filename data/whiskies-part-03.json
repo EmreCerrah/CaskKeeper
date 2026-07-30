@@ -1,0 +1,319 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Glenfiddich",
+      "name": "Glenfiddich 12 Years Old",
+      "distillery": "Glenfiddich Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Ex-Bourbon & Sherry",
+      "description": "Meyvemsi ve hafif.",
+      "flavorProfile": [
+        "pear",
+        "apple",
+        "vanilla",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenfiddich.com",
+      "externalId": "glenfiddich-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Glenfiddich",
+      "name": "Glenfiddich 15 Years Old Solera",
+      "distillery": "Glenfiddich Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 15,
+      "caskType": "Solera Vat",
+      "description": "Bal ve baharat dengesi.",
+      "flavorProfile": [
+        "honey",
+        "spice",
+        "oak",
+        "raisin",
+        "vanilla"
+      ],
+      "tags": [
+        "solera"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenfiddich.com",
+      "externalId": "glenfiddich-15-solera",
+      "source": "seed"
+    },
+    {
+      "brand": "The Glenlivet",
+      "name": "The Glenlivet 12 Years Old",
+      "distillery": "The Glenlivet Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "American & European Oak",
+      "description": "Yumuşak ve çiçeksi.",
+      "flavorProfile": [
+        "apple",
+        "pineapple",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.theglenlivet.com",
+      "externalId": "glenlivet-12",
+      "source": "seed"
+    },
+    {
+      "brand": "The Glenlivet",
+      "name": "The Glenlivet 15 Years Old French Oak Reserve",
+      "distillery": "The Glenlivet Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 15,
+      "caskType": "French Limousin Oak",
+      "description": "Kremsi ve baharatlı.",
+      "flavorProfile": [
+        "almond",
+        "spice",
+        "oak",
+        "pear",
+        "vanilla"
+      ],
+      "tags": [
+        "french-oak"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.theglenlivet.com",
+      "externalId": "glenlivet-15-french-oak",
+      "source": "seed"
+    },
+    {
+      "brand": "The Balvenie",
+      "name": "The Balvenie DoubleWood 12 Years Old",
+      "distillery": "The Balvenie Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Oloroso Sherry",
+      "description": "Bal ve kuru meyve.",
+      "flavorProfile": [
+        "honey",
+        "raisin",
+        "cinnamon",
+        "oak",
+        "vanilla"
+      ],
+      "tags": [
+        "doublewood"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.thebalvenie.com",
+      "externalId": "balvenie-doublewood-12",
+      "source": "seed"
+    },
+    {
+      "brand": "The Balvenie",
+      "name": "The Balvenie Caribbean Cask 14 Years Old",
+      "distillery": "The Balvenie Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 14,
+      "caskType": "Rum Finish",
+      "description": "Tatlı tropikal karakter.",
+      "flavorProfile": [
+        "toffee",
+        "banana",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "rum-finish"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.thebalvenie.com",
+      "externalId": "balvenie-caribbean-cask-14",
+      "source": "seed"
+    },
+    {
+      "brand": "Aberlour",
+      "name": "Aberlour 12 Years Old",
+      "distillery": "Aberlour Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Sherry",
+      "description": "Zengin ve meyvemsi.",
+      "flavorProfile": [
+        "apple",
+        "raisin",
+        "oak",
+        "caramel",
+        "spice"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.aberlour.com",
+      "externalId": "aberlour-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Aberlour",
+      "name": "Aberlour A'Bunadh",
+      "distillery": "Aberlour Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 61.2,
+      "caskType": "Oloroso Sherry",
+      "description": "Fıçı gücünde şeri bombası.",
+      "flavorProfile": [
+        "raisin",
+        "dark chocolate",
+        "spice",
+        "oak",
+        "orange"
+      ],
+      "tags": [
+        "cask-strength",
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.aberlour.com",
+      "externalId": "aberlour-abunadh",
+      "source": "seed"
+    },
+    {
+      "brand": "GlenDronach",
+      "name": "GlenDronach 12 Years Old Original",
+      "distillery": "GlenDronach Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Pedro Ximénez & Oloroso",
+      "description": "Şeri ağırlıklı klasik.",
+      "flavorProfile": [
+        "raisin",
+        "plum",
+        "oak",
+        "spice",
+        "chocolate"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glendronachdistillery.com",
+      "externalId": "glendronach-12",
+      "source": "seed"
+    },
+    {
+      "brand": "BenRiach",
+      "name": "BenRiach The Original Ten",
+      "distillery": "BenRiach Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 10,
+      "caskType": "Bourbon, Sherry & Virgin Oak",
+      "description": "Meyvemsi ve vanilyalı.",
+      "flavorProfile": [
+        "pear",
+        "vanilla",
+        "oak",
+        "apricot",
+        "honey"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.benriachdistillery.com",
+      "externalId": "benriach-original-ten",
+      "source": "seed"
+    },
+    {
+      "brand": "Craigellachie",
+      "name": "Craigellachie 13 Years Old",
+      "distillery": "Craigellachie Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 13,
+      "caskType": "Ex-Bourbon & Sherry",
+      "description": "Etimsi ve güçlü karakter.",
+      "flavorProfile": [
+        "apple",
+        "oak",
+        "spice",
+        "vanilla",
+        "malt"
+      ],
+      "tags": [
+        "worm-tub"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "craigellachie-13",
+      "source": "seed"
+    },
+    {
+      "brand": "Tamdhu",
+      "name": "Tamdhu 12 Years Old",
+      "distillery": "Tamdhu Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Oloroso Sherry",
+      "description": "Tam şeri olgunlaştırması.",
+      "flavorProfile": [
+        "raisin",
+        "orange",
+        "oak",
+        "cinnamon",
+        "vanilla"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tamdhudistillery.com",
+      "externalId": "tamdhu-12",
+      "source": "seed"
+    }
+  ]
+}

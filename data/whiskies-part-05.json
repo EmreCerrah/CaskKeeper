@@ -1,0 +1,316 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Oban",
+      "name": "Oban 14 Years Old",
+      "distillery": "Oban Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 14,
+      "caskType": "American & European Oak",
+      "description": "Deniz esintili Highland.",
+      "flavorProfile": [
+        "orange",
+        "sea salt",
+        "honey",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "coastal"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "oban-14",
+      "source": "seed"
+    },
+    {
+      "brand": "Oban",
+      "name": "Oban Little Bay",
+      "distillery": "Oban Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "Small Casks",
+      "description": "Yoğun ve baharatlı.",
+      "flavorProfile": [
+        "caramel",
+        "oak",
+        "orange",
+        "pepper",
+        "sea salt"
+      ],
+      "tags": [
+        "nas"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "oban-little-bay",
+      "source": "seed"
+    },
+    {
+      "brand": "Highland Park",
+      "name": "Highland Park 12 Years Old Viking Honour",
+      "distillery": "Highland Park Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "European & American Sherry Oak",
+      "description": "Bal, hafif turba ve şeri.",
+      "flavorProfile": [
+        "honey",
+        "heather",
+        "peat",
+        "oak",
+        "raisin"
+      ],
+      "tags": [
+        "islands"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.highlandparkwhisky.com",
+      "externalId": "highland-park-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Highland Park",
+      "name": "Highland Park 18 Years Old Viking Pride",
+      "distillery": "Highland Park Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 18,
+      "caskType": "Sherry Oak",
+      "description": "Kompleks ve zengin.",
+      "flavorProfile": [
+        "dark chocolate",
+        "raisin",
+        "peat",
+        "oak",
+        "orange"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.highlandparkwhisky.com",
+      "externalId": "highland-park-18",
+      "source": "seed"
+    },
+    {
+      "brand": "Old Pulteney",
+      "name": "Old Pulteney 12 Years Old",
+      "distillery": "Old Pulteney Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Ex-Bourbon",
+      "description": "Tuzlu ve narenciyeli.",
+      "flavorProfile": [
+        "sea salt",
+        "apple",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "maritime"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.oldpulteney.com",
+      "externalId": "old-pulteney-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Deanston",
+      "name": "Deanston 12 Years Old",
+      "distillery": "Deanston Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.3,
+      "age": 12,
+      "caskType": "Ex-Bourbon",
+      "description": "Bal ve malt ön planda.",
+      "flavorProfile": [
+        "honey",
+        "malt",
+        "vanilla",
+        "oak",
+        "apple"
+      ],
+      "tags": [
+        "unchillfiltered"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.deanstonmalt.com",
+      "externalId": "deanston-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Tomatin",
+      "name": "Tomatin Legacy",
+      "distillery": "Tomatin Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "Virgin Oak & Bourbon",
+      "description": "Yumuşak giriş seviyesi.",
+      "flavorProfile": [
+        "vanilla",
+        "pear",
+        "oak",
+        "citrus",
+        "honey"
+      ],
+      "tags": [
+        "nas"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tomatin.com",
+      "externalId": "tomatin-legacy",
+      "source": "seed"
+    },
+    {
+      "brand": "Tomatin",
+      "name": "Tomatin 14 Years Old Port Cask",
+      "distillery": "Tomatin Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 14,
+      "caskType": "Port Finish",
+      "description": "Kırmızı meyveli ve tatlı.",
+      "flavorProfile": [
+        "berries",
+        "toffee",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "port-finish"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tomatin.com",
+      "externalId": "tomatin-14-port",
+      "source": "seed"
+    },
+    {
+      "brand": "Glengoyne",
+      "name": "Glengoyne 12 Years Old",
+      "distillery": "Glengoyne Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Sherry Casks",
+      "description": "Yavaş damıtılmış, meyvemsi.",
+      "flavorProfile": [
+        "green apple",
+        "toffee",
+        "oak",
+        "cinnamon",
+        "raisin"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glengoyne.com",
+      "externalId": "glengoyne-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Loch Lomond",
+      "name": "Loch Lomond Original",
+      "distillery": "Loch Lomond Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "caskType": "American Oak",
+      "description": "Hafif ve meyvemsi.",
+      "flavorProfile": [
+        "pear",
+        "vanilla",
+        "oak",
+        "apple",
+        "honey"
+      ],
+      "tags": [
+        "entry-level"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.lochlomondwhiskies.com",
+      "externalId": "loch-lomond-original",
+      "source": "seed"
+    },
+    {
+      "brand": "Edradour",
+      "name": "Edradour 10 Years Old",
+      "distillery": "Edradour Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 10,
+      "caskType": "Oloroso Sherry",
+      "description": "Küçük damıtımevinden yoğun karakter.",
+      "flavorProfile": [
+        "raisin",
+        "nuts",
+        "oak",
+        "spice",
+        "caramel"
+      ],
+      "tags": [
+        "craft"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.edradour.com",
+      "externalId": "edradour-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Clynelish",
+      "name": "Clynelish 14 Years Old",
+      "distillery": "Clynelish Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 14,
+      "caskType": "Refill American Oak",
+      "description": "Mumumsu dokusu ile ünlü.",
+      "flavorProfile": [
+        "wax",
+        "citrus",
+        "honey",
+        "oak",
+        "salt"
+      ],
+      "tags": [
+        "classic"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "clynelish-14",
+      "source": "seed"
+    }
+  ]
+}

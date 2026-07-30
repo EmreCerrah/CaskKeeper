@@ -1,0 +1,317 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Caol Ila",
+      "name": "Caol Ila 12 Years Old",
+      "distillery": "Caol Ila Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Ex-Bourbon",
+      "description": "Zarif is ve narenciye.",
+      "flavorProfile": [
+        "peat",
+        "citrus",
+        "smoke",
+        "vanilla",
+        "sea salt"
+      ],
+      "tags": [
+        "peated",
+        "islay"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "caol-ila-12-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Caol Ila",
+      "name": "Caol Ila Moch",
+      "distillery": "Caol Ila Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "American Oak",
+      "description": "Yumuşak ve hafif isli.",
+      "flavorProfile": [
+        "peat",
+        "apple",
+        "oak",
+        "smoke",
+        "honey"
+      ],
+      "tags": [
+        "nas",
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "caol-ila-moch",
+      "source": "seed"
+    },
+    {
+      "brand": "Bowmore",
+      "name": "Bowmore 12 Years Old",
+      "distillery": "Bowmore Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Ex-Bourbon & Sherry",
+      "description": "Dengeli is ve bal.",
+      "flavorProfile": [
+        "peat",
+        "honey",
+        "lemon",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bowmore.com",
+      "externalId": "bowmore-12-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Bowmore",
+      "name": "Bowmore 15 Years Old",
+      "distillery": "Bowmore Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 15,
+      "caskType": "Oloroso Sherry Finish",
+      "description": "Koyu meyveli ve isli.",
+      "flavorProfile": [
+        "raisin",
+        "peat",
+        "dark chocolate",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "sherry-finish"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bowmore.com",
+      "externalId": "bowmore-15-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Bruichladdich",
+      "name": "Bruichladdich The Classic Laddie",
+      "distillery": "Bruichladdich Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 50.0,
+      "caskType": "American Oak",
+      "description": "Turbasız Islay karakteri.",
+      "flavorProfile": [
+        "vanilla",
+        "apple",
+        "barley",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "unpeated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bruichladdich.com",
+      "externalId": "classic-laddie",
+      "source": "seed"
+    },
+    {
+      "brand": "Port Charlotte",
+      "name": "Port Charlotte 10 Years Old",
+      "distillery": "Bruichladdich Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 50.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon & French Wine",
+      "description": "Yoğun turbalı.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "vanilla",
+        "oak",
+        "pepper"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bruichladdich.com",
+      "externalId": "port-charlotte-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Octomore",
+      "name": "Octomore 14.1",
+      "distillery": "Bruichladdich Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 59.6,
+      "caskType": "First Fill Ex-Bourbon",
+      "description": "Çok yüksek turba seviyesine sahip.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "vanilla",
+        "pepper",
+        "oak"
+      ],
+      "tags": [
+        "super-peated",
+        "cask-strength"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bruichladdich.com",
+      "externalId": "octomore-14-1",
+      "source": "seed"
+    },
+    {
+      "brand": "Kilchoman",
+      "name": "Kilchoman Machir Bay",
+      "distillery": "Kilchoman Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Bourbon & Sherry",
+      "description": "Genç ve canlı Islay.",
+      "flavorProfile": [
+        "peat",
+        "citrus",
+        "vanilla",
+        "smoke",
+        "pepper"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.kilchomandistillery.com",
+      "externalId": "machir-bay",
+      "source": "seed"
+    },
+    {
+      "brand": "Kilchoman",
+      "name": "Kilchoman Sanaig",
+      "distillery": "Kilchoman Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Oloroso Sherry & Bourbon",
+      "description": "Şeri ağırlıklı Kilchoman.",
+      "flavorProfile": [
+        "raisin",
+        "peat",
+        "oak",
+        "dark chocolate",
+        "smoke"
+      ],
+      "tags": [
+        "sherried",
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.kilchomandistillery.com",
+      "externalId": "sanaig",
+      "source": "seed"
+    },
+    {
+      "brand": "Bunnahabhain",
+      "name": "Bunnahabhain 12 Years Old",
+      "distillery": "Bunnahabhain Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 46.3,
+      "age": 12,
+      "caskType": "Ex-Bourbon & Sherry",
+      "description": "Turbasız, meyvemsi.",
+      "flavorProfile": [
+        "caramel",
+        "nuts",
+        "oak",
+        "apple",
+        "spice"
+      ],
+      "tags": [
+        "unpeated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bunnahabhain.com",
+      "externalId": "bunnahabhain-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Bunnahabhain",
+      "name": "Bunnahabhain Stiùireadair",
+      "distillery": "Bunnahabhain Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 46.3,
+      "caskType": "Sherry",
+      "description": "Baharatlı ve meyvemsi.",
+      "flavorProfile": [
+        "raisin",
+        "oak",
+        "nuts",
+        "toffee",
+        "spice"
+      ],
+      "tags": [
+        "nas"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.bunnahabhain.com",
+      "externalId": "bunnahabhain-stiuireadair",
+      "source": "seed"
+    },
+    {
+      "brand": "Lagavulin",
+      "name": "Lagavulin 8 Years Old",
+      "distillery": "Lagavulin Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 48.0,
+      "age": 8,
+      "caskType": "Ex-Bourbon",
+      "description": "Canlı ve dumanlı.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "pepper",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.lagavulin.com",
+      "externalId": "lagavulin-8-years-old",
+      "source": "seed"
+    }
+  ]
+}

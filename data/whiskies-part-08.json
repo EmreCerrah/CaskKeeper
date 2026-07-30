@@ -1,0 +1,312 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Auchentoshan",
+      "name": "Auchentoshan American Oak",
+      "distillery": "Auchentoshan Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "caskType": "First Fill Bourbon",
+      "description": "Üç kez damıtılmış, yumuşak.",
+      "flavorProfile": [
+        "vanilla",
+        "coconut",
+        "citrus",
+        "oak",
+        "barley"
+      ],
+      "tags": [
+        "triple-distilled"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.auchentoshan.com",
+      "externalId": "auchentoshan-american-oak",
+      "source": "seed"
+    },
+    {
+      "brand": "Auchentoshan",
+      "name": "Auchentoshan Three Wood",
+      "distillery": "Auchentoshan Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "Bourbon, Oloroso & PX",
+      "description": "Şeri etkili Lowland.",
+      "flavorProfile": [
+        "raisin",
+        "toffee",
+        "oak",
+        "orange",
+        "spice"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.auchentoshan.com",
+      "externalId": "auchentoshan-three-wood",
+      "source": "seed"
+    },
+    {
+      "brand": "Glenkinchie",
+      "name": "Glenkinchie 12 Years Old",
+      "distillery": "Glenkinchie Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Çiçeksi ve hafif.",
+      "flavorProfile": [
+        "grass",
+        "apple",
+        "vanilla",
+        "oak",
+        "floral"
+      ],
+      "tags": [
+        "classic"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "glenkinchie-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Bladnoch",
+      "name": "Bladnoch 11 Years Old",
+      "distillery": "Bladnoch Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.7,
+      "age": 11,
+      "caskType": "Bourbon",
+      "description": "Narenciye ve çiçek notaları.",
+      "flavorProfile": [
+        "lemon",
+        "pear",
+        "vanilla",
+        "oak",
+        "flowers"
+      ],
+      "tags": [
+        "lowland"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://bladnoch.com",
+      "externalId": "bladnoch-11",
+      "source": "seed"
+    },
+    {
+      "brand": "Kingsbarns",
+      "name": "Kingsbarns Dream to Dram",
+      "distillery": "Kingsbarns Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "STR & Bourbon",
+      "description": "Modern Lowland.",
+      "flavorProfile": [
+        "apricot",
+        "vanilla",
+        "oak",
+        "honey",
+        "spice"
+      ],
+      "tags": [
+        "modern"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://kingsbarnsdistillery.com",
+      "externalId": "kingsbarns-dream-to-dram",
+      "source": "seed"
+    },
+    {
+      "brand": "Lindores Abbey",
+      "name": "Lindores Abbey MCDXCIV",
+      "distillery": "Lindores Abbey Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Bourbon, Sherry & Wine",
+      "description": "Tarihi manastır damıtımevi.",
+      "flavorProfile": [
+        "apple",
+        "toffee",
+        "oak",
+        "cinnamon",
+        "vanilla"
+      ],
+      "tags": [
+        "modern"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://lindoresabbeydistillery.com",
+      "externalId": "lindores-mcdxciv",
+      "source": "seed"
+    },
+    {
+      "brand": "Daftmill",
+      "name": "Daftmill 2009 Winter Release",
+      "distillery": "Daftmill Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "vintage": 2009,
+      "caskType": "Bourbon",
+      "description": "Çiftlik damıtımevi üretimi.",
+      "flavorProfile": [
+        "barley",
+        "pear",
+        "vanilla",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "farm-distillery"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.daftmill.com",
+      "externalId": "daftmill-2009-winter",
+      "source": "seed"
+    },
+    {
+      "brand": "Ailsa Bay",
+      "name": "Ailsa Bay Release 1.2 Sweet Smoke",
+      "distillery": "Ailsa Bay Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 48.9,
+      "caskType": "Bourbon",
+      "description": "Tatlı ve hafif isli.",
+      "flavorProfile": [
+        "peat",
+        "vanilla",
+        "apple",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.ailsabay.com",
+      "externalId": "ailsa-bay-sweet-smoke",
+      "source": "seed"
+    },
+    {
+      "brand": "Rosebank",
+      "name": "Rosebank 30 Years Old",
+      "distillery": "Rosebank Distillery",
+      "type": "Single Malt",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 48.6,
+      "age": 30,
+      "caskType": "Refill Oak",
+      "description": "İkonik Lowland geri dönüşü.",
+      "flavorProfile": [
+        "floral",
+        "citrus",
+        "honey",
+        "oak",
+        "mint"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.rosebank.com",
+      "externalId": "rosebank-30",
+      "source": "seed"
+    },
+    {
+      "brand": "InchDairnie",
+      "name": "InchDairnie RyeLaw",
+      "distillery": "InchDairnie Distillery",
+      "type": "Rye Whisky",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.3,
+      "caskType": "New Oak",
+      "description": "İskoç rye whisky.",
+      "flavorProfile": [
+        "pepper",
+        "vanilla",
+        "oak",
+        "cereal",
+        "spice"
+      ],
+      "tags": [
+        "rye"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.inchdairniedistillery.com",
+      "externalId": "ryelaw",
+      "source": "seed"
+    },
+    {
+      "brand": "Girvan",
+      "name": "Girvan Patent Still No.4 Apps",
+      "distillery": "Girvan Distillery",
+      "type": "Single Grain",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 42.0,
+      "caskType": "American Oak",
+      "description": "Tatlı grain whisky.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "toffee",
+        "oak",
+        "cream"
+      ],
+      "tags": [
+        "single-grain"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.williamgrant.com",
+      "externalId": "girvan-patent-still-apps",
+      "source": "seed"
+    },
+    {
+      "brand": "Cameronbridge",
+      "name": "Cameronbridge 26 Years Old",
+      "distillery": "Cameronbridge Distillery",
+      "type": "Single Grain",
+      "region": "Lowland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 26,
+      "caskType": "Refill Oak",
+      "description": "Uzun yıllandırılmış grain whisky.",
+      "flavorProfile": [
+        "caramel",
+        "vanilla",
+        "oak",
+        "coconut",
+        "spice"
+      ],
+      "tags": [
+        "single-grain"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.diageo.com",
+      "externalId": "cameronbridge-26",
+      "source": "seed"
+    }
+  ]
+}

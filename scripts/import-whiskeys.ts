@@ -2,21 +2,29 @@
  * @file import-whiskeys.ts
  * @description Merkezi whisky kataloğu için import pipeline.
  *
+ * Kabul edilen JSON biçimleri (ikisi de çalışır):
+ *   1) Düz dizi:      [ { brand, name, ... }, ... ]
+ *   2) Sarmalayıcı:   { version, source, count, items: [ { ... }, ... ] }
+ *      ("items" yerine "data" da kabul edilir)
+ *
  * Kullanım:
- *   npm run seed:whiskeys                         → scripts/sample-data.json'dan okur
- *   npm run seed:whiskeys -- --file=./my.json     → özel JSON dosyası
+ *   npm run seed:catalog                          → data/ klasöründeki tüm partları yükler
+ *   npm run seed:catalog:dry                      → yazmadan prova eder
+ *   npm run seed:whiskeys -- --file=./my.json     → tek JSON dosyası
+ *   npm run seed:whiskeys -- --dir=data           → klasördeki tüm *.json (ada göre sıralı)
  *   npm run seed:whiskeys -- --url=https://...    → dış API veya URL'den JSON çeker
  *   npm run seed:whiskeys -- --dry-run            → MongoDB'ye yazmadan simüle eder
  *   npm run seed:whiskeys -- --insert-only        → sadece yeni kayıtlar eklenir
+ *   npm run seed:whiskeys -- --reset              → YIKICI: kataloğu boşaltıp yeniden yükler
  *   DEBUG=true npm run seed:whiskeys              → debug logları açık
  *   IMPORT_LOG_FILE=logs/import.log npm run seed:whiskeys  → dosyaya da loglar
  */
 
-//! 2. Önce prova et (hiçbir şey yazılmaz):
-//? npx tsx scripts/import-whiskeys.ts --file=scripts/whiskeys-2026-07.json --dry-run
+//! 1. Önce prova et (hiçbir şey yazılmaz):
+//? npx tsx scripts/import-whiskeys.ts --dir=data --dry-run
 
-//! 3. Sorun yoksa yükle:
-//? npx tsx scripts/import-whiskeys.ts --file=scripts/whiskeys-2026-07.json
+//! 2. Sorun yoksa yükle:
+//? npx tsx scripts/import-whiskeys.ts --dir=data
 
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
@@ -28,6 +36,7 @@ import https from "https";
 import http from "http";
 
 import Whiskey from "../src/server/models/Whiskey";
+import TastingNote from "../src/server/models/TastingNote";
 import { ImportLogger } from "../src/lib/utils/import-logger";
 import {
   generateWhiskeySlug,
@@ -122,65 +131,184 @@ function normalizePayload(
 // 3. VERİ KAYNAĞI — Dosya veya URL'den JSON çek
 // ---------------------------------------------------------------------------
 
-async function fetchFromUrl(url: string): Promise<unknown[]> {
-  return new Promise((resolve, reject) => {
-    const protocol = url.startsWith("https") ? https : http;
-    protocol.get(url, (res) => {
-      let data = "";
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => {
-        try {
-          const parsed = JSON.parse(data);
-          resolve(Array.isArray(parsed) ? parsed : parsed?.data ?? [parsed]);
-        } catch {
-          reject(new Error(`URL'den geçersiz JSON alındı: ${url}`));
+/**
+ * Bir JSON kökünden kayıt dizisini çıkarır.
+ *
+ * Seed dosyaları `{ version, source, count, items: [...] }` sarmalayıcısı kullanır;
+ * düz dizi de desteklenir. Sarmalayıcı açılmazsa tüm dosya TEK kayıt sanılır ve
+ * import sessizce çöp veri üretir — bu yüzden biçim tanınamazsa hata fırlatılır.
+ *
+ * @param label Hata mesajlarında görünecek kaynak adı (dosya yolu veya URL)
+ */
+function extractItems(parsed: unknown, label: string, log?: ImportLogger): unknown[] {
+  if (Array.isArray(parsed)) return parsed;
+
+  if (parsed !== null && typeof parsed === "object") {
+    const root = parsed as Record<string, unknown>;
+
+    for (const key of ["items", "data"] as const) {
+      const value = root[key];
+      if (Array.isArray(value)) {
+        // Sarmalayıcıdaki count beyanı ile gerçek uzunluk tutmuyorsa uyar:
+        // dosya elle düzenlenirken kayıt eklenip count güncellenmemiş olabilir.
+        if (typeof root.count === "number" && root.count !== value.length) {
+          log?.warn(
+            `${label}: "count" alanı ${root.count} diyor ama ${value.length} kayıt var — count alanı güncellenmemiş.`
+          );
         }
-      });
-      res.on("error", reject);
-    }).on("error", reject);
-  });
+        return value;
+      }
+    }
+  }
+
+  throw new Error(
+    `${label}: tanınmayan JSON biçimi. Beklenen: kayıt dizisi ya da { items: [...] } / { data: [...] } sarmalayıcısı.`
+  );
 }
 
-function readFromFile(filePath: string): unknown[] {
-  const abs = path.isAbsolute(filePath)
-    ? filePath
-    : path.resolve(process.cwd(), filePath);
+async function fetchFromUrl(url: string, log?: ImportLogger): Promise<unknown[]> {
+  const body = await new Promise<string>((resolve, reject) => {
+    const protocol = url.startsWith("https") ? https : http;
+    protocol
+      .get(url, (res) => {
+        let data = "";
+        res.on("data", (chunk) => (data += chunk));
+        res.on("end", () => resolve(data));
+        res.on("error", reject);
+      })
+      .on("error", reject);
+  });
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch {
+    throw new Error(`URL'den geçersiz JSON alındı: ${url}`);
+  }
+
+  return extractItems(parsed, url, log);
+}
+
+function resolvePath(target: string): string {
+  return path.isAbsolute(target) ? target : path.resolve(process.cwd(), target);
+}
+
+function readFromFile(filePath: string, log?: ImportLogger): unknown[] {
+  const abs = resolvePath(filePath);
 
   if (!fs.existsSync(abs)) {
     throw new Error(`Dosya bulunamadı: ${abs}`);
   }
 
-  const content = fs.readFileSync(abs, "utf-8");
-  const parsed = JSON.parse(content);
-  return Array.isArray(parsed) ? parsed : [parsed];
+  const parsed = JSON.parse(fs.readFileSync(abs, "utf-8"));
+  return extractItems(parsed, path.basename(abs), log);
+}
+
+/**
+ * Bir klasördeki tüm *.json dosyalarını ada göre sıralı okuyup birleştirir.
+ * Katalog 16 parçaya bölündüğü için (data/whiskies-part-01.json …) tek tek
+ * dosya vermeye gerek kalmaz.
+ */
+function readFromDir(dirPath: string, log?: ImportLogger): unknown[] {
+  const abs = resolvePath(dirPath);
+
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
+    throw new Error(`Klasör bulunamadı: ${abs}`);
+  }
+
+  const files = fs
+    .readdirSync(abs)
+    .filter((f) => f.toLowerCase().endsWith(".json"))
+    .sort();
+
+  if (files.length === 0) {
+    throw new Error(`Klasörde JSON dosyası yok: ${abs}`);
+  }
+
+  const items: unknown[] = [];
+  for (const file of files) {
+    const parsed = JSON.parse(fs.readFileSync(path.join(abs, file), "utf-8"));
+    const part = extractItems(parsed, file, log);
+    log?.info(`  ${file} → ${part.length} kayıt`);
+    items.push(...part);
+  }
+
+  log?.info(`${files.length} dosyadan toplam ${items.length} kayıt okundu.`);
+  return items;
 }
 
 // ---------------------------------------------------------------------------
 // 4. CLI ARG PARSER — --flag=value formatı
 // ---------------------------------------------------------------------------
 
+/** Katalog 16 parça halinde bu klasörde tutulur. */
+const DEFAULT_DIR = "data";
+
 function parseArgs(): {
-  file: string;
+  file?: string;
+  dir?: string;
   url?: string;
   dryRun: boolean;
   insertOnly: boolean;
+  reset: boolean;
   source: string;
 } {
   const args = process.argv.slice(2);
   const get = (key: string) =>
     args.find((a) => a.startsWith(`--${key}=`))?.split("=").slice(1).join("=");
 
+  const file = get("file");
+  const dir = get("dir");
+  const url = get("url");
+
   return {
-    file:       get("file") ?? "scripts/sample-data.json",
-    url:        get("url"),
+    file,
+    // Hiçbir kaynak belirtilmezse varsayılan olarak data/ klasörünün tamamı yüklenir
+    dir: dir ?? (file || url ? undefined : DEFAULT_DIR),
+    url,
     dryRun:     args.includes("--dry-run"),
     insertOnly: args.includes("--insert-only"),
-    source:     get("source") ?? "manual",
+    reset:      args.includes("--reset"),
+    source:     get("source") ?? "seed",
   };
 }
 
 // ---------------------------------------------------------------------------
-// 5. ANA IMPORT PIPELINE
+// 5. RESET — Kataloğu boşaltma (YIKICI, yalnızca --reset ile)
+// ---------------------------------------------------------------------------
+
+/**
+ * Viski kataloğunu tamamen boşaltır. Tadım notlarına DOKUNMAZ; notlar
+ * kullanıcıya aittir ve katalog verisiyle birlikte silinmemelidir. Ancak
+ * silinen viskilere işaret eden notlar öksüz kalacağı için sayı raporlanır.
+ */
+async function resetCatalog(dryRun: boolean, log: ImportLogger): Promise<void> {
+  const [existing, noteCount] = await Promise.all([
+    Whiskey.countDocuments(),
+    TastingNote.countDocuments(),
+  ]);
+
+  log.section("RESET — katalog boşaltılıyor");
+  log.warn(`Silinecek viski sayısı: ${existing}`);
+
+  if (noteCount > 0) {
+    log.warn(
+      `DİKKAT: ${noteCount} tadım notu var ve bunlar SİLİNMEZ. Katalog ` +
+        `boşaltıldığında notların işaret ettiği viskiler kaybolur (öksüz referans).`
+    );
+  }
+
+  if (dryRun) {
+    log.info("[DRY-RUN] Katalog boşaltılmadı.");
+    return;
+  }
+
+  const result = await Whiskey.deleteMany({});
+  log.success(`${result.deletedCount} viski silindi.`);
+}
+
+// ---------------------------------------------------------------------------
+// 6. ANA IMPORT PIPELINE
 // ---------------------------------------------------------------------------
 
 async function runImport(
@@ -314,7 +442,7 @@ async function runImport(
 }
 
 // ---------------------------------------------------------------------------
-// 6. ENTRY POINT
+// 7. ENTRY POINT
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
@@ -328,7 +456,7 @@ async function main(): Promise<void> {
   };
 
   log.section("CaskKeeper — Whisky Catalog Import");
-  log.info(`Kaynak: ${args.url ?? args.file}`);
+  log.info(`Kaynak: ${args.url ?? args.dir ?? args.file}`);
   log.info(`Mod   : ${args.dryRun ? "DRY-RUN" : args.insertOnly ? "INSERT-ONLY" : "UPSERT"}`);
 
   // Veri yükle
@@ -336,14 +464,22 @@ async function main(): Promise<void> {
   try {
     if (args.url) {
       log.info(`URL'den çekiliyor: ${args.url}`);
-      rawItems = await fetchFromUrl(args.url);
+      rawItems = await fetchFromUrl(args.url, log);
+    } else if (args.dir) {
+      log.info(`Klasörden okunuyor: ${args.dir}`);
+      rawItems = readFromDir(args.dir, log);
     } else {
       log.info(`Dosyadan okunuyor: ${args.file}`);
-      rawItems = readFromFile(args.file);
+      rawItems = readFromFile(args.file!, log);
     }
     log.info(`${rawItems.length} kayıt yüklendi.`);
   } catch (err) {
     log.error("Veri kaynağı okunamadı", err);
+    process.exit(1);
+  }
+
+  if (rawItems.length === 0) {
+    log.error("Kaynakta hiç kayıt yok — çıkılıyor.");
     process.exit(1);
   }
 
@@ -359,6 +495,9 @@ async function main(): Promise<void> {
 
   // Import çalıştır
   try {
+    if (args.reset) {
+      await resetCatalog(config.dryRun ?? false, log);
+    }
     await runImport(rawItems, config, log);
   } finally {
     await mongoose.connection.close();

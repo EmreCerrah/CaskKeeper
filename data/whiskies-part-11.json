@@ -1,0 +1,311 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Suntory",
+      "name": "Yamazaki 12 Years Old",
+      "distillery": "Yamazaki Distillery",
+      "type": "Single Malt",
+      "region": "Osaka",
+      "country": "Japan",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "American, Spanish & Mizunara Oak",
+      "description": "Japon single malt klasiği.",
+      "flavorProfile": [
+        "peach",
+        "honey",
+        "mizunara",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "yamazaki-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Suntory",
+      "name": "Yamazaki 18 Years Old",
+      "distillery": "Yamazaki Distillery",
+      "type": "Single Malt",
+      "region": "Osaka",
+      "country": "Japan",
+      "abv": 43.0,
+      "age": 18,
+      "caskType": "Sherry & Mizunara",
+      "description": "Zengin şeri karakteri.",
+      "flavorProfile": [
+        "raisin",
+        "dark chocolate",
+        "oak",
+        "mizunara",
+        "coffee"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "yamazaki-18",
+      "source": "seed"
+    },
+    {
+      "brand": "Suntory",
+      "name": "Hakushu 12 Years Old",
+      "distillery": "Hakushu Distillery",
+      "type": "Single Malt",
+      "region": "Yamanashi",
+      "country": "Japan",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Taze ve otsu.",
+      "flavorProfile": [
+        "green apple",
+        "mint",
+        "herbs",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "hakushu-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Suntory",
+      "name": "Hakushu Distiller's Reserve",
+      "distillery": "Hakushu Distillery",
+      "type": "Single Malt",
+      "region": "Yamanashi",
+      "country": "Japan",
+      "abv": 43.0,
+      "caskType": "American Oak",
+      "description": "Canlı ve ferah.",
+      "flavorProfile": [
+        "pear",
+        "mint",
+        "citrus",
+        "oak",
+        "light smoke"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "hakushu-dr",
+      "source": "seed"
+    },
+    {
+      "brand": "Suntory",
+      "name": "Hibiki Japanese Harmony",
+      "distillery": "Suntory",
+      "type": "Blended Whisky",
+      "region": "Japan",
+      "country": "Japan",
+      "abv": 43.0,
+      "caskType": "Various",
+      "description": "İkonik Japon harmanı.",
+      "flavorProfile": [
+        "orange",
+        "honey",
+        "oak",
+        "floral",
+        "mizunara"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "hibiki-harmony",
+      "source": "seed"
+    },
+    {
+      "brand": "Suntory",
+      "name": "Hibiki 21 Years Old",
+      "distillery": "Suntory",
+      "type": "Blended Whisky",
+      "region": "Japan",
+      "country": "Japan",
+      "abv": 43.0,
+      "age": 21,
+      "caskType": "Various",
+      "description": "Ödüllü premium harman.",
+      "flavorProfile": [
+        "plum",
+        "raisin",
+        "oak",
+        "dark chocolate",
+        "incense"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "officialUrl": "https://www.suntory.com",
+      "imageUrl": "",
+      "externalId": "hibiki-21",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Yoichi Single Malt",
+      "distillery": "Yoichi Distillery",
+      "type": "Single Malt",
+      "region": "Hokkaido",
+      "country": "Japan",
+      "abv": 45.0,
+      "caskType": "Various",
+      "description": "Kömür ateşi damıtımı.",
+      "flavorProfile": [
+        "peat",
+        "sea salt",
+        "apple",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "yoichi-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Miyagikyo Single Malt",
+      "distillery": "Miyagikyo Distillery",
+      "type": "Single Malt",
+      "region": "Miyagi",
+      "country": "Japan",
+      "abv": 45.0,
+      "caskType": "Various",
+      "description": "Meyvemsi ve zarif.",
+      "flavorProfile": [
+        "pear",
+        "floral",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "miyagikyo-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Nikka From the Barrel",
+      "distillery": "Nikka",
+      "type": "Blended Whisky",
+      "region": "Japan",
+      "country": "Japan",
+      "abv": 51.4,
+      "caskType": "Various",
+      "description": "Yüksek alkollü efsane harman.",
+      "flavorProfile": [
+        "caramel",
+        "spice",
+        "oak",
+        "orange",
+        "pepper"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "nikka-from-the-barrel",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Nikka Coffey Grain",
+      "distillery": "Miyagikyo Distillery",
+      "type": "Single Grain",
+      "region": "Miyagi",
+      "country": "Japan",
+      "abv": 45.0,
+      "caskType": "American Oak",
+      "description": "Coffey still ile üretilen grain.",
+      "flavorProfile": [
+        "banana",
+        "vanilla",
+        "caramel",
+        "oak",
+        "coconut"
+      ],
+      "tags": [
+        "single-grain"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "nikka-coffey-grain",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Nikka Coffey Malt",
+      "distillery": "Miyagikyo Distillery",
+      "type": "Malt Whisky",
+      "region": "Miyagi",
+      "country": "Japan",
+      "abv": 45.0,
+      "caskType": "American Oak",
+      "description": "Coffey still malt whisky.",
+      "flavorProfile": [
+        "toffee",
+        "orange",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "coffey"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "nikka-coffey-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Nikka",
+      "name": "Nikka Days",
+      "distillery": "Nikka",
+      "type": "Blended Whisky",
+      "region": "Japan",
+      "country": "Japan",
+      "abv": 40.0,
+      "caskType": "Various",
+      "description": "Günlük içim için dengeli harman.",
+      "flavorProfile": [
+        "pear",
+        "vanilla",
+        "grain",
+        "oak",
+        "floral"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.nikka.com",
+      "imageUrl": "",
+      "externalId": "nikka-days",
+      "source": "seed"
+    }
+  ]
+}

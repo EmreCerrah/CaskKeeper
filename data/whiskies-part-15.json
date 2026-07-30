@@ -1,0 +1,310 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Knob Creek",
+      "name": "Knob Creek 9 Years Old",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 50.0,
+      "age": 9,
+      "caskType": "New Charred Oak",
+      "description": "Yoğun gövdeli bourbon.",
+      "flavorProfile": [
+        "peanut",
+        "caramel",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.knobcreek.com",
+      "imageUrl": "",
+      "externalId": "knob-creek-9",
+      "source": "seed"
+    },
+    {
+      "brand": "Knob Creek",
+      "name": "Knob Creek Single Barrel Reserve",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 60.0,
+      "caskType": "New Charred Oak",
+      "description": "Tek fıçı yüksek proof.",
+      "flavorProfile": [
+        "dark caramel",
+        "oak",
+        "cinnamon",
+        "vanilla",
+        "pepper"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.knobcreek.com",
+      "imageUrl": "",
+      "externalId": "knob-creek-single-barrel",
+      "source": "seed"
+    },
+    {
+      "brand": "Booker's",
+      "name": "Booker's Bourbon",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 62.5,
+      "caskType": "New Charred Oak",
+      "description": "Batch bazlı barrel proof.",
+      "flavorProfile": [
+        "peanut",
+        "oak",
+        "dark chocolate",
+        "caramel",
+        "pepper"
+      ],
+      "tags": [
+        "barrel-proof"
+      ],
+      "officialUrl": "https://www.bookersbourbon.com",
+      "imageUrl": "",
+      "externalId": "bookers-bourbon",
+      "source": "seed"
+    },
+    {
+      "brand": "Baker's",
+      "name": "Baker's 7 Years Old",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 53.5,
+      "age": 7,
+      "caskType": "New Charred Oak",
+      "description": "Single barrel bourbon.",
+      "flavorProfile": [
+        "toffee",
+        "oak",
+        "vanilla",
+        "nuts",
+        "spice"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.bakersbourbon.com",
+      "imageUrl": "",
+      "externalId": "bakers-7",
+      "source": "seed"
+    },
+    {
+      "brand": "Basil Hayden",
+      "name": "Basil Hayden Original",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 40.0,
+      "caskType": "New Charred Oak",
+      "description": "Yüksek rye içeren yumuşak bourbon.",
+      "flavorProfile": [
+        "pepper",
+        "honey",
+        "oak",
+        "mint",
+        "vanilla"
+      ],
+      "tags": [
+        "high-rye"
+      ],
+      "officialUrl": "https://www.basilhaydenbourbon.com",
+      "imageUrl": "",
+      "externalId": "basil-hayden-original",
+      "source": "seed"
+    },
+    {
+      "brand": "Old Grand-Dad",
+      "name": "Old Grand-Dad 114",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 57.0,
+      "caskType": "New Charred Oak",
+      "description": "Fiyat/performans klasiği.",
+      "flavorProfile": [
+        "cinnamon",
+        "oak",
+        "caramel",
+        "pepper",
+        "orange"
+      ],
+      "tags": [
+        "high-proof"
+      ],
+      "officialUrl": "https://www.beamsuntory.com",
+      "imageUrl": "",
+      "externalId": "old-grand-dad-114",
+      "source": "seed"
+    },
+    {
+      "brand": "Jim Beam",
+      "name": "Jim Beam Black",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Uzun yıllandırılmış Beam.",
+      "flavorProfile": [
+        "vanilla",
+        "oak",
+        "caramel",
+        "toast",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.jimbeam.com",
+      "imageUrl": "",
+      "externalId": "jim-beam-black",
+      "source": "seed"
+    },
+    {
+      "brand": "Jim Beam",
+      "name": "Jim Beam Double Oak",
+      "distillery": "Jim Beam Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 43.0,
+      "caskType": "Double Oak",
+      "description": "İki kez meşe etkisi.",
+      "flavorProfile": [
+        "oak",
+        "vanilla",
+        "coffee",
+        "caramel",
+        "smoke"
+      ],
+      "tags": [
+        "double-oaked"
+      ],
+      "officialUrl": "https://www.jimbeam.com",
+      "imageUrl": "",
+      "externalId": "jim-beam-double-oak",
+      "source": "seed"
+    },
+    {
+      "brand": "Heaven Hill",
+      "name": "Heaven Hill Bottled-in-Bond 7 Years Old",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 50.0,
+      "age": 7,
+      "caskType": "New Charred Oak",
+      "description": "Bottled in Bond bourbon.",
+      "flavorProfile": [
+        "honey",
+        "oak",
+        "toffee",
+        "cinnamon",
+        "vanilla"
+      ],
+      "tags": [
+        "bottled-in-bond"
+      ],
+      "officialUrl": "https://heavenhilldistillery.com",
+      "imageUrl": "",
+      "externalId": "heaven-hill-bib-7",
+      "source": "seed"
+    },
+    {
+      "brand": "Larceny",
+      "name": "Larceny Small Batch",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 46.0,
+      "caskType": "New Charred Oak",
+      "description": "Buğday reçeteli bourbon.",
+      "flavorProfile": [
+        "bread",
+        "caramel",
+        "vanilla",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "wheated"
+      ],
+      "officialUrl": "https://heavenhilldistillery.com",
+      "imageUrl": "",
+      "externalId": "larceny-small-batch",
+      "source": "seed"
+    },
+    {
+      "brand": "Larceny",
+      "name": "Larceny Barrel Proof",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 61.0,
+      "caskType": "New Charred Oak",
+      "description": "Barrel proof Larceny.",
+      "flavorProfile": [
+        "dark caramel",
+        "oak",
+        "pepper",
+        "vanilla",
+        "chocolate"
+      ],
+      "tags": [
+        "barrel-proof"
+      ],
+      "officialUrl": "https://heavenhilldistillery.com",
+      "imageUrl": "",
+      "externalId": "larceny-barrel-proof",
+      "source": "seed"
+    },
+    {
+      "brand": "Evan Williams",
+      "name": "Evan Williams Single Barrel",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 43.3,
+      "caskType": "New Charred Oak",
+      "description": "Vintage etiketli single barrel.",
+      "flavorProfile": [
+        "apple",
+        "caramel",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://evanwilliams.com",
+      "imageUrl": "",
+      "externalId": "evan-williams-single-barrel",
+      "source": "seed"
+    }
+  ]
+}

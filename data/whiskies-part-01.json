@@ -1,0 +1,329 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Lagavulin",
+      "name": "Lagavulin 16 Years Old",
+      "distillery": "Lagavulin Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 16,
+      "caskType": "Ex-Bourbon & Sherry Casks",
+      "description": "İsli, yoğun ve klasik Islay karakteri.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "sea salt",
+        "dried fruit",
+        "oak"
+      ],
+      "tags": [
+        "peated",
+        "islay",
+        "classic"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.lagavulin.com",
+      "externalId": "lagavulin-16-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Lagavulin",
+      "name": "Lagavulin Distillers Edition",
+      "distillery": "Lagavulin Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "Pedro Ximénez Finish",
+      "description": "Tatlı şeri etkisiyle zenginleşmiş Lagavulin.",
+      "flavorProfile": [
+        "peat",
+        "raisin",
+        "smoke",
+        "oak",
+        "caramel"
+      ],
+      "tags": [
+        "peated",
+        "px-sherry",
+        "islay"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.lagavulin.com",
+      "externalId": "lagavulin-distillers-edition",
+      "source": "seed"
+    },
+    {
+      "brand": "Ardbeg",
+      "name": "Ardbeg 10 Years Old",
+      "distillery": "Ardbeg Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Yoğun turba ve turunçgil notaları.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "lime",
+        "vanilla",
+        "pepper"
+      ],
+      "tags": [
+        "peated",
+        "islay",
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.ardbeg.com",
+      "externalId": "ardbeg-10-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Ardbeg",
+      "name": "Ardbeg Uigeadail",
+      "distillery": "Ardbeg Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 54.2,
+      "caskType": "Ex-Bourbon & Oloroso Sherry",
+      "description": "Şeri ve yoğun turba dengesi.",
+      "flavorProfile": [
+        "peat",
+        "coffee",
+        "dark chocolate",
+        "raisin",
+        "smoke"
+      ],
+      "tags": [
+        "cask-strength",
+        "peated",
+        "islay"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.ardbeg.com",
+      "externalId": "ardbeg-uigeadail",
+      "source": "seed"
+    },
+    {
+      "brand": "Ardbeg",
+      "name": "Ardbeg Corryvreckan",
+      "distillery": "Ardbeg Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 57.1,
+      "caskType": "French Oak & Bourbon",
+      "description": "Baharatlı ve güçlü karakter.",
+      "flavorProfile": [
+        "pepper",
+        "smoke",
+        "oak",
+        "dark chocolate",
+        "tar"
+      ],
+      "tags": [
+        "cask-strength",
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.ardbeg.com",
+      "externalId": "ardbeg-corryvreckan",
+      "source": "seed"
+    },
+    {
+      "brand": "Laphroaig",
+      "name": "Laphroaig 10 Years Old",
+      "distillery": "Laphroaig Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "İyot, deniz ve yoğun turba.",
+      "flavorProfile": [
+        "peat",
+        "iodine",
+        "sea salt",
+        "oak",
+        "smoke"
+      ],
+      "tags": [
+        "peated",
+        "medicinal"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.laphroaig.com",
+      "externalId": "laphroaig-10-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Laphroaig",
+      "name": "Laphroaig Quarter Cask",
+      "distillery": "Laphroaig Distillery",
+      "type": "Single Malt",
+      "region": "Islay",
+      "country": "Scotland",
+      "abv": 48.0,
+      "caskType": "Quarter Cask",
+      "description": "Küçük fıçılarda ekstra olgunlaştırılmış.",
+      "flavorProfile": [
+        "peat",
+        "vanilla",
+        "oak",
+        "smoke",
+        "pepper"
+      ],
+      "tags": [
+        "quarter-cask",
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.laphroaig.com",
+      "externalId": "laphroaig-quarter-cask",
+      "source": "seed"
+    },
+    {
+      "brand": "Talisker",
+      "name": "Talisker 10 Years Old",
+      "distillery": "Talisker Distillery",
+      "type": "Single Malt",
+      "region": "Isle of Skye",
+      "country": "Scotland",
+      "abv": 45.8,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Deniz esintisi ve karabiber.",
+      "flavorProfile": [
+        "pepper",
+        "sea salt",
+        "smoke",
+        "citrus",
+        "oak"
+      ],
+      "tags": [
+        "coastal",
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "talisker-10-years-old",
+      "source": "seed"
+    },
+    {
+      "brand": "Talisker",
+      "name": "Talisker Storm",
+      "distillery": "Talisker Distillery",
+      "type": "Single Malt",
+      "region": "Isle of Skye",
+      "country": "Scotland",
+      "abv": 45.8,
+      "caskType": "American Oak",
+      "description": "Baharatlı ve deniz karakterli.",
+      "flavorProfile": [
+        "pepper",
+        "smoke",
+        "sea salt",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "coastal",
+        "nas"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "talisker-storm",
+      "source": "seed"
+    },
+    {
+      "brand": "Talisker",
+      "name": "Talisker Distillers Edition",
+      "distillery": "Talisker Distillery",
+      "type": "Single Malt",
+      "region": "Isle of Skye",
+      "country": "Scotland",
+      "abv": 45.8,
+      "caskType": "Amoroso Sherry Finish",
+      "description": "Meyvemsi ve baharatlı.",
+      "flavorProfile": [
+        "pepper",
+        "raisin",
+        "oak",
+        "smoke",
+        "caramel"
+      ],
+      "tags": [
+        "sherry-finish",
+        "coastal"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "talisker-distillers-edition",
+      "source": "seed"
+    },
+    {
+      "brand": "The Macallan",
+      "name": "The Macallan Double Cask 12 Years Old",
+      "distillery": "The Macallan Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "American & European Oloroso Sherry",
+      "description": "Vanilya ve kuru meyve dengesi.",
+      "flavorProfile": [
+        "vanilla",
+        "apple",
+        "oak",
+        "honey",
+        "dried fruit"
+      ],
+      "tags": [
+        "sherried",
+        "speyside"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.themacallan.com",
+      "externalId": "macallan-double-cask-12",
+      "source": "seed"
+    },
+    {
+      "brand": "The Macallan",
+      "name": "The Macallan Sherry Oak 18 Years Old",
+      "distillery": "The Macallan Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 18,
+      "caskType": "Oloroso Sherry",
+      "description": "Zengin şeri karakteri.",
+      "flavorProfile": [
+        "raisin",
+        "oak",
+        "orange",
+        "dark chocolate",
+        "spice"
+      ],
+      "tags": [
+        "sherried",
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.themacallan.com",
+      "externalId": "macallan-sherry-oak-18",
+      "source": "seed"
+    }
+  ]
+}

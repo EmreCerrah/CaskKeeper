@@ -1,0 +1,318 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "The Dalmore",
+      "name": "The Dalmore 12 Years Old",
+      "distillery": "The Dalmore Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Oloroso Sherry",
+      "description": "Portakal ve şeri karakteri.",
+      "flavorProfile": [
+        "orange",
+        "raisin",
+        "chocolate",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.thedalmore.com",
+      "externalId": "dalmore-12",
+      "source": "seed"
+    },
+    {
+      "brand": "The Dalmore",
+      "name": "The Dalmore 15 Years Old",
+      "distillery": "The Dalmore Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 15,
+      "caskType": "Matusalem, Apostoles & Amoroso Sherry",
+      "description": "Zengin ve kompleks.",
+      "flavorProfile": [
+        "orange",
+        "coffee",
+        "raisin",
+        "oak",
+        "cinnamon"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.thedalmore.com",
+      "externalId": "dalmore-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Glenmorangie",
+      "name": "Glenmorangie The Original 10 Years Old",
+      "distillery": "Glenmorangie Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Çiçeksi ve narenciyeli.",
+      "flavorProfile": [
+        "citrus",
+        "vanilla",
+        "peach",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenmorangie.com",
+      "externalId": "glenmorangie-original-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Glenmorangie",
+      "name": "Glenmorangie Quinta Ruban 14 Years Old",
+      "distillery": "Glenmorangie Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 14,
+      "caskType": "Ruby Port Finish",
+      "description": "Porto bitişli zengin karakter.",
+      "flavorProfile": [
+        "dark chocolate",
+        "mint",
+        "berries",
+        "oak",
+        "orange"
+      ],
+      "tags": [
+        "port-finish"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenmorangie.com",
+      "externalId": "glenmorangie-quinta-ruban-14",
+      "source": "seed"
+    },
+    {
+      "brand": "Dalwhinnie",
+      "name": "Dalwhinnie 15 Years Old",
+      "distillery": "Dalwhinnie Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 15,
+      "caskType": "American Oak",
+      "description": "Yumuşak ve ballı.",
+      "flavorProfile": [
+        "honey",
+        "heather",
+        "vanilla",
+        "oak",
+        "pear"
+      ],
+      "tags": [
+        "classic"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "dalwhinnie-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Aberfeldy",
+      "name": "Aberfeldy 12 Years Old",
+      "distillery": "Aberfeldy Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Sherry",
+      "description": "Bal ağırlıklı Highland.",
+      "flavorProfile": [
+        "honey",
+        "apple",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.aberfeldy.com",
+      "externalId": "aberfeldy-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Blair Athol",
+      "name": "Blair Athol 12 Years Old",
+      "distillery": "Blair Athol Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Refill Oak",
+      "description": "Malt ve baharat dengesi.",
+      "flavorProfile": [
+        "malt",
+        "nuts",
+        "oak",
+        "spice",
+        "toffee"
+      ],
+      "tags": [
+        "flora-fauna"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "blair-athol-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Royal Lochnagar",
+      "name": "Royal Lochnagar 12 Years Old",
+      "distillery": "Royal Lochnagar Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Kraliyet damıtımevi klasiği.",
+      "flavorProfile": [
+        "apple",
+        "honey",
+        "oak",
+        "nuts",
+        "spice"
+      ],
+      "tags": [
+        "royal"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "royal-lochnagar-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Fettercairn",
+      "name": "Fettercairn 12 Years Old",
+      "distillery": "Fettercairn Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Tropikal meyveli profil.",
+      "flavorProfile": [
+        "mango",
+        "banana",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "tropical"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.fettercairnwhisky.com",
+      "externalId": "fettercairn-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Balblair",
+      "name": "Balblair 15 Years Old",
+      "distillery": "Balblair Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 15,
+      "caskType": "Bourbon & Sherry",
+      "description": "Meyvemsi ve kremamsı.",
+      "flavorProfile": [
+        "apricot",
+        "vanilla",
+        "oak",
+        "honey",
+        "spice"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.balblair.com",
+      "externalId": "balblair-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Tullibardine",
+      "name": "Tullibardine Sovereign",
+      "distillery": "Tullibardine Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 43.0,
+      "caskType": "First Fill Bourbon",
+      "description": "Vanilyalı ve hafif.",
+      "flavorProfile": [
+        "vanilla",
+        "pear",
+        "oak",
+        "honey",
+        "citrus"
+      ],
+      "tags": [
+        "bourbon-cask"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tullibardine.com",
+      "externalId": "tullibardine-sovereign",
+      "source": "seed"
+    },
+    {
+      "brand": "Glencadam",
+      "name": "Glencadam 10 Years Old",
+      "distillery": "Glencadam Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Çiçeksi Highland stili.",
+      "flavorProfile": [
+        "floral",
+        "apple",
+        "vanilla",
+        "oak",
+        "lemon"
+      ],
+      "tags": [
+        "unchillfiltered"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glencadamwhisky.com",
+      "externalId": "glencadam-10",
+      "source": "seed"
+    }
+  ]
+}

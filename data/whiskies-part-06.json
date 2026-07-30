@@ -1,0 +1,365 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 14,
+  "items": [
+    {
+      "brand": "Arran",
+      "name": "Arran 10 Years Old",
+      "distillery": "Lochranza Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 10,
+      "caskType": "Bourbon & Sherry",
+      "description": "Meyvemsi ve dengeli.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "citrus",
+        "oak",
+        "honey"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.arranwhisky.com",
+      "externalId": "arran-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Arran",
+      "name": "Arran Sherry Cask The Bodega",
+      "distillery": "Lochranza Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 55.8,
+      "caskType": "Oloroso Sherry",
+      "description": "Fıçı gücünde şeri karakteri.",
+      "flavorProfile": [
+        "raisin",
+        "fig",
+        "oak",
+        "chocolate",
+        "spice"
+      ],
+      "tags": [
+        "cask-strength",
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.arranwhisky.com",
+      "externalId": "arran-bodega",
+      "source": "seed"
+    },
+    {
+      "brand": "Lagg",
+      "name": "Lagg Kilmory Edition",
+      "distillery": "Lagg Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Ex-Bourbon",
+      "description": "Genç ve turbalı Arran.",
+      "flavorProfile": [
+        "peat",
+        "vanilla",
+        "smoke",
+        "pepper",
+        "oak"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.arranwhisky.com",
+      "externalId": "lagg-kilmory",
+      "source": "seed"
+    },
+    {
+      "brand": "Jura",
+      "name": "Jura 12 Years Old",
+      "distillery": "Isle of Jura Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Oloroso",
+      "description": "Yumuşak ve hafif baharatlı.",
+      "flavorProfile": [
+        "honey",
+        "coffee",
+        "oak",
+        "citrus",
+        "nuts"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.jurawhisky.com",
+      "externalId": "jura-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Tobermory",
+      "name": "Tobermory 12 Years Old",
+      "distillery": "Tobermory Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.3,
+      "age": 12,
+      "caskType": "Ex-Bourbon",
+      "description": "Meyvemsi Mull karakteri.",
+      "flavorProfile": [
+        "apple",
+        "pear",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "unpeated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tobermorydistillery.com",
+      "externalId": "tobermory-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Ledaig",
+      "name": "Ledaig 10 Years Old",
+      "distillery": "Tobermory Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.3,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Yoğun isli Mull viskisi.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "pepper",
+        "sea salt",
+        "oak"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.tobermorydistillery.com",
+      "externalId": "ledaig-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Isle of Raasay",
+      "name": "Isle of Raasay Single Malt",
+      "distillery": "Isle of Raasay Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.4,
+      "caskType": "Rye, Chinkapin & Bordeaux",
+      "description": "Modern ada karakteri.",
+      "flavorProfile": [
+        "peat",
+        "berries",
+        "oak",
+        "pepper",
+        "vanilla"
+      ],
+      "tags": [
+        "modern"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://raasaydistillery.com",
+      "externalId": "raasay-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Torabhaig",
+      "name": "Torabhaig Allt Gleann",
+      "distillery": "Torabhaig Distillery",
+      "type": "Single Malt",
+      "region": "Islands",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Ex-Bourbon",
+      "description": "Skye'ın yeni turbalısı.",
+      "flavorProfile": [
+        "peat",
+        "citrus",
+        "smoke",
+        "oak",
+        "pepper"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://torabhaig.com",
+      "externalId": "torabhaig-allt-gleann",
+      "source": "seed"
+    },
+    {
+      "brand": "Ardnamurchan",
+      "name": "Ardnamurchan AD/",
+      "distillery": "Ardnamurchan Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 46.8,
+      "caskType": "Bourbon & Sherry",
+      "description": "Dengeli modern Highland.",
+      "flavorProfile": [
+        "apple",
+        "peat",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://ardnamurchandistillery.com",
+      "externalId": "ardnamurchan-ad",
+      "source": "seed"
+    },
+    {
+      "brand": "Glen Scotia",
+      "name": "Glen Scotia Double Cask",
+      "distillery": "Glen Scotia Distillery",
+      "type": "Single Malt",
+      "region": "Campbeltown",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Bourbon & PX Finish",
+      "description": "Campbeltown klasiği.",
+      "flavorProfile": [
+        "toffee",
+        "sea salt",
+        "oak",
+        "spice",
+        "vanilla"
+      ],
+      "tags": [
+        "campbeltown"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenscotia.com",
+      "externalId": "glen-scotia-double-cask",
+      "source": "seed"
+    },
+    {
+      "brand": "Springbank",
+      "name": "Springbank 10 Years Old",
+      "distillery": "Springbank Distillery",
+      "type": "Single Malt",
+      "region": "Campbeltown",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 10,
+      "caskType": "Bourbon & Sherry",
+      "description": "İkonik Campbeltown.",
+      "flavorProfile": [
+        "sea salt",
+        "smoke",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "campbeltown"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.springbank.scot",
+      "externalId": "springbank-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Longrow",
+      "name": "Longrow Peated",
+      "distillery": "Springbank Distillery",
+      "type": "Single Malt",
+      "region": "Campbeltown",
+      "country": "Scotland",
+      "abv": 46.0,
+      "caskType": "Bourbon",
+      "description": "Yoğun turbalı Springbank.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "pepper",
+        "oak",
+        "vanilla"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.springbank.scot",
+      "externalId": "longrow-peated",
+      "source": "seed"
+    },
+    {
+      "brand": "Hazelburn",
+      "name": "Hazelburn 10 Years Old",
+      "distillery": "Springbank Distillery",
+      "type": "Single Malt",
+      "region": "Campbeltown",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 10,
+      "caskType": "Bourbon",
+      "description": "Üç kez damıtılmış.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "oak",
+        "citrus",
+        "honey"
+      ],
+      "tags": [
+        "triple-distilled"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.springbank.scot",
+      "externalId": "hazelburn-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Kilkerran",
+      "name": "Kilkerran 12 Years Old",
+      "distillery": "Glengyle Distillery",
+      "type": "Single Malt",
+      "region": "Campbeltown",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 12,
+      "caskType": "Bourbon & Sherry",
+      "description": "Meyvemsi ve mineral.",
+      "flavorProfile": [
+        "lemon",
+        "vanilla",
+        "oak",
+        "smoke",
+        "brine"
+      ],
+      "tags": [
+        "campbeltown"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.kilkerransinglemalt.com",
+      "externalId": "kilkerran-12",
+      "source": "seed"
+    }
+  ]
+}
