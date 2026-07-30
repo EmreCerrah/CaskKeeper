@@ -66,8 +66,9 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
           className="h-80 w-full rounded-lg border lg:h-[420px]"
         />
 
-        {/* Bilgiler */}
-        <div className="space-y-6">
+        {/* Bilgiler — min-w-0: grid öğesinin içeriğinden dar olabilmesi için
+            (bkz. panel sayfasındaki aynı düzeltme) */}
+        <div className="min-w-0 space-y-6">
           <div className="space-y-2">
             <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
               {whiskey.brand}

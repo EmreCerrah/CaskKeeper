@@ -64,8 +64,12 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        {/* Son tadımlar */}
-        <div className="space-y-4">
+        {/* Son tadımlar
+            min-w-0: grid öğelerinin varsayılan `min-width: auto` değeri, içindeki
+            `truncate` (whitespace-nowrap) viski adının max-content genişliğinin
+            altına inmelerini engelliyordu; dar ekranda sütun 695px'e şişip sayfayı
+            yatay kaydırılabilir hale getiriyordu. */}
+        <div className="min-w-0 space-y-4">
           <h2 className="font-serif text-xl font-semibold">Son Tadımlarınız</h2>
           {stats.recentNotes.length > 0 ? (
             stats.recentNotes.map((note) => <TastingNoteCard key={note.id} note={note} />)
@@ -83,7 +87,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Damak profili */}
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <h2 className="font-serif text-xl font-semibold">Damak Profiliniz</h2>
           <Card>
             <CardHeader>
