@@ -177,6 +177,42 @@ export interface DashboardStatsDTO {
 }
 
 // ---------------------------------------------------------------------------
+// Detaylı İstatistikler (Faz 3 · Dilim A)
+// ---------------------------------------------------------------------------
+
+export interface FlavorTrendCategoryDTO {
+  /** Aroma çarkı kategori id'si (ör. "fruity") — grafik rengini seçmek için */
+  category: string;
+  /** Türkçe kategori etiketi (ör. "Meyvemsi (Fruity)") */
+  label: string;
+  count: number;
+}
+
+export interface FlavorTrendPointDTO {
+  /** "YYYY-MM" */
+  period: string;
+  total: number;
+  categories: FlavorTrendCategoryDTO[];
+}
+
+export interface DistributionItemDTO {
+  label: string;
+  count: number;
+}
+
+export interface CatalogDistributionDTO {
+  byType: DistributionItemDTO[];
+  byRegion: DistributionItemDTO[];
+  /** En çok tadılan ilk 8 damıtımevi */
+  byDistillery: DistributionItemDTO[];
+}
+
+export interface AnalyticsDTO {
+  flavorTrend: FlavorTrendPointDTO[];
+  distribution: CatalogDistributionDTO;
+}
+
+// ---------------------------------------------------------------------------
 // Dönüştürücüler
 // ---------------------------------------------------------------------------
 

@@ -94,3 +94,38 @@ export const getFlatTags = () => {
     }))
   );
 };
+
+// ---------------------------------------------------------------------------
+// İstatistik grafikleri için kategorik renk paleti
+// ---------------------------------------------------------------------------
+
+/**
+ * Aroma trend grafiğinde kategori başına kullanılan renkler.
+ *
+ * Sabit sırayla atanmıştır (dataviz kuralı: kategorik renkler asla döngüsel
+ * seçilmez) — koyu tema kart yüzeyine (#191310) karşı doğrulanmıştır
+ * (`validate_palette.js`, adjacent pairs, mode dark). "feinty_other" 9. seri
+ * olarak yeni bir ton üretmek yerine nötr griyle "Diğer" olarak katlanır —
+ * kendi etiketi zaten "Diğer/Feinty" olduğu için doğal bir eşleşme.
+ */
+export const CATEGORY_CHART_COLORS: Record<string, string> = {
+  fruity: "#3987e5",
+  floral: "#d95926",
+  woody: "#199e70",
+  sweet: "#c98500",
+  spicy: "#d55181",
+  smoky_peaty: "#008300",
+  nutty: "#9085e9",
+  cereal: "#e66767",
+  feinty_other: "#898781",
+};
+
+/** Bir aroma etiketinin ait olduğu kategori ve Türkçe etiketini bulur. */
+export function categoryForTag(tag: string): { category: string; label: string } | undefined {
+  for (const cat of WHSKEY_AROMA_WHEEL) {
+    if (cat.tags.includes(tag)) {
+      return { category: cat.category, label: cat.label };
+    }
+  }
+  return undefined;
+}

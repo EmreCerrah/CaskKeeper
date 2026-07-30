@@ -6,7 +6,7 @@ neyin tamamlandığını ve bilinen teknik borçları tek yerde tutar.
 > Güncelleme kuralı: bir özellik `main`'e merge edildiğinde kutusunu işaretle ve
 > ilgili PR numarasını yaz. Yeni teknik borç fark ettiğinde ilgili bölüme ekle.
 
-**Son güncelleme:** 2026-07-29
+**Son güncelleme:** 2026-07-30
 
 ---
 
@@ -35,8 +35,17 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 2 · Dilim 1 — Sosyal katman | ✅ Tamamlandı | #2 |
 | Ara iş — Admin & katalog yönetimi | ✅ Tamamlandı | #4 |
 | Faz 2 · Dilim 2 — Kullanıcı arama & arkadaşlık | ✅ Tamamlandı | #5 |
-| Faz 2 · Dilim 3 — Etkileşim | ⬜ Sıradaki | — |
-| Faz 3 — Gelişmiş özellikler | ⬜ Planlanan | — |
+| Faz 2 · Dilim 3 — Etkileşim | ✅ Tamamlandı | direkt merge* |
+| Ara iş — Katalog verisi yenilendi (194 viski, 16 parça) | ✅ Tamamlandı | #9 |
+| Faz 3 · Dilim A — İstatistik & aroma analitiği | ⬜ Sıradaki | — |
+| Faz 3 · Dilim B — Öneri motoru | ⬜ Planlanan | — |
+| Faz 3 · Dilim C — İstek listesi | ⬜ Planlanan | — |
+| Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Planlanan | — |
+| Mobil optimizasyon (ayrı takip) | ⬜ Planlanan | — |
+
+\* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
+fast-forward merge edildi ve hemen ardından katalog silme commit'iyle birlikte
+push edildi.
 
 ---
 
@@ -72,22 +81,50 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 > Karar: ayrı bir istek/kabul akışı **kurulmadı**. Arkadaşlık, var olan
 > karşılıklı takipten türetiliyor — ikinci bir sosyal graf oluşmuyor.
 
-### Dilim 3 — Etkileşim ⬜ (sıradaki)
+### Dilim 3 — Etkileşim ✅
 
-- [ ] Tadım notlarına beğeni
-- [ ] Tadım notlarına yorum
-- [ ] Bildirimler (takip, beğeni, yorum)
-- [ ] Bildirim okundu/okunmadı durumu
+- [x] Tadım notlarına beğeni (yalnızca herkese açık notlara; kendi notunu
+      beğenmek bildirim üretmez)
+- [x] Tadım notlarına yorum (silme yetkisi: yorumun yazarı ya da notun sahibi)
+- [x] Bildirimler (takip, beğeni, yorum) — `/bildirimler`, gezinme çubuğunda zil
+- [x] Bildirim okundu/okunmadı durumu — tekli ve "tümünü okundu işaretle"
+- [x] Tadım notu kalıcı bağlantısı (`/tadimlar/[id]`) — bildirimlerin hedefi
+- [x] Geri alınan eylemde (takibi bırak, beğeniyi kaldır) ilgili bildirim silinir
+- [x] Not silindiğinde beğeni/yorum/bildirimleri cascade temizlenir
 
 ## Faz 3 — Gelişmiş Özellikler ⬜
 
-- [ ] Detaylı istatistikler ve aroma analitiği
-- [ ] Öneri motoru (damak profiline göre viski önerisi)
-- [ ] Viski karşılaştırma
-- [ ] Şişe koleksiyonu (sahip olunan şişeler)
-- [ ] İstek listesi (wishlist)
-- [ ] Tadım notlarını dışa/içe aktarma
-- [ ] Mobil optimizasyon iyileştirmeleri
+Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma Tarzı).
+
+### Dilim A — İstatistik & aroma analitiği ⬜ (sıradaki)
+
+- [ ] Zaman içinde damak zevki değişimi (aylık/dönemsel aroma eğilimi)
+- [ ] Bölge/tip/damıtımevi dağılım grafikleri
+- [ ] Mevcut `getStatsByUser` aggregate'inin genişletilmesi
+
+### Dilim B — Öneri motoru ⬜
+
+- [ ] Kullanıcının en çok seçtiği aroma etiketlerine göre viski önerisi (ranking)
+- [ ] Dilim A'nın üstüne kurulur — aroma profili verisini kullanır
+
+### Dilim C — İstek listesi ⬜
+
+- [ ] Kullanıcının denemeyi düşündüğü viskileri işaretlemesi (wishlist)
+- [ ] Kapsam yalnızca bu: miktar/fiyat/konum gibi envanter alanları **yok**
+      (ürün brief'indeki "envanter/stok yönetimi değil" kuralına uyum için
+      "şişe koleksiyonu" fikri kapsam dışı bırakıldı)
+
+### Dilim D — Viski karşılaştırma ⬜
+
+- [ ] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
+- [ ] Yeni kalıcı model gerekmiyor, büyük ölçüde frontend
+
+> Kapsam dışı (şimdilik): tadım notu dışa/içe aktarma.
+
+## Mobil Optimizasyon ⬜ (ayrı takip)
+
+Kesitsel bir iş — her sayfaya dokunduğu için Faz 3 dilimlerinden bağımsız,
+kendi başına ele alınacak. Henüz dilimlenmedi.
 
 ---
 
@@ -114,22 +151,32 @@ olarak güncellendi — slug'ın türetildiği üçlüyle birebir aynı. Bağım
 > İndeks tanımı değişirse dağıtımdan sonra bir kez `npm run db:sync-indexes`
 > çalıştırılmalı — Mongoose kaldırılan indeksleri kendiliğinden düşürmez.
 
-### 3. Import script mimariyi atlıyor — *orta*
+### 3. `next@14.2.1` bilinen güvenlik açıklarına sahip — *yüksek*
+`npm audit`: 1 critical (Next.js — middleware yetki atlatma, SSRF, cache
+poisoning dahil onlarca CVE), 1 high (postcss), 1 moderate (mongoose), 1 low
+(esbuild). Bu uygulama route korumasını tamamen `middleware.ts`'e dayandırdığı
+için middleware yetki atlatma CVE'si özellikle ilgili. Next.js'i güncel bir
+14.x patch'ine (ya da 15'e) yükseltmek gerekiyor; kapsam ve regresyon riski
+ayrı bir dilim olarak ele alınmalı.
+
+### ~~4. Artık `whiskies` koleksiyonu~~ ✅ *çözüldü (2026-07-30)*
+Geliştirme veritabanındaki eski ham `whiskies` koleksiyonu silindi. Katalog
+artık yalnızca `whiskeys` koleksiyonunda, `data/` klasöründeki 16 parçadan
+(`npm run seed:catalog`) besleniyor.
+
+### 5. Import script mimariyi atlıyor — *düşük öncelik*
 `scripts/import-whiskeys.ts` doğrudan Mongoose modeline yazıyor; repository ve
 service katmanlarını kullanmıyor. Validasyon/slug mantığı script içinde
-tekrarlanıyor. Service üzerinden geçirilmesi tutarlılığı artırır.
+tekrarlanıyor. Bilinçli olarak düşük öncelikli tutuluyor: katalog bir kez
+seed edildikten sonra bu script canlı uygulama akışının parçası olmayan,
+yalnızca ihtiyaç halinde çalıştırılan bir bakım aracı.
 
-### 4. Rol değişimi menüye gecikmeli yansıyor — *düşük*
+### 6. Rol değişimi menüye gecikmeli yansıyor — *düşük*
 Rol JWT içinde tutulduğundan, yetki değişikliği kullanıcının menüsüne bir
 sonraki girişinde yansır. **Güvenlik etkisi yok** — yetki gerektiren tüm
 işlemler rolü her istekte veritabanından doğrular (`lib/auth/admin.ts`).
 
-### 5. Artık `whiskies` koleksiyonu — *düşük*
-Geliştirme veritabanında, ham `sample-data.json` verisinin elle yüklendiği
-`whiskies` koleksiyonu duruyor. Uygulama kullanmıyor; kafa karışıklığı yaratmasın
-diye silinebilir: `db.whiskies.drop()`
-
-### 6. `next/image` kullanılmıyor — *bilinçli tercih*
+### 7. `next/image` kullanılmıyor — *bilinçli tercih*
 Viski görselleri düz `<img>` ile yükleniyor. Sebep: katalog verisi dış
 kaynaklardan geldiği için her yeni domain'i `next.config.mjs`'e eklemek
 sürdürülebilir değil. `WhiskeyImage` bileşeni kırık/eksik görselleri fallback ile
