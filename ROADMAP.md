@@ -40,8 +40,8 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 3 · Dilim A — İstatistik & aroma analitiği | ✅ Tamamlandı | #10 |
 | Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
 | Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | — |
-| Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Sıradaki | — |
-| Mobil optimizasyon (ayrı takip) | ⬜ Planlanan | — |
+| Faz 3 · Dilim D — Viski karşılaştırma | ✅ Tamamlandı | — |
+| Mobil optimizasyon (ayrı takip) | ⬜ Sıradaki | — |
 
 \* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
 fast-forward merge edildi ve hemen ardından katalog silme commit'iyle birlikte
@@ -92,7 +92,7 @@ push edildi.
 - [x] Geri alınan eylemde (takibi bırak, beğeniyi kaldır) ilgili bildirim silinir
 - [x] Not silindiğinde beğeni/yorum/bildirimleri cascade temizlenir
 
-## Faz 3 — Gelişmiş Özellikler ⬜
+## Faz 3 — Gelişmiş Özellikler ✅
 
 Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma Tarzı).
 
@@ -121,10 +121,15 @@ Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma
 - [x] `/istek-listem` sayfası, `GET/POST/DELETE /api/wishlist`
 - [x] Viski detay sayfasında ekle/kaldır butonu
 
-### Dilim D — Viski karşılaştırma ⬜ (sıradaki)
+### Dilim D — Viski karşılaştırma ✅
 
-- [ ] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
-- [ ] Yeni kalıcı model gerekmiyor, büyük ölçüde frontend
+- [x] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
+- [x] Yeni kalıcı model gerekmedi — durum URL'de (`/karsilastir?viski=…`),
+      paylaşılabilir ve geri tuşu uyumlu
+- [x] Ortak aroma notaları vurgulanır (kesişim); ayrım renge değil, rozetteki
+      "ortak" ibaresine de dayanır
+- [x] Arama ile ekleme, tek tıkla çıkarma; giriş noktaları katalog ve viski
+      detay sayfasında
 
 > Kapsam dışı (şimdilik): tadım notu dışa/içe aktarma.
 
@@ -158,13 +163,37 @@ olarak güncellendi — slug'ın türetildiği üçlüyle birebir aynı. Bağım
 > İndeks tanımı değişirse dağıtımdan sonra bir kez `npm run db:sync-indexes`
 > çalıştırılmalı — Mongoose kaldırılan indeksleri kendiliğinden düşürmez.
 
-### 3. `next@14.2.1` bilinen güvenlik açıklarına sahip — *yüksek*
-`npm audit`: 1 critical (Next.js — middleware yetki atlatma, SSRF, cache
-poisoning dahil onlarca CVE), 1 high (postcss), 1 moderate (mongoose), 1 low
-(esbuild). Bu uygulama route korumasını tamamen `middleware.ts`'e dayandırdığı
-için middleware yetki atlatma CVE'si özellikle ilgili. Next.js'i güncel bir
-14.x patch'ine (ya da 15'e) yükseltmek gerekiyor; kapsam ve regresyon riski
-ayrı bir dilim olarak ele alınmalı.
+### ~~3. Kritik bağımlılık açıkları~~ ✅ *kritik olan çözüldü (2026-07-30)*
+`next` 14.2.1 → **14.2.35**, `mongoose` → **8.24.2**, `postcss` → **8.5.25**.
+Böylece **critical seviye sıfırlandı** — en önemlisi, route korumasının tamamen
+`middleware.ts`'e dayandığı bu uygulamayı doğrudan ilgilendiren *middleware
+yetki atlatma* CVE'si kapandı. `mongoose` prototype pollution (update casting)
+ve doğrudan `postcss` bağımlılığı da yamalandı. Yükseltme semver-major değil.
+
+> **Kalan artık risk — kabul edildi, ayrı dilim gerektirir.**
+> `npm audit` hâlâ `next` ve Next'in kendi içinde taşıdığı `postcss@8.4.31`
+> için HIGH gösteriyor; ikisinin de tek düzeltmesi **`next@16` (semver-major)**.
+> Kalan `next` uyarılarının çoğu bu uygulamada **karşılığı olmayan** özellikleri
+> hedefliyor (kod tabanında doğrulandı):
+> - Server Actions CVE'leri → `"use server"` hiç kullanılmıyor
+> - `next/image` / Image Optimizer CVE'leri → `next/image` kullanılmıyor (bkz. madde 7)
+> - rewrites SSRF / request smuggling → `next.config.mjs`'de rewrites yok
+> - Pages Router + i18n middleware bypass → App Router, i18n yok
+> - CSP nonce / `beforeInteractive` XSS → ikisi de kullanılmıyor
+>
+> Gerçekten geçerli olabilecekler RSC kaynaklı DoS/cache poisoning maddeleri;
+> tüm sayfalar `force-dynamic` olduğu için cache yüzeyi dar. Next'in içindeki
+> `postcss` ise yalnızca **derleme zamanı** çalışır ve CSS girdisi depodan gelir,
+> kullanıcıdan değil.
+>
+> Next 14 → 16 geçişi `cookies()`/`headers()`/`params`/`searchParams`'ı async
+> yapar; `lib/auth/session.ts` ve neredeyse tüm sayfalar etkilenir. Kendi dilimi
+> olarak planlanmalı.
+
+> Not: `next@14.2.35` derlemede `jose`'nin JWE deflate yolu için "Edge Runtime'da
+> desteklenmeyen Node.js API" uyarısı veriyor. Zararsız — uygulama yalnızca JWS
+> (`SignJWT`/`jwtVerify`) kullanıyor, o kod yolu hiç çalışmıyor; middleware ve
+> oturum akışı yükseltme sonrası uçtan uca doğrulandı.
 
 ### ~~4. Artık `whiskies` koleksiyonu~~ ✅ *çözüldü (2026-07-30)*
 Geliştirme veritabanındaki eski ham `whiskies` koleksiyonu silindi. Katalog

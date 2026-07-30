@@ -14,6 +14,7 @@ import { CreateWhiskeySchema, UpdateWhiskeyDTO, UpdateWhiskeySchema } from "../v
 import { generateWhiskeySlug, normalizeWhiskeyType } from "@/lib/utils/normalize";
 import { ConflictError, NotFoundError, ValidationError } from "@/lib/errors";
 import { toWhiskeyDTO, type WhiskeyDTO } from "@/lib/types/dto";
+import type { IWhiskey } from "../models/Whiskey";
 
 export interface PaginatedWhiskeys {
   data: WhiskeyDTO[];
@@ -50,6 +51,24 @@ export class WhiskeyService {
   async findWhiskeyBySlug(slug: string): Promise<WhiskeyDTO | null> {
     const whiskey = await whiskeyRepository.findBySlug(slug);
     return whiskey ? toWhiskeyDTO(whiskey) : null;
+  }
+
+  /**
+   * Karşılaştırma için: verilen slug'ları tek sorguda getirir ve **istenen
+   * sırayı korur** — karşılaştırma tablosundaki sütun sırası URL'deki sırayla
+   * aynı kalmalı. Bulunamayan slug'lar sessizce atlanır (URL elle düzenlenmiş
+   * ya da viski katalogdan silinmiş olabilir).
+   */
+  async getWhiskeysBySlugs(slugs: string[]): Promise<WhiskeyDTO[]> {
+    if (slugs.length === 0) return [];
+
+    const found = await whiskeyRepository.findBySlugs(slugs);
+    const bySlug = new Map(found.map((whiskey) => [whiskey.slug, whiskey]));
+
+    return slugs
+      .map((slug) => bySlug.get(slug))
+      .filter((whiskey): whiskey is IWhiskey => whiskey !== undefined)
+      .map(toWhiskeyDTO);
   }
 
   async searchWhiskeys(query: string, limit?: number): Promise<WhiskeyDTO[]> {

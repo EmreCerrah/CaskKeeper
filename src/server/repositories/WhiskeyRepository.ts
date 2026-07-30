@@ -126,6 +126,15 @@ export class WhiskeyRepository {
     return await Whiskey.findOne({ externalId }).lean() as unknown as IWhiskey | null;
   }
 
+  /**
+   * Birden çok slug'ı tek sorguda getirir (karşılaştırma sayfası için).
+   * Dönüş sırası garanti edilmez — çağıran taraf istediği sıraya dizmelidir.
+   */
+  async findBySlugs(slugs: string[]): Promise<IWhiskey[]> {
+    if (slugs.length === 0) return [];
+    return await Whiskey.find({ slug: { $in: slugs } }).lean() as unknown as IWhiskey[];
+  }
+
   /** Katalogdaki mevcut tip/bölge/ülke değerleri (filtre dropdown'ları için) */
   async getFacets(): Promise<WhiskeyFacets> {
     const [types, regions, countries] = await Promise.all([
