@@ -1,0 +1,314 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Redbreast",
+      "name": "Redbreast 12 Years Old",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon & Oloroso",
+      "description": "İkonik Irish Pot Still.",
+      "flavorProfile": [
+        "dried fruit",
+        "nuts",
+        "spice",
+        "vanilla",
+        "oak"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.redbreastwhiskey.com",
+      "imageUrl": "",
+      "externalId": "redbreast-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Redbreast",
+      "name": "Redbreast 15 Years Old",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 46.0,
+      "age": 15,
+      "caskType": "Bourbon & Sherry",
+      "description": "Zengin ve yağlı gövde.",
+      "flavorProfile": [
+        "fig",
+        "honey",
+        "oak",
+        "spice",
+        "toffee"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "officialUrl": "https://www.redbreastwhiskey.com",
+      "imageUrl": "",
+      "externalId": "redbreast-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Spot",
+      "name": "Green Spot",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon & Sherry",
+      "description": "Meyvemsi klasik.",
+      "flavorProfile": [
+        "green apple",
+        "pear",
+        "vanilla",
+        "oak",
+        "pepper"
+      ],
+      "tags": [
+        "spot-range"
+      ],
+      "officialUrl": "https://www.spotwhiskey.com",
+      "imageUrl": "",
+      "externalId": "green-spot",
+      "source": "seed"
+    },
+    {
+      "brand": "Spot",
+      "name": "Yellow Spot 12 Years Old",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 46.0,
+      "age": 12,
+      "caskType": "Bourbon, Sherry & Malaga",
+      "description": "Tatlı ve kompleks.",
+      "flavorProfile": [
+        "apricot",
+        "honey",
+        "spice",
+        "oak",
+        "raisin"
+      ],
+      "tags": [
+        "spot-range"
+      ],
+      "officialUrl": "https://www.spotwhiskey.com",
+      "imageUrl": "",
+      "externalId": "yellow-spot-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Spot",
+      "name": "Blue Spot 7 Years Old",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 58.7,
+      "age": 7,
+      "caskType": "Bourbon, Sherry & Madeira",
+      "description": "Cask strength.",
+      "flavorProfile": [
+        "pepper",
+        "vanilla",
+        "oak",
+        "tropical fruit",
+        "spice"
+      ],
+      "tags": [
+        "cask-strength"
+      ],
+      "officialUrl": "https://www.spotwhiskey.com",
+      "imageUrl": "",
+      "externalId": "blue-spot-7",
+      "source": "seed"
+    },
+    {
+      "brand": "Spot",
+      "name": "Red Spot 15 Years Old",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 46.0,
+      "age": 15,
+      "caskType": "Bourbon, Sherry & Marsala",
+      "description": "Nadir Spot serisi.",
+      "flavorProfile": [
+        "berries",
+        "oak",
+        "spice",
+        "honey",
+        "dark chocolate"
+      ],
+      "tags": [
+        "spot-range"
+      ],
+      "officialUrl": "https://www.spotwhiskey.com",
+      "imageUrl": "",
+      "externalId": "red-spot-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Jameson",
+      "name": "Jameson Original",
+      "distillery": "Midleton Distillery",
+      "type": "Blended Irish",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon & Sherry",
+      "description": "Dünyanın en popüler Irish whiskylerinden.",
+      "flavorProfile": [
+        "vanilla",
+        "pear",
+        "grain",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.jamesonwhiskey.com",
+      "imageUrl": "",
+      "externalId": "jameson-original",
+      "source": "seed"
+    },
+    {
+      "brand": "Bushmills",
+      "name": "Bushmills 10 Years Old",
+      "distillery": "Old Bushmills Distillery",
+      "type": "Single Malt",
+      "region": "County Antrim",
+      "country": "United Kingdom",
+      "subRegion": "Northern Ireland",
+      "abv": 40.0,
+      "age": 10,
+      "caskType": "Bourbon & Sherry",
+      "description": "Klasik Bushmills maltı.",
+      "flavorProfile": [
+        "honey",
+        "vanilla",
+        "apple",
+        "oak",
+        "chocolate"
+      ],
+      "tags": [
+        "single-malt"
+      ],
+      "officialUrl": "https://www.bushmills.com",
+      "imageUrl": "",
+      "externalId": "bushmills-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Teeling",
+      "name": "Teeling Small Batch",
+      "distillery": "Teeling Distillery",
+      "type": "Blended Irish",
+      "region": "Dublin",
+      "country": "Ireland",
+      "abv": 46.0,
+      "caskType": "Rum Finish",
+      "description": "Rum fıçısı bitişli.",
+      "flavorProfile": [
+        "rum",
+        "vanilla",
+        "caramel",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "rum-finish"
+      ],
+      "officialUrl": "https://www.teelingwhiskey.com",
+      "imageUrl": "",
+      "externalId": "teeling-small-batch",
+      "source": "seed"
+    },
+    {
+      "brand": "Writer's Tears",
+      "name": "Writer's Tears Copper Pot",
+      "distillery": "Walsh Whiskey",
+      "type": "Blended Irish",
+      "region": "County Carlow",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon",
+      "description": "Yumuşak ve meyvemsi.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "honey",
+        "oak",
+        "cinnamon"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.walshwhiskey.com",
+      "imageUrl": "",
+      "externalId": "writers-tears-copper-pot",
+      "source": "seed"
+    },
+    {
+      "brand": "Powers",
+      "name": "Powers Gold Label",
+      "distillery": "Midleton Distillery",
+      "type": "Single Pot Still",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 43.2,
+      "caskType": "Bourbon",
+      "description": "Baharatlı klasik.",
+      "flavorProfile": [
+        "pepper",
+        "honey",
+        "oak",
+        "vanilla",
+        "grain"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.powerswhiskey.com",
+      "imageUrl": "",
+      "externalId": "powers-gold",
+      "source": "seed"
+    },
+    {
+      "brand": "Roe & Co",
+      "name": "Roe & Co Blended Irish Whiskey",
+      "distillery": "Roe & Co Distillery",
+      "type": "Blended Irish",
+      "region": "Dublin",
+      "country": "Ireland",
+      "abv": 45.0,
+      "caskType": "Bourbon",
+      "description": "Modern Dublin harmanı.",
+      "flavorProfile": [
+        "vanilla",
+        "pear",
+        "oak",
+        "cream",
+        "spice"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.roeandcowhiskey.com",
+      "imageUrl": "",
+      "externalId": "roe-co",
+      "source": "seed"
+    }
+  ]
+}

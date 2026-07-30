@@ -1,0 +1,318 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "GlenAllachie",
+      "name": "GlenAllachie 12 Years Old",
+      "distillery": "GlenAllachie Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 12,
+      "caskType": "PX, Oloroso & Virgin Oak",
+      "description": "Zengin şeri karakteri.",
+      "flavorProfile": [
+        "raisin",
+        "honey",
+        "oak",
+        "cocoa",
+        "orange"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.theglenallachie.com",
+      "externalId": "glenallachie-12",
+      "source": "seed"
+    },
+    {
+      "brand": "GlenAllachie",
+      "name": "GlenAllachie 15 Years Old",
+      "distillery": "GlenAllachie Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 15,
+      "caskType": "Sherry Casks",
+      "description": "Yoğun kuru meyve.",
+      "flavorProfile": [
+        "raisin",
+        "fig",
+        "oak",
+        "dark chocolate",
+        "spice"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.theglenallachie.com",
+      "externalId": "glenallachie-15",
+      "source": "seed"
+    },
+    {
+      "brand": "Glen Moray",
+      "name": "Glen Moray Elgin Classic",
+      "distillery": "Glen Moray Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "caskType": "Ex-Bourbon",
+      "description": "Hafif ve vanilyalı.",
+      "flavorProfile": [
+        "vanilla",
+        "apple",
+        "oak",
+        "citrus",
+        "honey"
+      ],
+      "tags": [
+        "entry-level"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glenmoray.com",
+      "externalId": "glen-moray-elgin-classic",
+      "source": "seed"
+    },
+    {
+      "brand": "Glen Grant",
+      "name": "Glen Grant 10 Years Old",
+      "distillery": "Glen Grant Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 10,
+      "caskType": "Ex-Bourbon",
+      "description": "Çiçeksi ve ferah.",
+      "flavorProfile": [
+        "pear",
+        "apple",
+        "vanilla",
+        "oak",
+        "floral"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.glengrant.com",
+      "externalId": "glen-grant-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Mortlach",
+      "name": "Mortlach 16 Years Old",
+      "distillery": "Mortlach Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.4,
+      "age": 16,
+      "caskType": "Sherry Seasoned Oak",
+      "description": "Etimsi ve yoğun.",
+      "flavorProfile": [
+        "meaty",
+        "raisin",
+        "oak",
+        "spice",
+        "dark chocolate"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "mortlach-16",
+      "source": "seed"
+    },
+    {
+      "brand": "Glen Elgin",
+      "name": "Glen Elgin 12 Years Old",
+      "distillery": "Glen Elgin Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Tatlı ve meyvemsi.",
+      "flavorProfile": [
+        "honey",
+        "apple",
+        "almond",
+        "oak",
+        "vanilla"
+      ],
+      "tags": [
+        "flora-fauna"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "glen-elgin-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Knockando",
+      "name": "Knockando 12 Years Old",
+      "distillery": "Knockando Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Ex-Bourbon & Sherry",
+      "description": "Dengeli Speyside.",
+      "flavorProfile": [
+        "pear",
+        "oak",
+        "honey",
+        "nuts",
+        "vanilla"
+      ],
+      "tags": [
+        "classic"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.knockando.com",
+      "externalId": "knockando-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Linkwood",
+      "name": "Linkwood 12 Years Old",
+      "distillery": "Linkwood Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 12,
+      "caskType": "Refill Oak",
+      "description": "Çiçeksi ve narin.",
+      "flavorProfile": [
+        "floral",
+        "apple",
+        "oak",
+        "pear",
+        "vanilla"
+      ],
+      "tags": [
+        "flora-fauna"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "linkwood-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Aultmore",
+      "name": "Aultmore 12 Years Old",
+      "distillery": "Aultmore Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 46.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Temiz ve çimenimsi.",
+      "flavorProfile": [
+        "grass",
+        "apple",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "dew-of-the-moor"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.malts.com",
+      "externalId": "aultmore-12",
+      "source": "seed"
+    },
+    {
+      "brand": "Longmorn",
+      "name": "Longmorn 16 Years Old",
+      "distillery": "Longmorn Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 48.0,
+      "age": 16,
+      "caskType": "Oak Casks",
+      "description": "Meyvemsi ve dolgun.",
+      "flavorProfile": [
+        "pear",
+        "toffee",
+        "oak",
+        "orange",
+        "spice"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.longmorn.com",
+      "externalId": "longmorn-16",
+      "source": "seed"
+    },
+    {
+      "brand": "Benromach",
+      "name": "Benromach 10 Years Old",
+      "distillery": "Benromach Distillery",
+      "type": "Single Malt",
+      "region": "Speyside",
+      "country": "Scotland",
+      "abv": 43.0,
+      "age": 10,
+      "caskType": "Bourbon & Sherry",
+      "description": "Hafif isli Speyside.",
+      "flavorProfile": [
+        "smoke",
+        "apple",
+        "oak",
+        "sherry",
+        "pepper"
+      ],
+      "tags": [
+        "lightly-peated"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.benromach.com",
+      "externalId": "benromach-10",
+      "source": "seed"
+    },
+    {
+      "brand": "anCnoc",
+      "name": "anCnoc 12 Years Old",
+      "distillery": "Knockdhu Distillery",
+      "type": "Single Malt",
+      "region": "Highland",
+      "country": "Scotland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "American Oak",
+      "description": "Yumuşak Highland karakteri.",
+      "flavorProfile": [
+        "honey",
+        "lemon",
+        "vanilla",
+        "oak",
+        "malt"
+      ],
+      "tags": [
+        "highland"
+      ],
+      "imageUrl": "",
+      "officialUrl": "https://www.ancnoc.com",
+      "externalId": "ancnoc-12",
+      "source": "seed"
+    }
+  ]
+}

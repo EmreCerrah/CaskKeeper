@@ -1,0 +1,308 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Chichibu",
+      "name": "Chichibu The First",
+      "distillery": "Chichibu Distillery",
+      "type": "Single Malt",
+      "region": "Saitama",
+      "country": "Japan",
+      "abv": 61.8,
+      "limitedEdition": true,
+      "caskType": "Various",
+      "description": "İlk resmi Chichibu sürümü.",
+      "flavorProfile": [
+        "honey",
+        "oak",
+        "tropical fruit",
+        "spice",
+        "vanilla"
+      ],
+      "tags": [
+        "limited"
+      ],
+      "officialUrl": "https://www.chichibu-whisky.jp",
+      "imageUrl": "",
+      "externalId": "chichibu-the-first",
+      "source": "seed"
+    },
+    {
+      "brand": "Chichibu",
+      "name": "Chichibu On The Way",
+      "distillery": "Chichibu Distillery",
+      "type": "Single Malt",
+      "region": "Saitama",
+      "country": "Japan",
+      "abv": 58.5,
+      "caskType": "Various",
+      "description": "Erken dönem ikonik sürüm.",
+      "flavorProfile": [
+        "apple",
+        "oak",
+        "malt",
+        "pepper",
+        "honey"
+      ],
+      "tags": [
+        "limited"
+      ],
+      "officialUrl": "https://www.chichibu-whisky.jp",
+      "imageUrl": "",
+      "externalId": "chichibu-on-the-way",
+      "source": "seed"
+    },
+    {
+      "brand": "Chichibu",
+      "name": "Chichibu The Peated",
+      "distillery": "Chichibu Distillery",
+      "type": "Single Malt",
+      "region": "Saitama",
+      "country": "Japan",
+      "abv": 53.5,
+      "caskType": "Bourbon",
+      "description": "Yoğun turbalı Chichibu.",
+      "flavorProfile": [
+        "peat",
+        "smoke",
+        "vanilla",
+        "oak",
+        "citrus"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "officialUrl": "https://www.chichibu-whisky.jp",
+      "imageUrl": "",
+      "externalId": "chichibu-peated",
+      "source": "seed"
+    },
+    {
+      "brand": "Mars",
+      "name": "Mars Komagatake",
+      "distillery": "Mars Shinshu Distillery",
+      "type": "Single Malt",
+      "region": "Nagano",
+      "country": "Japan",
+      "abv": 48.0,
+      "caskType": "Bourbon & Sherry",
+      "description": "Dağ distillerisinden zarif malt.",
+      "flavorProfile": [
+        "pear",
+        "honey",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.hombo.co.jp",
+      "imageUrl": "",
+      "externalId": "mars-komagatake",
+      "source": "seed"
+    },
+    {
+      "brand": "Mars",
+      "name": "Mars Iwai Tradition",
+      "distillery": "Mars Shinshu Distillery",
+      "type": "Blended Whisky",
+      "region": "Nagano",
+      "country": "Japan",
+      "abv": 40.0,
+      "caskType": "Various",
+      "description": "Popüler günlük içim.",
+      "flavorProfile": [
+        "caramel",
+        "vanilla",
+        "apple",
+        "oak",
+        "pepper"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.hombo.co.jp",
+      "imageUrl": "",
+      "externalId": "mars-iwai-tradition",
+      "source": "seed"
+    },
+    {
+      "brand": "Akashi",
+      "name": "Akashi Single Malt",
+      "distillery": "White Oak Distillery",
+      "type": "Single Malt",
+      "region": "Hyogo",
+      "country": "Japan",
+      "abv": 46.0,
+      "caskType": "Bourbon",
+      "description": "Narenciye ağırlıklı.",
+      "flavorProfile": [
+        "citrus",
+        "vanilla",
+        "oak",
+        "pear",
+        "spice"
+      ],
+      "tags": [
+        "single-malt"
+      ],
+      "officialUrl": "https://www.ei-shuzo.co.jp",
+      "imageUrl": "",
+      "externalId": "akashi-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Akashi",
+      "name": "Akashi White Oak Blended",
+      "distillery": "White Oak Distillery",
+      "type": "Blended Whisky",
+      "region": "Hyogo",
+      "country": "Japan",
+      "abv": 40.0,
+      "caskType": "American Oak",
+      "description": "Yumuşak harman.",
+      "flavorProfile": [
+        "grain",
+        "vanilla",
+        "honey",
+        "oak",
+        "apple"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.ei-shuzo.co.jp",
+      "imageUrl": "",
+      "externalId": "akashi-white-oak",
+      "source": "seed"
+    },
+    {
+      "brand": "Fuji",
+      "name": "Fuji Single Malt",
+      "distillery": "Fuji Gotemba Distillery",
+      "type": "Single Malt",
+      "region": "Shizuoka",
+      "country": "Japan",
+      "abv": 46.0,
+      "caskType": "Various",
+      "description": "Fuji eteklerinden malt.",
+      "flavorProfile": [
+        "peach",
+        "vanilla",
+        "oak",
+        "honey",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.kirin.co.jp",
+      "imageUrl": "",
+      "externalId": "fuji-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Fuji",
+      "name": "Fuji Single Grain",
+      "distillery": "Fuji Gotemba Distillery",
+      "type": "Single Grain",
+      "region": "Shizuoka",
+      "country": "Japan",
+      "abv": 46.0,
+      "caskType": "Various",
+      "description": "Zengin grain whisky.",
+      "flavorProfile": [
+        "caramel",
+        "coconut",
+        "vanilla",
+        "oak",
+        "banana"
+      ],
+      "tags": [
+        "single-grain"
+      ],
+      "officialUrl": "https://www.kirin.co.jp",
+      "imageUrl": "",
+      "externalId": "fuji-single-grain",
+      "source": "seed"
+    },
+    {
+      "brand": "Sakurao",
+      "name": "Sakurao Single Malt",
+      "distillery": "Sakurao Distillery",
+      "type": "Single Malt",
+      "region": "Hiroshima",
+      "country": "Japan",
+      "abv": 43.0,
+      "caskType": "Bourbon & Sherry",
+      "description": "Deniz etkili karakter.",
+      "flavorProfile": [
+        "citrus",
+        "sea breeze",
+        "oak",
+        "vanilla",
+        "pepper"
+      ],
+      "tags": [
+        "modern"
+      ],
+      "officialUrl": "https://www.sakuraodistillery.com",
+      "imageUrl": "",
+      "externalId": "sakurao-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Shizuoka",
+      "name": "Shizuoka Contact S",
+      "distillery": "Shizuoka Distillery",
+      "type": "Single Malt",
+      "region": "Shizuoka",
+      "country": "Japan",
+      "abv": 55.5,
+      "caskType": "Various",
+      "description": "Eski Karuizawa ekipmanlarıyla üretilen malt.",
+      "flavorProfile": [
+        "malt",
+        "green tea",
+        "oak",
+        "pepper",
+        "citrus"
+      ],
+      "tags": [
+        "craft"
+      ],
+      "officialUrl": "https://shizuoka-distillery.jp",
+      "imageUrl": "",
+      "externalId": "shizuoka-contact-s",
+      "source": "seed"
+    },
+    {
+      "brand": "Kanosuke",
+      "name": "Kanosuke Single Malt",
+      "distillery": "Kanosuke Distillery",
+      "type": "Single Malt",
+      "region": "Kagoshima",
+      "country": "Japan",
+      "abv": 48.0,
+      "caskType": "Re-charred American Oak",
+      "description": "Yeni nesil Japon maltı.",
+      "flavorProfile": [
+        "honey",
+        "caramel",
+        "oak",
+        "cinnamon",
+        "orange"
+      ],
+      "tags": [
+        "craft"
+      ],
+      "officialUrl": "https://kanosuke.com",
+      "imageUrl": "",
+      "externalId": "kanosuke-single-malt",
+      "source": "seed"
+    }
+  ]
+}

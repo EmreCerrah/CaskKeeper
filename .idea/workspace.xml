@@ -4,10 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="36be260f-8382-4eb0-a4f9-b1d74e2c107b" name="Changes" comment="chore: add local Docker Compose override for MongoDB and IntelliJ IDEA configuration files&#10;&#10;- Introduced `docker-compose.override.yml` for local testing, exposing MongoDB port on the host.&#10;- Added IntelliJ IDEA project files to streamline development setup.">
+    <list default="true" id="36be260f-8382-4eb0-a4f9-b1d74e2c107b" name="Changes" comment="`delete: remove unused large seed file for whiskies`">
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-01.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-02.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-03.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-04.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-05.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-06.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-07.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-08.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-09.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-10.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-11.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-12.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-13.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-14.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-15.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/whiskies-part-16.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/import-whiskeys.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/import-whiskeys.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/whiskies-seed.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +38,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="data/whiskey-seed" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,7 +88,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "data/new-whiskies",
     "git.auto.fetch.suggestion.counter": "1",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
@@ -149,7 +166,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785351248812</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="`delete: remove unused large seed file for whiskies`">
+      <option name="closed" value="true" />
+      <created>1785389792408</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1785389792408</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
