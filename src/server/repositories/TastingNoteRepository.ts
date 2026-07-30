@@ -257,6 +257,15 @@ export class TastingNoteRepository {
     };
   }
 
+  /**
+   * Öneri motoru için: kullanıcının şimdiye kadar not yazdığı viskilerin
+   * benzersiz id listesi — önerilerden hariç tutmak için kullanılır.
+   */
+  async findTastedWhiskeyIds(userId: string): Promise<string[]> {
+    const ids = await TastingNote.distinct("whiskey", { user: userId });
+    return ids.map(String);
+  }
+
   // ---------- WRITE ----------
 
   async create(userId: string, data: CreateTastingNoteDTO): Promise<ITastingNote> {
