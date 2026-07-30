@@ -17,6 +17,12 @@ services:
     image: mongo:7
     container_name: caskkeeper-mongo
     restart: unless-stopped
+    ports:
+      # Yalnızca loopback'e bağlanır: seed script'i (npm run seed:catalog) host'tan
+      # veritabanına ulaşabilsin diye açık, ama ağdan erişilebilir değil.
+      # ÜRETİM: bu satırı kaldırın ve MongoDB kimlik doğrulamasını etkinleştirin —
+      # şu an mongo kimlik doğrulaması olmadan çalışıyor.
+      - "127.0.0.1:27017:27017"
     volumes:
       - mongo-data:/data/db
     healthcheck:

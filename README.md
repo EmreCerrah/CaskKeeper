@@ -63,7 +63,7 @@ Uygulama: http://localhost:3000 · Sağlık kontrolü: http://localhost:3000/api
 > için host'tan çalıştırılır. `data/` klasöründeki 16 parça dosyanın (194 viski)
 > tamamını yükler:
 > ```bash
-> # compose'un mongo portunu host'a açması gerekir (docker-compose.override.yml)
+> # compose, mongo'yu 127.0.0.1:27017'ye bağlar (yalnızca loopback)
 > echo "MONGODB_URI=mongodb://localhost:27017/caskkeeper" > .env.local
 > npm run seed:catalog
 > ```

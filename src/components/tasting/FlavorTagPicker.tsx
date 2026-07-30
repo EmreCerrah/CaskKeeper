@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { NOSE_TAG_CATEGORIES } from "@/lib/constants/aroma-wheel";
+import { AROMA_TAG_CATEGORIES } from "@/lib/constants/aroma-wheel";
 import { cn } from "@/lib/utils/cn";
 
 interface FlavorTagPickerProps {
@@ -42,7 +42,7 @@ export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps
       )}
 
       <div className="divide-y divide-border rounded-md border">
-        {NOSE_TAG_CATEGORIES.map((category) => {
+        {AROMA_TAG_CATEGORIES.map((category) => {
           const isOpen = openCategory === category.category;
           const selectedInCategory = category.tags.filter((t) => value.includes(t)).length;
 
