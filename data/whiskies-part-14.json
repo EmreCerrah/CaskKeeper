@@ -1,0 +1,308 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Wild Turkey",
+      "name": "Wild Turkey 101",
+      "distillery": "Wild Turkey Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 50.5,
+      "caskType": "New Charred Oak",
+      "description": "Klasik yüksek proof bourbon.",
+      "flavorProfile": [
+        "caramel",
+        "vanilla",
+        "oak",
+        "pepper",
+        "cinnamon"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.wildturkeybourbon.com",
+      "imageUrl": "",
+      "externalId": "wild-turkey-101",
+      "source": "seed"
+    },
+    {
+      "brand": "Wild Turkey",
+      "name": "Wild Turkey Rare Breed",
+      "distillery": "Wild Turkey Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 58.4,
+      "caskType": "New Charred Oak",
+      "description": "Barrel proof bourbon.",
+      "flavorProfile": [
+        "toffee",
+        "oak",
+        "orange",
+        "pepper",
+        "dark chocolate"
+      ],
+      "tags": [
+        "barrel-proof"
+      ],
+      "officialUrl": "https://www.wildturkeybourbon.com",
+      "imageUrl": "",
+      "externalId": "wild-turkey-rare-breed",
+      "source": "seed"
+    },
+    {
+      "brand": "Russell's Reserve",
+      "name": "Russell's Reserve 10 Years Old",
+      "distillery": "Wild Turkey Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "age": 10,
+      "caskType": "New Charred Oak",
+      "description": "Jimmy & Eddie Russell imzası.",
+      "flavorProfile": [
+        "vanilla",
+        "oak",
+        "caramel",
+        "mint",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.wildturkeybourbon.com",
+      "imageUrl": "",
+      "externalId": "russells-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Russell's Reserve",
+      "name": "Russell's Reserve Single Barrel",
+      "distillery": "Wild Turkey Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 55.0,
+      "caskType": "New Charred Oak",
+      "description": "Tek fıçı seçimi.",
+      "flavorProfile": [
+        "brown sugar",
+        "oak",
+        "cherry",
+        "pepper",
+        "vanilla"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.wildturkeybourbon.com",
+      "imageUrl": "",
+      "externalId": "russells-single-barrel",
+      "source": "seed"
+    },
+    {
+      "brand": "Four Roses",
+      "name": "Four Roses Small Batch",
+      "distillery": "Four Roses Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Dört reçetelik harman.",
+      "flavorProfile": [
+        "red berries",
+        "caramel",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "small-batch"
+      ],
+      "officialUrl": "https://fourrosesbourbon.com",
+      "imageUrl": "",
+      "externalId": "four-roses-small-batch",
+      "source": "seed"
+    },
+    {
+      "brand": "Four Roses",
+      "name": "Four Roses Single Barrel",
+      "distillery": "Four Roses Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Yüksek rye karakteri.",
+      "flavorProfile": [
+        "pear",
+        "cinnamon",
+        "oak",
+        "honey",
+        "pepper"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://fourrosesbourbon.com",
+      "imageUrl": "",
+      "externalId": "four-roses-single-barrel",
+      "source": "seed"
+    },
+    {
+      "brand": "Maker's Mark",
+      "name": "Maker's Mark",
+      "distillery": "Maker's Mark Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "İkonik kırmızı mumlu şişe.",
+      "flavorProfile": [
+        "vanilla",
+        "caramel",
+        "oak",
+        "bread",
+        "honey"
+      ],
+      "tags": [
+        "wheated"
+      ],
+      "officialUrl": "https://www.makersmark.com",
+      "imageUrl": "",
+      "externalId": "makers-mark",
+      "source": "seed"
+    },
+    {
+      "brand": "Maker's Mark",
+      "name": "Maker's Mark 46",
+      "distillery": "Maker's Mark Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 47.0,
+      "caskType": "French Oak Finish",
+      "description": "French oak stave finish.",
+      "flavorProfile": [
+        "vanilla",
+        "oak",
+        "baking spice",
+        "caramel",
+        "toast"
+      ],
+      "tags": [
+        "finished"
+      ],
+      "officialUrl": "https://www.makersmark.com",
+      "imageUrl": "",
+      "externalId": "makers-mark-46",
+      "source": "seed"
+    },
+    {
+      "brand": "Woodford Reserve",
+      "name": "Woodford Reserve Distiller's Select",
+      "distillery": "Woodford Reserve Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.2,
+      "caskType": "New Charred Oak",
+      "description": "Premium small batch bourbon.",
+      "flavorProfile": [
+        "cocoa",
+        "orange",
+        "vanilla",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "small-batch"
+      ],
+      "officialUrl": "https://www.woodfordreserve.com",
+      "imageUrl": "",
+      "externalId": "woodford-distillers-select",
+      "source": "seed"
+    },
+    {
+      "brand": "Woodford Reserve",
+      "name": "Woodford Reserve Double Oaked",
+      "distillery": "Woodford Reserve Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.2,
+      "caskType": "Double Oaked",
+      "description": "İkinci kez kavrulmuş fıçıda olgunlaştırılmış.",
+      "flavorProfile": [
+        "marshmallow",
+        "caramel",
+        "oak",
+        "coffee",
+        "vanilla"
+      ],
+      "tags": [
+        "double-oaked"
+      ],
+      "officialUrl": "https://www.woodfordreserve.com",
+      "imageUrl": "",
+      "externalId": "woodford-double-oaked",
+      "source": "seed"
+    },
+    {
+      "brand": "Elijah Craig",
+      "name": "Elijah Craig Small Batch",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 47.0,
+      "caskType": "New Charred Oak",
+      "description": "Heaven Hill klasiği.",
+      "flavorProfile": [
+        "toffee",
+        "oak",
+        "vanilla",
+        "nutmeg",
+        "orange"
+      ],
+      "tags": [
+        "small-batch"
+      ],
+      "officialUrl": "https://heavenhilldistillery.com",
+      "imageUrl": "",
+      "externalId": "elijah-craig-small-batch",
+      "source": "seed"
+    },
+    {
+      "brand": "Elijah Craig",
+      "name": "Elijah Craig Barrel Proof",
+      "distillery": "Heaven Hill Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 60.0,
+      "caskType": "New Charred Oak",
+      "description": "Güçlü barrel proof sürüm.",
+      "flavorProfile": [
+        "dark caramel",
+        "oak",
+        "chocolate",
+        "pepper",
+        "cinnamon"
+      ],
+      "tags": [
+        "barrel-proof"
+      ],
+      "officialUrl": "https://heavenhilldistillery.com",
+      "imageUrl": "",
+      "externalId": "elijah-craig-barrel-proof",
+      "source": "seed"
+    }
+  ]
+}

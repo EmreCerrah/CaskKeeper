@@ -1,0 +1,309 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Buffalo Trace",
+      "name": "Buffalo Trace Kentucky Straight Bourbon",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Klasik Kentucky bourbon.",
+      "flavorProfile": [
+        "caramel",
+        "vanilla",
+        "oak",
+        "brown sugar",
+        "spice"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "buffalo-trace",
+      "source": "seed"
+    },
+    {
+      "brand": "Eagle Rare",
+      "name": "Eagle Rare 10 Years Old",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "age": 10,
+      "caskType": "New Charred Oak",
+      "description": "Uzun yıllandırılmış bourbon.",
+      "flavorProfile": [
+        "toffee",
+        "orange",
+        "oak",
+        "leather",
+        "vanilla"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "eagle-rare-10",
+      "source": "seed"
+    },
+    {
+      "brand": "Blanton's",
+      "name": "Blanton's Original Single Barrel",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 46.5,
+      "caskType": "New Charred Oak",
+      "description": "İlk ticari single barrel bourbon.",
+      "flavorProfile": [
+        "honey",
+        "citrus",
+        "caramel",
+        "oak",
+        "nutmeg"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.blantonsbourbon.com",
+      "imageUrl": "",
+      "externalId": "blantons-original",
+      "source": "seed"
+    },
+    {
+      "brand": "Weller",
+      "name": "Weller Special Reserve",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Buğday reçeteli yumuşak bourbon.",
+      "flavorProfile": [
+        "vanilla",
+        "honey",
+        "oak",
+        "caramel",
+        "bread"
+      ],
+      "tags": [
+        "wheated"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "weller-special-reserve",
+      "source": "seed"
+    },
+    {
+      "brand": "Weller",
+      "name": "Weller Antique 107",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 53.5,
+      "caskType": "New Charred Oak",
+      "description": "Yüksek proof wheated bourbon.",
+      "flavorProfile": [
+        "cinnamon",
+        "caramel",
+        "oak",
+        "vanilla",
+        "cherry"
+      ],
+      "tags": [
+        "wheated"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "weller-107",
+      "source": "seed"
+    },
+    {
+      "brand": "Stagg",
+      "name": "Stagg Barrel Proof",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 64.0,
+      "caskType": "New Charred Oak",
+      "description": "Fıçı gücünde bourbon.",
+      "flavorProfile": [
+        "dark chocolate",
+        "cherry",
+        "oak",
+        "pepper",
+        "caramel"
+      ],
+      "tags": [
+        "barrel-proof"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "stagg-barrel-proof",
+      "source": "seed"
+    },
+    {
+      "brand": "E.H. Taylor",
+      "name": "Colonel E.H. Taylor Small Batch",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Bottled in Bond bourbon.",
+      "flavorProfile": [
+        "caramel",
+        "orange",
+        "oak",
+        "pepper",
+        "tobacco"
+      ],
+      "tags": [
+        "bottled-in-bond"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "eh-taylor-small-batch",
+      "source": "seed"
+    },
+    {
+      "brand": "Elmer T. Lee",
+      "name": "Elmer T. Lee Single Barrel",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Zarif single barrel.",
+      "flavorProfile": [
+        "apple",
+        "honey",
+        "oak",
+        "vanilla",
+        "spice"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "elmer-t-lee",
+      "source": "seed"
+    },
+    {
+      "brand": "Sazerac",
+      "name": "Sazerac Straight Rye",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Rye Whiskey",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Klasik rye whiskey.",
+      "flavorProfile": [
+        "pepper",
+        "mint",
+        "oak",
+        "vanilla",
+        "cinnamon"
+      ],
+      "tags": [
+        "rye"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "sazerac-rye",
+      "source": "seed"
+    },
+    {
+      "brand": "Benchmark",
+      "name": "Benchmark Full Proof",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 62.5,
+      "caskType": "New Charred Oak",
+      "description": "Yüksek proof uygun fiyatlı bourbon.",
+      "flavorProfile": [
+        "caramel",
+        "oak",
+        "vanilla",
+        "pepper",
+        "brown sugar"
+      ],
+      "tags": [
+        "full-proof"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "benchmark-full-proof",
+      "source": "seed"
+    },
+    {
+      "brand": "Old Charter Oak",
+      "name": "Old Charter Oak French Oak",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 45.0,
+      "limitedEdition": true,
+      "caskType": "French Oak",
+      "description": "Old Charter Oak serisi.",
+      "flavorProfile": [
+        "oak",
+        "vanilla",
+        "caramel",
+        "spice",
+        "toast"
+      ],
+      "tags": [
+        "limited"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "old-charter-french-oak",
+      "source": "seed"
+    },
+    {
+      "brand": "Buffalo Trace",
+      "name": "Buffalo Trace Kosher Wheat Recipe",
+      "distillery": "Buffalo Trace Distillery",
+      "type": "Wheated Bourbon",
+      "region": "Kentucky",
+      "country": "United States",
+      "abv": 47.0,
+      "caskType": "New Charred Oak",
+      "description": "Kosher serisinin wheated üyesi.",
+      "flavorProfile": [
+        "vanilla",
+        "honey",
+        "oak",
+        "caramel",
+        "cinnamon"
+      ],
+      "tags": [
+        "kosher"
+      ],
+      "officialUrl": "https://www.buffalotracedistillery.com",
+      "imageUrl": "",
+      "externalId": "buffalo-trace-kosher-wheat",
+      "source": "seed"
+    }
+  ]
+}

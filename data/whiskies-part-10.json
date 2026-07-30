@@ -1,0 +1,310 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Midleton",
+      "name": "Midleton Very Rare 2025",
+      "distillery": "Midleton Distillery",
+      "type": "Blended Irish",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 40.0,
+      "limitedEdition": true,
+      "caskType": "Bourbon",
+      "description": "Yıllık özel harman.",
+      "flavorProfile": [
+        "honey",
+        "vanilla",
+        "pear",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "limited"
+      ],
+      "officialUrl": "https://www.midletonveryrare.com",
+      "imageUrl": "",
+      "externalId": "midleton-very-rare-2025",
+      "source": "seed"
+    },
+    {
+      "brand": "Dingle",
+      "name": "Dingle Single Malt Batch 6",
+      "distillery": "Dingle Distillery",
+      "type": "Single Malt",
+      "region": "County Kerry",
+      "country": "Ireland",
+      "abv": 46.3,
+      "caskType": "Bourbon, PX & Madeira",
+      "description": "Küçük üretim.",
+      "flavorProfile": [
+        "apple",
+        "toffee",
+        "oak",
+        "spice",
+        "vanilla"
+      ],
+      "tags": [
+        "craft"
+      ],
+      "officialUrl": "https://dingledistillery.ie",
+      "imageUrl": "",
+      "externalId": "dingle-batch-6",
+      "source": "seed"
+    },
+    {
+      "brand": "Waterford",
+      "name": "Waterford Cuvée Koffi",
+      "distillery": "Waterford Distillery",
+      "type": "Single Malt",
+      "region": "County Waterford",
+      "country": "Ireland",
+      "abv": 50.0,
+      "caskType": "Various",
+      "description": "Terroir odaklı üretim.",
+      "flavorProfile": [
+        "barley",
+        "citrus",
+        "oak",
+        "pepper",
+        "cream"
+      ],
+      "tags": [
+        "terroir"
+      ],
+      "officialUrl": "https://waterfordwhisky.com",
+      "imageUrl": "",
+      "externalId": "waterford-koffi",
+      "source": "seed"
+    },
+    {
+      "brand": "Method and Madness",
+      "name": "Method and Madness Single Malt",
+      "distillery": "Midleton Distillery",
+      "type": "Single Malt",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 46.0,
+      "caskType": "Bourbon",
+      "description": "Deneysel seri.",
+      "flavorProfile": [
+        "vanilla",
+        "pear",
+        "oak",
+        "spice",
+        "honey"
+      ],
+      "tags": [
+        "experimental"
+      ],
+      "officialUrl": "https://methodandmadnesswhiskey.com",
+      "imageUrl": "",
+      "externalId": "method-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Knappogue Castle",
+      "name": "Knappogue Castle 12 Years Old",
+      "distillery": "Great Northern Distillery",
+      "type": "Single Malt",
+      "region": "County Louth",
+      "country": "Ireland",
+      "abv": 40.0,
+      "age": 12,
+      "caskType": "Bourbon",
+      "description": "Yumuşak Irish malt.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "oak",
+        "honey",
+        "floral"
+      ],
+      "tags": [
+        "single-malt"
+      ],
+      "officialUrl": "https://www.knappoguewhiskey.com",
+      "imageUrl": "",
+      "externalId": "knappogue-12",
+      "source": "seed"
+    },
+    {
+      "brand": "The Irishman",
+      "name": "The Irishman Founder's Reserve",
+      "distillery": "Walsh Whiskey",
+      "type": "Blended Irish",
+      "region": "County Carlow",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon",
+      "description": "Meyvemsi harman.",
+      "flavorProfile": [
+        "pear",
+        "vanilla",
+        "oak",
+        "grain",
+        "spice"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.walshwhiskey.com",
+      "imageUrl": "",
+      "externalId": "irishman-founders",
+      "source": "seed"
+    },
+    {
+      "brand": "Hyde",
+      "name": "Hyde No.6 President's Reserve",
+      "distillery": "Hibernia Distillers",
+      "type": "Single Malt",
+      "region": "County Cork",
+      "country": "Ireland",
+      "abv": 46.0,
+      "caskType": "Bourbon",
+      "description": "Küçük parti üretim.",
+      "flavorProfile": [
+        "honey",
+        "vanilla",
+        "oak",
+        "citrus",
+        "pepper"
+      ],
+      "tags": [
+        "small-batch"
+      ],
+      "officialUrl": "https://hydewhiskey.ie",
+      "imageUrl": "",
+      "externalId": "hyde-6",
+      "source": "seed"
+    },
+    {
+      "brand": "Glendalough",
+      "name": "Glendalough Double Barrel",
+      "distillery": "Glendalough Distillery",
+      "type": "Single Grain",
+      "region": "County Wicklow",
+      "country": "Ireland",
+      "abv": 42.0,
+      "caskType": "Bourbon & Oloroso",
+      "description": "Grain whiskey.",
+      "flavorProfile": [
+        "caramel",
+        "vanilla",
+        "oak",
+        "raisin",
+        "spice"
+      ],
+      "tags": [
+        "single-grain"
+      ],
+      "officialUrl": "https://www.glendaloughdistillery.com",
+      "imageUrl": "",
+      "externalId": "glendalough-double-barrel",
+      "source": "seed"
+    },
+    {
+      "brand": "The Sexton",
+      "name": "The Sexton Single Malt",
+      "distillery": "Bushmills Distillery",
+      "type": "Single Malt",
+      "region": "County Antrim",
+      "country": "United Kingdom",
+      "subRegion": "Northern Ireland",
+      "abv": 40.0,
+      "caskType": "Oloroso Sherry",
+      "description": "Şeri etkili.",
+      "flavorProfile": [
+        "dark fruit",
+        "oak",
+        "chocolate",
+        "spice",
+        "nuts"
+      ],
+      "tags": [
+        "sherried"
+      ],
+      "officialUrl": "https://thesexton.com",
+      "imageUrl": "",
+      "externalId": "sexton-single-malt",
+      "source": "seed"
+    },
+    {
+      "brand": "Kilbeggan",
+      "name": "Kilbeggan Traditional",
+      "distillery": "Kilbeggan Distillery",
+      "type": "Blended Irish",
+      "region": "County Westmeath",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon",
+      "description": "Klasik harman.",
+      "flavorProfile": [
+        "grain",
+        "vanilla",
+        "pear",
+        "oak",
+        "spice"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.kilbegganwhiskey.com",
+      "imageUrl": "",
+      "externalId": "kilbeggan-traditional",
+      "source": "seed"
+    },
+    {
+      "brand": "Tullamore D.E.W.",
+      "name": "Tullamore D.E.W. Original",
+      "distillery": "Tullamore Distillery",
+      "type": "Blended Irish",
+      "region": "County Offaly",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon",
+      "description": "Yumuşak klasik.",
+      "flavorProfile": [
+        "apple",
+        "vanilla",
+        "oak",
+        "cereal",
+        "spice"
+      ],
+      "tags": [
+        "blend"
+      ],
+      "officialUrl": "https://www.tullamoredew.com",
+      "imageUrl": "",
+      "externalId": "tullamore-original",
+      "source": "seed"
+    },
+    {
+      "brand": "Connemara",
+      "name": "Connemara Original Peated",
+      "distillery": "Cooley Distillery",
+      "type": "Single Malt",
+      "region": "County Louth",
+      "country": "Ireland",
+      "abv": 40.0,
+      "caskType": "Bourbon",
+      "description": "İrlanda'nın meşhur turbalı maltı.",
+      "flavorProfile": [
+        "peat",
+        "honey",
+        "oak",
+        "vanilla",
+        "smoke"
+      ],
+      "tags": [
+        "peated"
+      ],
+      "officialUrl": "https://www.connemarawhiskey.com",
+      "imageUrl": "",
+      "externalId": "connemara-original",
+      "source": "seed"
+    }
+  ]
+}

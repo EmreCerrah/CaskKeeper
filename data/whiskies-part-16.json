@@ -1,0 +1,307 @@
+{
+  "version": "1.0.0",
+  "source": "CaskKeeper Seed",
+  "count": 12,
+  "items": [
+    {
+      "brand": "Jack Daniel's",
+      "name": "Jack Daniel's Old No. 7",
+      "distillery": "Jack Daniel Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 40.0,
+      "caskType": "New Charred Oak",
+      "description": "Dünyanın en tanınmış Tennessee whiskey'si.",
+      "flavorProfile": [
+        "banana",
+        "vanilla",
+        "caramel",
+        "oak",
+        "charcoal"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.jackdaniels.com",
+      "imageUrl": "",
+      "externalId": "jd-old-no7",
+      "source": "seed"
+    },
+    {
+      "brand": "Jack Daniel's",
+      "name": "Jack Daniel's Single Barrel Select",
+      "distillery": "Jack Daniel Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 47.0,
+      "caskType": "New Charred Oak",
+      "description": "Tek fıçı seçimi.",
+      "flavorProfile": [
+        "caramel",
+        "banana",
+        "oak",
+        "spice",
+        "dark chocolate"
+      ],
+      "tags": [
+        "single-barrel"
+      ],
+      "officialUrl": "https://www.jackdaniels.com",
+      "imageUrl": "",
+      "externalId": "jd-single-barrel-select",
+      "source": "seed"
+    },
+    {
+      "brand": "Jack Daniel's",
+      "name": "Jack Daniel's Bonded",
+      "distillery": "Jack Daniel Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Bottled-in-Bond serisi.",
+      "flavorProfile": [
+        "toffee",
+        "oak",
+        "banana",
+        "pepper",
+        "vanilla"
+      ],
+      "tags": [
+        "bonded"
+      ],
+      "officialUrl": "https://www.jackdaniels.com",
+      "imageUrl": "",
+      "externalId": "jd-bonded",
+      "source": "seed"
+    },
+    {
+      "brand": "Jack Daniel's",
+      "name": "Jack Daniel's Sinatra Select",
+      "distillery": "Jack Daniel Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "Sinatra Barrels",
+      "description": "Frank Sinatra anısına özel seri.",
+      "flavorProfile": [
+        "oak",
+        "vanilla",
+        "caramel",
+        "smoke",
+        "spice"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "officialUrl": "https://www.jackdaniels.com",
+      "imageUrl": "",
+      "externalId": "jd-sinatra-select",
+      "source": "seed"
+    },
+    {
+      "brand": "George Dickel",
+      "name": "George Dickel No. 12",
+      "distillery": "Cascade Hollow Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 45.0,
+      "caskType": "New Charred Oak",
+      "description": "Klasik Dickel profili.",
+      "flavorProfile": [
+        "corn",
+        "vanilla",
+        "oak",
+        "pepper",
+        "caramel"
+      ],
+      "tags": [
+        "core-range"
+      ],
+      "officialUrl": "https://www.georgedickel.com",
+      "imageUrl": "",
+      "externalId": "gd-no12",
+      "source": "seed"
+    },
+    {
+      "brand": "George Dickel",
+      "name": "George Dickel Bottled in Bond",
+      "distillery": "Cascade Hollow Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Ödüllü Bottled in Bond.",
+      "flavorProfile": [
+        "apple",
+        "oak",
+        "caramel",
+        "cinnamon",
+        "vanilla"
+      ],
+      "tags": [
+        "bonded"
+      ],
+      "officialUrl": "https://www.georgedickel.com",
+      "imageUrl": "",
+      "externalId": "gd-bib",
+      "source": "seed"
+    },
+    {
+      "brand": "Uncle Nearest",
+      "name": "Uncle Nearest 1856 Premium Whiskey",
+      "distillery": "Nearest Green Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Nathan 'Nearest' Green'e ithafen.",
+      "flavorProfile": [
+        "maple",
+        "oak",
+        "vanilla",
+        "spice",
+        "caramel"
+      ],
+      "tags": [
+        "premium"
+      ],
+      "officialUrl": "https://unclenearest.com",
+      "imageUrl": "",
+      "externalId": "uncle-nearest-1856",
+      "source": "seed"
+    },
+    {
+      "brand": "Uncle Nearest",
+      "name": "Uncle Nearest 1884 Small Batch",
+      "distillery": "Nearest Green Distillery",
+      "type": "Tennessee Whiskey",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 46.5,
+      "caskType": "New Charred Oak",
+      "description": "Small batch Tennessee whiskey.",
+      "flavorProfile": [
+        "honey",
+        "oak",
+        "vanilla",
+        "orange",
+        "pepper"
+      ],
+      "tags": [
+        "small-batch"
+      ],
+      "officialUrl": "https://unclenearest.com",
+      "imageUrl": "",
+      "externalId": "uncle-nearest-1884",
+      "source": "seed"
+    },
+    {
+      "brand": "Nelson's Green Brier",
+      "name": "Belle Meade Reserve",
+      "distillery": "Nelson's Green Brier Distillery",
+      "type": "Bourbon",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 54.15,
+      "caskType": "New Charred Oak",
+      "description": "Yüksek proof bourbon.",
+      "flavorProfile": [
+        "brown sugar",
+        "oak",
+        "vanilla",
+        "spice",
+        "cherry"
+      ],
+      "tags": [
+        "reserve"
+      ],
+      "officialUrl": "https://greenbrierdistillery.com",
+      "imageUrl": "",
+      "externalId": "belle-meade-reserve",
+      "source": "seed"
+    },
+    {
+      "brand": "Nelson's Green Brier",
+      "name": "Nelson Brothers Classic Bourbon",
+      "distillery": "Nelson's Green Brier Distillery",
+      "type": "Bourbon",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 46.5,
+      "caskType": "New Charred Oak",
+      "description": "Modern Tennessee bourbon.",
+      "flavorProfile": [
+        "toffee",
+        "oak",
+        "vanilla",
+        "orange",
+        "pepper"
+      ],
+      "tags": [
+        "bourbon"
+      ],
+      "officialUrl": "https://greenbrierdistillery.com",
+      "imageUrl": "",
+      "externalId": "nelson-brothers-classic",
+      "source": "seed"
+    },
+    {
+      "brand": "Heaven's Door",
+      "name": "Heaven's Door Straight Bourbon",
+      "distillery": "Heaven's Door Distillery",
+      "type": "Bourbon",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "New Charred Oak",
+      "description": "Bob Dylan ortak markası.",
+      "flavorProfile": [
+        "caramel",
+        "oak",
+        "cinnamon",
+        "vanilla",
+        "toast"
+      ],
+      "tags": [
+        "celebrity"
+      ],
+      "officialUrl": "https://heavensdoor.com",
+      "imageUrl": "",
+      "externalId": "heavens-door-bourbon",
+      "source": "seed"
+    },
+    {
+      "brand": "Heaven's Door",
+      "name": "Heaven's Door Double Barrel",
+      "distillery": "Heaven's Door Distillery",
+      "type": "Bourbon",
+      "region": "Tennessee",
+      "country": "United States",
+      "abv": 50.0,
+      "caskType": "Double Barrel",
+      "description": "İkinci fıçıda olgunlaştırılmış.",
+      "flavorProfile": [
+        "oak",
+        "coffee",
+        "caramel",
+        "dark chocolate",
+        "vanilla"
+      ],
+      "tags": [
+        "double-barrel"
+      ],
+      "officialUrl": "https://heavensdoor.com",
+      "imageUrl": "",
+      "externalId": "heavens-door-double-barrel",
+      "source": "seed"
+    }
+  ]
+}
