@@ -6,10 +6,12 @@ import connectToDatabase from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { whiskeyService } from "@/server/services/WhiskeyService";
 import { tastingNoteService } from "@/server/services/TastingNoteService";
+import { wishlistService } from "@/server/services/WishlistService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WhiskeyImage } from "@/components/whiskey/WhiskeyImage";
+import { WishlistButton } from "@/components/whiskey/WishlistButton";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 
 export const dynamic = "force-dynamic";
@@ -31,9 +33,10 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
   if (!whiskey) notFound();
 
   const session = await getSession();
-  const myNotes = session
-    ? await tastingNoteService.getNotesForWhiskey(session.userId, whiskey.id)
-    : [];
+  const [myNotes, isWishlisted] = await Promise.all([
+    session ? tastingNoteService.getNotesForWhiskey(session.userId, whiskey.id) : Promise.resolve([]),
+    session ? wishlistService.isWishlisted(session.userId, whiskey.id) : Promise.resolve(false),
+  ]);
 
   const specs: { label: string; value: string }[] = [
     { label: "Tip", value: whiskey.type },
@@ -131,6 +134,15 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
                 Tadım Notu Yaz
               </Link>
             </Button>
+            {session ? (
+              <WishlistButton whiskeyId={whiskey.id} initialWishlisted={isWishlisted} />
+            ) : (
+              <Button asChild variant="outline" size="lg">
+                <Link href={`/giris?donus=/viskiler/${whiskey.slug}`}>
+                  İstek Listeme Ekle
+                </Link>
+              </Button>
+            )}
             {whiskey.officialUrl && (
               <Button asChild variant="outline" size="lg">
                 <a href={whiskey.officialUrl} target="_blank" rel="noopener noreferrer">

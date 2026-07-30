@@ -24,6 +24,7 @@ import Follow from "../src/server/models/Follow";
 import Like from "../src/server/models/Like";
 import Comment from "../src/server/models/Comment";
 import Notification from "../src/server/models/Notification";
+import Wishlist from "../src/server/models/Wishlist";
 
 const MONGO_URI = process.env.MONGODB_URI;
 
@@ -40,6 +41,7 @@ const MODELS = [
   { name: "Like", model: Like },
   { name: "Comment", model: Comment },
   { name: "Notification", model: Notification },
+  { name: "Wishlist", model: Wishlist },
 ];
 
 async function main() {

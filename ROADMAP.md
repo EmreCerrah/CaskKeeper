@@ -39,8 +39,8 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Ara iş — Katalog verisi yenilendi (194 viski, 16 parça) | ✅ Tamamlandı | #9 |
 | Faz 3 · Dilim A — İstatistik & aroma analitiği | ✅ Tamamlandı | #10 |
 | Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
-| Faz 3 · Dilim C — İstek listesi | ⬜ Sıradaki | — |
-| Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Planlanan | — |
+| Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | — |
+| Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Sıradaki | — |
 | Mobil optimizasyon (ayrı takip) | ⬜ Planlanan | — |
 
 \* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
@@ -112,14 +112,16 @@ Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma
       kategorisine eşlenir (`src/lib/constants/flavor-profile-map.ts`)
 - [x] Zaten tadılan viskiler önerilerden hariç tutulur
 
-### Dilim C — İstek listesi ⬜ (sıradaki)
+### Dilim C — İstek listesi ✅
 
-- [ ] Kullanıcının denemeyi düşündüğü viskileri işaretlemesi (wishlist)
-- [ ] Kapsam yalnızca bu: miktar/fiyat/konum gibi envanter alanları **yok**
+- [x] Kullanıcının denemeyi düşündüğü viskileri işaretlemesi (wishlist)
+- [x] Kapsam yalnızca bu: miktar/fiyat/konum gibi envanter alanları **yok**
       (ürün brief'indeki "envanter/stok yönetimi değil" kuralına uyum için
       "şişe koleksiyonu" fikri kapsam dışı bırakıldı)
+- [x] `/istek-listem` sayfası, `GET/POST/DELETE /api/wishlist`
+- [x] Viski detay sayfasında ekle/kaldır butonu
 
-### Dilim D — Viski karşılaştırma ⬜
+### Dilim D — Viski karşılaştırma ⬜ (sıradaki)
 
 - [ ] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
 - [ ] Yeni kalıcı model gerekmiyor, büyük ölçüde frontend
