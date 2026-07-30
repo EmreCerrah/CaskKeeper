@@ -85,8 +85,10 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
                       borderBottomRightRadius: isLast ? 4 : 0,
                     }}
                   >
+                    {/* max-w + normal sarma: uzun kategori adları dar ekranda
+                        görünüm alanını taşırıyordu (ör. "Diğer/Feinty (Leather/Meaty)") */}
                     <div
-                      className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs opacity-0 shadow-md transition-opacity group-hover/segment:opacity-100 group-focus/segment:opacity-100"
+                      className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 max-w-[60vw] -translate-x-1/2 whitespace-normal break-words rounded-md border border-border bg-popover px-2 py-1 text-center text-xs opacity-0 shadow-md transition-opacity group-hover/segment:opacity-100 group-focus/segment:opacity-100 sm:max-w-none sm:whitespace-nowrap"
                     >
                       <span className="font-medium text-foreground">{cat.count}</span>{" "}
                       <span className="text-muted-foreground">{cat.label}</span>

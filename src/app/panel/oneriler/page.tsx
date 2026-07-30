@@ -24,7 +24,7 @@ export default async function RecommendationsPage() {
       <div>
         <Link
           href="/panel"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+          className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
           Panelime dön

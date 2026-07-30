@@ -53,7 +53,10 @@ export function ComparisonTable({ whiskeys }: ComparisonTableProps) {
 
         <thead>
           <tr>
-            <th scope="col" className="w-36 p-3 text-left align-bottom">
+            <th
+              scope="col"
+              className="sticky left-0 z-10 w-36 bg-card p-3 text-left align-bottom"
+            >
               <span className="sr-only">Özellik</span>
             </th>
             {whiskeys.map((whiskey) => (
@@ -66,13 +69,13 @@ export function ComparisonTable({ whiskeys }: ComparisonTableProps) {
                   />
                   <Link
                     href={`/viskiler/${whiskey.slug}`}
-                    className="block font-serif text-base font-semibold leading-snug hover:text-primary"
+                    className="flex min-h-11 items-center font-serif text-base font-semibold leading-snug hover:text-primary md:min-h-0"
                   >
                     {whiskey.name}
                   </Link>
                   <Link
                     href={buildCompareHref(slugs.filter((s) => s !== whiskey.slug))}
-                    className="inline-flex items-center gap-1 text-xs font-normal text-muted-foreground hover:text-destructive-foreground"
+                    className="inline-flex min-h-11 items-center gap-1 text-xs font-normal text-muted-foreground hover:text-destructive-foreground md:min-h-0"
                   >
                     <X className="h-3 w-3" aria-hidden />
                     Çıkar
@@ -86,7 +89,10 @@ export function ComparisonTable({ whiskeys }: ComparisonTableProps) {
         <tbody className="divide-y divide-border">
           {SPEC_ROWS.map((row) => (
             <tr key={row.label}>
-              <th scope="row" className="p-3 text-left font-medium text-muted-foreground">
+              <th
+                scope="row"
+                className="sticky left-0 z-10 bg-card p-3 text-left font-medium text-muted-foreground"
+              >
                 {row.label}
               </th>
               {whiskeys.map((whiskey) => (
@@ -98,7 +104,10 @@ export function ComparisonTable({ whiskeys }: ComparisonTableProps) {
           ))}
 
           <tr>
-            <th scope="row" className="p-3 text-left font-medium text-muted-foreground">
+            <th
+              scope="row"
+              className="sticky left-0 z-10 bg-card p-3 text-left font-medium text-muted-foreground"
+            >
               Aroma Profili
             </th>
             {whiskeys.map((whiskey) => (

@@ -284,7 +284,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
                     type="button"
                     onClick={() => field.onChange(!field.value)}
                     className={cn(
-                      "flex h-10 w-full items-center justify-center gap-2 rounded-md border text-sm transition-colors",
+                      "flex h-11 w-full items-center justify-center gap-2 rounded-md border text-sm transition-colors md:h-10",
                       field.value
                         ? "border-primary/50 bg-primary/15 text-primary"
                         : "border-input bg-secondary/50 text-muted-foreground hover:text-foreground"

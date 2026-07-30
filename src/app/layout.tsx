@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { Footer } from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
@@ -27,6 +28,10 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        {/* Mobil alt sekme çubuğu sabit konumlu; içerik altında kalmasın diye
+            sayfa altına çubuk yüksekliği kadar boşluk bırakılır. */}
+        <div className="h-[calc(56px+env(safe-area-inset-bottom))] md:hidden" aria-hidden />
+        <MobileNav />
       </body>
     </html>
   );

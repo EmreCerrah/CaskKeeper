@@ -23,7 +23,7 @@ export async function NotificationBell({ userId }: NotificationBellProps) {
       href="/bildirimler"
       title={label}
       aria-label={label}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent"
+      className="relative inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-accent md:h-9 md:w-9"
     >
       <Bell className="h-5 w-5 text-muted-foreground" aria-hidden />
       {unreadCount > 0 && (
