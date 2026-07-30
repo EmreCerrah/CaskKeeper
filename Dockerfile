@@ -4,12 +4,17 @@
 
 # ---- 1. Bağımlılıklar ----
 FROM node:20-alpine AS deps
+# Next.js'in swc paketlerinde libc alanı tanımlı olmadığından npm hem gnu hem musl
+# varyantını kurar ve Next.js gnu olanı yüklemeye çalışır. libc6-compat glibc
+# uyumluluk katmanını sağlar (Next.js'in resmî alpine Dockerfile'ındaki çözüm).
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---- 2. Build ----
 FROM node:20-alpine AS builder
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
