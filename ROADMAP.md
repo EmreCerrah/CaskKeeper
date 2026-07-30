@@ -40,8 +40,8 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 3 · Dilim A — İstatistik & aroma analitiği | ✅ Tamamlandı | #10 |
 | Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
 | Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | — |
-| Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Sıradaki | — |
-| Mobil optimizasyon (ayrı takip) | ⬜ Planlanan | — |
+| Faz 3 · Dilim D — Viski karşılaştırma | ✅ Tamamlandı | — |
+| Mobil optimizasyon (ayrı takip) | ⬜ Sıradaki | — |
 
 \* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
 fast-forward merge edildi ve hemen ardından katalog silme commit'iyle birlikte
@@ -92,7 +92,7 @@ push edildi.
 - [x] Geri alınan eylemde (takibi bırak, beğeniyi kaldır) ilgili bildirim silinir
 - [x] Not silindiğinde beğeni/yorum/bildirimleri cascade temizlenir
 
-## Faz 3 — Gelişmiş Özellikler ⬜
+## Faz 3 — Gelişmiş Özellikler ✅
 
 Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma Tarzı).
 
@@ -121,10 +121,15 @@ Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma
 - [x] `/istek-listem` sayfası, `GET/POST/DELETE /api/wishlist`
 - [x] Viski detay sayfasında ekle/kaldır butonu
 
-### Dilim D — Viski karşılaştırma ⬜ (sıradaki)
+### Dilim D — Viski karşılaştırma ✅
 
-- [ ] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
-- [ ] Yeni kalıcı model gerekmiyor, büyük ölçüde frontend
+- [x] En fazla 3 viskiyi yan yana karşılaştırma (teknik özellik + aroma profili)
+- [x] Yeni kalıcı model gerekmedi — durum URL'de (`/karsilastir?viski=…`),
+      paylaşılabilir ve geri tuşu uyumlu
+- [x] Ortak aroma notaları vurgulanır (kesişim); ayrım renge değil, rozetteki
+      "ortak" ibaresine de dayanır
+- [x] Arama ile ekleme, tek tıkla çıkarma; giriş noktaları katalog ve viski
+      detay sayfasında
 
 > Kapsam dışı (şimdilik): tadım notu dışa/içe aktarma.
 

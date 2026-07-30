@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Award, ExternalLink, MapPin, NotebookPen } from "lucide-react";
+import { ArrowLeft, Award, Columns3, ExternalLink, MapPin, NotebookPen } from "lucide-react";
 import connectToDatabase from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { whiskeyService } from "@/server/services/WhiskeyService";
@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WhiskeyImage } from "@/components/whiskey/WhiskeyImage";
 import { WishlistButton } from "@/components/whiskey/WishlistButton";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
+import { buildCompareHref } from "@/lib/utils/comparison";
 
 export const dynamic = "force-dynamic";
 
@@ -143,6 +144,12 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
                 </Link>
               </Button>
             )}
+            <Button asChild variant="outline" size="lg">
+              <Link href={buildCompareHref([whiskey.slug])}>
+                <Columns3 className="h-4 w-4" aria-hidden />
+                Karşılaştır
+              </Link>
+            </Button>
             {whiskey.officialUrl && (
               <Button asChild variant="outline" size="lg">
                 <a href={whiskey.officialUrl} target="_blank" rel="noopener noreferrer">

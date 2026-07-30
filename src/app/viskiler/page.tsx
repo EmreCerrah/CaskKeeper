@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Link from "next/link";
+import { Columns3 } from "lucide-react";
 import connectToDatabase from "@/lib/db";
 import { whiskeyService } from "@/server/services/WhiskeyService";
+import { Button } from "@/components/ui/button";
 import { WhiskeyCard } from "@/components/whiskey/WhiskeyCard";
 import { WhiskeyFilters } from "@/components/whiskey/WhiskeyFilters";
 import { Pagination } from "@/components/shared/Pagination";
@@ -39,13 +42,21 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
-      <div className="space-y-1">
-        <h1 className="font-serif text-3xl font-bold">Viski Kataloğu</h1>
-        <p className="text-muted-foreground">
-          {result.total > 0
-            ? `${result.total} viski arasından keşfedin.`
-            : "Katalog şu an boş görünüyor."}
-        </p>
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+        <div className="space-y-1">
+          <h1 className="font-serif text-3xl font-bold">Viski Kataloğu</h1>
+          <p className="text-muted-foreground">
+            {result.total > 0
+              ? `${result.total} viski arasından keşfedin.`
+              : "Katalog şu an boş görünüyor."}
+          </p>
+        </div>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/karsilastir">
+            <Columns3 className="h-4 w-4" aria-hidden />
+            Karşılaştır
+          </Link>
+        </Button>
       </div>
 
       <Suspense>
