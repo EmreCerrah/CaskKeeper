@@ -42,6 +42,9 @@ export async function Navbar() {
               <Button asChild variant="ghost" size="sm">
                 <Link href="/favoriler">Favorilerim</Link>
               </Button>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/istek-listem">İstek Listem</Link>
+              </Button>
             </>
           )}
         </nav>
