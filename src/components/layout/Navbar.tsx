@@ -53,15 +53,21 @@ export async function Navbar() {
           {session ? (
             <>
               <NotificationBell userId={session.userId} />
-              <UserMenu
-                name={session.name}
-                userId={session.userId}
-                isAdmin={session.role === "admin"}
-              />
+              {/* Mobilde gizli: profil, ayarlar, yönetim ve çıkış zaten alt
+                  çubuktaki "Daha fazla" panelinde. Burada tutmak hem tekrar
+                  olurdu hem de dar ekranlarda üst çubuğu taşırıyordu. */}
+              <div className="hidden md:block">
+                <UserMenu
+                  name={session.name}
+                  userId={session.userId}
+                  isAdmin={session.role === "admin"}
+                />
+              </div>
             </>
           ) : (
             <>
-              <Button asChild variant="ghost" size="sm">
+              {/* Mobilde "Giriş" alt çubukta bir sekme; üstte yalnızca kayıt kalır */}
+              <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
                 <Link href="/giris">Giriş Yap</Link>
               </Button>
               <Button asChild size="sm">
