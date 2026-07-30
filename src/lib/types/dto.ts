@@ -213,6 +213,18 @@ export interface AnalyticsDTO {
 }
 
 // ---------------------------------------------------------------------------
+// Öneri Motoru (Faz 3 · Dilim B)
+// ---------------------------------------------------------------------------
+
+export interface RecommendationDTO {
+  whiskey: WhiskeyDTO;
+  /** 0-1 arası eşleşme skoru — damak profilinin bu viskiyi ne kadar kapsadığı */
+  score: number;
+  /** Skora katkı veren kategoriler, en güçlüsü önce (UI'da "neden önerildi") */
+  matchedCategories: { category: string; label: string }[];
+}
+
+// ---------------------------------------------------------------------------
 // Dönüştürücüler
 // ---------------------------------------------------------------------------
 

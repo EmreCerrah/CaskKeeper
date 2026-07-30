@@ -140,6 +140,17 @@ export class WhiskeyRepository {
     };
   }
 
+  /**
+   * Öneri motoru için aday viskiler: verilen id'ler hariç tüm katalog.
+   * Yalnızca skorlama için gereken alanlar seçilir (hafif sorgu).
+   * Katalog büyüklüğüne karşı bir güvenlik sınırı (`cap`) uygulanır.
+   */
+  async findRecommendationCandidates(excludeIds: string[], cap = 2000): Promise<IWhiskey[]> {
+    return await Whiskey.find({ _id: { $nin: excludeIds } })
+      .limit(cap)
+      .lean() as unknown as IWhiskey[];
+  }
+
   /** Metin araması (brand, name, description, tags) */
   async search(query: string, limit = 20): Promise<IWhiskey[]> {
     return await Whiskey.find(

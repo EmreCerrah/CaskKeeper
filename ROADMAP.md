@@ -37,9 +37,9 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 2 · Dilim 2 — Kullanıcı arama & arkadaşlık | ✅ Tamamlandı | #5 |
 | Faz 2 · Dilim 3 — Etkileşim | ✅ Tamamlandı | direkt merge* |
 | Ara iş — Katalog verisi yenilendi (194 viski, 16 parça) | ✅ Tamamlandı | #9 |
-| Faz 3 · Dilim A — İstatistik & aroma analitiği | ⬜ Sıradaki | — |
-| Faz 3 · Dilim B — Öneri motoru | ⬜ Planlanan | — |
-| Faz 3 · Dilim C — İstek listesi | ⬜ Planlanan | — |
+| Faz 3 · Dilim A — İstatistik & aroma analitiği | ✅ Tamamlandı | #10 |
+| Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
+| Faz 3 · Dilim C — İstek listesi | ⬜ Sıradaki | — |
 | Faz 3 · Dilim D — Viski karşılaştırma | ⬜ Planlanan | — |
 | Mobil optimizasyon (ayrı takip) | ⬜ Planlanan | — |
 
@@ -96,18 +96,23 @@ push edildi.
 
 Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma Tarzı).
 
-### Dilim A — İstatistik & aroma analitiği ⬜ (sıradaki)
+### Dilim A — İstatistik & aroma analitiği ✅
 
-- [ ] Zaman içinde damak zevki değişimi (aylık/dönemsel aroma eğilimi)
-- [ ] Bölge/tip/damıtımevi dağılım grafikleri
-- [ ] Mevcut `getStatsByUser` aggregate'inin genişletilmesi
+- [x] Zaman içinde damak zevki değişimi (aylık aroma trendi, yığılmış bar grafiği)
+- [x] Bölge/tip/damıtımevi dağılım grafikleri
+- [x] `/panel/istatistikler` sayfası, `GET /api/analytics`
+- [x] Ek: parola alanlarına göster/gizle butonu (aynı PR'da küçük düzeltme)
 
-### Dilim B — Öneri motoru ⬜
+### Dilim B — Öneri motoru ✅
 
-- [ ] Kullanıcının en çok seçtiği aroma etiketlerine göre viski önerisi (ranking)
-- [ ] Dilim A'nın üstüne kurulur — aroma profili verisini kullanır
+- [x] Kullanıcının en çok seçtiği aroma etiketlerine göre viski önerisi (ranking)
+- [x] `/panel/oneriler` sayfası, `GET /api/recommendations`
+- [x] Kataloğun serbest metin İngilizce `flavorProfile` alanı ile kullanıcının
+      Türkçe aroma çarkı etiketleri arasında köprü: her ikisi de aynı 9 aroma
+      kategorisine eşlenir (`src/lib/constants/flavor-profile-map.ts`)
+- [x] Zaten tadılan viskiler önerilerden hariç tutulur
 
-### Dilim C — İstek listesi ⬜
+### Dilim C — İstek listesi ⬜ (sıradaki)
 
 - [ ] Kullanıcının denemeyi düşündüğü viskileri işaretlemesi (wishlist)
 - [ ] Kapsam yalnızca bu: miktar/fiyat/konum gibi envanter alanları **yok**

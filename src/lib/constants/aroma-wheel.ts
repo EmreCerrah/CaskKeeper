@@ -129,3 +129,8 @@ export function categoryForTag(tag: string): { category: string; label: string }
   }
   return undefined;
 }
+
+/** Kategori id'sinden Türkçe etiketi döner (ör. "sweet" → "Tatlı (Sweet)"). */
+export function labelForCategory(category: string): string {
+  return WHSKEY_AROMA_WHEEL.find((c) => c.category === category)?.label ?? category;
+}

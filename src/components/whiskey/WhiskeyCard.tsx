@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import type { WhiskeyDTO } from "@/lib/types/dto";
@@ -7,10 +8,12 @@ import { WhiskeyImage } from "./WhiskeyImage";
 
 interface WhiskeyCardProps {
   whiskey: WhiskeyDTO;
+  /** Standart rozetlerin altına ek içerik (ör. öneri motorunda eşleşme bilgisi) */
+  footer?: ReactNode;
 }
 
 /** Katalog listesindeki viski kartı. */
-export function WhiskeyCard({ whiskey }: WhiskeyCardProps) {
+export function WhiskeyCard({ whiskey, footer }: WhiskeyCardProps) {
   return (
     <Link href={`/viskiler/${whiskey.slug}`} className="group">
       <Card className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
@@ -38,6 +41,7 @@ export function WhiskeyCard({ whiskey }: WhiskeyCardProps) {
             <Badge variant="outline">%{whiskey.abv} ABV</Badge>
             {whiskey.limitedEdition && <Badge>Limitli Üretim</Badge>}
           </div>
+          {footer}
         </div>
       </Card>
     </Link>
