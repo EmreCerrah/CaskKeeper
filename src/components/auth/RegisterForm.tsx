@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 
 const RegisterFormSchema = z
@@ -72,13 +73,13 @@ export function RegisterForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password">Parola</Label>
-        <Input id="password" type="password" autoComplete="new-password" {...register("password")} />
+        <PasswordInput id="password" autoComplete="new-password" {...register("password")} />
         {errors.password && <p className="text-xs text-destructive-foreground/90">{errors.password.message}</p>}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="passwordConfirm">Parola (Tekrar)</Label>
-        <Input id="passwordConfirm" type="password" autoComplete="new-password" {...register("passwordConfirm")} />
+        <PasswordInput id="passwordConfirm" autoComplete="new-password" {...register("passwordConfirm")} />
         {errors.passwordConfirm && (
           <p className="text-xs text-destructive-foreground/90">{errors.passwordConfirm.message}</p>
         )}
