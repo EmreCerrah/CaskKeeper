@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import TastingNote, { ITastingNote } from "../models/TastingNote";
 import type { PaginatedResult } from "./WhiskeyRepository";
 import type { CreateTastingNoteDTO, UpdateTastingNoteDTO } from "../validations/tasting-note.schema";
+import type { CatalogDistributionDTO, DistributionItemDTO } from "@/lib/types/dto";
+import type { NoteTagsInput } from "@/lib/utils/analytics";
 
 export interface TastingNoteFilterOptions {
   whiskeyId?: string;
@@ -194,6 +196,64 @@ export class TastingNoteRepository {
         tag: t._id,
         count: t.count,
       })),
+    };
+  }
+
+  /**
+   * Aroma trend analitiği için: kullanıcının notlarından yalnızca tarih ve
+   * etiket alanları (hafif sorgu — kategori eşleme uygulama katmanında yapılır).
+   */
+  async findTagsByUser(userId: string): Promise<NoteTagsInput[]> {
+    return await TastingNote.find({ user: userId })
+      .select("tastingDate noseTags palateTags finishTags")
+      .sort({ tastingDate: 1 })
+      .lean() as unknown as NoteTagsInput[];
+  }
+
+  /**
+   * Kullanıcının tadım notlarına bağlı viskilerin tip/bölge/damıtımevi
+   * dağılımı — tek aggregate turunda $facet ile.
+   */
+  async getCatalogDistributionByUser(userId: string): Promise<CatalogDistributionDTO> {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const [result] = await TastingNote.aggregate([
+      { $match: { user: userObjectId } },
+      {
+        $lookup: {
+          from: "whiskeys",
+          localField: "whiskey",
+          foreignField: "_id",
+          as: "whiskeyDoc",
+        },
+      },
+      { $unwind: "$whiskeyDoc" },
+      {
+        $facet: {
+          byType: [
+            { $group: { _id: "$whiskeyDoc.type", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+          ],
+          byRegion: [
+            { $group: { _id: "$whiskeyDoc.region", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+          ],
+          byDistillery: [
+            { $group: { _id: "$whiskeyDoc.distillery", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 8 },
+          ],
+        },
+      },
+    ]);
+
+    const toItems = (rows: { _id: string; count: number }[] | undefined): DistributionItemDTO[] =>
+      (rows ?? []).map((r) => ({ label: r._id, count: r.count }));
+
+    return {
+      byType: toItems(result?.byType),
+      byRegion: toItems(result?.byRegion),
+      byDistillery: toItems(result?.byDistillery),
     };
   }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { GlassWater, Heart, NotebookPen, Star } from "lucide-react";
+import { BarChart3, GlassWater, Heart, NotebookPen, Star } from "lucide-react";
 import connectToDatabase from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { tastingNoteService } from "@/server/services/TastingNoteService";
@@ -107,6 +107,13 @@ export default async function DashboardPage() {
               )}
             </CardContent>
           </Card>
+
+          <Button asChild variant="outline" className="w-full">
+            <Link href="/panel/istatistikler">
+              <BarChart3 className="h-4 w-4" aria-hidden />
+              Detaylı İstatistikler
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
