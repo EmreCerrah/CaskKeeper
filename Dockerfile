@@ -22,6 +22,8 @@ COPY . .
 # Build sırasında DB'ye bağlanılmaz (tüm veri sayfaları force-dynamic);
 # yine de modül yüklenirken env kontrolleri geçsin diye placeholder verilir.
 ENV NEXT_TELEMETRY_DISABLED=1
+# next.config.mjs standalone çıktıyı yalnızca bu bayrakla üretir (Vercel'de gerekmez)
+ENV DOCKER_BUILD=1
 ENV MONGODB_URI="mongodb://placeholder:27017/caskkeeper"
 ENV JWT_SECRET="build-time-placeholder"
 RUN npm run build
