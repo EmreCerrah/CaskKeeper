@@ -6,7 +6,8 @@ neyin tamamlandığını ve bilinen teknik borçları tek yerde tutar.
 > Güncelleme kuralı: bir özellik `main`'e merge edildiğinde kutusunu işaretle ve
 > ilgili PR numarasını yaz. Yeni teknik borç fark ettiğinde ilgili bölüme ekle.
 
-**Son güncelleme:** 2026-07-30
+**Son güncelleme:** 2026-07-31 · **Durum:** tüm planlanan fazlar tamamlandı,
+üretime alınmaya hazır (bkz. [Sırada Ne Var](#sırada-ne-var))
 
 ---
 
@@ -38,12 +39,12 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 2 · Dilim 3 — Etkileşim | ✅ Tamamlandı | direkt merge* |
 | Ara iş — Katalog verisi yenilendi (194 viski, 16 parça) | ✅ Tamamlandı | #9 |
 | Faz 3 · Dilim A — İstatistik & aroma analitiği | ✅ Tamamlandı | #10 |
-| Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
-| Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | — |
-| Faz 3 · Dilim D — Viski karşılaştırma | ✅ Tamamlandı | — |
-| Mobil optimizasyon | ✅ Tamamlandı | #15 |
+| Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | #11 |
+| Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | #12 |
+| Faz 3 · Dilim D — Viski karşılaştırma + güvenlik yükseltmesi | ✅ Tamamlandı | #13 |
 | Ara iş — Depo temizliği & tek compose dosyası | ✅ Tamamlandı | #14 |
-| Üretime alma hazırlığı (Vercel + Atlas) | ✅ Tamamlandı | — |
+| Mobil optimizasyon | ✅ Tamamlandı | #15 |
+| Üretime alma hazırlığı (Vercel + Atlas) & README | ✅ Tamamlandı | #16 |
 
 \* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
 fast-forward merge edildi ve hemen ardından katalog silme commit'iyle birlikte
@@ -163,90 +164,130 @@ sunucular için korunuyor.
 
 ---
 
+## Sırada Ne Var
+
+Planlanan tüm fazlar bitti. Kalan iş, yeni özellik değil — canlıya çıkmadan ya da
+çıktıktan hemen sonra kapatılması gereken maddeler. Öncelik sırasıyla:
+
+| # | İş | Neden | Büyüklük |
+|---|---|---|---|
+| 1 | Auth uçlarına hız sınırlama | Parola deneme saldırısına karşı koruma yok | Küçük, ama yeni bağımlılık kararı gerektirir |
+| 2 | `next@16` yükseltmesi | Kalan HIGH uyarılar yalnızca burada kapanıyor | Büyük — async API geçişi, kendi dilimi |
+| 3 | Repository entegrasyon testleri | Sorguların kendisi test kapsamı dışında | Orta |
+| 4 | `db.ts` build'de zorunlu env istiyor | `next build` veritabanı adresi olmadan çalışmıyor | Çok küçük |
+
+Detaylar aşağıdaki teknik borç bölümünde.
+
+---
+
 ## Teknik Borç ve Bilinen Konular
 
-Öncelik sırasına göre:
+### Açık maddeler
 
-### 0. Kimlik doğrulama uçlarında hız sınırlama yok — *yüksek*
+#### 1. Kimlik doğrulama uçlarında hız sınırlama yok — *yüksek*
 `/api/auth/login` ve `/api/auth/register` sınırsız denemeye açık; parola deneme
 saldırısına karşı koruma yok. Vercel'de bellek içi sayaç işe yaramaz (her istek
 farklı bir sunucusuz örneğe düşebilir), bu yüzden harici bir store gerekiyor
-(Upstash Redis, Vercel KV vb.). Sabit stack'e yeni bağımlılık eklemek demek
-olduğu için karar kullanıcıya bırakıldı.
+(Upstash Redis, Vercel KV vb.). **Sabit stack'e yeni bağımlılık eklemek demek
+olduğu için karar bilinçli olarak kullanıcıya bırakıldı.**
 
-### ~~1. Test altyapısı yok~~ ✅ *çözüldü (PR #7)*
-Vitest kuruldu; service katmanı ve normalizasyon yardımcıları test ediliyor.
-Kapsanan kritik kurallar: tadım notu sahipliği, rol korumaları (kendi yetkisini
-kaldırma / son yönetici), ilk kullanıcının admin olması, parola hash'leme,
-katalog kimliği ve slug yeniden üretimi.
-`npm test` · `npm run test:watch`
+#### 2. `next@14` kalan güvenlik uyarıları — *orta, sınırlı etki*
+`npm audit` hâlâ `next` ve Next'in kendi içinde taşıdığı `postcss@8.4.31` için
+HIGH gösteriyor; ikisinin de tek düzeltmesi **`next@16` (semver-major)**.
 
-> Kalan iş: repository katmanı için `mongodb-memory-server` ile entegrasyon
-> testleri. Şu an repository'ler mock'lanıyor, yani sorguların kendisi
-> (filtreler, aggregate'ler, populate) test kapsamı dışında.
+Kalan uyarıların çoğu bu uygulamada **karşılığı olmayan** özellikleri hedefliyor
+(kod tabanında tek tek doğrulandı):
 
-### ~~2. Katalog kimlik indeksleri tutarsız~~ ✅ *çözüldü (PR #7)*
+| Uyarı grubu | Bu projede |
+|---|---|
+| Server Actions CVE'leri | `"use server"` hiç kullanılmıyor |
+| `next/image` / Image Optimizer | `next/image` kullanılmıyor (bkz. madde 6) |
+| rewrites SSRF / request smuggling | `next.config.mjs`'de rewrites yok |
+| Pages Router + i18n middleware bypass | App Router, i18n yok |
+| CSP nonce / `beforeInteractive` XSS | İkisi de kullanılmıyor |
+
+Gerçekten geçerli olabilecekler RSC kaynaklı DoS/cache poisoning maddeleri; tüm
+sayfalar `force-dynamic` olduğu için cache yüzeyi dar. Next'in içindeki `postcss`
+ise yalnızca **derleme zamanı** çalışır ve CSS girdisi depodan gelir, kullanıcıdan
+değil.
+
+> Next 14 → 16 geçişi `cookies()`/`headers()`/`params`/`searchParams`'ı async
+> yapar; `lib/auth/session.ts` ve neredeyse tüm sayfalar etkilenir. Kendi dilimi
+> olarak planlanmalı.
+
+#### 3. Repository katmanı entegrasyon testleri yok — *orta*
+Testlerde repository'ler mock'lanıyor, yani sorguların kendisi (filtreler,
+aggregate'ler, populate) kapsam dışında. `mongodb-memory-server` ile gerçek
+sorgulara karşı test yazılması gerekiyor.
+
+#### 4. `db.ts` modül yüklenirken env istiyor — *düşük*
+`src/lib/db.ts` `MONGODB_URI` yoksa **modül seviyesinde** `throw` ediyor. Sonuç:
+`next build` veritabanı adresi olmadan hiç çalışmıyor. Dockerfile'daki
+`MONGODB_URI="mongodb://placeholder..."` satırı yalnızca bunu aşmak için var.
+Kontrolü `connectToDatabase()` içine almak yeterli — build env gerektirmez,
+çalışma zamanında yine net hata verir.
+
+#### 5. Import script mimariyi atlıyor — *düşük*
+`scripts/import-whiskeys.ts` doğrudan Mongoose modeline yazıyor; repository ve
+service katmanlarını kullanmıyor. Validasyon/slug mantığı script içinde
+tekrarlanıyor. Bilinçli olarak düşük öncelikli: katalog bir kez seed edildikten
+sonra bu script canlı uygulama akışının parçası değil, yalnızca ihtiyaç halinde
+çalıştırılan bir bakım aracı.
+
+#### 6. Rol değişimi menüye gecikmeli yansıyor — *düşük*
+Rol JWT içinde tutulduğundan, yetki değişikliği kullanıcının menüsüne bir sonraki
+girişinde yansır. **Güvenlik etkisi yok** — yetki gerektiren tüm işlemler rolü her
+istekte veritabanından doğrular (`lib/auth/admin.ts`).
+
+#### 7. `next/image` kullanılmıyor — *bilinçli tercih, kapatılmayacak*
+Viski görselleri düz `<img>` ile yükleniyor. Sebep: katalog verisi dış
+kaynaklardan geldiği için her yeni domain'i `next.config.mjs`'e eklemek
+sürdürülebilir değil. `WhiskeyImage` bileşeni kırık/eksik görselleri fallback ile
+karşılıyor.
+
+### Çözülenler
+
+<details>
+<summary>Kapatılmış teknik borç maddeleri</summary>
+
+#### ~~Test altyapısı yok~~ ✅ *PR #7*
+Vitest kuruldu; service katmanı ve saf yardımcılar test ediliyor. Kapsanan kritik
+kurallar: tadım notu sahipliği, rol korumaları (kendi yetkisini kaldırma / son
+yönetici), ilk kullanıcının admin olması, parola hash'leme, katalog kimliği ve
+slug yeniden üretimi. Sonradan eklendi: etkileşim görünürlük kuralları, öneri
+skorlaması, karşılaştırma URL ayrıştırma. **135 test.**
+
+#### ~~Katalog kimlik indeksleri tutarsız~~ ✅ *PR #7*
 `distillery` zorunlu hale getirildi ve unique indeks `{brand, name, distillery}`
 olarak güncellendi — slug'ın türetildiği üçlüyle birebir aynı. Bağımsız
 şişelemeler (aynı marka+ürün adı, farklı damıtımevi) artık eklenebiliyor.
 
-> İndeks tanımı değişirse dağıtımdan sonra bir kez `npm run db:sync-indexes`
+> İndeks tanımı değişirse dağıtımdan sonra bir kez `npm run db:indexes`
 > çalıştırılmalı — Mongoose kaldırılan indeksleri kendiliğinden düşürmez.
 
-### ~~3. Kritik bağımlılık açıkları~~ ✅ *kritik olan çözüldü (2026-07-30)*
+#### ~~Kritik bağımlılık açıkları~~ ✅ *PR #13*
 `next` 14.2.1 → **14.2.35**, `mongoose` → **8.24.2**, `postcss` → **8.5.25**.
-Böylece **critical seviye sıfırlandı** — en önemlisi, route korumasının tamamen
-`middleware.ts`'e dayandığı bu uygulamayı doğrudan ilgilendiren *middleware
-yetki atlatma* CVE'si kapandı. `mongoose` prototype pollution (update casting)
-ve doğrudan `postcss` bağımlılığı da yamalandı. Yükseltme semver-major değil.
-
-> **Kalan artık risk — kabul edildi, ayrı dilim gerektirir.**
-> `npm audit` hâlâ `next` ve Next'in kendi içinde taşıdığı `postcss@8.4.31`
-> için HIGH gösteriyor; ikisinin de tek düzeltmesi **`next@16` (semver-major)**.
-> Kalan `next` uyarılarının çoğu bu uygulamada **karşılığı olmayan** özellikleri
-> hedefliyor (kod tabanında doğrulandı):
-> - Server Actions CVE'leri → `"use server"` hiç kullanılmıyor
-> - `next/image` / Image Optimizer CVE'leri → `next/image` kullanılmıyor (bkz. madde 7)
-> - rewrites SSRF / request smuggling → `next.config.mjs`'de rewrites yok
-> - Pages Router + i18n middleware bypass → App Router, i18n yok
-> - CSP nonce / `beforeInteractive` XSS → ikisi de kullanılmıyor
->
-> Gerçekten geçerli olabilecekler RSC kaynaklı DoS/cache poisoning maddeleri;
-> tüm sayfalar `force-dynamic` olduğu için cache yüzeyi dar. Next'in içindeki
-> `postcss` ise yalnızca **derleme zamanı** çalışır ve CSS girdisi depodan gelir,
-> kullanıcıdan değil.
->
-> Next 14 → 16 geçişi `cookies()`/`headers()`/`params`/`searchParams`'ı async
-> yapar; `lib/auth/session.ts` ve neredeyse tüm sayfalar etkilenir. Kendi dilimi
-> olarak planlanmalı.
+**Critical seviye sıfırlandı** — en önemlisi, route korumasının tamamen
+`middleware.ts`'e dayandığı bu uygulamayı doğrudan ilgilendiren *middleware yetki
+atlatma* CVE'si kapandı. Yükseltme semver-major değil. Kalan artık risk için
+bkz. açık madde 2.
 
 > Not: `next@14.2.35` derlemede `jose`'nin JWE deflate yolu için "Edge Runtime'da
 > desteklenmeyen Node.js API" uyarısı veriyor. Zararsız — uygulama yalnızca JWS
 > (`SignJWT`/`jwtVerify`) kullanıyor, o kod yolu hiç çalışmıyor; middleware ve
 > oturum akışı yükseltme sonrası uçtan uca doğrulandı.
 
-### ~~4. Artık `whiskies` koleksiyonu~~ ✅ *çözüldü (2026-07-30)*
-Geliştirme veritabanındaki eski ham `whiskies` koleksiyonu silindi. Katalog
-artık yalnızca `whiskeys` koleksiyonunda, `data/` klasöründeki 16 parçadan
-(`npm run seed:catalog`) besleniyor.
+#### ~~Artık `whiskies` koleksiyonu~~ ✅ *2026-07-30*
+Geliştirme veritabanındaki eski ham `whiskies` koleksiyonu silindi. Katalog artık
+yalnızca `whiskeys` koleksiyonunda, `data/` klasöründeki 16 parçadan
+(`npm run data:seed`) besleniyor.
 
-### 5. Import script mimariyi atlıyor — *düşük öncelik*
-`scripts/import-whiskeys.ts` doğrudan Mongoose modeline yazıyor; repository ve
-service katmanlarını kullanmıyor. Validasyon/slug mantığı script içinde
-tekrarlanıyor. Bilinçli olarak düşük öncelikli tutuluyor: katalog bir kez
-seed edildikten sonra bu script canlı uygulama akışının parçası olmayan,
-yalnızca ihtiyaç halinde çalıştırılan bir bakım aracı.
+#### ~~Depo hijyeni~~ ✅ *PR #14*
+11 MB'lık başıboş ikili dosya silindi; `.env.local` ve `.idea/workspace.xml`
+takipten çıkarıldı (gitignore'da görünüp takipli olan tuzak); `zustand` ve ölü
+aroma sabitleri kaldırıldı; iki compose dosyası teke indirildi.
 
-### 6. Rol değişimi menüye gecikmeli yansıyor — *düşük*
-Rol JWT içinde tutulduğundan, yetki değişikliği kullanıcının menüsüne bir
-sonraki girişinde yansır. **Güvenlik etkisi yok** — yetki gerektiren tüm
-işlemler rolü her istekte veritabanından doğrular (`lib/auth/admin.ts`).
-
-### 7. `next/image` kullanılmıyor — *bilinçli tercih*
-Viski görselleri düz `<img>` ile yükleniyor. Sebep: katalog verisi dış
-kaynaklardan geldiği için her yeni domain'i `next.config.mjs`'e eklemek
-sürdürülebilir değil. `WhiskeyImage` bileşeni kırık/eksik görselleri fallback ile
-karşılıyor.
+</details>
 
 ---
 
@@ -271,12 +312,32 @@ Model       → Mongoose şemaları
   kolaylaştırmak içindir.
 - Validasyon **Zod** ile; hata sınıfları `src/lib/errors.ts`, route'larda
   `handleApiError` ile tutarlı yanıt.
-- Arayüz metinleri **Türkçe**; kod, değişken ve dosya adları İngilizce.
+- **Arayüz metinleri Türkçe**; kod, değişken ve dosya adları İngilizce.
+  Dokümantasyon (`README.md`) İngilizce — arayüz kullanıcıya, doküman katkıcıya
+  hitap eder. Bu belge (`ROADMAP.md`) proje içi planlama olduğu için Türkçe.
 - Liste ekranlarında **N+1 sorgudan kaçın** — ilişkileri toplu çek.
+- Mobilde dokunma hedefleri **en az 44px** (WCAG 2.5.5); masaüstü ölçüleri `md:`
+  ile korunur. Bilgi **yalnızca renkle** aktarılmaz.
 
 ### Stack (sabit)
 
 Next.js (App Router) · React · TypeScript · MongoDB + Mongoose · Zod ·
 React Hook Form · Tailwind CSS · shadcn/ui deseni
 
-Gereksiz yeni teknoloji eklenmez.
+Gereksiz yeni teknoloji eklenmez. Grafikler bile bu yüzden düz CSS/HTML ile
+yazıldı — grafik kütüphanesi eklenmedi.
+
+### Çalışma tarzı
+
+- İş **dilimlere** bölünür; her dilim ayrı dalda, ayrı PR. Dallar `main`'den
+  açılır, birbirine stack'lenmez.
+- Commit öncesi `npm test` ve `npm run build`; mümkünse Docker'da ayağa kaldırıp
+  canlı doğrulama. Sonuç **çıktıyla** raporlanır.
+- Merge'ü proje sahibi yapar.
+
+---
+
+## İlgili Belgeler
+
+- **[README.md](README.md)** — proje tanıtımı, kurulum, API referansı, dağıtım
+- **`.env.example`** — ortam değişkenleri ve Atlas/Vercel notları
