@@ -24,8 +24,15 @@ Premium viski tadım günlüğü ve viski kataloğu. Viskileri keşfedin, tadım
 - 💬 **Yorum** — herkese açık tadım notlarına; yorumu yazan ya da not sahibi silebilir
 - 🔔 **Bildirimler** — takip/beğeni/yorum için, okundu/okunmadı durumu, gezinme çubuğunda zil
 
+**Gelişmiş (Faz 3)**
+- 📈 **Detaylı istatistikler** — zaman içinde aroma değişimi, tip/bölge/damıtımevi dağılımı
+- ✨ **Öneri motoru** — damak profilinize göre henüz denemediğiniz viskiler
+- 🔖 **İstek listesi** — denemeyi düşündüğünüz viskiler
+- ⚖️ **Karşılaştırma** — en fazla 3 viski yan yana, ortak aroma notaları vurgulu
+
 **Genel**
 - 🌙 **Koyu, amber/altın temalı premium arayüz** — tamamen Türkçe
+- 📱 **Mobil uyumlu** — alt sekme çubuğu, 44px dokunma hedefleri (WCAG 2.5.5)
 
 ## Teknoloji
 
@@ -47,49 +54,69 @@ Model     (Mongoose şemaları)
 - İstemciye yalnızca düz **DTO**'lar döner (`src/lib/types/dto.ts`) — Mongoose dokümanları UI'a sızmaz.
 - Viski kataloğu **globaldir** ve import edilir; kullanıcılar yalnızca tüketir. Tadım notları kullanıcıya aittir.
 
-## Docker ile Çalıştırma (önerilen)
+## Hızlı Başlangıç
+
+### Docker ile (tüm yığın tek komutta)
 
 ```bash
-# 1. JWT anahtarı üretin ve .env dosyasına yazın
 echo "JWT_SECRET=$(openssl rand -base64 48)" > .env
-
-# 2. Uygulamayı ve MongoDB'yi başlatın
-docker compose up -d --build
+npm run docker:up
 ```
 
-Uygulama: http://localhost:3000 · Sağlık kontrolü: http://localhost:3000/api/health
-
-> **Katalog verisi:** Import script'i geliştirme bağımlılıklarına ihtiyaç duyduğu
-> için host'tan çalıştırılır. `data/` klasöründeki 16 parça dosyanın (194 viski)
-> tamamını yükler:
-> ```bash
-> # compose, mongo'yu 127.0.0.1:27017'ye bağlar (yalnızca loopback)
-> echo "MONGODB_URI=mongodb://localhost:27017/caskkeeper" > .env.local
-> npm run seed:catalog
-> ```
-> Prova için `npm run seed:catalog:dry`; kataloğu boşaltıp yeniden yüklemek için
-> `npm run seed:catalog:reset` (tadım notlarına dokunmaz, ama silinen viskilere
-> işaret eden notlar öksüz kalır). Alternatif olarak `POST /api/whiskeys`
-> endpoint'i ile tek tek eklenebilir.
-
-## Yerel Geliştirme
+Uygulama <http://localhost:3000> adresinde. Compose, MongoDB'yi `127.0.0.1:27017`'ye
+bağlar (yalnızca loopback), böylece katalog verisini host'tan yükleyebilirsiniz:
 
 ```bash
-# 1. Bağımlılıklar
+cp .env.example .env.local        # MONGODB_URI zaten localhost'u gösteriyor
+npm run data:setup                # indeksleri kurar + 194 viskiyi yükler
+```
+
+Durdurmak için `npm run docker:down`.
+
+### Docker'sız (yerel Node + kendi MongoDB'niz)
+
+```bash
 npm install
-
-# 2. Ortam değişkenleri
-cp .env.example .env.local   # değerleri düzenleyin
-
-# 3. MongoDB (Docker ile)
-docker run -d -p 27017:27017 --name caskkeeper-dev-mongo mongo:7
-
-# 4. Katalog verisi (data/ klasöründeki 16 parça, 194 viski)
-npm run seed:catalog
-
-# 5. Geliştirme sunucusu
+cp .env.example .env.local        # MONGODB_URI ve JWT_SECRET'ı doldurun
+npm run data:setup                # indeksler + katalog verisi
 npm run dev
 ```
+
+## Komutlar
+
+| Komut | Ne yapar |
+|---|---|
+| `npm run dev` | Geliştirme sunucusu |
+| `npm run build` | Üretim derlemesi |
+| `npm start` | Derlenmiş uygulamayı çalıştırır |
+| `npm run lint` | ESLint |
+| `npm test` | Testler (tek sefer) |
+| `npm run test:watch` | Testler (izleme modu) |
+| `npm run data:setup` | **İlk kurulum** — indeksleri kurar, sonra kataloğu yükler |
+| `npm run data:seed` | Kataloğu yükler/günceller (idempotent, upsert) |
+| `npm run data:reset` | Kataloğu **boşaltıp** yeniden yükler |
+| `npm run db:indexes` | İndeksleri model tanımlarıyla eşitler |
+| `npm run docker:up` | Docker yığınını başlatır (app + MongoDB) |
+| `npm run docker:down` | Docker yığınını durdurur |
+
+<details>
+<summary>Import script'inin ek bayrakları</summary>
+
+`data:seed` ve `data:reset` altında `scripts/import-whiskeys.ts` çalışır. Doğrudan
+çağırarak ek bayrak verebilirsiniz:
+
+```bash
+npx tsx scripts/import-whiskeys.ts --dir=data --dry-run      # yazmadan prova
+npx tsx scripts/import-whiskeys.ts --dir=data --insert-only  # mevcutları atla
+npx tsx scripts/import-whiskeys.ts --file=data/whiskies-part-01.json
+DEBUG=true npx tsx scripts/import-whiskeys.ts --dir=data     # ayrıntılı log
+IMPORT_LOG_FILE=logs/import.log npx tsx scripts/import-whiskeys.ts --dir=data
+```
+
+> `data:reset` tadım notlarına **dokunmaz**, ama silinen viskilere işaret eden
+> notlar öksüz referans taşır.
+
+</details>
 
 ## Test
 
@@ -110,11 +137,65 @@ beğenmek gibi durumlar bildirim doğurmaz).
 Bir modelin indeks tanımı değiştiğinde, dağıtımdan sonra bir kez çalıştırın:
 
 ```bash
-npm run db:sync-indexes
+npm run db:indexes
 ```
 
 Mongoose yeni indeksleri otomatik oluşturur ancak **şemadan kaldırılan
 indeksleri düşürmez**; bu komut farkı kapatır.
+
+## Üretime Alma (Vercel + MongoDB Atlas)
+
+Üretim hedefi Vercel; Docker yerel geliştirme ve alternatif sunucular için durur.
+
+### 1. Atlas kümesi
+
+1. Bir küme oluşturun, **Database Access**'ten uygulama için ayrı bir kullanıcı
+   açın (`readWrite`, yalnızca `caskkeeper` veritabanında).
+2. **Network Access**: Vercel'in IP'leri sabit olmadığı için `0.0.0.0/0` gerekir.
+   Erişim kontrolünü kimlik doğrulaması sağlar — bu yüzden parolanın güçlü
+   olması kritik.
+3. Bağlantı dizesini alın ve **veritabanı adını yola ekleyin**:
+   `mongodb+srv://kullanici:parola@cluster.mongodb.net/caskkeeper?retryWrites=true&w=majority`
+   Yol boş bırakılırsa Mongoose `test` veritabanına bağlanır.
+
+### 2. Vercel ortam değişkenleri
+
+Project Settings → Environment Variables:
+
+| Değişken | Değer |
+|---|---|
+| `MONGODB_URI` | Atlas bağlantı dizesi (yukarıdaki) |
+| `JWT_SECRET` | `openssl rand -base64 48` çıktısı — yerelde kullandığınızdan **farklı** olmalı |
+
+### 3. İlk veri yüklemesi
+
+Katalog verisi depoda (`data/`), uygulama açılışta kendiliğinden yüklemez.
+Deploy sonrası bir kez, **yerelinizden Atlas'a** yükleyin:
+
+```bash
+MONGODB_URI="mongodb+srv://...caskkeeper?retryWrites=true&w=majority" npm run data:setup
+```
+
+Bu komut indeksleri kurar ve 194 viskiyi yükler. İdempotenttir — tekrar
+çalıştırmak güvenlidir, mevcut kayıtları günceller.
+
+### 4. İlk yönetici
+
+İlk kaydolan kullanıcı otomatik olarak **admin** olur. Deploy'dan hemen sonra
+kendi hesabınızı oluşturun.
+
+### Bilinmesi gerekenler
+
+- **Hız sınırlama yok.** `/api/auth/login` ve `/api/auth/register` sınırsız
+  denemeye açık. Vercel sunucusuz olduğu için bellek içi sayaç işe yaramaz;
+  kalıcı bir çözüm harici bir store (ör. Upstash Redis) gerektirir.
+- **`JWT_SECRET` değişirse** tüm oturumlar geçersiz olur, kullanıcılar yeniden
+  giriş yapar.
+- **Yedekleme** Atlas'ın sorumluluğunda — küme planınızda yedeklemenin açık
+  olduğunu doğrulayın.
+- Güvenlik başlıkları (`X-Frame-Options`, `HSTS`, vb.) `next.config.mjs`'de
+  tanımlı. **HSTS**, TLS olmayan bir ortamda siteyi erişilemez yapabilir;
+  Vercel her zaman TLS sonlandırdığı için orada sorun değildir.
 
 ## API Endpoint'leri
 
@@ -139,7 +220,11 @@ indeksleri düşürmez**; bu komut farkı kapatır.
 | GET | `/api/notifications` | Bildirim listesi + okunmamış sayısı | ✔ |
 | POST | `/api/notifications/[id]/read` | Tek bildirimi okundu işaretle | ✔ |
 | POST | `/api/notifications/read-all` | Tüm bildirimleri okundu işaretle | ✔ |
-| GET | `/api/dashboard` | Tadım istatistikleri | ✔ |
+| GET | `/api/dashboard` | Tadım istatistikleri (panel özeti) | ✔ |
+| GET | `/api/analytics` | Aroma trendi + katalog dağılımı | ✔ |
+| GET | `/api/recommendations` | Damak profiline göre viski önerileri | ✔ |
+| GET | `/api/wishlist` | İstek listesi | ✔ |
+| POST/DELETE | `/api/wishlist/[whiskeyId]` | İstek listesine ekle / çıkar | ✔ |
 | GET | `/api/admin/users` | Kullanıcı listesi (yönetim) | ✔ admin |
 | PATCH | `/api/admin/users/[id]/role` | Kullanıcı rolü değiştir | ✔ admin |
 | GET | `/api/health` | DB sağlık kontrolü | — |
@@ -159,4 +244,5 @@ Güncel durum, planlanan özellikler ve bilinen teknik borçlar için
 Özet:
 - **Faz 1 — Temel uygulama:** ✅ tamamlandı
 - **Faz 2 — Topluluk:** ✅ tamamlandı — profiller, takip, arama, akış, beğeni, yorum, bildirim
-- **Faz 3 — Gelişmiş:** planlanıyor — istatistikler, öneri motoru, karşılaştırma, koleksiyon/istek listesi
+- **Faz 3 — Gelişmiş:** ✅ tamamlandı — istatistik/aroma analitiği, öneri motoru, istek listesi, karşılaştırma
+- **Sırada:** hız sınırlama, repository katmanı entegrasyon testleri, `next@16` yükseltmesi

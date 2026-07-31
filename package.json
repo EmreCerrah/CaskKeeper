@@ -9,14 +9,12 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:sync-indexes": "npx tsx scripts/sync-indexes.ts",
-    "seed:catalog": "npx tsx scripts/import-whiskeys.ts --dir=data",
-    "seed:catalog:dry": "npx tsx scripts/import-whiskeys.ts --dir=data --dry-run",
-    "seed:catalog:insert": "npx tsx scripts/import-whiskeys.ts --dir=data --insert-only",
-    "seed:catalog:reset": "npx tsx scripts/import-whiskeys.ts --dir=data --reset",
-    "seed:catalog:logged": "cross-env IMPORT_LOG_FILE=logs/import.log npx tsx scripts/import-whiskeys.ts --dir=data",
-    "seed:catalog:debug": "cross-env DEBUG=true npx tsx scripts/import-whiskeys.ts --dir=data",
-    "seed:whiskeys": "npx tsx scripts/import-whiskeys.ts"
+    "data:setup": "npm run db:indexes && npm run data:seed",
+    "data:seed": "npx tsx scripts/import-whiskeys.ts --dir=data",
+    "data:reset": "npx tsx scripts/import-whiskeys.ts --dir=data --reset",
+    "db:indexes": "npx tsx scripts/sync-indexes.ts",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -42,7 +40,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
-    "cross-env": "^7.0.3",
     "dotenv": "^17.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",

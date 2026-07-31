@@ -41,7 +41,9 @@ CaskKeeper viski tutkunlarının **tadım deneyimlerini kaydettiği** bir günl�
 | Faz 3 · Dilim B — Öneri motoru | ✅ Tamamlandı | — |
 | Faz 3 · Dilim C — İstek listesi | ✅ Tamamlandı | — |
 | Faz 3 · Dilim D — Viski karşılaştırma | ✅ Tamamlandı | — |
-| Mobil optimizasyon (ayrı takip) | ⬜ Sıradaki | — |
+| Mobil optimizasyon | ✅ Tamamlandı | #15 |
+| Ara iş — Depo temizliği & tek compose dosyası | ✅ Tamamlandı | #14 |
+| Üretime alma hazırlığı (Vercel + Atlas) | ✅ Tamamlandı | — |
 
 \* Dilim 3 için ayrı PR açılmadı; `feat/interactions` dalı yerelde `main`'e
 fast-forward merge edildi ve hemen ardından katalog silme commit'iyle birlikte
@@ -133,16 +135,44 @@ Sıra: **A → B → C → D**. Her dilim ayrı dalda, ayrı PR (bkz. Çalışma
 
 > Kapsam dışı (şimdilik): tadım notu dışa/içe aktarma.
 
-## Mobil Optimizasyon ⬜ (ayrı takip)
+## Mobil Optimizasyon ✅ (PR #15)
 
-Kesitsel bir iş — her sayfaya dokunduğu için Faz 3 dilimlerinden bağımsız,
-kendi başına ele alınacak. Henüz dilimlenmedi.
+- [x] Alt sekme çubuğu — masaüstü nav mobilde gizli olduğu için `/panel` ve
+      `/istek-listem` erişilemiyordu; oturumsuz kullanıcının ise hiç bağlantısı yoktu
+- [x] Dokunma hedefleri 44px'e çıkarıldı (WCAG 2.5.5), yalnızca mobilde —
+      masaüstü ölçüleri `md:` ile korundu
+- [x] Karşılaştırma tablosunda satır başlıkları sabitlendi
+- [x] 320px'de yatay taşmalar giderildi (üst çubuk; panelde grid `min-width: auto`)
+
+## Üretime Alma ✅
+
+Hedef: **Vercel + MongoDB Atlas**. Docker yerel geliştirme ve alternatif
+sunucular için korunuyor.
+
+- [x] `output: "standalone"` yalnızca Docker build'inde (`DOCKER_BUILD=1`)
+- [x] Güvenlik başlıkları: `X-Frame-Options`, `X-Content-Type-Options`,
+      `Referrer-Policy`, `Permissions-Policy`, `HSTS`
+- [x] `data:setup` — ilk kurulum için tek komut (indeksler + katalog)
+- [x] `.env.example` Atlas/Vercel için belgelendi
+- [x] README'ye "Üretime Alma" bölümü
+
+> Kapsam dışı bırakıldı: **hız sınırlama**. Vercel sunucusuz olduğu için bellek
+> içi sayaç işe yaramaz; kalıcı çözüm harici bir store (Upstash Redis vb.)
+> gerektirir ve bu, sabit stack'e yeni bir bağımlılık eklemek demektir. Karar
+> bilinçli olarak ertelendi — bkz. teknik borç.
 
 ---
 
 ## Teknik Borç ve Bilinen Konular
 
 Öncelik sırasına göre:
+
+### 0. Kimlik doğrulama uçlarında hız sınırlama yok — *yüksek*
+`/api/auth/login` ve `/api/auth/register` sınırsız denemeye açık; parola deneme
+saldırısına karşı koruma yok. Vercel'de bellek içi sayaç işe yaramaz (her istek
+farklı bir sunucusuz örneğe düşebilir), bu yüzden harici bir store gerekiyor
+(Upstash Redis, Vercel KV vb.). Sabit stack'e yeni bağımlılık eklemek demek
+olduğu için karar kullanıcıya bırakıldı.
 
 ### ~~1. Test altyapısı yok~~ ✅ *çözüldü (PR #7)*
 Vitest kuruldu; service katmanı ve normalizasyon yardımcıları test ediliyor.
