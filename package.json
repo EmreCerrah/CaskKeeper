@@ -13,6 +13,7 @@
     "data:seed": "npx tsx scripts/import-whiskeys.ts --dir=data",
     "data:reset": "npx tsx scripts/import-whiskeys.ts --dir=data --reset",
     "db:indexes": "npx tsx scripts/sync-indexes.ts",
+    "icons:generate": "npx tsx scripts/generate-icons.ts",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down"
   },
