@@ -21,6 +21,7 @@ export async function MobileNav() {
       isAuthenticated={Boolean(session)}
       isAdmin={session?.role === "admin"}
       userId={session?.userId}
+      userName={session?.name}
       unreadCount={unreadCount}
     />
   );

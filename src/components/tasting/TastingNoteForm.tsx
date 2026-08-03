@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Heart, Loader2 } from "lucide-react";
 import type { TastingNoteDTO, WhiskeyDTO } from "@/lib/types/dto";
 import { FINISH_LENGTHS } from "@/lib/constants/aroma-wheel";
+import { notifyOfflineDataChanged } from "@/lib/offline/sync";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,6 +108,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       return;
     }
 
+    notifyOfflineDataChanged();
     router.push("/tadimlarim");
     router.refresh();
   }

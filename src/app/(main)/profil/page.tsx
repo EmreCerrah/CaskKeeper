@@ -6,6 +6,7 @@ import { getSession } from "@/lib/auth/session";
 import { userService } from "@/server/services/UserService";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { OfflineSyncCard } from "@/components/offline/OfflineSyncCard";
 
 export const metadata: Metadata = { title: "Profilim" };
 export const dynamic = "force-dynamic";
@@ -47,6 +48,12 @@ export default async function ProfilePage() {
           <ProfileForm user={user} />
         </CardContent>
       </Card>
+
+      {/* Kullanıcı menüsündeki "Çevrimdışı Kullanım" girdisi buraya atlar.
+          scroll-mt, yapışkan üst çubuğun başlığı örtmesini engeller. */}
+      <div id="cevrimdisi" className="scroll-mt-20">
+        <OfflineSyncCard userId={session.userId} userName={session.name} />
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { notifyOfflineDataChanged } from "@/lib/offline/sync";
 
 interface WishlistButtonProps {
   whiskeyId: string;
@@ -23,6 +24,7 @@ export function WishlistButton({ whiskeyId, initialWishlisted }: WishlistButtonP
     });
     if (res.ok) {
       setWishlisted((v) => !v);
+      notifyOfflineDataChanged();
       router.refresh();
     }
     setBusy(false);

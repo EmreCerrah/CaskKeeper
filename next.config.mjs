@@ -30,6 +30,12 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Service worker dosyası önbellekten sunulursa yeni sürüm kullanıcıya
+        // günlerce ulaşmaz. Her zaman sunucuya doğrulatılır.
+        source: "/sw.js",
+        headers: [{ key: "Cache-Control", value: "no-cache, must-revalidate" }],
+      },
     ];
   },
 };

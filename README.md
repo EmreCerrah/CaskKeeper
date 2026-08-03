@@ -59,6 +59,23 @@ follows, likes and comments.
 - **Comparison** — up to three whiskies side by side on specs and aroma, with the
   notes they share highlighted.
 
+### Installable, with opt-in offline access
+
+The app installs to the home screen on Android and iOS (web app manifest,
+generated icon set, standalone display). A switch in the user menu — mirrored on
+`/profil` — turns on offline use: your own tasting notes and wishlist are copied
+to the device and kept current, so you can read them with no connection.
+
+The switch is **off by default and never flips itself on**: on a shared device
+nobody's personal data should land on disk without them asking. While it is on,
+the copy refreshes on app start, when you return to the tab, and immediately
+after anything changes (writing a note, editing it, favouriting, adding to the
+wishlist). Turning it off deletes the stored copy at once, and signing out both
+deletes it and switches the setting back off.
+
+Nothing syncs while the browser is closed — a copy is only as fresh as the last
+time the app was open.
+
 ### Two domains that never mix
 
 This separation is the central rule of the product and shapes the whole data model:
@@ -458,6 +475,11 @@ Current status, planned work and tracked technical debt live in
 
 Known gaps, deliberately recorded rather than hidden:
 
+- **The offline copy survives on the device until sign-out.** If a user turns the
+  switch on and then walks away without signing out, someone else on that device
+  could read the copy from `/cevrimdisi`. Accepted deliberately: the switch is
+  off by default, the page names whose copy it is, turning the switch off deletes
+  it instantly, and signing out both deletes it and resets the switch.
 - **No rate limiting on the authentication endpoints.** An in-memory counter is
   useless on serverless, and a durable fix needs an external store (Upstash Redis,
   Vercel KV), which means adding a dependency to a deliberately fixed stack.

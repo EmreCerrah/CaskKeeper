@@ -47,6 +47,7 @@ experiences**.
 | Interlude — Repo cleanup & single compose file | ✅ Done | #14 |
 | Mobile optimisation | ✅ Done | #15 |
 | Production readiness (Vercel + Atlas) & README | ✅ Done | #16 |
+| PWA — installable + opt-in offline access | ✅ Done | #17 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -167,6 +168,46 @@ self-hosting.
 > like), which means adding a dependency to a deliberately fixed stack. The
 > decision was deferred on purpose — see technical debt.
 
+## PWA — installable + opt-in offline access ✅ (PR #17)
+
+- [x] Web app manifest, icon set generated in code (`scripts/generate-icons.ts`
+      encodes PNGs with Node's `zlib` — no image library added to the stack)
+- [x] Service worker: caches only content-hashed build output and icons.
+      **Page HTML and `/api/*` are never cached** — the root layout used to
+      render `Navbar` as a session-reading server component, so every page was
+      user-specific
+- [x] Root layout split: session-dependent chrome moved to `(main)/layout.tsx`,
+      so `/cevrimdisi` can live outside it and be statically rendered. URLs are
+      unchanged — route groups do not affect paths
+- [x] Opt-in offline copy behind a switch (user menu + `/profil`), **off by
+      default**. While on, the user's own tasting notes and wishlist are kept in
+      the Cache API (`caskkeeper-offline-v1`), separate from the asset cache so
+      sign-out clears only personal data
+- [x] Auto-sync triggers: app start, return to tab, and immediately after any
+      mutation (`notifyOfflineDataChanged`). Background triggers respect a 30 s
+      minimum interval; user-initiated changes bypass it, otherwise a note
+      written just before going offline would be missing from the copy
+- [x] Switching off deletes the copy at once; sign-out deletes it *and* resets
+      the switch, so the next person to sign in on that device does not inherit
+      an enabled setting. If the app ever starts with the switch off but a copy
+      present, it is cleared
+- [x] `/cevrimdisi` renders that copy, reusing `TastingNoteCard` and
+      `WhiskeyCard` — no duplicated markup
+- [x] Client-side logout consolidated into `lib/auth/logout-client.ts`; it was
+      duplicated in `UserMenu` and `MobileTabBar`, and the wipe had to happen in
+      both
+- [x] `viewport-fit=cover` — `MobileNav` already used
+      `env(safe-area-inset-bottom)`, which always resolved to `0` without it
+
+> Reachability is probed against `/api/health` rather than trusting
+> `navigator.onLine`: that flag only reports whether the device has a network,
+> not whether the server can be reached.
+>
+> Known limit: nothing syncs while the browser is closed. A service worker
+> cannot poll in the background here, so a copy is only as fresh as the last
+> time the app was open. Periodic Background Sync would change that, but it is
+> Chromium-only and needs the app to be installed — not worth the dependency.
+
 ---
 
 ## What's Next
@@ -196,6 +237,15 @@ protection against password guessing. An in-memory counter does not work on Verc
 external store (Upstash Redis, Vercel KV, etc.). **Because that means adding a
 dependency to the fixed stack, the decision was deliberately left to the project
 owner.**
+
+#### 1b. The offline copy outlives the session on a shared device — *accepted*
+While the offline switch is on, the copy stays on the device until the user turns
+it off or signs out. A user who walks away without signing out leaves a readable
+copy behind at `/cevrimdisi`. **Deliberately accepted** — the switch is off by
+default and never enables itself, the page names whose copy it is and when it was
+synced, turning it off deletes the copy instantly, and `logout-client.ts` wipes
+the copy *and* resets the switch on sign-out. Revisit if the product ever stores
+anything more sensitive than tasting notes.
 
 #### 2. Remaining `next@14` security advisories — *medium, limited exposure*
 `npm audit` still reports HIGH for `next` and for the `postcss@8.4.31` that Next

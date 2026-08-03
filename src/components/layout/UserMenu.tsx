@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircleUserRound, LogOut, ShieldCheck, User, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { OfflineToggle } from "@/components/offline/OfflineToggle";
+import { logoutClient } from "@/lib/auth/logout-client";
 
 interface UserMenuProps {
   name: string;
@@ -29,7 +31,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
   }, []);
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await logoutClient();
     router.push("/");
     router.refresh();
   }
@@ -70,6 +72,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
             <User className="h-4 w-4" aria-hidden />
             Profil Ayarları
           </Link>
+          <OfflineToggle userId={userId} userName={name} />
           {isAdmin && (
             <Link
               href="/yonetim"
