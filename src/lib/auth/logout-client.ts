@@ -1,4 +1,6 @@
 import { clearOfflineSnapshot } from "@/lib/offline/store";
+import { setOfflineEnabled } from "@/lib/offline/preference";
+import { resetSyncThrottle } from "@/lib/offline/sync";
 
 /**
  * İstemci tarafı çıkış akışı.
@@ -13,4 +15,8 @@ import { clearOfflineSnapshot } from "@/lib/offline/store";
 export async function logoutClient(): Promise<void> {
   await fetch("/api/auth/logout", { method: "POST" });
   await clearOfflineSnapshot();
+  // Anahtar da kapatılır: aksi halde aynı cihazda giriş yapan bir sonraki
+  // kullanıcı, hiç istemediği hâlde açık bir çevrimdışı kayıt devralırdı.
+  setOfflineEnabled(false);
+  resetSyncThrottle();
 }

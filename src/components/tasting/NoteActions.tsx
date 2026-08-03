@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Heart, Pencil, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
+import { notifyOfflineDataChanged } from "@/lib/offline/sync";
 
 interface NoteActionsProps {
   noteId: string;
@@ -29,6 +30,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
     });
     if (res.ok) {
       setFavorite(next);
+      notifyOfflineDataChanged();
       router.refresh();
     }
     setBusy(false);
@@ -44,6 +46,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
     setBusy(true);
     const res = await fetch(`/api/tasting-notes/${noteId}`, { method: "DELETE" });
     if (res.ok) {
+      notifyOfflineDataChanged();
       router.refresh();
     }
     setBusy(false);

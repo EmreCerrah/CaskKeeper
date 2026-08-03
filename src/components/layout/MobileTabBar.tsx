@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { OfflineToggle } from "@/components/offline/OfflineToggle";
 import { logoutClient } from "@/lib/auth/logout-client";
 
 interface MobileTabBarProps {
@@ -29,6 +30,8 @@ interface MobileTabBarProps {
   isAdmin: boolean;
   /** Oturum açmış kullanıcının herkese açık profil bağlantısı için */
   userId?: string;
+  /** Çevrimdışı kopyanın kime ait olduğunu kaydetmek için */
+  userName?: string;
   /** "Daha fazla" sekmesindeki bildirim satırında gösterilir */
   unreadCount: number;
 }
@@ -66,6 +69,7 @@ export function MobileTabBar({
   isAuthenticated,
   isAdmin,
   userId,
+  userName,
   unreadCount,
 }: MobileTabBarProps) {
   const pathname = usePathname();
@@ -104,6 +108,7 @@ export function MobileTabBar({
         <MoreSheet
           isAdmin={isAdmin}
           userId={userId}
+          userName={userName}
           unreadCount={unreadCount}
           onClose={() => setMoreOpen(false)}
           onLogout={handleLogout}
@@ -171,13 +176,14 @@ export function MobileTabBar({
 interface MoreSheetProps {
   isAdmin: boolean;
   userId?: string;
+  userName?: string;
   unreadCount: number;
   onClose: () => void;
   onLogout: () => void;
 }
 
 /** Alt çubuğa sığmayan hedefler — masaüstündeki her bağlantının karşılığı burada. */
-function MoreSheet({ isAdmin, userId, unreadCount, onClose, onLogout }: MoreSheetProps) {
+function MoreSheet({ isAdmin, userId, userName, unreadCount, onClose, onLogout }: MoreSheetProps) {
   const items: { href: string; label: string; icon: LucideIcon; badge?: number }[] = [
     { href: "/panel", label: "Panelim", icon: BarChart3 },
     { href: "/bildirimler", label: "Bildirimler", icon: Bell, badge: unreadCount },
@@ -236,6 +242,12 @@ function MoreSheet({ isAdmin, userId, unreadCount, onClose, onLogout }: MoreShee
               </Link>
             </li>
           ))}
+
+          {userId && userName && (
+            <li>
+              <OfflineToggle userId={userId} userName={userName} variant="menu" />
+            </li>
+          )}
 
           <li>
             <button

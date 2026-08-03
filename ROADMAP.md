@@ -179,9 +179,18 @@ self-hosting.
 - [x] Root layout split: session-dependent chrome moved to `(main)/layout.tsx`,
       so `/cevrimdisi` can live outside it and be statically rendered. URLs are
       unchanged — route groups do not affect paths
-- [x] Opt-in offline copy: a button on `/panel` downloads the user's own tasting
-      notes and wishlist into the Cache API (`caskkeeper-offline-v1`), separate
-      from the asset cache so sign-out clears only personal data
+- [x] Opt-in offline copy behind a switch (user menu + `/profil`), **off by
+      default**. While on, the user's own tasting notes and wishlist are kept in
+      the Cache API (`caskkeeper-offline-v1`), separate from the asset cache so
+      sign-out clears only personal data
+- [x] Auto-sync triggers: app start, return to tab, and immediately after any
+      mutation (`notifyOfflineDataChanged`). Background triggers respect a 30 s
+      minimum interval; user-initiated changes bypass it, otherwise a note
+      written just before going offline would be missing from the copy
+- [x] Switching off deletes the copy at once; sign-out deletes it *and* resets
+      the switch, so the next person to sign in on that device does not inherit
+      an enabled setting. If the app ever starts with the switch off but a copy
+      present, it is cleared
 - [x] `/cevrimdisi` renders that copy, reusing `TastingNoteCard` and
       `WhiskeyCard` — no duplicated markup
 - [x] Client-side logout consolidated into `lib/auth/logout-client.ts`; it was
@@ -193,6 +202,11 @@ self-hosting.
 > Reachability is probed against `/api/health` rather than trusting
 > `navigator.onLine`: that flag only reports whether the device has a network,
 > not whether the server can be reached.
+>
+> Known limit: nothing syncs while the browser is closed. A service worker
+> cannot poll in the background here, so a copy is only as fresh as the last
+> time the app was open. Periodic Background Sync would change that, but it is
+> Chromium-only and needs the app to be installed — not worth the dependency.
 
 ---
 
@@ -225,12 +239,13 @@ dependency to the fixed stack, the decision was deliberately left to the project
 owner.**
 
 #### 1b. The offline copy outlives the session on a shared device — *accepted*
-Data downloaded through the offline button stays on the device until the user
-signs out or deletes it. A user who walks away without signing out leaves a
-readable copy behind at `/cevrimdisi`. **Deliberately accepted** — the download
-is opt-in rather than automatic, the page names whose copy it is and when it was
-synced, there is a one-click delete, and `logout-client.ts` wipes it on sign-out.
-Revisit if the product ever stores anything more sensitive than tasting notes.
+While the offline switch is on, the copy stays on the device until the user turns
+it off or signs out. A user who walks away without signing out leaves a readable
+copy behind at `/cevrimdisi`. **Deliberately accepted** — the switch is off by
+default and never enables itself, the page names whose copy it is and when it was
+synced, turning it off deletes the copy instantly, and `logout-client.ts` wipes
+the copy *and* resets the switch on sign-out. Revisit if the product ever stores
+anything more sensitive than tasting notes.
 
 #### 2. Remaining `next@14` security advisories — *medium, limited exposure*
 `npm audit` still reports HIGH for `next` and for the `postcss@8.4.31` that Next
