@@ -59,6 +59,18 @@ follows, likes and comments.
 - **Comparison** — up to three whiskies side by side on specs and aroma, with the
   notes they share highlighted.
 
+### Installable, with opt-in offline access
+
+The app installs to the home screen on Android and iOS (web app manifest,
+generated icon set, standalone display). From the dashboard you can explicitly
+download your own tasting notes and wishlist to the device and read them with no
+connection.
+
+Downloading is **deliberately a button, never automatic**: on a shared device
+nobody's personal data should land on disk without them asking. The copy shows
+whose it is and when it was last synced, can be deleted at any time, and is
+wiped on sign-out.
+
 ### Two domains that never mix
 
 This separation is the central rule of the product and shapes the whole data model:
@@ -458,6 +470,11 @@ Current status, planned work and tracked technical debt live in
 
 Known gaps, deliberately recorded rather than hidden:
 
+- **The offline copy survives on the device until sign-out.** If a user downloads
+  their data and then walks away without signing out, someone else on that device
+  could read it from `/cevrimdisi`. Accepted deliberately: the download is
+  opt-in, labelled with the owner's name, deletable in one click, and cleared on
+  sign-out.
 - **No rate limiting on the authentication endpoints.** An in-memory counter is
   useless on serverless, and a durable fix needs an external store (Upstash Redis,
   Vercel KV), which means adding a dependency to a deliberately fixed stack.

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
+import { OfflineSyncCard } from "@/components/offline/OfflineSyncCard";
 
 export const metadata: Metadata = { title: "Panelim" };
 export const dynamic = "force-dynamic";
@@ -125,6 +126,8 @@ export default async function DashboardPage() {
               Sizin İçin Öneriler
             </Link>
           </Button>
+
+          <OfflineSyncCard userId={session.userId} userName={session.name} />
         </div>
       </div>
     </div>

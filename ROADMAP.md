@@ -47,6 +47,7 @@ experiences**.
 | Interlude — Repo cleanup & single compose file | ✅ Done | #14 |
 | Mobile optimisation | ✅ Done | #15 |
 | Production readiness (Vercel + Atlas) & README | ✅ Done | #16 |
+| PWA — installable + opt-in offline access | ✅ Done | #17 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -167,6 +168,32 @@ self-hosting.
 > like), which means adding a dependency to a deliberately fixed stack. The
 > decision was deferred on purpose — see technical debt.
 
+## PWA — installable + opt-in offline access ✅ (PR #17)
+
+- [x] Web app manifest, icon set generated in code (`scripts/generate-icons.ts`
+      encodes PNGs with Node's `zlib` — no image library added to the stack)
+- [x] Service worker: caches only content-hashed build output and icons.
+      **Page HTML and `/api/*` are never cached** — the root layout used to
+      render `Navbar` as a session-reading server component, so every page was
+      user-specific
+- [x] Root layout split: session-dependent chrome moved to `(main)/layout.tsx`,
+      so `/cevrimdisi` can live outside it and be statically rendered. URLs are
+      unchanged — route groups do not affect paths
+- [x] Opt-in offline copy: a button on `/panel` downloads the user's own tasting
+      notes and wishlist into the Cache API (`caskkeeper-offline-v1`), separate
+      from the asset cache so sign-out clears only personal data
+- [x] `/cevrimdisi` renders that copy, reusing `TastingNoteCard` and
+      `WhiskeyCard` — no duplicated markup
+- [x] Client-side logout consolidated into `lib/auth/logout-client.ts`; it was
+      duplicated in `UserMenu` and `MobileTabBar`, and the wipe had to happen in
+      both
+- [x] `viewport-fit=cover` — `MobileNav` already used
+      `env(safe-area-inset-bottom)`, which always resolved to `0` without it
+
+> Reachability is probed against `/api/health` rather than trusting
+> `navigator.onLine`: that flag only reports whether the device has a network,
+> not whether the server can be reached.
+
 ---
 
 ## What's Next
@@ -196,6 +223,14 @@ protection against password guessing. An in-memory counter does not work on Verc
 external store (Upstash Redis, Vercel KV, etc.). **Because that means adding a
 dependency to the fixed stack, the decision was deliberately left to the project
 owner.**
+
+#### 1b. The offline copy outlives the session on a shared device — *accepted*
+Data downloaded through the offline button stays on the device until the user
+signs out or deletes it. A user who walks away without signing out leaves a
+readable copy behind at `/cevrimdisi`. **Deliberately accepted** — the download
+is opt-in rather than automatic, the page names whose copy it is and when it was
+synced, there is a one-click delete, and `logout-client.ts` wipes it on sign-out.
+Revisit if the product ever stores anything more sensitive than tasting notes.
 
 #### 2. Remaining `next@14` security advisories — *medium, limited exposure*
 `npm audit` still reports HIGH for `next` and for the `postcss@8.4.31` that Next

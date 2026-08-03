@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircleUserRound, LogOut, ShieldCheck, User, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logoutClient } from "@/lib/auth/logout-client";
 
 interface UserMenuProps {
   name: string;
@@ -29,7 +30,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
   }, []);
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await logoutClient();
     router.push("/");
     router.refresh();
   }

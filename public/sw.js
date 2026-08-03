@@ -18,7 +18,17 @@
  * sırasında eski sürümler silinir.
  */
 
+// src/lib/offline/store.ts içindeki SHELL_CACHE ile aynı olmalı; service worker
+// düz JS olduğu için oradan import edemiyor.
 const CACHE_VERSION = "caskkeeper-v1";
+
+/**
+ * Bağlantı yokken gezinme isteklerine sunulan sayfa. (main) route grubunun
+ * dışında olduğu için statiktir ve içinde kullanıcı verisi yoktur — bu yüzden
+ * "sayfa HTML'i önbelleğe alınmaz" kuralının tek istisnası olabiliyor.
+ * Kullanıcı panelden veri indirdiğinde önbelleğe alınır (cacheOfflineShell).
+ */
+const OFFLINE_PAGE = "/cevrimdisi";
 
 self.addEventListener("install", (event) => {
   // Ön yükleme yok: önbellek kullanıldıkça dolar.
@@ -60,8 +70,20 @@ self.addEventListener("fetch", (event) => {
   // Başka origin'lere (ör. katalog görselleri) karışma.
   if (url.origin !== self.location.origin) return;
 
-  // Gezinme istekleri, /api/* ve diğer her şey doğrudan ağa gider —
-  // tarayıcının kendi davranışına dokunulmaz.
+  // Gezinme istekleri her zaman ağa gider — yanıt kullanıcıya özel olduğu için
+  // saklanmaz. Ağ erişilemezse, kullanıcı daha önce verisini indirdiyse
+  // çevrimdışı sayfası sunulur; indirmediyse tarayıcının kendi hatası görünür.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(async () => {
+        const cached = await caches.match(OFFLINE_PAGE, { cacheName: CACHE_VERSION });
+        return cached ?? Response.error();
+      })
+    );
+    return;
+  }
+
+  // /api/* ve diğer her şey doğrudan ağa gider.
   if (!isImmutableAsset(url)) return;
 
   event.respondWith(

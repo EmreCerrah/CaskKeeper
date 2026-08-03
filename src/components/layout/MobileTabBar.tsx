@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { logoutClient } from "@/lib/auth/logout-client";
 
 interface MobileTabBarProps {
   isAuthenticated: boolean;
@@ -91,7 +92,7 @@ export function MobileTabBar({
   }
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await logoutClient();
     setMoreOpen(false);
     router.push("/");
     router.refresh();
