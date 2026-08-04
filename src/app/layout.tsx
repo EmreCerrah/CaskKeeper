@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegistrar } from "@/components/pwa/ServiceWorkerRegistrar";
+import { getLocale, getTranslations } from "@/lib/i18n/server";
+import { LocaleProvider } from "@/lib/i18n/client";
 
 /**
  * Kök layout — bilinçli olarak oturumdan bağımsızdır.
@@ -18,22 +20,25 @@ import { ServiceWorkerRegistrar } from "@/components/pwa/ServiceWorkerRegistrar"
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-playfair" });
 
-export const metadata: Metadata = {
-  title: {
-    default: "CaskKeeper — Viski Tadım Günlüğünüz",
-    template: "%s | CaskKeeper",
-  },
-  description:
-    "Viskileri keşfedin, tadım deneyimlerinizi kaydedin, zaman içinde karşılaştırın. Premium viski tadım günlüğü.",
-  applicationName: "CaskKeeper",
-  // iOS manifest'i yok sayar; ana ekrana eklenen uygulamanın tam ekran açılması
-  // ve başlık çubuğunun temayla uyumlu olması için bu ayarlar gerekir.
-  appleWebApp: {
-    capable: true,
-    title: "CaskKeeper",
-    statusBarStyle: "black-translucent",
-  },
-};
+export function generateMetadata(): Metadata {
+  const t = getTranslations();
+
+  return {
+    title: {
+      default: t("meta.title"),
+      template: "%s | CaskKeeper",
+    },
+    description: t("meta.description"),
+    applicationName: "CaskKeeper",
+    // iOS manifest'i yok sayar; ana ekrana eklenen uygulamanın tam ekran
+    // açılması ve başlık çubuğunun temayla uyumlu olması için bu ayarlar gerekir.
+    appleWebApp: {
+      capable: true,
+      title: "CaskKeeper",
+      statusBarStyle: "black-translucent",
+    },
+  };
+}
 
 export const viewport: Viewport = {
   // viewport-fit=cover olmadan env(safe-area-inset-*) her zaman 0 döner;
@@ -48,11 +53,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // lang sabit "tr" değil: ekran okuyucular telaffuzu, tarayıcılar çeviri
+  // teklifini buna göre belirliyor.
+  const locale = getLocale();
+
   return (
-    <html lang="tr" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
-        {children}
-        <ServiceWorkerRegistrar />
+        <LocaleProvider locale={locale}>
+          {children}
+          <ServiceWorkerRegistrar />
+        </LocaleProvider>
       </body>
     </html>
   );

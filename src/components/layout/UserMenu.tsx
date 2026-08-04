@@ -7,6 +7,7 @@ import { CircleUserRound, LogOut, ShieldCheck, User, UserCircle } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { OfflineToggle } from "@/components/offline/OfflineToggle";
 import { logoutClient } from "@/lib/auth/logout-client";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface UserMenuProps {
   name: string;
@@ -19,6 +20,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const t = useTranslations();
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -61,7 +63,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <UserCircle className="h-4 w-4" aria-hidden />
-            Herkese Açık Profilim
+            {t("nav.publicProfile")}
           </Link>
           <Link
             href="/profil"
@@ -70,7 +72,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <User className="h-4 w-4" aria-hidden />
-            Profil Ayarları
+            {t("nav.profileSettings")}
           </Link>
           <OfflineToggle userId={userId} userName={name} />
           {isAdmin && (
@@ -81,7 +83,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
               onClick={() => setOpen(false)}
             >
               <ShieldCheck className="h-4 w-4" aria-hidden />
-              Yönetim
+              {t("nav.admin")}
             </Link>
           )}
           <button
@@ -90,7 +92,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" aria-hidden />
-            Çıkış Yap
+            {t("nav.logout")}
           </button>
         </div>
       )}
