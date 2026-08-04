@@ -14,6 +14,7 @@ import { WhiskeyImage } from "@/components/whiskey/WhiskeyImage";
 import { WishlistButton } from "@/components/whiskey/WishlistButton";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { buildCompareHref } from "@/lib/utils/comparison";
+import { getTranslations } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ interface WhiskeyDetailPageProps {
 export async function generateMetadata({ params }: WhiskeyDetailPageProps): Promise<Metadata> {
   await connectToDatabase();
   const whiskey = await whiskeyService.findWhiskeyBySlug(params.slug);
-  return { title: whiskey ? `${whiskey.brand} ${whiskey.name}` : "Viski Bulunamadı" };
+  return { title: whiskey ? `${whiskey.brand} ${whiskey.name}` : getTranslations()("whiskey.notFound") };
 }
 
 export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPageProps) {
@@ -39,14 +40,16 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
     session ? wishlistService.isWishlisted(session.userId, whiskey.id) : Promise.resolve(false),
   ]);
 
+  const t = getTranslations();
+
   const specs: { label: string; value: string }[] = [
-    { label: "Tip", value: whiskey.type },
-    { label: "Alkol Oranı", value: `%${whiskey.abv}` },
-    ...(whiskey.age != null ? [{ label: "Yaş", value: `${whiskey.age} Yıl` }] : []),
-    ...(whiskey.distillery ? [{ label: "Damıtımevi", value: whiskey.distillery }] : []),
-    ...(whiskey.caskType ? [{ label: "Fıçı Tipi", value: whiskey.caskType }] : []),
-    ...(whiskey.bottlingYear ? [{ label: "Şişeleme Yılı", value: String(whiskey.bottlingYear) }] : []),
-    ...(whiskey.vintage ? [{ label: "Rekolte", value: String(whiskey.vintage) }] : []),
+    { label: t("whiskey.type"), value: whiskey.type },
+    { label: t("whiskey.abv"), value: `%${whiskey.abv}` },
+    ...(whiskey.age != null ? [{ label: t("whiskey.age"), value: t("whiskey.ageYears", { age: whiskey.age }) }] : []),
+    ...(whiskey.distillery ? [{ label: t("whiskey.distillery"), value: whiskey.distillery }] : []),
+    ...(whiskey.caskType ? [{ label: t("whiskey.caskType"), value: whiskey.caskType }] : []),
+    ...(whiskey.bottlingYear ? [{ label: t("whiskey.bottlingYear"), value: String(whiskey.bottlingYear) }] : []),
+    ...(whiskey.vintage ? [{ label: t("whiskey.vintage"), value: String(whiskey.vintage) }] : []),
   ];
 
   return (
@@ -54,7 +57,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
       <Button asChild variant="ghost" size="sm">
         <Link href="/viskiler">
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Kataloğa Dön
+          {t("whiskey.backToCatalogue")}
         </Link>
       </Button>
 
@@ -79,7 +82,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
               {whiskey.region}
               {whiskey.subRegion ? ` (${whiskey.subRegion})` : ""}, {whiskey.country}
             </p>
-            {whiskey.limitedEdition && <Badge>Limitli Üretim</Badge>}
+            {whiskey.limitedEdition && <Badge>{t("catalogue.limitedEdition")}</Badge>}
           </div>
 
           {whiskey.description && (
@@ -100,7 +103,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
           {whiskey.flavorProfile.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Aroma Profili
+                {t("whiskey.flavorProfile")}
               </h2>
               <div className="flex flex-wrap gap-1.5">
                 {whiskey.flavorProfile.map((flavor) => (
@@ -116,7 +119,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
           {whiskey.awards.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Ödüller
+                {t("whiskey.awards")}
               </h2>
               <ul className="space-y-1">
                 {whiskey.awards.map((award) => (
@@ -133,7 +136,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
             <Button asChild size="lg">
               <Link href={session ? `/tadimlarim/yeni?viski=${whiskey.slug}` : `/giris?donus=/viskiler/${whiskey.slug}`}>
                 <NotebookPen className="h-4 w-4" aria-hidden />
-                Tadım Notu Yaz
+                {t("whiskey.writeNote")}
               </Link>
             </Button>
             {session ? (
@@ -141,21 +144,21 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
             ) : (
               <Button asChild variant="outline" size="lg">
                 <Link href={`/giris?donus=/viskiler/${whiskey.slug}`}>
-                  İstek Listeme Ekle
+                  {t("whiskey.wishlistAdd")}
                 </Link>
               </Button>
             )}
             <Button asChild variant="outline" size="lg">
               <Link href={buildCompareHref([whiskey.slug])}>
                 <Columns3 className="h-4 w-4" aria-hidden />
-                Karşılaştır
+                {t("nav.compare")}
               </Link>
             </Button>
             {whiskey.officialUrl && (
               <Button asChild variant="outline" size="lg">
                 <a href={whiskey.officialUrl} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="h-4 w-4" aria-hidden />
-                  Resmî Sayfa
+                  {t("whiskey.officialPage")}
                 </a>
               </Button>
             )}
@@ -168,7 +171,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
         <Card>
           <CardHeader>
             <CardTitle className="font-serif">
-              Bu Viskiye Ait Tadımlarım {myNotes.length > 0 && `(${myNotes.length})`}
+              {t("whiskey.myNotesTitle")} {myNotes.length > 0 && `(${myNotes.length})`}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -176,7 +179,7 @@ export default async function WhiskeyDetailPage({ params }: WhiskeyDetailPagePro
               myNotes.map((note) => <TastingNoteCard key={note.id} note={note} hideWhiskey />)
             ) : (
               <p className="text-sm text-muted-foreground">
-                Bu viskiyi henüz tatmadınız. İlk tadım notunuzu yazmak için yukarıdaki butonu kullanın.
+                {t("whiskey.noNotesYet")}
               </p>
             )}
           </CardContent>

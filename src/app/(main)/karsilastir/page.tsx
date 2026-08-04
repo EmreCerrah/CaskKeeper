@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { ComparePicker } from "@/components/whiskey/ComparePicker";
 import { ComparisonTable } from "@/components/whiskey/ComparisonTable";
 import { MAX_COMPARE_ITEMS, parseCompareSlugs } from "@/lib/utils/comparison";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Viski Karşılaştırma" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("compare.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface ComparePageProps {
@@ -20,14 +23,14 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
 
   const slugs = parseCompareSlugs(searchParams.viski);
   const whiskeys = await whiskeyService.getWhiskeysBySlugs(slugs);
+  const t = getTranslations();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
       <div className="space-y-1">
-        <h1 className="font-serif text-3xl font-bold">Viski Karşılaştırma</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("compare.title")}</h1>
         <p className="text-muted-foreground">
-          En fazla {MAX_COMPARE_ITEMS} viskiyi yan yana inceleyin. Ortak aroma notaları
-          vurgulanır.
+          {t("compare.subtitle", { max: MAX_COMPARE_ITEMS })}
         </p>
       </div>
 
@@ -38,21 +41,16 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <Columns3 className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
-          <p className="font-medium">Karşılaştırma henüz boş.</p>
-          <p className="mt-1 text-sm">
-            Yukarıdaki arama kutusundan viski ekleyin ya da katalogdan bir viski seçip
-            &ldquo;Karşılaştır&rdquo; butonunu kullanın.
-          </p>
+          <p className="font-medium">{t("compare.empty")}</p>
+          <p className="mt-1 text-sm">{t("compare.emptyHint")}</p>
           <Button asChild className="mt-4">
-            <Link href="/viskiler">Kataloğu Keşfet</Link>
+            <Link href="/viskiler">{t("compare.exploreCatalogue")}</Link>
           </Button>
         </div>
       )}
 
       {whiskeys.length === 1 && (
-        <p className="text-sm text-muted-foreground">
-          Ortak aroma notalarını görmek için en az bir viski daha ekleyin.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("compare.addOneMore")}</p>
       )}
     </div>
   );

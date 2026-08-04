@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
@@ -5,6 +7,7 @@ import type { WhiskeyDTO } from "@/lib/types/dto";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { WhiskeyImage } from "./WhiskeyImage";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface WhiskeyCardProps {
   whiskey: WhiskeyDTO;
@@ -14,6 +17,8 @@ interface WhiskeyCardProps {
 
 /** Katalog listesindeki viski kartı. */
 export function WhiskeyCard({ whiskey, footer }: WhiskeyCardProps) {
+  const t = useTranslations();
+
   return (
     <Link href={`/viskiler/${whiskey.slug}`} className="group">
       <Card className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
@@ -39,7 +44,7 @@ export function WhiskeyCard({ whiskey, footer }: WhiskeyCardProps) {
             <Badge variant="gold">{whiskey.type}</Badge>
             {whiskey.age != null && <Badge variant="secondary">{whiskey.age} Yıl</Badge>}
             <Badge variant="outline">%{whiskey.abv} ABV</Badge>
-            {whiskey.limitedEdition && <Badge>Limitli Üretim</Badge>}
+            {whiskey.limitedEdition && <Badge>{t("catalogue.limitedEdition")}</Badge>}
           </div>
           {footer}
         </div>

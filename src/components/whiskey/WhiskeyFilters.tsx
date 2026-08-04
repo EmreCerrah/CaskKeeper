@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import type { WhiskeyFacets } from "@/server/repositories/WhiskeyRepository";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface WhiskeyFiltersProps {
   facets: WhiskeyFacets;
@@ -20,6 +21,7 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations();
 
   const [search, setSearch] = useState(searchParams.get("arama") ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -55,9 +57,9 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Marka, isim veya damıtımevi ara…"
+          placeholder={t("catalogue.searchPlaceholder")}
           className="pl-9"
-          aria-label="Viski ara"
+          aria-label={t("catalogue.searchLabel")}
         />
       </div>
 
@@ -65,9 +67,9 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
         value={searchParams.get("tip") ?? ""}
         onChange={(e) => updateParams({ tip: e.target.value || null })}
         className="md:w-44"
-        aria-label="Tip filtresi"
+        aria-label={t("catalogue.filterType")}
       >
-        <option value="">Tüm Tipler</option>
+        <option value="">{t("catalogue.allTypes")}</option>
         {facets.types.map((t) => (
           <option key={t} value={t}>
             {t}
@@ -79,9 +81,9 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
         value={searchParams.get("bolge") ?? ""}
         onChange={(e) => updateParams({ bolge: e.target.value || null })}
         className="md:w-44"
-        aria-label="Bölge filtresi"
+        aria-label={t("catalogue.filterRegion")}
       >
-        <option value="">Tüm Bölgeler</option>
+        <option value="">{t("catalogue.allRegions")}</option>
         {facets.regions.map((r) => (
           <option key={r} value={r}>
             {r}
@@ -93,9 +95,9 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
         value={searchParams.get("ulke") ?? ""}
         onChange={(e) => updateParams({ ulke: e.target.value || null })}
         className="md:w-44"
-        aria-label="Ülke filtresi"
+        aria-label={t("catalogue.filterCountry")}
       >
-        <option value="">Tüm Ülkeler</option>
+        <option value="">{t("catalogue.allCountries")}</option>
         {facets.countries.map((c) => (
           <option key={c} value={c}>
             {c}
