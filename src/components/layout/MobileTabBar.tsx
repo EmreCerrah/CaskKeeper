@@ -24,6 +24,8 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { OfflineToggle } from "@/components/offline/OfflineToggle";
 import { logoutClient } from "@/lib/auth/logout-client";
+import { useTranslations } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n/translate";
 
 interface MobileTabBarProps {
   isAuthenticated: boolean;
@@ -38,24 +40,24 @@ interface MobileTabBarProps {
 
 interface TabItem {
   href: string;
-  label: string;
+  labelKey: TranslationKey;
   icon: LucideIcon;
 }
 
 /** Oturum açmış kullanıcı için birincil hedefler (4 sekme + "Daha fazla"). */
 const AUTHED_TABS: TabItem[] = [
-  { href: "/viskiler", label: "Viskiler", icon: GlassWater },
-  { href: "/tadimlarim", label: "Tadımlarım", icon: NotebookPen },
-  { href: "/akis", label: "Akış", icon: Compass },
-  { href: "/istek-listem", label: "İstek", icon: Bookmark },
+  { href: "/viskiler", labelKey: "nav.whiskies", icon: GlassWater },
+  { href: "/tadimlarim", labelKey: "nav.myTastings", icon: NotebookPen },
+  { href: "/akis", labelKey: "nav.feed", icon: Compass },
+  { href: "/istek-listem", labelKey: "nav.wishlistShort", icon: Bookmark },
 ];
 
 /** Oturumsuz kullanıcı için: herkese açık sayfalar erişilebilir kalmalı. */
 const GUEST_TABS: TabItem[] = [
-  { href: "/viskiler", label: "Viskiler", icon: GlassWater },
-  { href: "/kullanicilar", label: "Kişiler", icon: Users },
-  { href: "/karsilastir", label: "Karşılaştır", icon: BarChart3 },
-  { href: "/giris", label: "Giriş", icon: LogIn },
+  { href: "/viskiler", labelKey: "nav.whiskies", icon: GlassWater },
+  { href: "/kullanicilar", labelKey: "nav.people", icon: Users },
+  { href: "/karsilastir", labelKey: "nav.compare", icon: BarChart3 },
+  { href: "/giris", labelKey: "nav.loginShort", icon: LogIn },
 ];
 
 /**
@@ -74,6 +76,7 @@ export function MobileTabBar({
 }: MobileTabBarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations();
   const [moreOpen, setMoreOpen] = useState(false);
 
   // Gezinme sonrası panel açık kalmasın
@@ -116,7 +119,7 @@ export function MobileTabBar({
       )}
 
       <nav
-        aria-label="Mobil gezinme"
+        aria-label={t("a11y.mobileNav")}
         className="fixed inset-x-0 bottom-0 z-50 border-t border-border/60 bg-background/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         <ul className="flex items-stretch">
@@ -136,7 +139,7 @@ export function MobileTabBar({
                     className={cn("h-5 w-5", active && "fill-primary/15")}
                     aria-hidden
                   />
-                  <span className="truncate">{tab.label}</span>
+                  <span className="truncate">{t(tab.labelKey)}</span>
                 </Link>
               </li>
             );
@@ -163,7 +166,7 @@ export function MobileTabBar({
                     />
                   )}
                 </span>
-                <span className="truncate">Daha fazla</span>
+                <span className="truncate">{t("nav.more")}</span>
               </button>
             </li>
           )}
@@ -184,39 +187,41 @@ interface MoreSheetProps {
 
 /** Alt çubuğa sığmayan hedefler — masaüstündeki her bağlantının karşılığı burada. */
 function MoreSheet({ isAdmin, userId, userName, unreadCount, onClose, onLogout }: MoreSheetProps) {
-  const items: { href: string; label: string; icon: LucideIcon; badge?: number }[] = [
-    { href: "/panel", label: "Panelim", icon: BarChart3 },
-    { href: "/bildirimler", label: "Bildirimler", icon: Bell, badge: unreadCount },
-    { href: "/favoriler", label: "Favorilerim", icon: Heart },
-    { href: "/kullanicilar", label: "Kişiler", icon: Users },
-    { href: "/karsilastir", label: "Viski Karşılaştır", icon: BarChart3 },
+  const t = useTranslations();
+
+  const items: { href: string; labelKey: TranslationKey; icon: LucideIcon; badge?: number }[] = [
+    { href: "/panel", labelKey: "nav.dashboard", icon: BarChart3 },
+    { href: "/bildirimler", labelKey: "nav.notifications", icon: Bell, badge: unreadCount },
+    { href: "/favoriler", labelKey: "nav.favorites", icon: Heart },
+    { href: "/kullanicilar", labelKey: "nav.people", icon: Users },
+    { href: "/karsilastir", labelKey: "nav.compareLong", icon: BarChart3 },
     ...(userId
-      ? [{ href: `/kullanicilar/${userId}`, label: "Herkese Açık Profilim", icon: UserCircle }]
+      ? [{ href: `/kullanicilar/${userId}`, labelKey: "nav.publicProfile" as TranslationKey, icon: UserCircle }]
       : []),
-    { href: "/profil", label: "Profil Ayarları", icon: User },
-    ...(isAdmin ? [{ href: "/yonetim", label: "Yönetim", icon: ShieldCheck }] : []),
+    { href: "/profil", labelKey: "nav.profileSettings", icon: User },
+    ...(isAdmin ? [{ href: "/yonetim", labelKey: "nav.admin" as TranslationKey, icon: ShieldCheck }] : []),
   ];
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
       <button
         type="button"
-        aria-label="Menüyü kapat"
+        aria-label={t("a11y.closeMenu")}
         onClick={onClose}
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
       />
 
       <div
         role="menu"
-        aria-label="Diğer sayfalar"
+        aria-label={t("a11y.otherPages")}
         className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-2xl border-t border-border bg-card pb-[calc(env(safe-area-inset-bottom)+72px)] shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
-          <span className="font-serif text-lg font-semibold">Menü</span>
+          <span className="font-serif text-lg font-semibold">{t("nav.menu")}</span>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Kapat"
+            aria-label={t("a11y.close")}
             className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-accent"
           >
             <X className="h-5 w-5" aria-hidden />
@@ -233,7 +238,7 @@ function MoreSheet({ isAdmin, userId, userName, unreadCount, onClose, onLogout }
                 className="flex min-h-[52px] items-center gap-3 px-4 py-3 text-sm hover:bg-accent/50"
               >
                 <item.icon className="h-5 w-5 shrink-0 text-primary/80" aria-hidden />
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">{t(item.labelKey)}</span>
                 {item.badge != null && item.badge > 0 && (
                   <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-bold tabular-nums text-primary-foreground">
                     {item.badge > 9 ? "9+" : item.badge}
@@ -257,7 +262,7 @@ function MoreSheet({ isAdmin, userId, userName, unreadCount, onClose, onLogout }
               className="flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left text-sm text-destructive-foreground/90 hover:bg-accent/50"
             >
               <LogOut className="h-5 w-5 shrink-0" aria-hidden />
-              Çıkış Yap
+              {t("nav.logout")}
             </button>
           </li>
         </ul>

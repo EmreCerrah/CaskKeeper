@@ -7,12 +7,16 @@ export const metadata: Metadata = { title: "Çevrimdışı" };
  * Çevrimdışı görünüm.
  *
  * (main) route grubunun DIŞINDA duruyor: oradaki layout Navbar'ı render eder ve
- * Navbar oturumu sunucuda okur, bu da sayfayı dinamik ve kullanıcıya özel
- * yapardı. Burada sunucu tarafında hiçbir kişisel veri okunmadığı için sayfa
- * statik üretilir — service worker onu önbelleğe alıp bağlantı yokken
- * sunabiliyor. Veriler istemcide, cihazdaki kopyadan okunur.
+ * Navbar oturumu okur, bu da sayfayı KULLANICIYA ÖZEL yapardı. Buradaki tek
+ * sunucu girdisi dil çerezi; kişisel hiçbir veri okunmaz, dolayısıyla HTML'i
+ * önbelleğe almak güvenlidir. Veriler istemcide, cihazdaki kopyadan okunur.
+ *
+ * Sayfa `force-static` DEĞİL: kök layout dil çerezini okuduğu için tüm rotalar
+ * dinamik. Bu bir sorun değil — service worker sayfayı senkron sırasında
+ * (cacheOfflineShell) önbelleğe alıyor, statik üretime bağlı değil. Tek etkisi,
+ * önbellekteki kopyanın alındığı andaki dilde donması; sonraki senkronda
+ * tazeleniyor.
  */
-export const dynamic = "force-static";
 
 export default function OfflinePage() {
   return (

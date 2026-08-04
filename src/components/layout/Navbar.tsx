@@ -3,13 +3,16 @@ import { GlassWater } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "./UserMenu";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { getTranslations } from "@/lib/i18n/server";
 
 /**
  * Üst gezinme çubuğu (server component — oturumu doğrudan okur).
  */
 export async function Navbar() {
   const session = await getSession();
+  const t = getTranslations();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -23,33 +26,36 @@ export async function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           <Button asChild variant="ghost" size="sm">
-            <Link href="/viskiler">Viskiler</Link>
+            <Link href="/viskiler">{t("nav.whiskies")}</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/kullanicilar">Kişiler</Link>
+            <Link href="/kullanicilar">{t("nav.people")}</Link>
           </Button>
           {session && (
             <>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/panel">Panelim</Link>
+                <Link href="/panel">{t("nav.dashboard")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/akis">Akış</Link>
+                <Link href="/akis">{t("nav.feed")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/tadimlarim">Tadımlarım</Link>
+                <Link href="/tadimlarim">{t("nav.myTastings")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/favoriler">Favorilerim</Link>
+                <Link href="/favoriler">{t("nav.favorites")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/istek-listem">İstek Listem</Link>
+                <Link href="/istek-listem">{t("nav.wishlist")}</Link>
               </Button>
             </>
           )}
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Oturumsuz kullanıcı da görmeli: giriş/kayıt sayfalarını anlamayan
+              biri zaten içeri giremez. */}
+          <LocaleSwitcher />
           {session ? (
             <>
               <NotificationBell userId={session.userId} />
@@ -68,10 +74,10 @@ export async function Navbar() {
             <>
               {/* Mobilde "Giriş" alt çubukta bir sekme; üstte yalnızca kayıt kalır */}
               <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
-                <Link href="/giris">Giriş Yap</Link>
+                <Link href="/giris">{t("nav.login")}</Link>
               </Button>
               <Button asChild size="sm">
-                <Link href="/kayit">Kayıt Ol</Link>
+                <Link href="/kayit">{t("nav.register")}</Link>
               </Button>
             </>
           )}

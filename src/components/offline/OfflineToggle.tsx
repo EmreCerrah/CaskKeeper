@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils/cn";
 import { clearOfflineSnapshot } from "@/lib/offline/store";
 import { isOfflineEnabled, setOfflineEnabled, subscribeOfflinePreference } from "@/lib/offline/preference";
 import { resetSyncThrottle, syncOfflineSnapshot } from "@/lib/offline/sync";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface OfflineToggleProps {
   userId: string;
@@ -22,6 +23,7 @@ interface OfflineToggleProps {
  * bırakılmaz. Varsayılan kapalıdır.
  */
 export function OfflineToggle({ userId, userName, variant = "menu" }: OfflineToggleProps) {
+  const t = useTranslations();
   const [enabled, setEnabled] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,13 +53,13 @@ export function OfflineToggle({ userId, userName, variant = "menu" }: OfflineTog
     } catch (e) {
       setEnabled(!next);
       setOfflineEnabled(!next);
-      setError(e instanceof Error ? e.message : "İşlem tamamlanamadı.");
+      setError(e instanceof Error ? e.message : t("offline.actionFailed"));
     } finally {
       setBusy(false);
     }
   }
 
-  const label = enabled ? "Çevrimdışı kullanım açık" : "Çevrimdışı kullanım kapalı";
+  const label = enabled ? t("offline.switchOnLabel") : t("offline.switchOffLabel");
 
   return (
     <div className={cn(variant === "menu" && "border-t border-border/60")}>
@@ -74,10 +76,10 @@ export function OfflineToggle({ userId, userName, variant = "menu" }: OfflineTog
         )}
       >
         <WifiOff className="h-4 w-4 shrink-0" aria-hidden />
-        <span className="flex-1">Çevrimdışı Kullanım</span>
+        <span className="flex-1">{t("offline.title")}</span>
 
         {/* Durum yalnızca renkle anlatılmaz; anahtarın yanında metin de var. */}
-        <span className="text-xs text-muted-foreground">{enabled ? "Açık" : "Kapalı"}</span>
+        <span className="text-xs text-muted-foreground">{enabled ? t("offline.on") : t("offline.off")}</span>
         <span
           aria-hidden
           className={cn(
