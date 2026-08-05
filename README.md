@@ -134,6 +134,17 @@ The rules that keep this honest:
   demote themselves, and the last remaining administrator cannot be demoted at all.
 - Security headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
   `Permissions-Policy`, `HSTS`) are set in `next.config.mjs`.
+- **The authentication endpoints are rate limited.** Attempts are counted in
+  MongoDB with a TTL index rather than an external store — sign-in allows 5
+  attempts per 15 minutes for an IP/email pair and 20 per 15 minutes for an IP,
+  registration 5 per hour per IP. Nothing is ever locked permanently; exceeding a
+  limit returns `429` with `Retry-After`, and a correct password clears that
+  account's counter. If the counter cannot be read the request is allowed and the
+  failure logged, so a database hiccup cannot lock everyone out.
+
+  > This relies on `x-forwarded-for`, which Vercel overwrites and therefore makes
+  > trustworthy. If you self-host **without a reverse proxy in front**, that
+  > header can be forged and the limit bypassed.
 
 ### Accessibility & mobile
 
@@ -312,6 +323,7 @@ src/
 | `Like` / `Comment` | Interactions, allowed only on public notes. |
 | `Notification` | Follow / like / comment events. Reversing the action deletes the notification. |
 | `Wishlist` | Whiskies a user intends to try. Deliberately just a marker — no quantity, price or location. |
+| `AuthAttempt` | One sign-in or registration attempt, for rate limiting. A TTL index expires the rows, so nothing needs cleaning up. |
 
 Deleting a tasting note cascades to its likes, comments and notifications.
 
@@ -480,9 +492,6 @@ Known gaps, deliberately recorded rather than hidden:
   could read the copy from `/cevrimdisi`. Accepted deliberately: the switch is
   off by default, the page names whose copy it is, turning the switch off deletes
   it instantly, and signing out both deletes it and resets the switch.
-- **No rate limiting on the authentication endpoints.** An in-memory counter is
-  useless on serverless, and a durable fix needs an external store (Upstash Redis,
-  Vercel KV), which means adding a dependency to a deliberately fixed stack.
 - **Repository-layer integration tests are missing.** Repositories are mocked in
   the current suite, so the queries themselves — filters, aggregations, populates
   — are not covered.

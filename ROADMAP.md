@@ -163,10 +163,10 @@ self-hosting.
 - [x] `.env.example` documented for Atlas/Vercel
 - [x] "Deployment" section added to the README
 
-> Left out of scope: **rate limiting**. An in-memory counter is useless on
-> serverless, and a durable fix needs an external store (Upstash Redis and the
-> like), which means adding a dependency to a deliberately fixed stack. The
-> decision was deferred on purpose — see technical debt.
+> Left out of scope at the time: **rate limiting** — the reasoning was that a
+> durable counter needs an external store and therefore a new dependency.
+> Closed later in PR #21 without one: the attempts live in MongoDB, which the
+> application already depends on.
 
 ## PWA — installable + opt-in offline access ✅ (PR #17)
 
@@ -217,7 +217,6 @@ items to close before going live, or immediately after. In priority order:
 
 | # | Work | Why | Size |
 |---|---|---|---|
-| 1 | Rate limiting on auth endpoints | No protection against password-guessing | Small, but needs a new-dependency decision |
 | 2 | `next@16` upgrade | The remaining HIGH advisories only close there | Large — async API migration, its own slice |
 | 3 | Repository integration tests | The queries themselves are untested | Medium |
 
@@ -229,15 +228,7 @@ Details in the technical debt section below.
 
 ### Open items
 
-#### 1. No rate limiting on the authentication endpoints — *high*
-`/api/auth/login` and `/api/auth/register` accept unlimited attempts; there is no
-protection against password guessing. An in-memory counter does not work on Vercel
-(each request may land on a different serverless instance), so this needs an
-external store (Upstash Redis, Vercel KV, etc.). **Because that means adding a
-dependency to the fixed stack, the decision was deliberately left to the project
-owner.**
-
-#### 1b. The offline copy outlives the session on a shared device — *accepted*
+#### 1. The offline copy outlives the session on a shared device — *accepted*
 While the offline switch is on, the copy stays on the device until the user turns
 it off or signs out. A user who walks away without signing out leaves a readable
 copy behind at `/cevrimdisi`. **Deliberately accepted** — the switch is off by
@@ -297,6 +288,32 @@ with a fallback.
 
 <details>
 <summary>Closed technical debt items</summary>
+
+#### ~~No rate limiting on the authentication endpoints~~ ✅ *PR #21*
+`/api/auth/login` and `/api/auth/register` accepted unlimited attempts. This
+entry used to say a durable fix needed an external store and therefore a new
+dependency — that framing missed the obvious: **MongoDB Atlas is already there.**
+Attempts go into an `AuthAttempt` collection with a TTL index that expires them.
+No Redis, no KV, no new dependency.
+
+Measurement settled the cost question: `bcrypt.compare` at 12 rounds takes
+**~450 ms**, so two extra Mongo operations are noise. The same number reframed
+the risk — every failed login burns half a second of server CPU, so an unlimited
+endpoint is an availability and cost problem, not only a password-guessing one.
+
+Two counters, because one is never enough: per **IP + email** (5 per 15 min) and
+per **IP** (20 per 15 min). IP alone punishes everyone behind a shared network;
+email alone lets an attacker lock a chosen account out. There is no permanent
+lockout — only waiting out the window — for the same reason. A correct password
+clears that account's counter but deliberately *not* the IP counter, so one good
+login cannot wipe a scan across many accounts.
+
+Fails **open**: if the counter cannot be read the request is allowed and the
+error logged. A Mongo hiccup must not lock everyone out of the application.
+
+> Depends on `x-forwarded-for`, which Vercel overwrites and therefore makes
+> trustworthy. With no reverse proxy in front, the header can be forged and the
+> limit bypassed — noted in the README.
 
 #### ~~No test infrastructure~~ ✅ *PR #7*
 Vitest was set up; the service layer and pure helpers are tested. Critical rules

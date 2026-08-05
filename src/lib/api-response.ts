@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AppError, ValidationError } from "@/lib/errors";
+import { AppError, TooManyRequestsError, ValidationError } from "@/lib/errors";
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -37,6 +37,12 @@ export function createErrorResponse(error: unknown, message: string = "Bir hata 
 export function handleApiError(error: unknown) {
   if (error instanceof ValidationError) {
     return createErrorResponse(error.details ?? error.code, error.message, error.status);
+  }
+  if (error instanceof TooManyRequestsError) {
+    // İstemcinin ne zaman tekrar deneyebileceğini bilmesi için standart başlık.
+    const response = createErrorResponse(error.code, error.message, error.status);
+    response.headers.set("Retry-After", String(error.retryAfterSeconds));
+    return response;
   }
   if (error instanceof AppError) {
     return createErrorResponse(error.code, error.message, error.status);
