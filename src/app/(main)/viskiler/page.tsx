@@ -90,7 +90,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <p className="font-medium">{t("catalogue.noResults")}</p>
-          <p className="mt-1 text-sm">Filtreleri temizleyip tekrar deneyin.</p>
+          <p className="mt-1 text-sm">{t("catalogue.clearFilters")}</p>
         </div>
       )}
     </div>

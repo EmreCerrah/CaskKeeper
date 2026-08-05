@@ -42,7 +42,7 @@ export function WhiskeyCard({ whiskey, footer }: WhiskeyCardProps) {
           </div>
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             <Badge variant="gold">{whiskey.type}</Badge>
-            {whiskey.age != null && <Badge variant="secondary">{whiskey.age} Yıl</Badge>}
+            {whiskey.age != null && <Badge variant="secondary">{t("whiskey.ageYears", { age: whiskey.age })}</Badge>}
             <Badge variant="outline">%{whiskey.abv} ABV</Badge>
             {whiskey.limitedEdition && <Badge>{t("catalogue.limitedEdition")}</Badge>}
           </div>

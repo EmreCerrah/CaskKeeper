@@ -65,6 +65,11 @@ export const en: Record<TranslationKey, string> = {
   "common.search": "Search",
   "common.clearSearch": "Clear search",
   "common.pagination": "Pagination",
+  "common.previous": "Previous",
+  "common.next": "Next",
+  "common.pageOf": "Page",
+  "common.searching": "Searching…",
+  "common.offline": "Offline",
   "common.yes": "Yes",
   "common.no": "No",
   "common.searchFailed": "Search failed",
@@ -112,6 +117,7 @@ export const en: Record<TranslationKey, string> = {
   "catalogue.count": "Explore {count} whiskies.",
   "catalogue.empty": "The catalogue looks empty right now.",
   "catalogue.noResults": "No whisky matches those filters.",
+  "catalogue.clearFilters": "Clear the filters and try again.",
   "catalogue.searchPlaceholder": "Search brand, name or distillery…",
   "catalogue.searchLabel": "Search whiskies",
   "catalogue.filterType": "Filter by type",
@@ -162,6 +168,7 @@ export const en: Record<TranslationKey, string> = {
   "compare.remove": "Remove",
   "compare.tableCaption": "Specification and aroma profile comparison of the selected whiskies",
   "compare.sharedLabel": "shared",
+  "compare.full": "You can compare up to {max} whiskies. Remove one to add another.",
   "compare.brand": "Brand",
 
   // --- People -------------------------------------------------------------
@@ -179,5 +186,29 @@ export const en: Record<TranslationKey, string> = {
   "people.subtitlePrefix": "Find other whisky enthusiasts and follow them. Anyone you follow who follows you back appears as a",
   "people.subtitleSuffix": ".",
   "people.newMembers": "Newest Members",
+
+  // --- Home page ----------------------------------------------------------
+  "home.eyebrow": "A Premium Whisky Tasting Journal",
+  "home.headlineBefore": "Every sip",
+  "home.headlineHighlight": "a memory",
+  "home.headlineAfter": ", every bottle a story.",
+  "home.subtitle":
+    "Discover whiskies with CaskKeeper, keep your tastings in an elegant journal, and follow where your palate takes you.",
+  "home.ctaDashboard": "Go to My Dashboard",
+  "home.ctaCatalogue": "Browse the Catalogue",
+  "home.ctaSignUp": "Start for Free",
+
+  "home.feature.discover.title": "Discover",
+  "home.feature.discover.body":
+    "Search one central catalogue of whiskies from around the world by brand, region and type.",
+  "home.feature.record.title": "Record",
+  "home.feature.record.body":
+    "Capture every session with nose, palate and finish notes, and aroma tags picked from a flavour wheel.",
+  "home.feature.compare.title": "Compare",
+  "home.feature.compare.body":
+    "Put your tastings of the same whisky side by side over time and watch your palate evolve.",
+  "home.feature.favorite.title": "Favourite",
+  "home.feature.favorite.body":
+    "Mark the drams you loved most and build your own whisky memory.",
   "people.publicNoteCount": "{count} public tastings",
 };

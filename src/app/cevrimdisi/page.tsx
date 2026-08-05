@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { OfflineView } from "@/components/offline/OfflineView";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Çevrimdışı" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("common.offline") };
+}
 
 /**
  * Çevrimdışı görünüm.
