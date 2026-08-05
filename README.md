@@ -502,6 +502,7 @@ Known gaps, deliberately recorded rather than hidden:
 - **`next/image` is not used** — a deliberate choice, since catalogue imagery comes
   from arbitrary external domains and whitelisting each one in `next.config.mjs`
   does not scale. `WhiskeyImage` handles broken and missing images with a fallback.
+  
 
 ---
 
