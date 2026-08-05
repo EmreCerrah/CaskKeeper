@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Aynı dala arka arkaya push gelirse önceki çalışma iptal edilir.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: build-and-test
+    runs-on: ubuntu-latest
+
+    env:
+      # DİKKAT: bunlar gerçek kimlik bilgisi değil, yer tutucu.
+      #
+      # src/lib/db.ts MONGODB_URI'yi MODÜL YÜKLENİRKEN kontrol edip yoksa throw
+      # ediyor, bu yüzden `next build` veritabanı adresi olmadan hiç
+      # başlayamıyor. Dockerfile da aynı nedenle placeholder geçiyor.
+      # Build sırasında veritabanına BAĞLANILMAZ: veri çeken tüm sayfalar
+      # force-dynamic, yani istek anında render ediliyorlar.
+      #
+      # Bu ihtiyaç ROADMAP.md'deki 4. teknik borç maddesinin belirtisi —
+      # kontrol connectToDatabase() içine alınırsa buradaki iki satır düşer.
+      MONGODB_URI: mongodb://placeholder:27017/caskkeeper
+      JWT_SECRET: ci-placeholder-not-a-real-secret
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Dockerfile ve README ile aynı sürüm.
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+# `npm run lint` bilerek yok: depoda ESLint yapılandırması bulunmadığı için
+# `next lint` kurulum sorusu sorup interaktif moda giriyor ve CI'da takılıyor.
+# Lint'i eklemek için önce bir .eslintrc dosyası commit'lenmeli.
