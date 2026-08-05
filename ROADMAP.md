@@ -220,7 +220,6 @@ items to close before going live, or immediately after. In priority order:
 | 1 | Rate limiting on auth endpoints | No protection against password-guessing | Small, but needs a new-dependency decision |
 | 2 | `next@16` upgrade | The remaining HIGH advisories only close there | Large — async API migration, its own slice |
 | 3 | Repository integration tests | The queries themselves are untested | Medium |
-| 4 | `db.ts` requires an env var at build time | `next build` cannot run without a database URL | Very small |
 
 Details in the technical debt section below.
 
@@ -275,13 +274,6 @@ repository, not from users.
 Repositories are mocked in the test suite, so the queries themselves (filters,
 aggregations, populates) are out of scope. These need to be tested against real
 queries with `mongodb-memory-server`.
-
-#### 4. `db.ts` requires the env var at module load — *low*
-`src/lib/db.ts` throws at **module level** when `MONGODB_URI` is missing. As a
-result `next build` cannot run at all without a database URL; the
-`MONGODB_URI="mongodb://placeholder..."` line in the Dockerfile exists purely to
-work around it. Moving the check inside `connectToDatabase()` is enough — builds
-would no longer need the variable, while runtime still fails loudly.
 
 #### 5. The import script bypasses the architecture — *low*
 `scripts/import-whiskeys.ts` writes straight to the Mongoose model instead of
@@ -338,6 +330,24 @@ risk see open item 2.
 The old raw `whiskies` collection was dropped from the development database. The
 catalogue now lives only in `whiskeys`, fed from the 16 parts in `data/`
 (`npm run data:seed`).
+
+#### ~~`db.ts` required the env var at module load~~ ✅ *PR #20*
+`src/lib/db.ts` read `MONGODB_URI` at **module level** and threw when it was
+missing. Fifty files import that module, so `next build` could not start without
+a database URL it never used — every data-backed page is `force-dynamic`. The
+Dockerfile and the CI workflow both carried a fake connection string purely to
+satisfy it. The check now lives in `connectToDatabase()`; the build needs no
+environment variables at all, and both placeholder pairs are gone.
+
+The same change closes a trap that had already cost us once: a connection string
+with **no database name** makes Mongoose fall back to `test` silently, which is
+where data landed on the first Atlas deploy. `resolveConnectionString()` now
+rejects it with an explanation before connecting. Scheme is validated too, and
+credentials are masked in error messages.
+
+> Also fixed while in that function: a failed first connection cached its
+> rejected promise forever, so one transient outage at startup left every later
+> request failing until the process restarted. The promise is cleared on failure.
 
 #### ~~Repo hygiene~~ ✅ *PR #14*
 An 11 MB stray binary was removed; `.env.local` and `.idea/workspace.xml` were

@@ -19,13 +19,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build sırasında DB'ye bağlanılmaz (tüm veri sayfaları force-dynamic);
-# yine de modül yüklenirken env kontrolleri geçsin diye placeholder verilir.
+# Build sırasında veritabanına bağlanılmaz (veri çeken tüm sayfalar
+# force-dynamic) ve artık sahte bir MONGODB_URI/JWT_SECRET de gerekmiyor:
+# ikisinin de kontrolü çalışma zamanına taşındı (src/lib/db.ts,
+# src/lib/auth/session.ts).
 ENV NEXT_TELEMETRY_DISABLED=1
 # next.config.mjs standalone çıktıyı yalnızca bu bayrakla üretir (Vercel'de gerekmez)
 ENV DOCKER_BUILD=1
-ENV MONGODB_URI="mongodb://placeholder:27017/caskkeeper"
-ENV JWT_SECRET="build-time-placeholder"
 RUN npm run build
 
 # ---- 3. Runtime ----
