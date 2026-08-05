@@ -69,6 +69,12 @@ export const en: Record<TranslationKey, string> = {
   "common.no": "No",
   "common.searchFailed": "Search failed",
 
+  // --- 404 ----------------------------------------------------------------
+  "notFound.title": "Page Not Found",
+  "notFound.body":
+    "The page you are after may have been left to rest in a cask. Head back to the catalogue and keep exploring.",
+  "notFound.cta": "Back to the Catalogue",
+
   // --- Sign in / Sign up --------------------------------------------------
   "auth.login.heading": "Welcome Back",
   "auth.login.subtitle": "Sign in to pick up your tasting journal where you left it.",

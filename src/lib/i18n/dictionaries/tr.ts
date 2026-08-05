@@ -70,6 +70,12 @@ export const tr = {
   "common.no": "Hayır",
   "common.searchFailed": "Arama başarısız",
 
+  // --- 404 ----------------------------------------------------------------
+  "notFound.title": "Sayfa Bulunamadı",
+  "notFound.body":
+    "Aradığınız sayfa fıçıda dinlenmeye bırakılmış olabilir. Kataloğa dönüp keşfetmeye devam edin.",
+  "notFound.cta": "Kataloğa Dön",
+
   // --- Giriş / Kayıt ------------------------------------------------------
   "auth.login.heading": "Tekrar Hoş Geldiniz",
   "auth.login.subtitle": "Tadım günlüğünüze devam etmek için giriş yapın.",

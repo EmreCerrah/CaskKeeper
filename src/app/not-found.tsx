@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { Footer } from "@/components/layout/Footer";
+import { getTranslations } from "@/lib/i18n/server";
 
 /**
  * Hiçbir route ile eşleşmeyen adresler için 404.
@@ -13,18 +14,20 @@ import { Footer } from "@/components/layout/Footer";
  * kalırdı. (main) altındaki sayfalar çerçeveyi kendi layout'undan alır.
  */
 export default function NotFound() {
+  const t = getTranslations();
+
   return (
     <>
       <Navbar />
       <main className="flex-1">
         <div className="flex flex-col items-center justify-center gap-4 py-32 text-center">
           <GlassWater className="h-12 w-12 text-primary/50" aria-hidden />
-          <h1 className="font-serif text-3xl font-bold">Sayfa Bulunamadı</h1>
+          <h1 className="font-serif text-3xl font-bold">{t("notFound.title")}</h1>
           <p className="max-w-md text-muted-foreground">
-            Aradığınız sayfa fıçıda dinlenmeye bırakılmış olabilir. Kataloğa dönüp keşfetmeye devam edin.
+            {t("notFound.body")}
           </p>
           <Button asChild>
-            <Link href="/viskiler">Kataloğa Dön</Link>
+            <Link href="/viskiler">{t("notFound.cta")}</Link>
           </Button>
         </div>
       </main>
