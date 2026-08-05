@@ -258,7 +258,7 @@ envelope, and reports a mismatch between a declared `count` and the real length.
 
 | Variable | Required | Description |
 |---|---|---|
-| `MONGODB_URI` | yes | MongoDB connection string. Include the database name in the path — Mongoose silently falls back to `test` without it. |
+| `MONGODB_URI` | yes | MongoDB connection string. **Must include the database name in the path.** Mongoose falls back to `test` silently when it is missing, so the app rejects such a string at startup rather than writing to the wrong database. |
 | `JWT_SECRET` | yes | Key used to sign session tokens (HS256). Generate with `openssl rand -base64 48`. Changing it invalidates every existing session. |
 
 Where each file is used:
