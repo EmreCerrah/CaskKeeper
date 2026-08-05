@@ -38,30 +38,30 @@ export function Pagination({ page, totalPages, basePath, searchParams = {} }: Pa
         <Button asChild variant="outline" size="sm">
           <Link href={hrefFor(page - 1)}>
             <ChevronLeft className="h-4 w-4" aria-hidden />
-            Önceki
+            {t("common.previous")}
           </Link>
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled>
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          Önceki
+          {t("common.previous")}
         </Button>
       )}
 
       <span className="text-sm text-muted-foreground">
-        Sayfa <span className="font-medium text-foreground">{page}</span> / {totalPages}
+        {t("common.pageOf")} <span className="font-medium text-foreground">{page}</span> / {totalPages}
       </span>
 
       {page < totalPages ? (
         <Button asChild variant="outline" size="sm">
           <Link href={hrefFor(page + 1)}>
-            Sonraki
+            {t("common.next")}
             <ChevronRight className="h-4 w-4" aria-hidden />
           </Link>
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled>
-          Sonraki
+          {t("common.next")}
           <ChevronRight className="h-4 w-4" aria-hidden />
         </Button>
       )}

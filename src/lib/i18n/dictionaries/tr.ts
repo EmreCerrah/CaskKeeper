@@ -66,6 +66,11 @@ export const tr = {
   "common.search": "Ara",
   "common.clearSearch": "Aramayı temizle",
   "common.pagination": "Sayfalama",
+  "common.previous": "Önceki",
+  "common.next": "Sonraki",
+  "common.pageOf": "Sayfa",
+  "common.searching": "Aranıyor…",
+  "common.offline": "Çevrimdışı",
   "common.yes": "Evet",
   "common.no": "Hayır",
   "common.searchFailed": "Arama başarısız",
@@ -113,6 +118,7 @@ export const tr = {
   "catalogue.count": "{count} viski arasından keşfedin.",
   "catalogue.empty": "Katalog şu an boş görünüyor.",
   "catalogue.noResults": "Aradığınız kriterlere uygun viski bulunamadı.",
+  "catalogue.clearFilters": "Filtreleri temizleyip tekrar deneyin.",
   "catalogue.searchPlaceholder": "Marka, isim veya damıtımevi ara…",
   "catalogue.searchLabel": "Viski ara",
   "catalogue.filterType": "Tip filtresi",
@@ -163,6 +169,7 @@ export const tr = {
   "compare.remove": "Çıkar",
   "compare.tableCaption": "Seçili viskilerin teknik özellik ve aroma profili karşılaştırması",
   "compare.sharedLabel": "ortak",
+  "compare.full": "En fazla {max} viski karşılaştırılabilir. Yenisini eklemek için birini çıkarın.",
   "compare.brand": "Marka",
 
   // --- Kişiler ------------------------------------------------------------
@@ -180,6 +187,30 @@ export const tr = {
   "people.subtitlePrefix": "Diğer viski tutkunlarını bulun, takip edin. Karşılıklı takip ettiğiniz kişiler",
   "people.subtitleSuffix": "olarak görünür.",
   "people.newMembers": "Yeni Katılanlar",
+
+  // --- Ana sayfa ----------------------------------------------------------
+  "home.eyebrow": "Premium Viski Tadım Günlüğü",
+  "home.headlineBefore": "Her yudum",
+  "home.headlineHighlight": "bir hatıra",
+  "home.headlineAfter": ", her şişe bir hikâye.",
+  "home.subtitle":
+    "CaskKeeper ile viskileri keşfedin, tadım deneyimlerinizi zarif bir günlükte saklayın ve damak zevkinizin yolculuğunu izleyin.",
+  "home.ctaDashboard": "Panelime Git",
+  "home.ctaCatalogue": "Kataloğa Göz At",
+  "home.ctaSignUp": "Ücretsiz Başlayın",
+
+  "home.feature.discover.title": "Keşfedin",
+  "home.feature.discover.body":
+    "Dünya viskilerinin yer aldığı merkezi katalogda markaya, bölgeye ve tipe göre arama yapın.",
+  "home.feature.record.title": "Kaydedin",
+  "home.feature.record.body":
+    "Her tadım seansını burun, damak ve bitiş notlarıyla, aroma çarkından seçtiğiniz etiketlerle kaydedin.",
+  "home.feature.compare.title": "Karşılaştırın",
+  "home.feature.compare.body":
+    "Aynı viskiye ait tadımlarınızı zaman içinde karşılaştırın, damak zevkinizin evrimini izleyin.",
+  "home.feature.favorite.title": "Favorileyin",
+  "home.feature.favorite.body":
+    "En sevdiğiniz tadımları işaretleyin, kişisel viski hafızanızı oluşturun.",
   "people.publicNoteCount": "{count} herkese açık tadım",
 } as const;
 

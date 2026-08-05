@@ -79,8 +79,7 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
   if (isFull) {
     return (
       <p className="text-sm text-muted-foreground">
-        En fazla {MAX_COMPARE_ITEMS} viski karşılaştırılabilir. Yenisini eklemek için
-        birini çıkarın.
+        {t("compare.full", { max: MAX_COMPARE_ITEMS })}
       </p>
     );
   }
@@ -119,7 +118,7 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
       {loading && (
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          Aranıyor…
+          {t("common.searching")}
         </p>
       )}
 
