@@ -8,8 +8,11 @@ import { Button } from "@/components/ui/button";
 import { WhiskeyCard } from "@/components/whiskey/WhiskeyCard";
 import { WhiskeyFilters } from "@/components/whiskey/WhiskeyFilters";
 import { Pagination } from "@/components/shared/Pagination";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Viski Kataloğu" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("catalogue.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface CatalogPageProps {
@@ -40,21 +43,23 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
     whiskeyService.getFacets(),
   ]);
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
         <div className="space-y-1">
-          <h1 className="font-serif text-3xl font-bold">Viski Kataloğu</h1>
+          <h1 className="font-serif text-3xl font-bold">{t("catalogue.title")}</h1>
           <p className="text-muted-foreground">
             {result.total > 0
-              ? `${result.total} viski arasından keşfedin.`
-              : "Katalog şu an boş görünüyor."}
+              ? t("catalogue.count", { count: result.total })
+              : t("catalogue.empty")}
           </p>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link href="/karsilastir">
             <Columns3 className="h-4 w-4" aria-hidden />
-            Karşılaştır
+            {t("nav.compare")}
           </Link>
         </Button>
       </div>
@@ -84,7 +89,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         </>
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
-          <p className="font-medium">Aradığınız kriterlere uygun viski bulunamadı.</p>
+          <p className="font-medium">{t("catalogue.noResults")}</p>
           <p className="mt-1 text-sm">Filtreleri temizleyip tekrar deneyin.</p>
         </div>
       )}

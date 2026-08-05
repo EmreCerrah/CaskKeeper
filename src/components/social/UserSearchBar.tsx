@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/client";
 
 /**
  * Kullanıcı arama kutusu. Durum URL'de tutulur (paylaşılabilir/geri tuşu uyumlu),
@@ -14,6 +15,8 @@ export function UserSearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const t = useTranslations();
 
   const [value, setValue] = useState(searchParams.get("arama") ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -48,9 +51,9 @@ export function UserSearchBar() {
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="İsme göre kişi ara…"
+          placeholder={t("people.searchPlaceholder")}
           className="pl-9"
-          aria-label="Kullanıcı ara"
+          aria-label={t("people.searchLabel")}
         />
       </div>
 
@@ -62,7 +65,7 @@ export function UserSearchBar() {
             setValue("");
             applySearch("");
           }}
-          title="Aramayı temizle"
+          title={t("common.clearSearch")}
         >
           <X className="h-4 w-4" aria-hidden />
         </Button>

@@ -6,8 +6,11 @@ import { getSession } from "@/lib/auth/session";
 import { userService } from "@/server/services/UserService";
 import { UserSearchBar } from "@/components/social/UserSearchBar";
 import { UserResultCard } from "@/components/social/UserResultCard";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Kişiler" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("people.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface DiscoverPeoplePageProps {
@@ -22,14 +25,16 @@ export default async function DiscoverPeoplePage({ searchParams }: DiscoverPeopl
   const users = await userService.searchUsers(query, session?.userId);
 
   const isSearching = query.trim().length > 0;
+  const t = getTranslations();
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">Kişiler</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("people.title")}</h1>
         <p className="mt-1 text-muted-foreground">
-          Diğer viski tutkunlarını bulun, takip edin. Karşılıklı takip ettiğiniz kişiler{" "}
-          <span className="text-primary">Arkadaş</span> olarak görünür.
+          {t("people.subtitlePrefix")}{" "}
+          <span className="text-primary">{t("people.friend")}</span>{" "}
+          {t("people.subtitleSuffix")}
         </p>
       </div>
 
@@ -39,7 +44,7 @@ export default async function DiscoverPeoplePage({ searchParams }: DiscoverPeopl
 
       {!isSearching && users.length > 0 && (
         <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-          Yeni Katılanlar
+          {t("people.newMembers")}
         </h2>
       )}
 
@@ -53,9 +58,9 @@ export default async function DiscoverPeoplePage({ searchParams }: DiscoverPeopl
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <Users className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
           <p className="font-medium">
-            {isSearching ? `“${query}” ile eşleşen kişi bulunamadı.` : "Henüz başka kullanıcı yok."}
+            {isSearching ? t("people.noMatches", { query }) : t("people.noUsers")}
           </p>
-          {isSearching && <p className="mt-1 text-sm">Farklı bir isim deneyin.</p>}
+          {isSearching && <p className="mt-1 text-sm">{t("people.tryAnotherName")}</p>}
         </div>
       )}
     </div>

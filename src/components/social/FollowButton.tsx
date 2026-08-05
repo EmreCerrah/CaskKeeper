@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, UserMinus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface FollowButtonProps {
   targetUserId: string;
@@ -13,6 +14,7 @@ interface FollowButtonProps {
 /** Takip et / takibi bırak butonu — iyimser değil, sunucu yanıtını bekler. */
 export function FollowButton({ targetUserId, initialFollowing }: FollowButtonProps) {
   const router = useRouter();
+  const t = useTranslations();
   const [following, setFollowing] = useState(initialFollowing);
   const [busy, setBusy] = useState(false);
 
@@ -37,7 +39,7 @@ export function FollowButton({ targetUserId, initialFollowing }: FollowButtonPro
       ) : (
         <UserPlus className="h-4 w-4" aria-hidden />
       )}
-      {following ? "Takibi Bırak" : "Takip Et"}
+      {following ? t("people.unfollow") : t("people.follow")}
     </Button>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,25 +10,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "@/lib/i18n/client";
+import type { Translator } from "@/lib/i18n/translate";
 
-const LoginFormSchema = z.object({
-  email: z.string().email("Geçerli bir e-posta adresi giriniz"),
-  password: z.string().min(1, "Parola zorunludur"),
-});
+/**
+ * Şema bir fonksiyon: doğrulama metinleri de çevrilmeli, ama t() bir hook
+ * olduğu için modül seviyesinde çağrılamaz. Şema bileşen içinde, seçili dile
+ * göre kurulur.
+ */
+const buildLoginSchema = (t: Translator) =>
+  z.object({
+    email: z.string().email(t("auth.validation.email")),
+    password: z.string().min(1, t("auth.validation.passwordRequired")),
+  });
 
-type LoginFormValues = z.infer<typeof LoginFormSchema>;
+type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>;
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const schema = useMemo(() => buildLoginSchema(t), [t]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(LoginFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: "", password: "" },
   });
 
@@ -43,7 +54,7 @@ export function LoginForm() {
 
     const json = await res.json();
     if (!res.ok || !json.success) {
-      setServerError(json.message ?? "Giriş yapılamadı");
+      setServerError(json.message ?? t("auth.login.failed"));
       return;
     }
 
@@ -55,13 +66,13 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email">E-posta</Label>
-        <Input id="email" type="email" autoComplete="email" placeholder="ornek@eposta.com" {...register("email")} />
+        <Label htmlFor="email">{t("auth.field.email")}</Label>
+        <Input id="email" type="email" autoComplete="email" placeholder={t("auth.field.emailPlaceholder")} {...register("email")} />
         {errors.email && <p className="text-xs text-destructive-foreground/90">{errors.email.message}</p>}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Parola</Label>
+        <Label htmlFor="password">{t("auth.field.password")}</Label>
         <PasswordInput id="password" autoComplete="current-password" {...register("password")} />
         {errors.password && <p className="text-xs text-destructive-foreground/90">{errors.password.message}</p>}
       </div>
@@ -74,7 +85,7 @@ export function LoginForm() {
 
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-        Giriş Yap
+        {t("auth.login.submit")}
       </Button>
     </form>
   );

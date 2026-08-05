@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface PaginationProps {
   page: number;
@@ -10,8 +13,12 @@ interface PaginationProps {
   searchParams?: Record<string, string | undefined>;
 }
 
-/** Link tabanlı sayfalama (server component uyumlu). */
+/**
+ * Link tabanlı sayfalama. Durumu yok ama çeviri hook'unu kullandığı için
+ * istemci bileşeni; hem sunucu hem istemci ağacından çağrılabilmesi gerekiyor.
+ */
 export function Pagination({ page, totalPages, basePath, searchParams = {} }: PaginationProps) {
+  const t = useTranslations();
   if (totalPages <= 1) return null;
 
   function hrefFor(target: number) {
@@ -26,7 +33,7 @@ export function Pagination({ page, totalPages, basePath, searchParams = {} }: Pa
   }
 
   return (
-    <nav className="flex items-center justify-center gap-4 pt-8" aria-label="Sayfalama">
+    <nav className="flex items-center justify-center gap-4 pt-8" aria-label={t("common.pagination")}>
       {page > 1 ? (
         <Button asChild variant="outline" size="sm">
           <Link href={hrefFor(page - 1)}>

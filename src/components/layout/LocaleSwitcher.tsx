@@ -51,8 +51,11 @@ export function LocaleSwitcher({ className }: { className?: string }) {
             className={cn(
               // Mobilde 44×44 dokunma hedefi (WCAG 2.5.5), masaüstünde kompakt.
               "min-h-11 min-w-11 rounded px-2 text-xs font-semibold uppercase transition-colors md:min-h-0 md:min-w-0 md:py-1",
+              // 44px'lik iki düğme 320px'te üst çubuğu taşırıyordu. Mobilde
+              // yalnızca GEÇİLECEK dil gösterilir (aktif olan gizlenir), yani
+              // kontrol tek düğmeye iner; masaüstünde ikisi de görünür.
               active
-                ? "bg-primary text-primary-foreground"
+                ? "hidden bg-primary text-primary-foreground md:inline-flex"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >

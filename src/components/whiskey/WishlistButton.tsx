@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { notifyOfflineDataChanged } from "@/lib/offline/sync";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface WishlistButtonProps {
   whiskeyId: string;
@@ -14,6 +15,7 @@ interface WishlistButtonProps {
 /** İstek listesine ekle / kaldır butonu — sunucu yanıtını bekler, iyimser değil. */
 export function WishlistButton({ whiskeyId, initialWishlisted }: WishlistButtonProps) {
   const router = useRouter();
+  const t = useTranslations();
   const [wishlisted, setWishlisted] = useState(initialWishlisted);
   const [busy, setBusy] = useState(false);
 
@@ -39,7 +41,7 @@ export function WishlistButton({ whiskeyId, initialWishlisted }: WishlistButtonP
       ) : (
         <Bookmark className="h-4 w-4" aria-hidden />
       )}
-      {wishlisted ? "İstek Listemde" : "İstek Listeme Ekle"}
+      {wishlisted ? t("whiskey.wishlistAdded") : t("whiskey.wishlistAdd")}
     </Button>
   );
 }

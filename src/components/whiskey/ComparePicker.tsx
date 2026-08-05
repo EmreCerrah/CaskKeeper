@@ -7,6 +7,7 @@ import type { WhiskeyDTO } from "@/lib/types/dto";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { buildCompareHref, MAX_COMPARE_ITEMS } from "@/lib/utils/comparison";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface ComparePickerProps {
   /** Şu anda karşılaştırmada olan slug'lar — sonuçlardan çıkarılır */
@@ -22,6 +23,7 @@ const RESULT_LIMIT = 6;
  */
 export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
   const router = useRouter();
+  const t = useTranslations();
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<WhiskeyDTO[]>([]);
@@ -42,13 +44,13 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
         });
         const res = await fetch(`/api/whiskeys?${params.toString()}`);
         const payload = await res.json();
-        if (!res.ok) throw new Error(payload.message ?? "Arama başarısız");
+        if (!res.ok) throw new Error(payload.message ?? t("common.searchFailed"));
 
         const found = (payload.data?.data ?? []) as WhiskeyDTO[];
         // Zaten karşılaştırmada olanları listeden çıkar
         setResults(found.filter((w) => !selectedSlugs.includes(w.slug)).slice(0, RESULT_LIMIT));
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Arama başarısız");
+        setError(err instanceof Error ? err.message : t("common.searchFailed"));
         setResults([]);
       } finally {
         setLoading(false);
@@ -94,9 +96,9 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Karşılaştırmaya viski ekle — marka, isim veya damıtımevi ara…"
+            placeholder={t("compare.addPlaceholder")}
             className="pl-9"
-            aria-label="Karşılaştırmaya eklenecek viskiyi ara"
+            aria-label={t("compare.addLabel")}
           />
         </div>
         {query && (
@@ -107,7 +109,7 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
               setQuery("");
               setResults([]);
             }}
-            title="Aramayı temizle"
+            title={t("common.clearSearch")}
           >
             <X className="h-4 w-4" aria-hidden />
           </Button>
@@ -124,7 +126,7 @@ export function ComparePicker({ selectedSlugs }: ComparePickerProps) {
       {error && <p className="text-sm text-destructive-foreground">{error}</p>}
 
       {!loading && query.trim().length >= 2 && results.length === 0 && !error && (
-        <p className="text-sm text-muted-foreground">Eşleşen viski bulunamadı.</p>
+        <p className="text-sm text-muted-foreground">{t("compare.noMatches")}</p>
       )}
 
       {results.length > 0 && (
