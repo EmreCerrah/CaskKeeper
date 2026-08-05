@@ -32,11 +32,15 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      # v5: v4 sürümleri GitHub'ın kullanımdan kaldırdığı Node 20 çalışma
+      # zamanını hedefliyor ve her çalışmada uyarı üretiyordu. Buradaki sürüm
+      # action'ın kendi çalışma zamanı — aşağıdaki node-version'dan bağımsız.
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          # Dockerfile ve README ile aynı sürüm.
+          # Uygulamanın çalıştığı sürüm: Dockerfile (node:20-alpine) ve README
+          # ile aynı kalmalı, yoksa CI üretimden farklı bir Node'da doğrular.
           node-version: 20
           cache: npm
 
