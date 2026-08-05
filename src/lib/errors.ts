@@ -54,3 +54,14 @@ export class ConflictError extends AppError {
     this.name = "ConflictError";
   }
 }
+
+export class TooManyRequestsError extends AppError {
+  /** İstemcinin kaç saniye sonra tekrar deneyebileceği — Retry-After başlığına yazılır. */
+  readonly retryAfterSeconds: number;
+
+  constructor(message = "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.", retryAfterSeconds = 60) {
+    super(message, 429, "TOO_MANY_REQUESTS");
+    this.name = "TooManyRequestsError";
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}
