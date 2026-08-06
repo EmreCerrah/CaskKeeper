@@ -4,11 +4,13 @@
  */
 
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import { userRepository } from "../repositories/UserRepository";
 import { followRepository } from "../repositories/FollowRepository";
 import { tastingNoteRepository } from "../repositories/TastingNoteRepository";
+import { notificationRepository } from "../repositories/NotificationRepository";
 import { UpdateProfileSchema } from "../validations/user.schema";
-import { ForbiddenError, NotFoundError, ValidationError } from "@/lib/errors";
+import { ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from "@/lib/errors";
 import {
   toUserDTO,
   type UserDTO,
@@ -168,6 +170,44 @@ export class UserService {
     const updated = await userRepository.update(userId, update);
     if (!updated) throw new NotFoundError("errors.userNotFound");
     return toUserDTO(updated);
+  }
+
+  /**
+   * Hesabı KALICI olarak kapatır. Geri açma yoktur.
+   *
+   * Kayıtlar silinmez, görünürlükten çıkar (bkz. UserRepository'deki aktif
+   * filtresi): tadım notları ve yorumlar başkalarının verisine bağlı olduğu
+   * için gerçek silme onların içeriğini bozardı. Tek istisna bildirimler —
+   * onlar türetilmiş veri ve siliniyor (bkz. notificationRepository.deleteByUser).
+   *
+   * E-posta serbest kalır: aynı adresle sıfırdan yeni bir hesap açılabilir,
+   * ama eski veriye ulaştırmaz.
+   */
+  async closeAccount(userId: string, password: unknown): Promise<void> {
+    if (typeof password !== "string" || password.length === 0) {
+      throw new ValidationError("errors.passwordRequiredToClose");
+    }
+
+    const user = await userRepository.findByIdWithPassword(userId);
+    if (!user || !user.passwordHash) throw new NotFoundError("errors.userNotFound");
+
+    // Parola doğrulaması: kilitsiz bırakılmış bir cihazda hesabın
+    // kapatılmasını engeller. Geri dönüşü olmayan bir işlem için asgari şart.
+    const passwordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!passwordValid) {
+      throw new UnauthorizedError("errors.invalidCredentials");
+    }
+
+    // "Son yönetici düşürülemez" kuralının ikizi: kendi hesabını kapatarak da
+    // sistemi yöneticisiz bırakamamalı.
+    if (user.role === "admin" && (await userRepository.countAdmins()) <= 1) {
+      throw new ForbiddenError("errors.cannotCloseLastAdmin");
+    }
+
+    const closed = await userRepository.close(userId);
+    if (!closed) throw new NotFoundError("errors.userNotFound");
+
+    await notificationRepository.deleteByUser(userId);
   }
 }
 

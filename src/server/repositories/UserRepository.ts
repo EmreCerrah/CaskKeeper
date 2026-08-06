@@ -3,6 +3,7 @@
  * @description User koleksiyonu için MongoDB erişim katmanı.
  */
 
+import mongoose from "mongoose";
 import User, { IUser } from "../models/User";
 import { escapeRegex } from "@/lib/utils/normalize";
 
@@ -19,34 +20,79 @@ export interface UpdateUserInput {
   profilePicture?: string;
 }
 
+/**
+ * Kapatılmamış hesaplar. Görünürlük kuralı BURADA toplanır: kapalı bir
+ * kullanıcının profili, araması, takip listelerindeki satırı ve girişi bu tek
+ * filtreyle kapanır — çağıran katmanların ayrıca bir şey yapması gerekmez.
+ */
+const ACTIVE = { closedAt: { $exists: false } } as const;
+
 export class UserRepository {
   async findById(id: string): Promise<IUser | null> {
-    return await User.findById(id).lean() as IUser | null;
+    return await User.findOne({ _id: id, ...ACTIVE }).lean() as IUser | null;
   }
 
   async findByEmail(email: string): Promise<IUser | null> {
-    return await User.findOne({ email: email.toLowerCase() }).lean() as IUser | null;
+    return await User.findOne({ email: email.toLowerCase(), ...ACTIVE }).lean() as IUser | null;
   }
 
-  /** Login için — passwordHash select:false olduğundan açıkça istenir */
+  /**
+   * Login için — passwordHash select:false olduğundan açıkça istenir.
+   *
+   * Aktif filtresi kritik: kapalı satırda e-posta durmaya devam ettiği için,
+   * aynı adresle yeni hesap açıldığında koleksiyonda o e-postadan İKİ satır
+   * bulunur. Filtre olmasa giriş yanlış satırı bulurdu.
+   */
   async findByEmailWithPassword(email: string): Promise<IUser | null> {
-    return await User.findOne({ email: email.toLowerCase() })
+    return await User.findOne({ email: email.toLowerCase(), ...ACTIVE })
+      .select("+passwordHash")
+      .lean() as IUser | null;
+  }
+
+  /** Hesabı kapatmadan önce parola doğrulaması için */
+  async findByIdWithPassword(id: string): Promise<IUser | null> {
+    return await User.findOne({ _id: id, ...ACTIVE })
       .select("+passwordHash")
       .lean() as IUser | null;
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    return !!(await User.exists({ email: email.toLowerCase() }));
+    return !!(await User.exists({ email: email.toLowerCase(), ...ACTIVE }));
   }
 
-  /** Toplam kullanıcı sayısı — ilk kaydın admin olması için kullanılır */
+  /**
+   * Toplam kullanıcı sayısı — ilk kaydın admin olması için kullanılır.
+   *
+   * Kapalı hesaplar BİLEREK sayılır: herkes hesabını kapatsa bile bir sonraki
+   * kayıt sessizce yönetici olmamalı.
+   */
   async count(): Promise<number> {
     return await User.countDocuments();
   }
 
-  /** Yönetim panelinde kullanıcı listesi (en yeni önce) */
+  /**
+   * Yönetim panelinde kullanıcı listesi (en yeni önce).
+   * Kapalı hesaplar da döner — operatörün onları görebildiği tek yer burası.
+   */
   async findAll(): Promise<IUser[]> {
     return await User.find().sort({ createdAt: -1 }).lean() as unknown as IUser[];
+  }
+
+  /**
+   * Verilen id'lerden yalnızca açık hesaplara ait olanları döndürür.
+   * Akış, yazar id'lerini dışarıdan aldığı için join yapmadan süzülebiliyor.
+   */
+  async filterActiveIds(ids: mongoose.Types.ObjectId[]): Promise<mongoose.Types.ObjectId[]> {
+    if (ids.length === 0) return [];
+
+    const rows = await User.find({ _id: { $in: ids }, ...ACTIVE }).select("_id").lean();
+    return (rows as unknown as { _id: mongoose.Types.ObjectId }[]).map((r) => r._id);
+  }
+
+  /** Verilen id'lerden kaçının hesabı açık — takipçi/takip sayıları için */
+  async countActiveByIds(ids: mongoose.Types.ObjectId[]): Promise<number> {
+    if (ids.length === 0) return 0;
+    return await User.countDocuments({ _id: { $in: ids }, ...ACTIVE });
   }
 
   /**
@@ -55,7 +101,7 @@ export class UserRepository {
    * e-postaları başkaları tarafından keşfedilebilir olmamalı.
    */
   async searchByName(query: string, limit = 20, excludeId?: string): Promise<IUser[]> {
-    const filter: Record<string, unknown> = { name: new RegExp(escapeRegex(query), "i") };
+    const filter: Record<string, unknown> = { name: new RegExp(escapeRegex(query), "i"), ...ACTIVE };
     if (excludeId) filter._id = { $ne: excludeId };
 
     return await User.find(filter)
@@ -66,7 +112,9 @@ export class UserRepository {
 
   /** Keşfet listesi: arama yapılmadığında gösterilecek kullanıcılar */
   async findRecent(limit = 20, excludeIds: string[] = []): Promise<IUser[]> {
-    const filter = excludeIds.length ? { _id: { $nin: excludeIds } } : {};
+    const filter: Record<string, unknown> = excludeIds.length
+      ? { _id: { $nin: excludeIds }, ...ACTIVE }
+      : { ...ACTIVE };
 
     return await User.find(filter)
       .sort({ createdAt: -1 })
@@ -74,9 +122,15 @@ export class UserRepository {
       .lean() as unknown as IUser[];
   }
 
-  /** Kaç admin var — son admini düşürmeyi engellemek için */
+  /** Kaç AÇIK admin var — son admini düşürmeyi/kapatmayı engellemek için */
   async countAdmins(): Promise<number> {
-    return await User.countDocuments({ role: "admin" });
+    return await User.countDocuments({ role: "admin", ...ACTIVE });
+  }
+
+  /** Hesabı kapatır. Kalıcıdır; geri açan bir metot bilerek yoktur. */
+  async close(id: string): Promise<boolean> {
+    const result = await User.updateOne({ _id: id, ...ACTIVE }, { $set: { closedAt: new Date() } });
+    return result.modifiedCount > 0;
   }
 
   async updateRole(id: string, role: "user" | "admin"): Promise<IUser | null> {

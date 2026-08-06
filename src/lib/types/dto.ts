@@ -126,6 +126,11 @@ export interface UserDTO {
   bio?: string;
   role: "user" | "admin";
   createdAt: string; // ISO
+  /**
+   * Hesap kapatıldıysa kapatılma anı. Yalnızca yönetim listesinde dolar —
+   * kapalı hesaplar başka hiçbir sorgudan dönmüyor.
+   */
+  closedAt?: string; // ISO
 }
 
 /**
@@ -381,5 +386,6 @@ export function toUserDTO(doc: IUser | LeanDoc): UserDTO {
     bio: u.bio ?? undefined,
     role: u.role,
     createdAt: new Date(u.createdAt).toISOString(),
+    closedAt: u.closedAt ? new Date(u.closedAt).toISOString() : undefined,
   };
 }

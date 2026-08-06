@@ -329,6 +329,7 @@ export const en: Record<TranslationKey, string> = {
   "admin.whiskeySaveFailed": "Could not save the whisky",
   "admin.deleteFailed": "Could not delete",
   "admin.ownAccount": "Your own account",
+  "admin.accountClosed": "Closed",
   "admin.emptyCatalogue": "The catalogue is empty.",
   "admin.emptyCatalogueHint": "Add a whisky, or run the import script.",
   "admin.newWhiskeyTitle": "Add a Whisky to the Catalogue",
@@ -434,6 +435,17 @@ export const en: Record<TranslationKey, string> = {
   "profile.publicTastings": "Public Tastings",
   "profile.noPublicOwn": "You have no public tastings yet.",
   "profile.noPublicOther": "This member has no public tastings yet.",
+  "profile.closeTitle": "Close Account",
+  "profile.closeDescription":
+    "Closing your account hides your profile, your tasting notes and your comments.",
+  "profile.closeWarning":
+    "This cannot be undone. You will not be able to reopen the account. You may register again with the same email address, but your old notes will not come back.",
+  "profile.closeStart": "I want to close my account",
+  "profile.closePasswordLabel": "Your password",
+  "profile.closePasswordHint": "Enter your password to confirm.",
+  "profile.closeConfirm": "Close my account permanently",
+  "profile.closeCancel": "Cancel",
+  "profile.closeFailed": "Could not close the account",
   "profile.noPublicHint":
     "Mark a tasting note as “Public” and it will show up here.",
 
@@ -544,6 +556,8 @@ export const en: Record<TranslationKey, string> = {
   "errors.cannotFollowSelf": "You cannot follow yourself",
   "errors.cannotDemoteSelf": "You cannot revoke your own administrator rights",
   "errors.cannotDemoteLastAdmin": "The last remaining administrator cannot be demoted",
+  "errors.cannotCloseLastAdmin": "The last remaining administrator cannot close their account",
+  "errors.passwordRequiredToClose": "Enter your password to close the account",
   "errors.invalidProfile": "Invalid profile details",
   "errors.invalidRole": "Invalid role",
 

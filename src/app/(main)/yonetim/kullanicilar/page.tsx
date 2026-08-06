@@ -32,23 +32,34 @@ export default async function AdminUsersPage() {
       <div className="space-y-2">
         {users.map((user) => {
           const isSelf = user.id === session?.userId;
+          const isClosed = Boolean(user.closedAt);
           return (
-            <Card key={user.id} className="flex items-center justify-between gap-4 p-4">
+            <Card
+              key={user.id}
+              className={`flex items-center justify-between gap-4 p-4 ${isClosed ? "opacity-60" : ""}`}
+            >
               <div className="flex min-w-0 items-center gap-3">
                 <UserAvatar name={user.name} src={user.profilePicture} size="md" />
                 <div className="min-w-0">
-                  <Link
-                    href={`/kullanicilar/${user.id}`}
-                    className="block truncate font-medium hover:text-primary"
-                  >
-                    {user.name}
-                  </Link>
+                  {/* Kapalı hesabın profili 404 döner; bağlantı verilmez. */}
+                  {isClosed ? (
+                    <span className="block truncate font-medium">{user.name}</span>
+                  ) : (
+                    <Link
+                      href={`/kullanicilar/${user.id}`}
+                      className="block truncate font-medium hover:text-primary"
+                    >
+                      {user.name}
+                    </Link>
+                  )}
                   <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                 </div>
                 {user.role === "admin" && <Badge variant="gold">{t("admin.roleAdmin")}</Badge>}
+                {isClosed && <Badge variant="outline">{t("admin.accountClosed")}</Badge>}
               </div>
 
-              <RoleToggle userId={user.id} role={user.role} isSelf={isSelf} />
+              {/* Kapalı hesapta rol değiştirilemez — servis zaten reddeder. */}
+              {!isClosed && <RoleToggle userId={user.id} role={user.role} isSelf={isSelf} />}
             </Card>
           );
         })}
