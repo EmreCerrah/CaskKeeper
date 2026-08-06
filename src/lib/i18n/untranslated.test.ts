@@ -85,8 +85,18 @@ function findUntranslated(source: string): string[] {
       if (TURKISH.test(match[2])) report(match[0]);
     }
 
-    // 2) Etiketler, ifadeler ve string'ler çıkarıldıktan sonra Türkçe harf
-    //    kalıyorsa geriye kalan şey JSX metnidir.
+    // 2) Aynı satırda `>metin<` — DİLİ NE OLURSA OLSUN. Çevrilmiş bir dosyada
+    //    JSX metni sabit yazılmamalı. Yalnızca Türkçe harf aramak yetmiyordu:
+    //    "Favorilerim" ve "Yeni Viski" salt ASCII olduğu için ağdan geçmişti.
+    //    Marka adı çevrilmez, o yüzden ayıklanır.
+    for (const match of line.matchAll(/>([^<>{}]*[A-Za-zÇĞİÖŞÜçğıöşü]{2,}[^<>{}]*)</g)) {
+      if (match[1].replace(/CaskKeeper/g, "").trim().length > 1) report(match[1]);
+    }
+
+    // 3) Çok satıra yayılan JSX metni: etiket, ifade ve string'ler
+    //    çıkarıldıktan sonra Türkçe harf kalıyorsa metin kalmış demektir.
+    //    Burada yalnızca Türkçe harf aranıyor — geniş tutulsa kod satırları da
+    //    yakalanırdı, çünkü bu artık JSX'e özgü bir kalıp değil.
     const residue = line
       .replace(STRING_LITERAL, '""')
       // String'ler çıkarıldıktan SONRA satır sonu yorumu atılır; önce atılsaydı

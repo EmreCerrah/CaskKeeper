@@ -79,7 +79,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">E-posta</Label>
+        <Label htmlFor="email">{t("auth.field.email")}</Label>
         <Input id="email" value={user.email} disabled aria-readonly />
         <p className="text-xs text-muted-foreground">{t("profileForm.emailFixed")}</p>
       </div>

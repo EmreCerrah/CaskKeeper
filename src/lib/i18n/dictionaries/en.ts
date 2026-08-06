@@ -248,6 +248,8 @@ export const en: Record<TranslationKey, string> = {
   "trend.empty":
     "As you tag aromas in your tasting notes, the shift over time will show up here.",
   "trend.barLabel": "{period}: {count} aroma tags",
+  "trend.month": "Month",
+  "trend.total": "Total",
   "trend.showTable": "Table view",
   "trend.hideTable": "Hide the table",
 
@@ -257,6 +259,8 @@ export const en: Record<TranslationKey, string> = {
   "note.finishMedium": "Medium finish",
   "note.finishLong": "Long finish",
   "note.finishPrefix": "Finish",
+  "note.noseLabel": "Nose",
+  "note.palateLabel": "Palate",
   "note.favoriteAdd": "Add to favourites",
   "note.favoriteRemove": "Remove from favourites",
   "note.edit": "Edit",
@@ -269,6 +273,7 @@ export const en: Record<TranslationKey, string> = {
   "interactions.unlike": "Unlike",
   "interactions.likeSignIn": "Sign in to like this",
   "interactions.likeUnit": "likes",
+  "interactions.commentUnit": "comments",
   "interactions.showComments": "Show comments",
   "interactions.hideComments": "Hide comments",
   "interactions.openNote": "Open the note",
@@ -338,7 +343,10 @@ export const en: Record<TranslationKey, string> = {
   "admin.editWhiskeyHint":
     "Changing the brand, product name or distillery regenerates the slug.",
   "admin.deleteConfirm": "“{label}” will be deleted — click again to confirm",
+  "admin.areYouSure": "Are you sure?",
   "whiskeyForm.identityCard": "Identity",
+  "whiskeyForm.type": "Type *",
+  "whiskeyForm.technicalCard": "Technical",
   "whiskeyForm.brand": "Brand *",
   "whiskeyForm.name": "Product Name *",
   "whiskeyForm.distillery": "Distillery *",

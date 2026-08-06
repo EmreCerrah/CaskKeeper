@@ -35,7 +35,7 @@ export default async function FavoritesPage({ searchParams }: FavoritesPageProps
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">Favorilerim</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("favorites.title")}</h1>
         <p className="mt-1 text-muted-foreground">
           {result.total > 0
             ? t("favorites.count", { count: result.total })

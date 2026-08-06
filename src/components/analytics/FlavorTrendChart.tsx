@@ -124,18 +124,20 @@ function FlavorTrendTable({
   legend: { category: string; label: string }[];
   locale: Locale;
 }) {
+  const t = useTranslations();
+
   return (
     <div className="overflow-x-auto rounded-md border border-border">
       <table className="w-full text-left text-xs">
         <thead className="bg-secondary/40 text-muted-foreground">
           <tr>
-            <th className="whitespace-nowrap px-3 py-2 font-medium">Ay</th>
+            <th className="whitespace-nowrap px-3 py-2 font-medium">{t("trend.month")}</th>
             {legend.map((item) => (
               <th key={item.category} className="whitespace-nowrap px-3 py-2 font-medium">
                 {item.label}
               </th>
             ))}
-            <th className="whitespace-nowrap px-3 py-2 font-medium">Toplam</th>
+            <th className="whitespace-nowrap px-3 py-2 font-medium">{t("trend.total")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">

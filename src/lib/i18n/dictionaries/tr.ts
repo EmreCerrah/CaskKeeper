@@ -249,6 +249,8 @@ export const tr = {
   "trend.empty":
     "Tadım notlarınızda aroma etiketi seçtikçe zaman içindeki değişim burada görünecek.",
   "trend.barLabel": "{period}: {count} aroma etiketi",
+  "trend.month": "Ay",
+  "trend.total": "Toplam",
   "trend.showTable": "Tablo görünümü",
   "trend.hideTable": "Tabloyu gizle",
 
@@ -258,6 +260,8 @@ export const tr = {
   "note.finishMedium": "Orta bitiş",
   "note.finishLong": "Uzun bitiş",
   "note.finishPrefix": "Bitiş",
+  "note.noseLabel": "Burun",
+  "note.palateLabel": "Damak",
   "note.favoriteAdd": "Favorilere ekle",
   "note.favoriteRemove": "Favorilerden çıkar",
   "note.edit": "Düzenle",
@@ -270,6 +274,7 @@ export const tr = {
   "interactions.unlike": "Beğeniyi kaldır",
   "interactions.likeSignIn": "Beğenmek için giriş yapmalısınız",
   "interactions.likeUnit": "beğeni",
+  "interactions.commentUnit": "yorum",
   "interactions.showComments": "Yorumları göster",
   "interactions.hideComments": "Yorumları gizle",
   "interactions.openNote": "Notu aç",
@@ -339,7 +344,10 @@ export const tr = {
   "admin.editWhiskeyHint":
     "Marka, ürün adı veya damıtımevini değiştirirseniz slug yeniden üretilir.",
   "admin.deleteConfirm": "“{label}” silinecek — onaylamak için tekrar tıklayın",
+  "admin.areYouSure": "Emin misiniz?",
   "whiskeyForm.identityCard": "Kimlik",
+  "whiskeyForm.type": "Tip *",
+  "whiskeyForm.technicalCard": "Teknik",
   "whiskeyForm.brand": "Marka *",
   "whiskeyForm.name": "Ürün Adı *",
   "whiskeyForm.distillery": "Damıtımevi *",

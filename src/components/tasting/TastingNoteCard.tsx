@@ -98,7 +98,7 @@ export function TastingNoteCard({
           <div className="flex items-start gap-2 text-sm">
             <Wind className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
             <div className="space-y-1">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Burun</span>
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("note.noseLabel")}</span>
               {note.noseTags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {note.noseTags.map((tag) => (
@@ -115,7 +115,7 @@ export function TastingNoteCard({
           <div className="flex items-start gap-2 text-sm">
             <Wine className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
             <div className="space-y-1">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Damak</span>
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("note.palateLabel")}</span>
               {note.palateTags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {note.palateTags.map((tag) => (

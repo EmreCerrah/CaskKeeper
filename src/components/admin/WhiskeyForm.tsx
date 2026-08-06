@@ -202,7 +202,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="type">Tip *</Label>
+            <Label htmlFor="type">{t("whiskeyForm.type")}</Label>
             <Input id="type" placeholder="Single Malt" {...register("type")} />
             {errors.type && <p className="text-xs text-destructive-foreground/90">{errors.type.message}</p>}
           </div>
@@ -225,7 +225,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Teknik</CardTitle>
+          <CardTitle className="font-serif">{t("whiskeyForm.technicalCard")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">

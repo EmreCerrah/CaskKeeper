@@ -183,7 +183,7 @@ export function NoteInteractions({
         >
           <MessageCircle className="h-4 w-4 text-muted-foreground" aria-hidden />
           <span className="tabular-nums">{commentCount}</span>
-          <span className="sr-only">yorum</span>
+          <span className="sr-only">{t("interactions.commentUnit")}</span>
         </Button>
 
         <Link

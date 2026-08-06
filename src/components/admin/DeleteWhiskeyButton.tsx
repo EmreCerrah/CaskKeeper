@@ -63,7 +63,7 @@ export function DeleteWhiskeyButton({ slug, label }: DeleteWhiskeyButtonProps) {
           />
         )}
       </Button>
-      {confirming && !busy && <span className="text-xs text-destructive-foreground/90">Emin misiniz?</span>}
+      {confirming && !busy && <span className="text-xs text-destructive-foreground/90">{t("admin.areYouSure")}</span>}
       {error && <span className="text-xs text-destructive-foreground/90">{error}</span>}
     </div>
   );
