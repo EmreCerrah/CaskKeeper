@@ -8,8 +8,11 @@ import { recommendationService } from "@/server/services/RecommendationService";
 import { Button } from "@/components/ui/button";
 import { WhiskeyCard } from "@/components/whiskey/WhiskeyCard";
 import { MatchInfo } from "@/components/recommendations/MatchInfo";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Öneriler" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("recommendations.title") };
+}
 export const dynamic = "force-dynamic";
 
 export default async function RecommendationsPage() {
@@ -19,6 +22,8 @@ export default async function RecommendationsPage() {
   await connectToDatabase();
   const recommendations = await recommendationService.getRecommendations(session.userId);
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
       <div>
@@ -27,11 +32,11 @@ export default async function RecommendationsPage() {
           className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          Panelime dön
+          {t("dashboard.back")}
         </Link>
-        <h1 className="mt-2 font-serif text-3xl font-bold">Öneriler</h1>
+        <h1 className="mt-2 font-serif text-3xl font-bold">{t("recommendations.title")}</h1>
         <p className="mt-1 text-muted-foreground">
-          Tadım notlarınızdaki aroma tercihlerinize göre, henüz denemediğiniz viskiler.
+          {t("recommendations.subtitle")}
         </p>
       </div>
 
@@ -48,12 +53,12 @@ export default async function RecommendationsPage() {
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <Sparkles className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
-          <p className="font-medium">Henüz size özel öneri oluşturamadık.</p>
+          <p className="font-medium">{t("recommendations.empty")}</p>
           <p className="mt-1 text-sm">
-            Tadım notlarınızda aroma etiketi seçtikçe damak profiliniz oluşur ve öneriler burada görünür.
+            {t("recommendations.emptyHint")}
           </p>
           <Button asChild className="mt-4">
-            <Link href="/viskiler">Katalogu Keşfet</Link>
+            <Link href="/viskiler">{t("compare.exploreCatalogue")}</Link>
           </Button>
         </div>
       )}

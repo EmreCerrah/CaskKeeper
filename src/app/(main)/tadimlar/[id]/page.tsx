@@ -8,6 +8,7 @@ import { tastingNoteService } from "@/server/services/TastingNoteService";
 import { interactionService } from "@/server/services/InteractionService";
 import { AppError } from "@/lib/errors";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
+import { getTranslations } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +21,10 @@ export async function generateMetadata({ params }: NotePageProps): Promise<Metad
   await connectToDatabase();
   try {
     const note = await tastingNoteService.getPublicNote(params.id, session?.userId);
-    const label = note.whiskey ? `${note.whiskey.brand} ${note.whiskey.name}` : "Tadım notu";
-    return { title: `${label} — ${note.author?.name ?? "Tadım"}` };
+    const label = note.whiskey ? `${note.whiskey.brand} ${note.whiskey.name}` : getTranslations()("notePage.fallbackTitle");
+    return { title: `${label} — ${note.author?.name ?? getTranslations()("notePage.fallbackAuthor")}` };
   } catch {
-    return { title: "Tadım Notu Bulunamadı" };
+    return { title: getTranslations()("notePage.notFound") };
   }
 }
 
@@ -54,7 +55,7 @@ export default async function TastingNotePage({ params }: NotePageProps) {
           className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          {note.author.name} profiline dön
+          {getTranslations()("social.backToProfile", { name: note.author.name })}
         </Link>
       )}
 

@@ -8,8 +8,11 @@ import { tastingNoteService } from "@/server/services/TastingNoteService";
 import { Button } from "@/components/ui/button";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { Pagination } from "@/components/shared/Pagination";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Tadımlarım" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("myTastings.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface MyTastingsPageProps {
@@ -28,21 +31,23 @@ export default async function MyTastingsPage({ searchParams }: MyTastingsPagePro
     limit: 10,
   });
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 sm:px-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="font-serif text-3xl font-bold">Tadımlarım</h1>
+          <h1 className="font-serif text-3xl font-bold">{t("myTastings.title")}</h1>
           <p className="mt-1 text-muted-foreground">
             {result.total > 0
-              ? `Toplam ${result.total} tadım seansı kaydettiniz.`
-              : "Henüz tadım notunuz yok."}
+              ? t("myTastings.count", { count: result.total })
+              : t("myTastings.subtitle")}
           </p>
         </div>
         <Button asChild>
           <Link href="/viskiler">
             <NotebookPen className="h-4 w-4" aria-hidden />
-            Yeni Tadım
+            {t("myTastings.new")}
           </Link>
         </Button>
       </div>
@@ -58,12 +63,12 @@ export default async function MyTastingsPage({ searchParams }: MyTastingsPagePro
         </>
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
-          <p className="font-medium">Günlüğünüz sizi bekliyor.</p>
+          <p className="font-medium">{t("myTastings.empty")}</p>
           <p className="mt-1 text-sm">
             <Link href="/viskiler" className="text-primary hover:underline">
-              Katalogdan bir viski seçin
+              {t("myTastings.emptyHintBefore")}
             </Link>{" "}
-            ve ilk tadım notunuzu yazın.
+            {t("myTastings.emptyHintAfter")}
           </p>
         </div>
       )}

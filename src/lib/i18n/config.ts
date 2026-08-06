@@ -24,6 +24,19 @@ export const LOCALE_COOKIE = "caskkeeper-locale";
 /** Bir yıl — dil tercihi her ziyarette yeniden sorulmamalı. */
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
+/**
+ * Intl API'sine verilecek etiket. Tarih ve sayı biçimlendirmesi arayüz diliyle
+ * birlikte değişmeli — İngilizce bir ekranda "5 Ağustos 2026" görmek, çevirinin
+ * kapatmaya çalıştığı sızıntının ta kendisi.
+ *
+ * İngilizce için en-GB: arayüz metinleri de İngiliz yazımını kullanıyor
+ * (favourite, flavour) ve gün-ay-yıl sırası Türkçe'yle aynı kalıyor.
+ */
+export const INTL_LOCALE: Record<Locale, string> = {
+  tr: "tr-TR",
+  en: "en-GB",
+};
+
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
 }

@@ -8,8 +8,11 @@ import { wishlistService } from "@/server/services/WishlistService";
 import { Button } from "@/components/ui/button";
 import { WhiskeyCard } from "@/components/whiskey/WhiskeyCard";
 import { Pagination } from "@/components/shared/Pagination";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "İstek Listem" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("wishlist.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface WishlistPageProps {
@@ -24,15 +27,16 @@ export default async function WishlistPage({ searchParams }: WishlistPageProps) 
 
   const page = Math.max(1, Number(searchParams.sayfa) || 1);
   const result = await wishlistService.getWishlist(session.userId, { page, limit: 12 });
+  const t = getTranslations();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">İstek Listem</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("wishlist.title")}</h1>
         <p className="mt-1 text-muted-foreground">
           {result.total > 0
-            ? `Denemeyi düşündüğünüz ${result.total} viski.`
-            : "Denemeyi düşündüğünüz viskileri burada toplayın."}
+            ? t("wishlist.count", { count: result.total })
+            : t("wishlist.subtitle")}
         </p>
       </div>
 
@@ -48,12 +52,12 @@ export default async function WishlistPage({ searchParams }: WishlistPageProps) 
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <Bookmark className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
-          <p className="font-medium">İstek listeniz henüz boş.</p>
+          <p className="font-medium">{t("wishlist.empty")}</p>
           <p className="mt-1 text-sm">
-            Katalogda denemek istediğiniz bir viski bulduğunuzda, detay sayfasından ekleyin.
+            {t("wishlist.emptyHint")}
           </p>
           <Button asChild className="mt-4">
-            <Link href="/viskiler">Kataloğu Keşfet</Link>
+            <Link href="/viskiler">{t("compare.exploreCatalogue")}</Link>
           </Button>
         </div>
       )}

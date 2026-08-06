@@ -1,3 +1,4 @@
+import { getTranslations } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import connectToDatabase from "@/lib/db";
@@ -8,7 +9,9 @@ import { Card } from "@/components/ui/card";
 import { UserAvatar } from "@/components/social/UserAvatar";
 import { RoleToggle } from "@/components/admin/RoleToggle";
 
-export const metadata: Metadata = { title: "Kullanıcı Yönetimi" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("admin.usersTitle") };
+}
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
@@ -17,11 +20,13 @@ export default async function AdminUsersPage() {
 
   const users = await userService.listUsers();
 
+  const t = getTranslations();
+
   return (
     <div className="space-y-4">
       <p className="text-muted-foreground">
-        Sistemde <span className="font-medium text-foreground">{users.length}</span> kullanıcı var.
-        Yönetici yetkisi verdiğiniz kişiler kataloğu düzenleyebilir.
+        {t("admin.usersSubtitleBefore")} <span className="font-medium text-foreground">{users.length}</span>{" "}
+        {t("admin.usersSubtitleAfter")}
       </p>
 
       <div className="space-y-2">
@@ -40,7 +45,7 @@ export default async function AdminUsersPage() {
                   </Link>
                   <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                 </div>
-                {user.role === "admin" && <Badge variant="gold">Yönetici</Badge>}
+                {user.role === "admin" && <Badge variant="gold">{t("admin.roleAdmin")}</Badge>}
               </div>
 
               <RoleToggle userId={user.id} role={user.role} isSelf={isSelf} />

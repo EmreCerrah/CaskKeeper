@@ -8,8 +8,11 @@ import { followService } from "@/server/services/FollowService";
 import { AppError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { UserListItem } from "@/components/social/UserListItem";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Takipçiler" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("social.followersTitle") };
+}
 export const dynamic = "force-dynamic";
 
 interface FollowersPageProps {
@@ -29,17 +32,19 @@ export default async function FollowersPage({ params }: FollowersPageProps) {
 
   const followers = await followService.getFollowers(params.id);
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6">
       <Button asChild variant="ghost" size="sm">
         <Link href={`/kullanicilar/${params.id}`}>
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          {profile.name} profiline dön
+          {t("social.backToProfile", { name: profile.name })}
         </Link>
       </Button>
 
       <h1 className="font-serif text-2xl font-bold">
-        {profile.name} — Takipçiler ({profile.followerCount})
+        {t("social.followersHeading", { name: profile.name, count: profile.followerCount })}
       </h1>
 
       {followers.length > 0 ? (
@@ -50,7 +55,7 @@ export default async function FollowersPage({ params }: FollowersPageProps) {
         </div>
       ) : (
         <p className="rounded-lg border border-dashed py-16 text-center text-muted-foreground">
-          Henüz takipçi yok.
+          {t("social.noFollowers")}
         </p>
       )}
     </div>

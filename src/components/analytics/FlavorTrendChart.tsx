@@ -5,13 +5,15 @@ import { Table2, X } from "lucide-react";
 import type { FlavorTrendPointDTO } from "@/lib/types/dto";
 import { CATEGORY_CHART_COLORS } from "@/lib/constants/aroma-wheel";
 import { Button } from "@/components/ui/button";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { INTL_LOCALE, type Locale } from "@/lib/i18n/config";
 
 interface FlavorTrendChartProps {
   trend: FlavorTrendPointDTO[];
 }
 
-function formatPeriod(period: string): string {
-  return new Date(`${period}-01`).toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
+function formatPeriod(period: string, locale: Locale): string {
+  return new Date(`${period}-01`).toLocaleDateString(INTL_LOCALE[locale], { month: "long", year: "numeric" });
 }
 
 /**
@@ -20,6 +22,8 @@ function formatPeriod(period: string): string {
  * "Tablo görünümü" ile hover'a bağımlı olmadan da erişilebilir.
  */
 export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [showTable, setShowTable] = useState(false);
 
   // Grafikte görünen tüm kategoriler, ilk görüldükleri ayın sırasına göre
@@ -37,7 +41,7 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
   if (trend.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
-        Tadım notlarınızda aroma etiketi seçtikçe zaman içindeki değişim burada görünecek.
+        {t("trend.empty")}
       </p>
     );
   }
@@ -63,10 +67,10 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
         {trend.map((point) => (
           <div key={point.period} className="space-y-1">
             <div className="flex items-baseline justify-between text-xs text-muted-foreground">
-              <span className="capitalize">{formatPeriod(point.period)}</span>
+              <span className="capitalize">{formatPeriod(point.period, locale)}</span>
               <span className="tabular-nums">{point.total} etiket</span>
             </div>
-            <div className="flex h-5 w-full gap-0.5 overflow-hidden rounded" role="img" aria-label={`${formatPeriod(point.period)}: ${point.total} aroma etiketi`}>
+            <div className="flex h-5 w-full gap-0.5 overflow-hidden rounded" role="img" aria-label={t("trend.barLabel", { period: formatPeriod(point.period, locale), count: point.total })}>
               {point.categories.map((cat, idx) => {
                 const widthPct = (cat.count / point.total) * 100;
                 const isFirst = idx === 0;
@@ -103,10 +107,10 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
 
       <Button variant="outline" size="sm" onClick={() => setShowTable((v) => !v)}>
         {showTable ? <X className="h-4 w-4" aria-hidden /> : <Table2 className="h-4 w-4" aria-hidden />}
-        {showTable ? "Tabloyu gizle" : "Tablo görünümü"}
+        {showTable ? t("trend.hideTable") : t("trend.showTable")}
       </Button>
 
-      {showTable && <FlavorTrendTable trend={trend} legend={legend} />}
+      {showTable && <FlavorTrendTable trend={trend} legend={legend} locale={locale} />}
     </div>
   );
 }
@@ -114,22 +118,26 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
 function FlavorTrendTable({
   trend,
   legend,
+  locale,
 }: {
   trend: FlavorTrendPointDTO[];
   legend: { category: string; label: string }[];
+  locale: Locale;
 }) {
+  const t = useTranslations();
+
   return (
     <div className="overflow-x-auto rounded-md border border-border">
       <table className="w-full text-left text-xs">
         <thead className="bg-secondary/40 text-muted-foreground">
           <tr>
-            <th className="whitespace-nowrap px-3 py-2 font-medium">Ay</th>
+            <th className="whitespace-nowrap px-3 py-2 font-medium">{t("trend.month")}</th>
             {legend.map((item) => (
               <th key={item.category} className="whitespace-nowrap px-3 py-2 font-medium">
                 {item.label}
               </th>
             ))}
-            <th className="whitespace-nowrap px-3 py-2 font-medium">Toplam</th>
+            <th className="whitespace-nowrap px-3 py-2 font-medium">{t("trend.total")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -138,7 +146,7 @@ function FlavorTrendTable({
             return (
               <tr key={point.period}>
                 <td className="whitespace-nowrap px-3 py-2 capitalize text-foreground">
-                  {formatPeriod(point.period)}
+                  {formatPeriod(point.period, locale)}
                 </td>
                 {legend.map((item) => (
                   <td key={item.category} className="px-3 py-2 tabular-nums text-muted-foreground">

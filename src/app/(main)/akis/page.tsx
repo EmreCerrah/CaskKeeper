@@ -8,8 +8,11 @@ import { tastingNoteService } from "@/server/services/TastingNoteService";
 import { Button } from "@/components/ui/button";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { Pagination } from "@/components/shared/Pagination";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Akış" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("feed.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface FeedPageProps {
@@ -25,12 +28,14 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
   const page = Math.max(1, Number(searchParams.sayfa) || 1);
   const feed = await tastingNoteService.getFeed(session.userId, { page, limit: 10 });
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">Akış</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("feed.title")}</h1>
         <p className="mt-1 text-muted-foreground">
-          Takip ettiğiniz kişilerin en yeni herkese açık tadımları.
+          {t("feed.subtitle")}
         </p>
       </div>
 
@@ -52,12 +57,12 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <Compass className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
-          <p className="font-medium">Akışınız henüz boş.</p>
+          <p className="font-medium">{t("feed.empty")}</p>
           <p className="mt-1 text-sm">
-            Diğer tutkunları takip ederek onların herkese açık tadımlarını burada görün.
+            {t("feed.emptyHint")}
           </p>
           <Button asChild className="mt-4">
-            <Link href="/kullanicilar">Kişileri Keşfet</Link>
+            <Link href="/kullanicilar">{t("feed.discoverPeople")}</Link>
           </Button>
         </div>
       )}

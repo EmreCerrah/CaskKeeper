@@ -21,49 +21,20 @@ import path from "node:path";
  * geçer. Güvenilir tespit AST çözümlemesi ve "bu metin kullanıcıya görünüyor
  * mu" kararı isterdi; bu kapsam için fazla. Amaç kusursuz denetim değil,
  * çevrilmiş dosyalara yeniden Türkçe metin sızmasını yakalamak.
+ *
+ * O sınır bir kez ısırdı: `title: "Yeni Viski"` iki dilde de aynı çıkıyordu ve
+ * tarama göremedi, çünkü içinde Türkçeye özgü harf yok. Aşağıdaki ikinci test
+ * bu belirli deliği kapatıyor — sabit `metadata` nesnesi artık hiçbir sayfada
+ * kabul edilmiyor, başlıklar generateMetadata() ile üretilmeli.
  */
 
 const ROOT = path.resolve(__dirname, "../../..");
 const SCAN_DIRS = ["src/app", "src/components"];
 
 /** Henüz çevrilmemiş dosyalar — 3. dilimin kapsamı. */
-const PENDING_TRANSLATION = new Set([
-  "src/app/(main)/akis/page.tsx",
-  "src/app/(main)/bildirimler/page.tsx",
-  "src/app/(main)/favoriler/page.tsx",
-  "src/app/(main)/istek-listem/page.tsx",
-  "src/app/(main)/kullanicilar/[id]/page.tsx",
-  "src/app/(main)/kullanicilar/[id]/takip-edilenler/page.tsx",
-  "src/app/(main)/kullanicilar/[id]/takipciler/page.tsx",
-  "src/app/(main)/panel/istatistikler/page.tsx",
-  "src/app/(main)/panel/oneriler/page.tsx",
-  "src/app/(main)/panel/page.tsx",
-  "src/app/(main)/profil/page.tsx",
-  "src/app/(main)/tadimlar/[id]/page.tsx",
-  "src/app/(main)/tadimlarim/[id]/duzenle/page.tsx",
-  "src/app/(main)/tadimlarim/page.tsx",
-  "src/app/(main)/tadimlarim/yeni/page.tsx",
-  "src/app/(main)/yonetim/kullanicilar/page.tsx",
-  "src/app/(main)/yonetim/layout.tsx",
-  "src/app/(main)/yonetim/viskiler/[slug]/duzenle/page.tsx",
-  "src/app/(main)/yonetim/viskiler/page.tsx",
-  "src/app/(main)/yonetim/viskiler/yeni/page.tsx",
-  "src/components/admin/DeleteWhiskeyButton.tsx",
-  "src/components/admin/RoleToggle.tsx",
-  "src/components/admin/WhiskeyForm.tsx",
-  "src/components/analytics/FlavorTrendChart.tsx",
-  "src/components/notifications/MarkAllReadButton.tsx",
-  "src/components/notifications/NotificationBell.tsx",
-  "src/components/notifications/NotificationItem.tsx",
-  "src/components/offline/OfflineSyncCard.tsx",
-  "src/components/offline/OfflineView.tsx",
-  "src/components/profile/ProfileForm.tsx",
-  "src/components/recommendations/MatchInfo.tsx",
-  "src/components/tasting/FlavorTagPicker.tsx",
-  "src/components/tasting/NoteActions.tsx",
-  "src/components/tasting/NoteInteractions.tsx",
-  "src/components/tasting/TastingNoteCard.tsx",
-  "src/components/tasting/TastingNoteForm.tsx",
+const PENDING_TRANSLATION = new Set<string>([
+  // Boş: arayüzün tamamı çevrildi. Yeni bir dosya buraya eklenmemeli — çeviri
+  // ertelenecekse bile, bu liste bir borç kaydıdır ve boş kalması hedeftir.
 ]);
 
 const TURKISH = /[çğıöşüÇĞİÖŞÜ]/;
@@ -114,8 +85,18 @@ function findUntranslated(source: string): string[] {
       if (TURKISH.test(match[2])) report(match[0]);
     }
 
-    // 2) Etiketler, ifadeler ve string'ler çıkarıldıktan sonra Türkçe harf
-    //    kalıyorsa geriye kalan şey JSX metnidir.
+    // 2) Aynı satırda `>metin<` — DİLİ NE OLURSA OLSUN. Çevrilmiş bir dosyada
+    //    JSX metni sabit yazılmamalı. Yalnızca Türkçe harf aramak yetmiyordu:
+    //    "Favorilerim" ve "Yeni Viski" salt ASCII olduğu için ağdan geçmişti.
+    //    Marka adı çevrilmez, o yüzden ayıklanır.
+    for (const match of line.matchAll(/>([^<>{}]*[A-Za-zÇĞİÖŞÜçğıöşü]{2,}[^<>{}]*)</g)) {
+      if (match[1].replace(/CaskKeeper/g, "").trim().length > 1) report(match[1]);
+    }
+
+    // 3) Çok satıra yayılan JSX metni: etiket, ifade ve string'ler
+    //    çıkarıldıktan sonra Türkçe harf kalıyorsa metin kalmış demektir.
+    //    Burada yalnızca Türkçe harf aranıyor — geniş tutulsa kod satırları da
+    //    yakalanırdı, çünkü bu artık JSX'e özgü bir kalıp değil.
     const residue = line
       .replace(STRING_LITERAL, '""')
       // String'ler çıkarıldıktan SONRA satır sonu yorumu atılır; önce atılsaydı
@@ -149,6 +130,19 @@ describe("çevrilmemiş arayüz metni", () => {
     }
 
     expect(offenders.join("\n\n")).toBe("");
+  });
+
+  it("hiçbir sayfa sabit metadata başlığı kullanmaz", () => {
+    // Sabit `export const metadata = { title: "…" }` dile göre değişemez.
+    // Türkçeye özgü harf içermeyen bir başlık (ör. "Yeni Viski") karakter
+    // taramasından kaçtığı için bu ayrı kural gerekiyor.
+    const offenders = files
+      .filter((file) => /\/(page|layout)\.tsx$/.test(file))
+      .filter((file) =>
+        /export const metadata\b[\s\S]{0,200}?title\s*:/.test(readFileSync(path.join(ROOT, file), "utf8"))
+      );
+
+    expect(offenders.join("\n")).toBe("");
   });
 
   it("bekleyenler listesi bayat değildir — temizlenen dosya listeden silinmelidir", () => {

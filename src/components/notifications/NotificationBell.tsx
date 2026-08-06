@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Bell } from "lucide-react";
 import connectToDatabase from "@/lib/db";
 import { notificationService } from "@/server/services/NotificationService";
+import { getTranslations } from "@/lib/i18n/server";
 
 interface NotificationBellProps {
   userId: string;
@@ -15,8 +16,11 @@ export async function NotificationBell({ userId }: NotificationBellProps) {
   await connectToDatabase();
   const unreadCount = await notificationService.countUnread(userId);
 
+  const t = getTranslations();
   const label =
-    unreadCount > 0 ? `Bildirimler — ${unreadCount} okunmamış` : "Bildirimler";
+    unreadCount > 0
+      ? t("notifications.bellWithCount", { count: unreadCount })
+      : t("notifications.title");
 
   return (
     <Link

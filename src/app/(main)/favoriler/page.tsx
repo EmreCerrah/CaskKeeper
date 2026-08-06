@@ -6,8 +6,11 @@ import { getSession } from "@/lib/auth/session";
 import { tastingNoteService } from "@/server/services/TastingNoteService";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { Pagination } from "@/components/shared/Pagination";
+import { getTranslations } from "@/lib/i18n/server";
 
-export const metadata: Metadata = { title: "Favorilerim" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("favorites.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface FavoritesPageProps {
@@ -27,14 +30,16 @@ export default async function FavoritesPage({ searchParams }: FavoritesPageProps
     { page, limit: 10 }
   );
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">Favorilerim</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("favorites.title")}</h1>
         <p className="mt-1 text-muted-foreground">
           {result.total > 0
-            ? `${result.total} favori tadımınız var.`
-            : "Henüz favori tadımınız yok."}
+            ? t("favorites.count", { count: result.total })
+            : t("favorites.subtitle")}
         </p>
       </div>
 
@@ -49,12 +54,12 @@ export default async function FavoritesPage({ searchParams }: FavoritesPageProps
         </>
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
-          <p className="font-medium">Favori tadımlarınız burada görünecek.</p>
+          <p className="font-medium">{t("favorites.empty")}</p>
           <p className="mt-1 text-sm">
             <Link href="/tadimlarim" className="text-primary hover:underline">
-              Tadımlarınızdan
+              {t("favorites.emptyHintBefore")}
             </Link>{" "}
-            kalp simgesine tıklayarak favorilerinize ekleyin.
+            {t("favorites.emptyHintAfter")}
           </p>
         </div>
       )}

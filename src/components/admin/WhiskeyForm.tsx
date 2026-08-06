@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/client";
+import type { Translator } from "@/lib/i18n/translate";
 
 /** Virgülle ayrılmış metni diziye çevirir (boşları eler). */
 function toList(value?: string): string[] {
@@ -21,30 +23,31 @@ function toList(value?: string): string[] {
     .filter(Boolean);
 }
 
-const WhiskeyFormSchema = z.object({
-  brand: z.string().min(2, "Marka en az 2 karakter olmalı"),
-  name: z.string().min(2, "Ürün adı en az 2 karakter olmalı"),
-  distillery: z.string().min(2, "Damıtımevi zorunludur"),
-  type: z.string().min(2, "Tip zorunludur"),
-  region: z.string().min(2, "Bölge zorunludur"),
-  country: z.string().min(2, "Ülke zorunludur"),
-  subRegion: z.string().optional(),
-  abv: z.coerce.number().min(0, "0-100 arası olmalı").max(100, "0-100 arası olmalı"),
-  age: z.union([z.coerce.number().int().positive(), z.literal("")]).optional(),
-  caskType: z.string().optional(),
-  bottlingYear: z.union([z.coerce.number().int().min(1700), z.literal("")]).optional(),
-  vintage: z.union([z.coerce.number().int().min(1700), z.literal("")]).optional(),
-  limitedEdition: z.boolean(),
-  description: z.string().optional(),
-  flavorProfile: z.string().optional(),
-  awards: z.string().optional(),
-  tags: z.string().optional(),
-  imageUrl: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
-  officialUrl: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
-  externalId: z.string().optional(),
-});
+const buildWhiskeySchema = (t: Translator) =>
+  z.object({
+    brand: z.string().min(2, t("whiskeyForm.brandMin")),
+    name: z.string().min(2, t("whiskeyForm.nameMin")),
+    distillery: z.string().min(2, t("whiskeyForm.distilleryRequired")),
+    type: z.string().min(2, t("whiskeyForm.typeRequired")),
+    region: z.string().min(2, t("whiskeyForm.regionRequired")),
+    country: z.string().min(2, t("whiskeyForm.countryRequired")),
+    subRegion: z.string().optional(),
+    abv: z.coerce.number().min(0, t("whiskeyForm.abvRange")).max(100, t("whiskeyForm.abvRange")),
+    age: z.union([z.coerce.number().int().positive(), z.literal("")]).optional(),
+    caskType: z.string().optional(),
+    bottlingYear: z.union([z.coerce.number().int().min(1700), z.literal("")]).optional(),
+    vintage: z.union([z.coerce.number().int().min(1700), z.literal("")]).optional(),
+    limitedEdition: z.boolean(),
+    description: z.string().optional(),
+    flavorProfile: z.string().optional(),
+    awards: z.string().optional(),
+    tags: z.string().optional(),
+    imageUrl: z.string().url(t("profileForm.urlInvalid")).optional().or(z.literal("")),
+    officialUrl: z.string().url(t("profileForm.urlInvalid")).optional().or(z.literal("")),
+    externalId: z.string().optional(),
+  });
 
-type WhiskeyFormValues = z.infer<typeof WhiskeyFormSchema>;
+type WhiskeyFormValues = z.infer<ReturnType<typeof buildWhiskeySchema>>;
 
 interface WhiskeyFormProps {
   /** Verilirse düzenleme modu */
@@ -53,6 +56,8 @@ interface WhiskeyFormProps {
 
 export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
   const router = useRouter();
+  const t = useTranslations();
+  const schema = useMemo(() => buildWhiskeySchema(t), [t]);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -60,7 +65,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<WhiskeyFormValues>({
-    resolver: zodResolver(WhiskeyFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: whiskey
       ? {
           brand: whiskey.brand,
@@ -158,34 +163,34 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Kimlik</CardTitle>
+          <CardTitle className="font-serif">{t("whiskeyForm.identityCard")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="brand">Marka *</Label>
+            <Label htmlFor="brand">{t("whiskeyForm.brand")}</Label>
             <Input id="brand" {...register("brand")} />
             {errors.brand && <p className="text-xs text-destructive-foreground/90">{errors.brand.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="name">Ürün Adı *</Label>
+            <Label htmlFor="name">{t("whiskeyForm.name")}</Label>
             <Input id="name" placeholder="16 Year Old" {...register("name")} />
             {errors.name && <p className="text-xs text-destructive-foreground/90">{errors.name.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="distillery">Damıtımevi *</Label>
+            <Label htmlFor="distillery">{t("whiskeyForm.distillery")}</Label>
             <Input id="distillery" {...register("distillery")} />
             {errors.distillery && (
               <p className="text-xs text-destructive-foreground/90">{errors.distillery.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
-              Bilinmiyorsa üreticiyi yazın — kimliğin parçasıdır, boş bırakılamaz.
+              {t("whiskeyForm.distilleryHint")}
             </p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="externalId">Dış Kimlik (externalId)</Label>
+            <Label htmlFor="externalId">{t("whiskeyForm.externalId")}</Label>
             <Input id="externalId" placeholder="talisker-10" {...register("externalId")} />
             <p className="text-xs text-muted-foreground">
-              Kalıcı kimlik — sonradan isim düzeltirseniz kopya oluşmasını önler.
+              {t("whiskeyForm.externalIdHint")}
             </p>
           </div>
         </CardContent>
@@ -193,26 +198,26 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Sınıflandırma</CardTitle>
+          <CardTitle className="font-serif">{t("whiskeyForm.classificationCard")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="type">Tip *</Label>
+            <Label htmlFor="type">{t("whiskeyForm.type")}</Label>
             <Input id="type" placeholder="Single Malt" {...register("type")} />
             {errors.type && <p className="text-xs text-destructive-foreground/90">{errors.type.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="region">Bölge *</Label>
+            <Label htmlFor="region">{t("whiskeyForm.region")}</Label>
             <Input id="region" placeholder="Islay" {...register("region")} />
             {errors.region && <p className="text-xs text-destructive-foreground/90">{errors.region.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="country">Ülke *</Label>
+            <Label htmlFor="country">{t("whiskeyForm.country")}</Label>
             <Input id="country" {...register("country")} />
             {errors.country && <p className="text-xs text-destructive-foreground/90">{errors.country.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="subRegion">Alt Bölge</Label>
+            <Label htmlFor="subRegion">{t("whiskeyForm.subRegion")}</Label>
             <Input id="subRegion" {...register("subRegion")} />
           </div>
         </CardContent>
@@ -220,28 +225,28 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Teknik</CardTitle>
+          <CardTitle className="font-serif">{t("whiskeyForm.technicalCard")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="abv">Alkol Oranı (%) *</Label>
+            <Label htmlFor="abv">{t("whiskeyForm.abv")}</Label>
             <Input id="abv" type="number" step="0.1" {...register("abv")} />
             {errors.abv && <p className="text-xs text-destructive-foreground/90">{errors.abv.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="age">Yaş (yıl)</Label>
+            <Label htmlFor="age">{t("whiskeyForm.age")}</Label>
             <Input id="age" type="number" {...register("age")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="caskType">Fıçı Tipi</Label>
+            <Label htmlFor="caskType">{t("whiskeyForm.caskType")}</Label>
             <Input id="caskType" {...register("caskType")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="bottlingYear">Şişeleme Yılı</Label>
+            <Label htmlFor="bottlingYear">{t("whiskeyForm.bottlingYear")}</Label>
             <Input id="bottlingYear" type="number" {...register("bottlingYear")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="vintage">Rekolte</Label>
+            <Label htmlFor="vintage">{t("whiskeyForm.vintage")}</Label>
             <Input id="vintage" type="number" {...register("vintage")} />
           </div>
           <div className="flex items-center gap-2 pt-7">
@@ -251,40 +256,40 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
               className="h-4 w-4 accent-primary"
               {...register("limitedEdition")}
             />
-            <Label htmlFor="limitedEdition">Limitli Üretim</Label>
+            <Label htmlFor="limitedEdition">{t("whiskeyForm.limitedEdition")}</Label>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">İçerik</CardTitle>
+          <CardTitle className="font-serif">{t("whiskeyForm.contentCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="description">Açıklama</Label>
+            <Label htmlFor="description">{t("whiskeyForm.description")}</Label>
             <Textarea id="description" rows={3} {...register("description")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="flavorProfile">Aroma Profili</Label>
+            <Label htmlFor="flavorProfile">{t("whiskeyForm.flavorProfile")}</Label>
             <Input id="flavorProfile" placeholder="smoke, peat, vanilla" {...register("flavorProfile")} />
-            <p className="text-xs text-muted-foreground">Virgülle ayırın.</p>
+            <p className="text-xs text-muted-foreground">{t("whiskeyForm.commaHint")}</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tags">Etiketler</Label>
+            <Label htmlFor="tags">{t("whiskeyForm.tags")}</Label>
             <Input id="tags" placeholder="peated, islay, classic" {...register("tags")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="awards">Ödüller</Label>
+            <Label htmlFor="awards">{t("whiskeyForm.awards")}</Label>
             <Input id="awards" placeholder="IWSC 2023 Gold" {...register("awards")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="imageUrl">Görsel URL</Label>
+            <Label htmlFor="imageUrl">{t("whiskeyForm.imageUrl")}</Label>
             <Input id="imageUrl" placeholder="https://…" {...register("imageUrl")} />
             {errors.imageUrl && <p className="text-xs text-destructive-foreground/90">{errors.imageUrl.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="officialUrl">Resmî Sayfa URL</Label>
+            <Label htmlFor="officialUrl">{t("whiskeyForm.officialUrl")}</Label>
             <Input id="officialUrl" placeholder="https://…" {...register("officialUrl")} />
             {errors.officialUrl && <p className="text-xs text-destructive-foreground/90">{errors.officialUrl.message}</p>}
           </div>
@@ -299,11 +304,11 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
 
       <div className="flex items-center justify-end gap-3">
         <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isSubmitting}>
-          Vazgeç
+          {t("whiskeyForm.cancel")}
         </Button>
         <Button type="submit" disabled={isSubmitting} size="lg">
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-          {whiskey ? "Değişiklikleri Kaydet" : "Kataloğa Ekle"}
+          {whiskey ? t("whiskeyForm.saveChanges") : t("whiskeyForm.create")}
         </Button>
       </div>
     </form>

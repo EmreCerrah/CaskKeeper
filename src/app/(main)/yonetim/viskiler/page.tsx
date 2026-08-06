@@ -1,3 +1,4 @@
+import { getTranslations } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Pencil, Plus } from "lucide-react";
@@ -9,7 +10,9 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/shared/Pagination";
 import { DeleteWhiskeyButton } from "@/components/admin/DeleteWhiskeyButton";
 
-export const metadata: Metadata = { title: "Katalog Yönetimi" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("admin.catalogueTitle") };
+}
 export const dynamic = "force-dynamic";
 
 interface AdminCatalogPageProps {
@@ -26,6 +29,8 @@ export default async function AdminCatalogPage({ searchParams }: AdminCatalogPag
     sortBy: "brand",
     sortOrder: "asc",
   });
+
+  const t = getTranslations();
 
   return (
     <div className="space-y-4">
@@ -59,13 +64,13 @@ export default async function AdminCatalogPage({ searchParams }: AdminCatalogPag
                       {whiskey.region}, {whiskey.country}
                     </Badge>
                     <Badge variant="secondary">%{whiskey.abv}</Badge>
-                    {whiskey.age != null && <Badge variant="secondary">{whiskey.age} Yıl</Badge>}
+                    {whiskey.age != null && <Badge variant="secondary">{t("whiskey.ageYears", { age: whiskey.age })}</Badge>}
                   </div>
                   <p className="truncate font-mono text-xs text-muted-foreground">{whiskey.slug}</p>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1">
-                  <Button asChild variant="ghost" size="icon" title="Düzenle">
+                  <Button asChild variant="ghost" size="icon" title={t("note.edit")}>
                     <Link href={`/yonetim/viskiler/${whiskey.slug}/duzenle`}>
                       <Pencil className="h-4 w-4 text-muted-foreground" aria-hidden />
                     </Link>
@@ -86,8 +91,8 @@ export default async function AdminCatalogPage({ searchParams }: AdminCatalogPag
         </>
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
-          <p className="font-medium">Katalog boş.</p>
-          <p className="mt-1 text-sm">Yeni viski ekleyin veya import script’ini çalıştırın.</p>
+          <p className="font-medium">{t("admin.emptyCatalogue")}</p>
+          <p className="mt-1 text-sm">{t("admin.emptyCatalogueHint")}</p>
         </div>
       )}
     </div>

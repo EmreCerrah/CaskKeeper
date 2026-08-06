@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { AROMA_TAG_CATEGORIES } from "@/lib/constants/aroma-wheel";
 import { cn } from "@/lib/utils/cn";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface FlavorTagPickerProps {
   value: string[];
@@ -17,6 +18,7 @@ interface FlavorTagPickerProps {
  * seçili etiketler amber vurgu ile gösterilir.
  */
 export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps) {
+  const t = useTranslations();
   const [openCategory, setOpenCategory] = useState<string | null>(null);
 
   function toggleTag(tag: string) {
@@ -33,7 +35,7 @@ export function FlavorTagPicker({ value, onChange, label }: FlavorTagPickerProps
               type="button"
               onClick={() => toggleTag(tag)}
               className="inline-flex min-h-11 items-center rounded-full border border-primary/40 bg-primary/15 px-3 py-2 text-xs font-medium text-primary hover:bg-primary/25"
-              title="Kaldırmak için tıklayın"
+              title={t("flavorPicker.removeHint")}
             >
               {tag} ✕
             </button>

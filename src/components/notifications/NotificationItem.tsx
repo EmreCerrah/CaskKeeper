@@ -8,6 +8,8 @@ import type { NotificationDTO } from "@/lib/types/dto";
 import { UserAvatar } from "@/components/social/UserAvatar";
 import { formatRelativeTime } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import type { Translator } from "@/lib/i18n/translate";
 
 const ICONS = {
   follow: UserPlus,
@@ -23,18 +25,18 @@ function targetHref(notification: NotificationDTO): string {
 }
 
 /** Bildirim metni — viski adı biliniyorsa cümleye eklenir. */
-function describe(notification: NotificationDTO): string {
+function describe(notification: NotificationDTO, t: Translator): string {
   const target = notification.whiskeyLabel
-    ? `“${notification.whiskeyLabel}” tadımınızı`
-    : "tadım notunuzu";
+    ? t("notifications.targetNamed", { whiskey: notification.whiskeyLabel })
+    : t("notifications.targetGeneric");
 
   switch (notification.type) {
     case "follow":
-      return "sizi takip etmeye başladı";
+      return t("notifications.follow");
     case "like":
-      return `${target} beğendi`;
+      return t("notifications.like", { target });
     case "comment":
-      return `${target} yorumladı`;
+      return t("notifications.comment", { target });
   }
 }
 
@@ -45,6 +47,8 @@ interface NotificationItemProps {
 /** Tek bildirim satırı — tıklandığında okundu işaretlenip hedefe gider. */
 export function NotificationItem({ notification }: NotificationItemProps) {
   const router = useRouter();
+  const t = useTranslations();
+  const locale = useLocale();
   const [isRead, setIsRead] = useState(notification.isRead);
 
   const Icon = ICONS[notification.type];
@@ -74,7 +78,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
       <div className="min-w-0 flex-1">
         <p className="text-sm">
           <span className="font-medium">{notification.actor.name}</span>{" "}
-          <span className="text-muted-foreground">{describe(notification)}</span>
+          <span className="text-muted-foreground">{describe(notification, t)}</span>
         </p>
 
         {notification.commentExcerpt && (
@@ -85,14 +89,14 @@ export function NotificationItem({ notification }: NotificationItemProps) {
 
         <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
           <Icon className="h-3.5 w-3.5 text-primary/70" aria-hidden />
-          {formatRelativeTime(notification.createdAt)}
+          {formatRelativeTime(notification.createdAt, locale, t)}
         </p>
       </div>
 
       {!isRead && (
         <span
           className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"
-          aria-label="Okunmamış"
+          aria-label={t("notifications.unread")}
         />
       )}
     </Link>

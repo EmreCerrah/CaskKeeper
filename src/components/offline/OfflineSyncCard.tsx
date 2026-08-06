@@ -8,9 +8,11 @@ import { getSnapshotMeta, isOfflineStorageSupported, type OfflineSnapshotMeta } 
 import { isOfflineEnabled, subscribeOfflinePreference } from "@/lib/offline/preference";
 import { subscribeOfflineDataChanged, syncOfflineSnapshot } from "@/lib/offline/sync";
 import { OfflineToggle } from "./OfflineToggle";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { INTL_LOCALE, type Locale } from "@/lib/i18n/config";
 
-function formatSyncedAt(iso: string): string {
-  return new Date(iso).toLocaleString("tr-TR", {
+function formatSyncedAt(iso: string, locale: Locale): string {
+  return new Date(iso).toLocaleString(INTL_LOCALE[locale], {
     day: "numeric",
     month: "long",
     hour: "2-digit",
@@ -29,6 +31,8 @@ interface OfflineSyncCardProps {
  * paylaşır (bkz. preference.ts).
  */
 export function OfflineSyncCard({ userId, userName }: OfflineSyncCardProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [meta, setMeta] = useState<OfflineSnapshotMeta | null>(null);
   const [enabled, setEnabled] = useState(false);
   const [supported, setSupported] = useState(true);
@@ -67,7 +71,7 @@ export function OfflineSyncCard({ userId, userName }: OfflineSyncCardProps) {
     try {
       setMeta(await syncOfflineSnapshot({ userId, userName, force: true }));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Veriler güncellenemedi.");
+      setError(e instanceof Error ? e.message : t("offline.syncFailed"));
     } finally {
       setBusy(false);
     }
@@ -78,19 +82,19 @@ export function OfflineSyncCard({ userId, userName }: OfflineSyncCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-serif">
           <WifiOff className="h-5 w-5 text-primary" aria-hidden />
-          Çevrimdışı Kullanım
+          {t("offline.title")}
         </CardTitle>
         <CardDescription>
-          Açtığınızda tadım notlarınız ve istek listeniz bu cihaza kaydedilir ve
-          güncel tutulur; internet bağlantınız olmadığında da okuyabilirsiniz.
-          Kapattığınızda kayıtlı kopya hemen silinir.
+          {t("offline.cardDescription")}
+
+
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {!supported ? (
           <p className="text-sm text-muted-foreground">
-            Bu tarayıcı çevrimdışı kaydı desteklemiyor.
+            {t("offline.unsupported")}
           </p>
         ) : (
           <>
@@ -102,21 +106,21 @@ export function OfflineSyncCard({ userId, userName }: OfflineSyncCardProps) {
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="outline" size="sm" onClick={handleManualSync} disabled={busy}>
                   <RefreshCw className="mr-2 h-4 w-4" aria-hidden />
-                  {busy ? "Güncelleniyor…" : "Şimdi güncelle"}
+                  {busy ? t("offline.syncing") : t("offline.syncNow")}
                 </Button>
                 {meta && (
                   <p className="text-sm text-muted-foreground">
                     Son senkron:{" "}
                     <span className="font-medium text-foreground">
-                      {formatSyncedAt(meta.syncedAt)}
+                      {formatSyncedAt(meta.syncedAt, locale)}
                     </span>{" "}
-                    · {meta.noteCount} tadım notu, {meta.wishlistCount} istek listesi kaydı
+                    · {t("offline.counts", { notes: meta.noteCount, wishlist: meta.wishlistCount })}
                   </p>
                 )}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                Bu cihazda kayıtlı çevrimdışı veri yok.
+                {t("offline.noData")}
               </p>
             )}
           </>

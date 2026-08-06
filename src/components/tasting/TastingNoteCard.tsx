@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { CalendarDays, Wind, Wine, Hourglass } from "lucide-react";
 import type { CommentDTO, TastingNoteDTO } from "@/lib/types/dto";
@@ -7,11 +9,14 @@ import { RatingBadge } from "@/components/shared/RatingBadge";
 import { NoteActions } from "./NoteActions";
 import { NoteInteractions } from "./NoteInteractions";
 import { UserAvatar } from "@/components/social/UserAvatar";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { formatDate } from "@/lib/utils/date";
+import type { TranslationKey } from "@/lib/i18n/translate";
 
-const FINISH_LABELS: Record<string, string> = {
-  short: "Kısa bitiş",
-  medium: "Orta bitiş",
-  long: "Uzun bitiş",
+const FINISH_LABELS: Record<string, TranslationKey> = {
+  short: "note.finishShort",
+  medium: "note.finishMedium",
+  long: "note.finishLong",
 };
 
 interface TastingNoteCardProps {
@@ -43,11 +48,9 @@ export function TastingNoteCard({
   commentsOpen = false,
   initialComments,
 }: TastingNoteCardProps) {
-  const formattedDate = new Date(note.tastingDate).toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const t = useTranslations();
+  const locale = useLocale();
+  const formattedDate = formatDate(note.tastingDate, locale);
 
   return (
     <Card>
@@ -77,7 +80,7 @@ export function TastingNoteCard({
               {formattedDate}
               {note.visibility === "public" && (
                 <Badge variant="outline" className="ml-1">
-                  Herkese açık
+                  {t("note.public")}
                 </Badge>
               )}
             </p>
@@ -95,7 +98,7 @@ export function TastingNoteCard({
           <div className="flex items-start gap-2 text-sm">
             <Wind className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
             <div className="space-y-1">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Burun</span>
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("note.noseLabel")}</span>
               {note.noseTags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {note.noseTags.map((tag) => (
@@ -112,7 +115,7 @@ export function TastingNoteCard({
           <div className="flex items-start gap-2 text-sm">
             <Wine className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
             <div className="space-y-1">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Damak</span>
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("note.palateLabel")}</span>
               {note.palateTags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {note.palateTags.map((tag) => (
@@ -129,7 +132,7 @@ export function TastingNoteCard({
           <Hourglass className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
           <div className="space-y-1">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Bitiş — {FINISH_LABELS[note.finishLength]}
+              {t("note.finishPrefix")} — {t(FINISH_LABELS[note.finishLength])}
             </span>
             {note.finishTags.length > 0 && (
               <div className="flex flex-wrap gap-1">
