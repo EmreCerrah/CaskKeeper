@@ -13,6 +13,8 @@ import { FollowButton } from "@/components/social/FollowButton";
 import { FriendBadge } from "@/components/social/FriendBadge";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { Pagination } from "@/components/shared/Pagination";
+import { getLocale, getTranslations } from "@/lib/i18n/server";
+import { INTL_LOCALE } from "@/lib/i18n/config";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
     const profile = await userService.getPublicProfile(params.id);
     return { title: `${profile.name} — Profil` };
   } catch {
-    return { title: "Kullanıcı Bulunamadı" };
+    return { title: getTranslations()("profile.notFound") };
   }
 }
 
@@ -50,15 +52,17 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
     session?.userId
   );
 
-  const memberSince = new Date(profile.createdAt).toLocaleDateString("tr-TR", {
+  const memberSince = new Date(profile.createdAt).toLocaleDateString(INTL_LOCALE[getLocale()], {
     month: "long",
     year: "numeric",
   });
 
+  const t = getTranslations();
+
   const stats = [
-    { label: "Tadım", value: profile.publicNoteCount, href: null },
-    { label: "Takipçi", value: profile.followerCount, href: `/kullanicilar/${profile.id}/takipciler` },
-    { label: "Takip", value: profile.followingCount, href: `/kullanicilar/${profile.id}/takip-edilenler` },
+    { label: t("profile.statTastings"), value: profile.publicNoteCount, href: null },
+    { label: t("profile.statFollowers"), value: profile.followerCount, href: `/kullanicilar/${profile.id}/takipciler` },
+    { label: t("profile.statFollowing"), value: profile.followingCount, href: `/kullanicilar/${profile.id}/takip-edilenler` },
   ];
 
   return (
@@ -80,7 +84,7 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
               </div>
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <CalendarDays className="h-3.5 w-3.5" aria-hidden />
-                {memberSince} tarihinden beri üye
+                {t("profile.memberSince", { date: memberSince })}
               </p>
             </div>
           </div>
@@ -90,7 +94,7 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
           )}
           {profile.isOwnProfile && (
             <Link href="/profil" className="text-sm text-primary hover:underline">
-              Profili düzenle
+              {t("profile.edit")}
             </Link>
           )}
         </div>
@@ -119,7 +123,7 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
 
       {/* Herkese açık tadımlar */}
       <div className="space-y-4">
-        <h2 className="font-serif text-xl font-semibold">Herkese Açık Tadımlar</h2>
+        <h2 className="font-serif text-xl font-semibold">{t("profile.publicTastings")}</h2>
         {notes.data.length > 0 ? (
           <>
             {notes.data.map((note) => (
@@ -140,12 +144,12 @@ export default async function PublicProfilePage({ params, searchParams }: Profil
           <div className="rounded-lg border border-dashed py-16 text-center text-muted-foreground">
             <p className="font-medium">
               {profile.isOwnProfile
-                ? "Henüz herkese açık tadımınız yok."
-                : "Bu kullanıcının henüz herkese açık tadımı yok."}
+                ? t("profile.noPublicOwn")
+                : t("profile.noPublicOther")}
             </p>
             {profile.isOwnProfile && (
               <p className="mt-1 text-sm">
-                Tadım notlarınızı “Herkese açık” olarak işaretlerseniz burada görünür.
+                {t("profile.noPublicHint")}
               </p>
             )}
           </div>

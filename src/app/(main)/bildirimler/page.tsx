@@ -6,9 +6,12 @@ import { getSession } from "@/lib/auth/session";
 import { notificationService } from "@/server/services/NotificationService";
 import { NotificationItem } from "@/components/notifications/NotificationItem";
 import { MarkAllReadButton } from "@/components/notifications/MarkAllReadButton";
+import { getTranslations } from "@/lib/i18n/server";
 import { Pagination } from "@/components/shared/Pagination";
 
-export const metadata: Metadata = { title: "Bildirimler" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("notifications.title") };
+}
 export const dynamic = "force-dynamic";
 
 interface NotificationsPageProps {
@@ -24,15 +27,17 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
   const page = Math.max(1, Number(searchParams.sayfa) || 1);
   const notifications = await notificationService.list(session.userId, { page, limit: 20 });
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="font-serif text-3xl font-bold">Bildirimler</h1>
+          <h1 className="font-serif text-3xl font-bold">{t("notifications.title")}</h1>
           <p className="mt-1 text-muted-foreground">
             {notifications.unreadCount > 0
-              ? `${notifications.unreadCount} okunmamış bildiriminiz var.`
-              : "Tüm bildirimleriniz okundu."}
+              ? t("notifications.unreadCount", { count: notifications.unreadCount })
+              : t("notifications.allRead")}
           </p>
         </div>
         <MarkAllReadButton unreadCount={notifications.unreadCount} />
@@ -54,9 +59,9 @@ export default async function NotificationsPage({ searchParams }: NotificationsP
       ) : (
         <div className="rounded-lg border border-dashed py-20 text-center text-muted-foreground">
           <BellOff className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden />
-          <p className="font-medium">Henüz bildiriminiz yok.</p>
+          <p className="font-medium">{t("notifications.empty")}</p>
           <p className="mt-1 text-sm">
-            Biri sizi takip ettiğinde, tadımınızı beğendiğinde ya da yorumladığında burada görünür.
+            {t("notifications.emptyHint")}
           </p>
         </div>
       )}

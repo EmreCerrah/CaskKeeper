@@ -1,3 +1,4 @@
+import { getTranslations } from "@/lib/i18n/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GlassWater, ShieldCheck, Users } from "lucide-react";
@@ -19,12 +20,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   await connectToDatabase();
   if (!(await isCurrentUserAdmin(session.userId))) redirect("/panel");
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-6 w-6 text-primary" aria-hidden />
-          <h1 className="font-serif text-2xl font-bold">Yönetim</h1>
+          <h1 className="font-serif text-2xl font-bold">{t("admin.title")}</h1>
         </div>
         <nav className="flex gap-2">
           <Button asChild variant="ghost" size="sm">
@@ -36,7 +39,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Button asChild variant="ghost" size="sm">
             <Link href="/yonetim/kullanicilar">
               <Users className="h-4 w-4" aria-hidden />
-              Kullanıcılar
+              {t("admin.users")}
             </Link>
           </Button>
         </nav>

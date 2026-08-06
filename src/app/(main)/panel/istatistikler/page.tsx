@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "@/lib/i18n/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
@@ -9,7 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DistributionBars } from "@/components/analytics/DistributionBars";
 import { FlavorTrendChart } from "@/components/analytics/FlavorTrendChart";
 
-export const metadata: Metadata = { title: "Detaylı İstatistikler" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("stats.title") };
+}
 export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
@@ -19,6 +22,8 @@ export default async function AnalyticsPage() {
   await connectToDatabase();
   const analytics = await analyticsService.getAnalytics(session.userId);
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-4 py-10 sm:px-6">
       <div>
@@ -27,17 +32,17 @@ export default async function AnalyticsPage() {
           className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          Panelime dön
+          {t("dashboard.back")}
         </Link>
-        <h1 className="mt-2 font-serif text-3xl font-bold">Detaylı İstatistikler</h1>
+        <h1 className="mt-2 font-serif text-3xl font-bold">{t("stats.title")}</h1>
         <p className="mt-1 text-muted-foreground">
-          Damak zevkinizin zaman içindeki değişimi ve katalog tercihleriniz.
+          {t("stats.subtitle")}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif text-lg">Zaman İçinde Aroma Değişimi</CardTitle>
+          <CardTitle className="font-serif text-lg">{t("stats.trendTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           <FlavorTrendChart trend={analytics.flavorTrend} />
@@ -47,24 +52,24 @@ export default async function AnalyticsPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Tipe Göre</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.byType")}</CardTitle>
           </CardHeader>
           <CardContent>
             <DistributionBars
               items={analytics.distribution.byType}
-              emptyLabel="Henüz tadım notunuz yok."
+              emptyLabel={t("stats.empty")}
             />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Bölgeye Göre</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.byRegion")}</CardTitle>
           </CardHeader>
           <CardContent>
             <DistributionBars
               items={analytics.distribution.byRegion}
-              emptyLabel="Henüz tadım notunuz yok."
+              emptyLabel={t("stats.empty")}
             />
           </CardContent>
         </Card>
@@ -72,13 +77,13 @@ export default async function AnalyticsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              En Çok Tadılan Damıtımevleri
+              {t("stats.topDistilleries")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <DistributionBars
               items={analytics.distribution.byDistillery}
-              emptyLabel="Henüz tadım notunuz yok."
+              emptyLabel={t("stats.empty")}
             />
           </CardContent>
         </Card>

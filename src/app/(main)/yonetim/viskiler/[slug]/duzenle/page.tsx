@@ -1,3 +1,4 @@
+import { getTranslations } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,7 +8,9 @@ import { whiskeyService } from "@/server/services/WhiskeyService";
 import { Button } from "@/components/ui/button";
 import { WhiskeyForm } from "@/components/admin/WhiskeyForm";
 
-export const metadata: Metadata = { title: "Viski Düzenle" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("admin.editWhiskeyTitle") };
+}
 export const dynamic = "force-dynamic";
 
 interface EditWhiskeyPageProps {
@@ -20,12 +23,14 @@ export default async function EditWhiskeyPage({ params }: EditWhiskeyPageProps) 
   const whiskey = await whiskeyService.findWhiskeyBySlug(params.slug);
   if (!whiskey) notFound();
 
+  const t = getTranslations();
+
   return (
     <div className="space-y-6">
       <Button asChild variant="ghost" size="sm">
         <Link href="/yonetim/viskiler">
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Kataloğa Dön
+          {t("whiskey.backToCatalogue")}
         </Link>
       </Button>
 
@@ -35,7 +40,7 @@ export default async function EditWhiskeyPage({ params }: EditWhiskeyPageProps) 
         </h2>
         <p className="mt-1 font-mono text-xs text-muted-foreground">{whiskey.slug}</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Marka, ürün adı veya damıtımevini değiştirirseniz slug yeniden üretilir.
+          {t("admin.editWhiskeyHint")}
         </p>
       </div>
 

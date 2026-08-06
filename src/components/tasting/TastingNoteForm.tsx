@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,26 +17,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FlavorTagPicker } from "./FlavorTagPicker";
 import { cn } from "@/lib/utils/cn";
+import { useTranslations } from "@/lib/i18n/client";
+import type { Translator } from "@/lib/i18n/translate";
 
 // İstemci form şeması — API şemasıyla aynı kurallar, tarih string olarak alınır
-const TastingFormSchema = z.object({
-  tastingDate: z.string().min(1, "Tadım tarihi zorunludur"),
-  rating: z.coerce.number().min(0, "Puan 0-100 arası olmalı").max(100, "Puan 0-100 arası olmalı"),
-  noseTags: z.array(z.string()),
-  noseNotes: z.string().max(1000, "En fazla 1000 karakter").optional(),
-  palateTags: z.array(z.string()),
-  palateNotes: z.string().max(1000, "En fazla 1000 karakter").optional(),
-  finishTags: z.array(z.string()),
-  finishNotes: z.string().max(1000, "En fazla 1000 karakter").optional(),
-  finishLength: z.enum(["short", "medium", "long"], {
-    errorMap: () => ({ message: "Bitiş uzunluğu seçiniz" }),
-  }),
-  personalNotes: z.string().max(2000, "En fazla 2000 karakter").optional(),
-  visibility: z.enum(["private", "public"]),
-  isFavorite: z.boolean(),
-});
+const buildTastingSchema = (t: Translator) =>
+  z.object({
+    tastingDate: z.string().min(1, t("noteForm.dateRequired")),
+    rating: z.coerce.number().min(0, t("noteForm.ratingRange")).max(100, t("noteForm.ratingRange")),
+    noseTags: z.array(z.string()),
+    noseNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    palateTags: z.array(z.string()),
+    palateNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    finishTags: z.array(z.string()),
+    finishNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    finishLength: z.enum(["short", "medium", "long"], {
+      errorMap: () => ({ message: t("noteForm.finishRequired") }),
+    }),
+    personalNotes: z.string().max(2000, t("noteForm.maxChars", { max: 2000 })).optional(),
+    visibility: z.enum(["private", "public"]),
+    isFavorite: z.boolean(),
+  });
 
-type TastingFormValues = z.infer<typeof TastingFormSchema>;
+type TastingFormValues = z.infer<ReturnType<typeof buildTastingSchema>>;
 
 interface TastingNoteFormProps {
   whiskey: WhiskeyDTO;
@@ -46,6 +49,8 @@ interface TastingNoteFormProps {
 
 export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
   const router = useRouter();
+  const t = useTranslations();
+  const schema = useMemo(() => buildTastingSchema(t), [t]);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -55,7 +60,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<TastingFormValues>({
-    resolver: zodResolver(TastingFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: note
       ? {
           tastingDate: note.tastingDate.slice(0, 10),
@@ -104,7 +109,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
 
     const json = await res.json();
     if (!res.ok || !json.success) {
-      setServerError(json.message ?? "Tadım notu kaydedilemedi");
+      setServerError(json.message ?? t("noteForm.failed"));
       return;
     }
 
@@ -118,12 +123,12 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       {/* Tarih + Puan */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Tadım Seansı</CardTitle>
+          <CardTitle className="font-serif">{t("noteForm.sessionCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="tastingDate">Tadım Tarihi</Label>
+              <Label htmlFor="tastingDate">{t("noteForm.date")}</Label>
               <Input id="tastingDate" type="date" {...register("tastingDate")} />
               {errors.tastingDate && (
                 <p className="text-xs text-destructive-foreground/90">{errors.tastingDate.message}</p>
@@ -132,7 +137,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="rating">
-                Puan: <span className="font-bold text-primary">{rating}</span>
+                {t("noteForm.rating")} <span className="font-bold text-primary">{rating}</span>
                 <span className="text-muted-foreground"> / 100</span>
               </Label>
               <input
@@ -155,21 +160,21 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       {/* Burun */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Burun (Nose)</CardTitle>
+          <CardTitle className="font-serif">{t("noteForm.noseCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Controller
             control={control}
             name="noseTags"
             render={({ field }) => (
-              <FlavorTagPicker label="Burun" value={field.value} onChange={field.onChange} />
+              <FlavorTagPicker label={t("noteForm.nose")} value={field.value} onChange={field.onChange} />
             )}
           />
           <div className="space-y-2">
-            <Label htmlFor="noseNotes">Burun Notlarınız</Label>
+            <Label htmlFor="noseNotes">{t("noteForm.noseNotes")}</Label>
             <Textarea
               id="noseNotes"
-              placeholder="Bardağı burnunuza yaklaştırdığınızda ne hissediyorsunuz?"
+              placeholder={t("noteForm.nosePlaceholder")}
               {...register("noseNotes")}
             />
             {errors.noseNotes && (
@@ -182,21 +187,21 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       {/* Damak */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Damak (Palate)</CardTitle>
+          <CardTitle className="font-serif">{t("noteForm.palateCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Controller
             control={control}
             name="palateTags"
             render={({ field }) => (
-              <FlavorTagPicker label="Damak" value={field.value} onChange={field.onChange} />
+              <FlavorTagPicker label={t("noteForm.palate")} value={field.value} onChange={field.onChange} />
             )}
           />
           <div className="space-y-2">
-            <Label htmlFor="palateNotes">Damak Notlarınız</Label>
+            <Label htmlFor="palateNotes">{t("noteForm.palateNotes")}</Label>
             <Textarea
               id="palateNotes"
-              placeholder="İlk yudumda hangi tatlar öne çıkıyor?"
+              placeholder={t("noteForm.palatePlaceholder")}
               {...register("palateNotes")}
             />
             {errors.palateNotes && (
@@ -209,19 +214,19 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       {/* Bitiş */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Bitiş (Finish)</CardTitle>
+          <CardTitle className="font-serif">{t("noteForm.finishCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Controller
             control={control}
             name="finishTags"
             render={({ field }) => (
-              <FlavorTagPicker label="Bitiş" value={field.value} onChange={field.onChange} />
+              <FlavorTagPicker label={t("noteForm.finish")} value={field.value} onChange={field.onChange} />
             )}
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="finishLength">Bitiş Uzunluğu</Label>
+              <Label htmlFor="finishLength">{t("noteForm.finishLength")}</Label>
               <Select id="finishLength" {...register("finishLength")}>
                 {FINISH_LENGTHS.map((f) => (
                   <option key={f.id} value={f.value}>
@@ -235,10 +240,10 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="finishNotes">Bitiş Notlarınız</Label>
+            <Label htmlFor="finishNotes">{t("noteForm.finishNotes")}</Label>
             <Textarea
               id="finishNotes"
-              placeholder="Yudumdan sonra damakta ne kalıyor?"
+              placeholder={t("noteForm.finishPlaceholder")}
               {...register("finishNotes")}
             />
             {errors.finishNotes && (
@@ -251,15 +256,15 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
       {/* Kişisel */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Kişisel Notlar</CardTitle>
+          <CardTitle className="font-serif">{t("noteForm.personalCard")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="personalNotes">Anılarınız ve Düşünceleriniz</Label>
+            <Label htmlFor="personalNotes">{t("noteForm.personalNotes")}</Label>
             <Textarea
               id="personalNotes"
               rows={4}
-              placeholder="Bu tadımı özel kılan neydi? Nerede, kiminle içtiniz?"
+              placeholder={t("noteForm.personalPlaceholder")}
               {...register("personalNotes")}
             />
             {errors.personalNotes && (
@@ -269,15 +274,15 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="visibility">Görünürlük</Label>
+              <Label htmlFor="visibility">{t("noteForm.visibility")}</Label>
               <Select id="visibility" {...register("visibility")}>
-                <option value="private">Özel (yalnızca ben)</option>
-                <option value="public">Herkese açık</option>
+                <option value="private">{t("noteForm.visibilityPrivate")}</option>
+                <option value="public">{t("noteForm.visibilityPublic")}</option>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Favori</Label>
+              <Label>{t("noteForm.favorite")}</Label>
               <Controller
                 control={control}
                 name="isFavorite"
@@ -311,11 +316,11 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
 
       <div className="flex items-center justify-end gap-3">
         <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isSubmitting}>
-          Vazgeç
+          {t("noteForm.cancel")}
         </Button>
         <Button type="submit" disabled={isSubmitting} size="lg">
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-          {note ? "Değişiklikleri Kaydet" : "Tadım Notunu Kaydet"}
+          {note ? t("noteForm.saveChanges") : t("noteForm.save")}
         </Button>
       </div>
     </form>

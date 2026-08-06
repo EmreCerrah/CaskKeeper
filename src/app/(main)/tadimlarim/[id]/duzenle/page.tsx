@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "@/lib/i18n/server";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -10,7 +11,9 @@ import { AppError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { TastingNoteForm } from "@/components/tasting/TastingNoteForm";
 
-export const metadata: Metadata = { title: "Tadım Notunu Düzenle" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("noteForm.editTitle") };
+}
 export const dynamic = "force-dynamic";
 
 interface EditTastingPageProps {
@@ -35,18 +38,20 @@ export default async function EditTastingPage({ params }: EditTastingPageProps) 
 
   const whiskey = note.whiskey ?? (await whiskeyService.getWhiskeyById(note.whiskeyId));
 
+  const t = getTranslations();
+
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 sm:px-6">
       <Button asChild variant="ghost" size="sm">
         <Link href="/tadimlarim">
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Tadımlarıma Dön
+          {t("noteForm.backToTastings")}
         </Link>
       </Button>
 
       <div>
         <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
-          Tadım Notunu Düzenle
+          {t("noteForm.editTitle")}
         </p>
         <h1 className="mt-1 font-serif text-3xl font-bold">
           {whiskey.brand} <span className="text-gold-gradient">{whiskey.name}</span>

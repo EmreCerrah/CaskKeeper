@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCheck, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface MarkAllReadButtonProps {
   unreadCount: number;
@@ -12,6 +13,7 @@ interface MarkAllReadButtonProps {
 /** "Tümünü okundu işaretle" — okunmamış bildirim yoksa devre dışıdır. */
 export function MarkAllReadButton({ unreadCount }: MarkAllReadButtonProps) {
   const router = useRouter();
+  const t = useTranslations();
   const [busy, setBusy] = useState(false);
 
   async function markAll() {
@@ -33,7 +35,7 @@ export function MarkAllReadButton({ unreadCount }: MarkAllReadButtonProps) {
       ) : (
         <CheckCheck className="h-4 w-4" aria-hidden />
       )}
-      Tümünü okundu işaretle
+      {t("notifications.markAllRead")}
     </Button>
   );
 }

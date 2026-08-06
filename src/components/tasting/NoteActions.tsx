@@ -7,6 +7,7 @@ import { Heart, Pencil, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { notifyOfflineDataChanged } from "@/lib/offline/sync";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface NoteActionsProps {
   noteId: string;
@@ -18,6 +19,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
   const router = useRouter();
   const [favorite, setFavorite] = useState(isFavorite);
   const [busy, setBusy] = useState(false);
+  const t = useTranslations();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   async function toggleFavorite() {
@@ -60,7 +62,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
         size="icon"
         onClick={toggleFavorite}
         disabled={busy}
-        title={favorite ? "Favorilerden çıkar" : "Favorilere ekle"}
+        title={favorite ? t("note.favoriteRemove") : t("note.favoriteAdd")}
         aria-pressed={favorite}
       >
         <Heart
@@ -69,7 +71,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
         />
       </Button>
 
-      <Button asChild variant="ghost" size="icon" title="Düzenle">
+      <Button asChild variant="ghost" size="icon" title={t("note.edit")}>
         <Link href={`/tadimlarim/${noteId}/duzenle`}>
           <Pencil className="h-4 w-4 text-muted-foreground" aria-hidden />
         </Link>
@@ -80,7 +82,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
         size="icon"
         onClick={handleDelete}
         disabled={busy}
-        title={confirmingDelete ? "Silmeyi onaylamak için tekrar tıklayın" : "Sil"}
+        title={confirmingDelete ? t("note.deleteConfirm") : t("note.delete")}
         className={cn(confirmingDelete && "bg-destructive/20")}
       >
         {busy ? (

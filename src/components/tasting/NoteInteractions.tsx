@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/social/UserAvatar";
 import { formatRelativeTime } from "@/lib/utils/date";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { cn } from "@/lib/utils/cn";
 
 const MAX_COMMENT_LENGTH = 1000;
@@ -45,6 +46,8 @@ export function NoteInteractions({
   const [commentCount, setCommentCount] = useState(interactions.commentCount);
   const [likeBusy, setLikeBusy] = useState(false);
 
+  const t = useTranslations();
+  const locale = useLocale();
   const [open, setOpen] = useState(defaultOpen);
   const [comments, setComments] = useState<CommentDTO[] | null>(initialComments ?? null);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -85,14 +88,14 @@ export function NoteInteractions({
         method: liked ? "DELETE" : "POST",
       });
       const payload = await res.json();
-      if (!res.ok) throw new Error(payload.message ?? "Beğeni güncellenemedi");
+      if (!res.ok) throw new Error(payload.message ?? t("interactions.likeFailed"));
 
       const next = payload.data as NoteInteractionsDTO;
       setLiked(next.isLikedByViewer);
       setLikeCount(next.likeCount);
       setCommentCount(next.commentCount);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Beğeni güncellenemedi");
+      setError(err instanceof Error ? err.message : t("interactions.likeFailed"));
     } finally {
       setLikeBusy(false);
     }
@@ -154,9 +157,9 @@ export function NoteInteractions({
           title={
             isAuthenticated
               ? liked
-                ? "Beğeniyi kaldır"
-                : "Beğen"
-              : "Beğenmek için giriş yapmalısınız"
+                ? t("interactions.unlike")
+                : t("interactions.like")
+              : t("interactions.likeSignIn")
           }
         >
           {likeBusy ? (
@@ -168,7 +171,7 @@ export function NoteInteractions({
             />
           )}
           <span className="tabular-nums">{likeCount}</span>
-          <span className="sr-only">beğeni</span>
+          <span className="sr-only">{t("interactions.likeUnit")}</span>
         </Button>
 
         <Button
@@ -176,7 +179,7 @@ export function NoteInteractions({
           size="sm"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          title={open ? "Yorumları gizle" : "Yorumları göster"}
+          title={open ? t("interactions.hideComments") : t("interactions.showComments")}
         >
           <MessageCircle className="h-4 w-4 text-muted-foreground" aria-hidden />
           <span className="tabular-nums">{commentCount}</span>
@@ -187,7 +190,7 @@ export function NoteInteractions({
           href={`/tadimlar/${noteId}`}
           className="ml-auto text-xs text-muted-foreground hover:text-primary"
         >
-          Notu aç
+          {t("interactions.openNote")}
         </Link>
       </div>
 
@@ -198,13 +201,13 @@ export function NoteInteractions({
           {loadingComments && (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-              Yorumlar yükleniyor…
+              {t("interactions.loadingComments")}
             </p>
           )}
 
           {comments?.length === 0 && !loadingComments && (
             <p className="text-sm text-muted-foreground">
-              Henüz yorum yok. İlk yorumu siz yazın.
+              {t("interactions.noComments")}
             </p>
           )}
 
@@ -226,7 +229,7 @@ export function NoteInteractions({
                     {comment.author.name}
                   </Link>
                   <span className="text-muted-foreground">
-                    {formatRelativeTime(comment.createdAt)}
+                    {formatRelativeTime(comment.createdAt, locale, t)}
                   </span>
                 </p>
                 <p className="mt-1 whitespace-pre-wrap break-words text-sm">{comment.body}</p>
@@ -249,7 +252,7 @@ export function NoteInteractions({
               <Textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                placeholder="Bu tadım hakkında ne düşünüyorsunuz?"
+                placeholder={t("interactions.commentPlaceholder")}
                 maxLength={MAX_COMMENT_LENGTH}
                 className="min-h-[64px]"
               />
@@ -263,15 +266,15 @@ export function NoteInteractions({
                   ) : (
                     <Send className="h-4 w-4" aria-hidden />
                   )}
-                  Gönder
+                  {t("interactions.send")}
                 </Button>
               </div>
             </form>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Yorum yazmak için{" "}
+              {t("interactions.signInToCommentBefore")}{" "}
               <Link href="/giris" className="text-primary hover:underline">
-                giriş yapın
+                {t("interactions.signInToCommentLink")}
               </Link>
               .
             </p>

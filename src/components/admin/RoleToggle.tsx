@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ShieldCheck, ShieldOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface RoleToggleProps {
   userId: string;
@@ -15,6 +16,7 @@ interface RoleToggleProps {
 /** Kullanıcıya yönetici yetkisi verir veya kaldırır. */
 export function RoleToggle({ userId, role, isSelf }: RoleToggleProps) {
   const router = useRouter();
+  const t = useTranslations();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +34,7 @@ export function RoleToggle({ userId, role, isSelf }: RoleToggleProps) {
 
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setError(json.message ?? "Rol değiştirilemedi");
+      setError(json.message ?? t("admin.roleFailed"));
       setBusy(false);
       return;
     }
@@ -42,7 +44,7 @@ export function RoleToggle({ userId, role, isSelf }: RoleToggleProps) {
   }
 
   if (isSelf && isAdmin) {
-    return <span className="text-xs text-muted-foreground">Kendi hesabınız</span>;
+    return <span className="text-xs text-muted-foreground">{t("admin.ownAccount")}</span>;
   }
 
   return (
@@ -55,7 +57,7 @@ export function RoleToggle({ userId, role, isSelf }: RoleToggleProps) {
         ) : (
           <ShieldCheck className="h-4 w-4" aria-hidden />
         )}
-        {isAdmin ? "Yetkiyi Kaldır" : "Yönetici Yap"}
+        {isAdmin ? t("admin.roleRevoke") : t("admin.roleGrant")}
       </Button>
       {error && <span className="text-xs text-destructive-foreground/90">{error}</span>}
     </div>

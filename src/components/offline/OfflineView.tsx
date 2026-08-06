@@ -8,11 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { TastingNoteCard } from "@/components/tasting/TastingNoteCard";
 import { WhiskeyCard } from "@/components/whiskey/WhiskeyCard";
 import { readOfflineSnapshot, type OfflineSnapshot } from "@/lib/offline/store";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { INTL_LOCALE, type Locale } from "@/lib/i18n/config";
 
 type Tab = "notes" | "wishlist";
 
-function formatSyncedAt(iso: string): string {
-  return new Date(iso).toLocaleString("tr-TR", {
+function formatSyncedAt(iso: string, locale: Locale): string {
+  return new Date(iso).toLocaleString(INTL_LOCALE[locale], {
     day: "numeric",
     month: "long",
     hour: "2-digit",
@@ -28,6 +30,8 @@ function formatSyncedAt(iso: string): string {
  * Bağlantı yokken açılabilen tek sayfa budur.
  */
 export function OfflineView() {
+  const t = useTranslations();
+  const locale = useLocale();
   const [snapshot, setSnapshot] = useState<OfflineSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>("notes");
@@ -92,22 +96,22 @@ export function OfflineView() {
   );
 
   if (loading) {
-    return <p className="py-16 text-center text-muted-foreground">Yükleniyor…</p>;
+    return <p className="py-16 text-center text-muted-foreground">{t("offline.loading")}</p>;
   }
 
   if (!snapshot) {
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
         <WifiOff className="h-12 w-12 text-primary/50" aria-hidden />
-        <h1 className="font-serif text-2xl font-bold">Çevrimdışı veri yok</h1>
+        <h1 className="font-serif text-2xl font-bold">{t("offline.noDataTitle")}</h1>
         <p className="max-w-md text-muted-foreground">
-          Bu cihaza henüz veri indirilmemiş. Bağlantınız olduğunda panelinizdeki
-          “Verilerimi indir” düğmesiyle tadım notlarınızı ve istek listenizi
-          kaydedebilirsiniz.
+          {t("offline.noDataBody")}
+
+
         </p>
         {online && (
           <Button asChild>
-            <Link href="/panel">Panele git</Link>
+            <Link href="/panel">{t("offline.goToDashboard")}</Link>
           </Button>
         )}
       </div>
@@ -124,19 +128,19 @@ export function OfflineView() {
           <span className="font-serif text-xl font-bold text-gold-gradient">CaskKeeper</span>
           {!online && (
             <Badge variant="outline" className="ml-1">
-              Çevrimdışı
+              {t("common.offline")}
             </Badge>
           )}
         </div>
 
         <div className="rounded-lg border border-border/60 bg-card/60 p-3 text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{meta.userName}</span> hesabının
-          bu cihazdaki kopyası · son senkron {formatSyncedAt(meta.syncedAt)}
+          {t("offline.copyOwner", { name: meta.userName, date: formatSyncedAt(meta.syncedAt, locale) })}
+
         </div>
 
         {online && (
           <Button asChild variant="ghost" size="sm">
-            <Link href="/panel">Bağlantı geri geldi — panele dön</Link>
+            <Link href="/panel">{t("offline.backOnline")}</Link>
           </Button>
         )}
       </header>
@@ -150,7 +154,7 @@ export function OfflineView() {
           onClick={() => setTab("notes")}
         >
           <NotebookPen className="mr-2 h-4 w-4" aria-hidden />
-          Tadımlarım ({notes.length})
+          {t("offline.tabNotes", { count: notes.length })}
         </Button>
         <Button
           role="tab"
@@ -160,7 +164,7 @@ export function OfflineView() {
           onClick={() => setTab("wishlist")}
         >
           <Bookmark className="mr-2 h-4 w-4" aria-hidden />
-          İstek Listem ({wishlist.length})
+          {t("offline.tabWishlist", { count: wishlist.length })}
         </Button>
       </div>
 
@@ -168,7 +172,7 @@ export function OfflineView() {
         {tab === "notes" ? (
           notes.length === 0 ? (
             <p className="py-12 text-center text-muted-foreground">
-              Kayıtlı tadım notu yok.
+              {t("offline.noNotes")}
             </p>
           ) : (
             <div className="space-y-4">
@@ -179,7 +183,7 @@ export function OfflineView() {
           )
         ) : wishlist.length === 0 ? (
           <p className="py-12 text-center text-muted-foreground">
-            İstek listeniz boş.
+            {t("offline.emptyWishlist")}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

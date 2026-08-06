@@ -7,8 +7,12 @@ import { userService } from "@/server/services/UserService";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { OfflineSyncCard } from "@/components/offline/OfflineSyncCard";
+import { getLocale, getTranslations } from "@/lib/i18n/server";
+import { INTL_LOCALE } from "@/lib/i18n/config";
 
-export const metadata: Metadata = { title: "Profilim" };
+export function generateMetadata(): Metadata {
+  return { title: getTranslations()("profile.title") };
+}
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
@@ -18,7 +22,9 @@ export default async function ProfilePage() {
   await connectToDatabase();
   const user = await userService.getById(session.userId);
 
-  const memberSince = new Date(user.createdAt).toLocaleDateString("tr-TR", {
+  const t = getTranslations();
+
+  const memberSince = new Date(user.createdAt).toLocaleDateString(INTL_LOCALE[getLocale()], {
     month: "long",
     year: "numeric",
   });
@@ -26,7 +32,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-serif text-3xl font-bold">Profilim</h1>
+        <h1 className="font-serif text-3xl font-bold">{t("profile.title")}</h1>
         <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <Mail className="h-4 w-4" aria-hidden />
@@ -34,15 +40,15 @@ export default async function ProfilePage() {
           </span>
           <span className="flex items-center gap-1.5">
             <CalendarDays className="h-4 w-4" aria-hidden />
-            {memberSince} tarihinden beri üye
+            {t("profile.memberSince", { date: memberSince })}
           </span>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Profil Bilgileri</CardTitle>
-          <CardDescription>Adınızı, hakkınızda yazınızı ve profil fotoğrafınızı güncelleyin.</CardDescription>
+          <CardTitle className="font-serif">{t("profile.infoTitle")}</CardTitle>
+          <CardDescription>{t("profile.infoDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <ProfileForm user={user} />

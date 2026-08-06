@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
+import { useTranslations } from "@/lib/i18n/client";
 
 interface DeleteWhiskeyButtonProps {
   slug: string;
@@ -14,6 +15,7 @@ interface DeleteWhiskeyButtonProps {
 /** Katalogdan viski siler — iki aşamalı onay ister. */
 export function DeleteWhiskeyButton({ slug, label }: DeleteWhiskeyButtonProps) {
   const router = useRouter();
+  const t = useTranslations();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export function DeleteWhiskeyButton({ slug, label }: DeleteWhiskeyButtonProps) {
         size="icon"
         onClick={handleDelete}
         disabled={busy}
-        title={confirming ? `"${label}" silinecek — onaylamak için tekrar tıklayın` : "Sil"}
+        title={confirming ? t("admin.deleteConfirm", { label }) : t("note.delete")}
         className={cn(confirming && "bg-destructive/20")}
       >
         {busy ? (
