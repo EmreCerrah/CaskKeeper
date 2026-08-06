@@ -37,13 +37,13 @@ export class WhiskeyService {
 
   async getWhiskeyById(id: string): Promise<WhiskeyDTO> {
     const whiskey = await whiskeyRepository.findById(id);
-    if (!whiskey) throw new NotFoundError("Viski bulunamadı");
+    if (!whiskey) throw new NotFoundError("errors.whiskeyNotFound");
     return toWhiskeyDTO(whiskey);
   }
 
   async getWhiskeyBySlug(slug: string): Promise<WhiskeyDTO> {
     const whiskey = await whiskeyRepository.findBySlug(slug);
-    if (!whiskey) throw new NotFoundError(`Viski bulunamadı: ${slug}`);
+    if (!whiskey) throw new NotFoundError("errors.whiskeyNotFoundSlug", { slug });
     return toWhiskeyDTO(whiskey);
   }
 
@@ -86,7 +86,7 @@ export class WhiskeyService {
     // 1. Validation
     const parsed = CreateWhiskeySchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz viski verisi", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidWhiskeyData", parsed.error.flatten().fieldErrors);
     }
 
     const dto = parsed.data;
@@ -98,7 +98,7 @@ export class WhiskeyService {
     // 3. Duplicate kontrolü
     const exists = await whiskeyRepository.existsBySlug(slug);
     if (exists) {
-      throw new ConflictError(`Bu viski katalogda zaten mevcut (slug: ${slug})`);
+      throw new ConflictError("errors.whiskeyAlreadyExists", { slug });
     }
 
     // 4. Kaydet
@@ -113,11 +113,11 @@ export class WhiskeyService {
   async updateWhiskey(id: string, data: unknown): Promise<WhiskeyDTO> {
     const parsed = UpdateWhiskeySchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz viski verisi", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidWhiskeyData", parsed.error.flatten().fieldErrors);
     }
 
     const updated = await whiskeyRepository.update(id, parsed.data as UpdateWhiskeyDTO);
-    if (!updated) throw new NotFoundError("Viski bulunamadı");
+    if (!updated) throw new NotFoundError("errors.whiskeyNotFound");
     return toWhiskeyDTO(updated);
   }
 
@@ -129,11 +129,11 @@ export class WhiskeyService {
   async updateWhiskeyBySlug(slug: string, data: unknown): Promise<WhiskeyDTO> {
     const parsed = UpdateWhiskeySchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz viski verisi", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidWhiskeyData", parsed.error.flatten().fieldErrors);
     }
 
     const existing = await whiskeyRepository.findBySlug(slug);
-    if (!existing) throw new NotFoundError(`Viski bulunamadı: ${slug}`);
+    if (!existing) throw new NotFoundError("errors.whiskeyNotFoundSlug", { slug });
 
     const dto = { ...parsed.data } as UpdateWhiskeyDTO & { slug?: string };
 
@@ -155,25 +155,25 @@ export class WhiskeyService {
       if (nextSlug !== slug) {
         const clash = await whiskeyRepository.findBySlug(nextSlug);
         if (clash) {
-          throw new ConflictError(`Bu bilgilerle başka bir viski zaten mevcut (slug: ${nextSlug})`);
+          throw new ConflictError("errors.whiskeyConflict", { slug: nextSlug });
         }
         dto.slug = nextSlug;
       }
     }
 
     const updated = await whiskeyRepository.update(String(existing._id), dto);
-    if (!updated) throw new NotFoundError("Viski bulunamadı");
+    if (!updated) throw new NotFoundError("errors.whiskeyNotFound");
     return toWhiskeyDTO(updated);
   }
 
   async deleteWhiskey(id: string): Promise<void> {
     const deleted = await whiskeyRepository.delete(id);
-    if (!deleted) throw new NotFoundError("Viski bulunamadı");
+    if (!deleted) throw new NotFoundError("errors.whiskeyNotFound");
   }
 
   async deleteWhiskeyBySlug(slug: string): Promise<void> {
     const existing = await whiskeyRepository.findBySlug(slug);
-    if (!existing) throw new NotFoundError(`Viski bulunamadı: ${slug}`);
+    if (!existing) throw new NotFoundError("errors.whiskeyNotFoundSlug", { slug });
     await whiskeyRepository.delete(String(existing._id));
   }
 }

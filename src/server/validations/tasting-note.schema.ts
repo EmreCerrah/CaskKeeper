@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mk } from "@/lib/i18n/message-key";
 
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
@@ -7,28 +8,28 @@ const objectIdRegex = /^[0-9a-fA-F]{24}$/;
  * `user` alanı istemciden ASLA alınmaz — service katmanı oturumdan ekler.
  */
 export const CreateTastingNoteSchema = z.object({
-  whiskey: z.string().regex(objectIdRegex, "Geçersiz viski kimliği"),
+  whiskey: z.string().regex(objectIdRegex, mk("validation.whiskeyIdInvalid")),
 
-  tastingDate: z.coerce.date({ errorMap: () => ({ message: "Geçerli bir tarih giriniz" }) }),
+  tastingDate: z.coerce.date({ errorMap: () => ({ message: mk("validation.tastingDateRequired") }) }),
 
   rating: z
-    .number({ invalid_type_error: "Puan sayı olmalı" })
-    .min(0, "Puan 0'dan küçük olamaz")
-    .max(100, "Puan 100'den büyük olamaz"),
+    .number({ invalid_type_error: mk("validation.ratingNumber") })
+    .min(0, mk("validation.ratingRange"))
+    .max(100, mk("validation.ratingRange")),
 
   noseTags: z.array(z.string().trim()).default([]),
-  noseNotes: z.string().max(1000, "Burun notu en fazla 1000 karakter olabilir").optional().or(z.literal("")),
+  noseNotes: z.string().max(1000, mk("validation.noseNotesMax")).optional().or(z.literal("")),
 
   palateTags: z.array(z.string().trim()).default([]),
-  palateNotes: z.string().max(1000, "Damak notu en fazla 1000 karakter olabilir").optional().or(z.literal("")),
+  palateNotes: z.string().max(1000, mk("validation.palateNotesMax")).optional().or(z.literal("")),
 
   finishTags: z.array(z.string().trim()).default([]),
-  finishNotes: z.string().max(1000, "Bitiş notu en fazla 1000 karakter olabilir").optional().or(z.literal("")),
+  finishNotes: z.string().max(1000, mk("validation.finishNotesMax")).optional().or(z.literal("")),
   finishLength: z.enum(["short", "medium", "long"], {
-    errorMap: () => ({ message: "Bitiş uzunluğu seçiniz" }),
+    errorMap: () => ({ message: mk("validation.finishLengthRequired") }),
   }),
 
-  personalNotes: z.string().max(2000, "Kişisel notlar en fazla 2000 karakter olabilir").optional().or(z.literal("")),
+  personalNotes: z.string().max(2000, mk("validation.personalNotesMax")).optional().or(z.literal("")),
   visibility: z.enum(["private", "public"]).default("private"),
   isFavorite: z.boolean().default(false),
 });

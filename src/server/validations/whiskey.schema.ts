@@ -1,20 +1,21 @@
 import { z } from "zod";
+import { mk } from "@/lib/i18n/message-key";
 
 // ---------------------------------------------------------------------------
 // Temel Whiskey Oluşturma Şeması (API endpoint'i için)
 // ---------------------------------------------------------------------------
 
 export const CreateWhiskeySchema = z.object({
-  brand:          z.string().min(2, "Marka adı en az 2 karakter olmalı").trim(),
-  name:           z.string().min(2, "Ürün adı en az 2 karakter olmalı").trim(),
+  brand:          z.string().min(2, mk("validation.brandMin")).trim(),
+  name:           z.string().min(2, mk("validation.whiskeyNameMin")).trim(),
   // Damıtımevi zorunludur: katalog kimliğinin (slug) parçasıdır ve aynı
   // marka/ürün adıyla farklı üreticileri ayırt etmeyi sağlar.
-  distillery:     z.string().min(2, "Damıtımevi zorunludur").trim(),
-  type:           z.string().min(2, "Tip zorunludur").trim(),
-  region:         z.string().min(2, "Bölge zorunludur").trim(),
+  distillery:     z.string().min(2, mk("validation.distilleryRequired")).trim(),
+  type:           z.string().min(2, mk("validation.typeRequired")).trim(),
+  region:         z.string().min(2, mk("validation.regionRequired")).trim(),
   country:        z.string().trim().default("Scotland"),
   subRegion:      z.string().trim().optional(),
-  abv:            z.number().min(0, "ABV negatif olamaz").max(100, "ABV 100'ü geçemez"),
+  abv:            z.number().min(0, mk("validation.abvRange")).max(100, mk("validation.abvRange")),
   age:            z.number().int().positive().optional(),
   caskType:       z.string().trim().optional(),
   bottlingYear:   z.number().int().min(1700).max(new Date().getFullYear()).optional(),
@@ -23,8 +24,8 @@ export const CreateWhiskeySchema = z.object({
   description:    z.string().trim().optional(),
   flavorProfile:  z.array(z.string().trim()).default([]),
   awards:         z.array(z.string().trim()).default([]),
-  imageUrl:       z.string().url("Geçerli bir URL giriniz").optional(),
-  officialUrl:    z.string().url("Geçerli bir URL giriniz").optional(),
+  imageUrl:       z.string().url(mk("validation.url")).optional(),
+  officialUrl:    z.string().url(mk("validation.url")).optional(),
   tags:           z.array(z.string().trim().toLowerCase()).default([]),
   externalId:     z.string().trim().optional(),
   source:         z.string().default("manual"),

@@ -7,8 +7,9 @@ is known.
 > Update rule: when a feature lands on `main`, tick its box and record the PR
 > number. When you notice new technical debt, add it to the relevant section.
 
-**Last updated:** 2026-07-31 · **Status:** all planned phases complete, ready for
-production (see [What's Next](#whats-next))
+**Last updated:** 2026-08-06 · **Status:** live at
+<https://cask-keeper.vercel.app>; all planned phases complete, remaining work is
+hardening (see [What's Next](#whats-next))
 
 ---
 
@@ -48,6 +49,11 @@ experiences**.
 | Mobile optimisation | ✅ Done | #15 |
 | Production readiness (Vercel + Atlas) & README | ✅ Done | #16 |
 | PWA — installable + opt-in offline access | ✅ Done | #17 |
+| Database URL checked at connect time, not at import | ✅ Done | #20 |
+| Rate limiting on the authentication endpoints | ✅ Done | #21 |
+| Bilingual interface (Turkish/English) | ✅ Done | #18, #19, #22, #23 |
+| Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
+| Bilingual server messages | ✅ Done | #24 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -208,6 +214,66 @@ self-hosting.
 > time the app was open. Periodic Background Sync would change that, but it is
 > Chromium-only and needs the app to be installed — not worth the dependency.
 
+## Bilingual interface ✅ (PRs #18, #19, #22, #23)
+
+The interface is Turkish and English. No i18n library was added — the need is a
+flat key/value dictionary and a cookie, which is roughly a hundred lines.
+
+- [x] `lib/i18n/dictionaries/tr.ts` is the **source** language; `en.ts` is typed
+      against it, so a missing or extra key is a **compile error**. Translation
+      cannot silently fall behind
+- [x] Locale resolution: cookie (`caskkeeper-locale`) → `Accept-Language` →
+      **English**. The last step is deliberate: a visitor who reads neither
+      header language gets English rather than a Turkish interface they cannot use
+- [x] `getTranslations()` in server components, `useTranslations()` on the
+      client; the same `t(key, params)` signature on both sides
+- [x] Dates follow the interface, not the server: `INTL_LOCALE` maps tr→`tr-TR`
+      and en→`en-GB`. `lib/utils/date.ts` takes the locale as a **parameter** —
+      it is called from both sides and cannot read the cookie itself
+- [x] Module-level Zod schemas and constant tables became functions taking `t`
+      (`buildXSchema(t)` + `useMemo`), because a hook cannot run at module level
+- [x] **URLs stay Turkish** (`/viskiler`, `/tadimlarim`, `/panel`). Translating
+      them would break every link already shared from the live site
+
+> `lib/i18n/untranslated.test.ts` is the guard that makes this stick. Missing
+> translation is a **silent** failure — the build passes, the page renders, only
+> the language is wrong. The scan rejects hardcoded JSX text *in any language*,
+> string literals carrying Turkish-specific letters, and static
+> `export const metadata = { title }` in pages (a fixed title cannot follow the
+> locale). It has caught three real leaks so far. Strengthen it, never weaken it.
+
+## Bilingual server messages ✅ (PR #24)
+
+The interface was fully translated while **everything the server said was still
+Turkish** — 77 messages across services, Zod schemas and `lib/errors.ts`. The
+client prints the server's `message` field directly, so an English interface
+turned Turkish at exactly the moment the user got stuck.
+
+- [x] Services throw a **translation key**, not a sentence:
+      `throw new NotFoundError("errors.tastingNoteNotFound")`. The error classes
+      take a `TranslationKey`, so free text no longer compiles
+- [x] The language is resolved in `handleApiError` — the HTTP layer, where a
+      request-scoped concern belongs. The business layer stays unaware of locale
+      and no service signature grew a `t` parameter
+- [x] Zod messages go through `mk()` (`lib/i18n/message-key.ts`), which types a
+      plain string as a key; `handleApiError` also translates the per-field
+      `fieldErrors` values
+- [x] Parameterised messages keep working —
+      `new NotFoundError("errors.whiskeyNotFoundSlug", { slug })`
+- [x] Client forms and server schemas now **share** one `validation.*` namespace.
+      The same rule was previously worded in two places and could drift
+- [x] Two new scan rules: every `errors.*` / `validation.*` literal must exist in
+      the dictionary, and no Turkish string may return to the service or schema
+      layer
+
+> `import type` matters here: the dictionary type reaches `lib/errors.ts`
+> without the dictionary reaching the bundle, so `session.ts` still runs in the
+> Edge runtime that powers `middleware.ts`.
+>
+> Deliberately out of scope: **success** messages
+> (`createResponse(user, "Giriş başarılı")`, 36 call sites) are still Turkish.
+> Nothing in the client displays them — only the error path reaches the screen.
+
 ---
 
 ## What's Next
@@ -217,8 +283,10 @@ items to close before going live, or immediately after. In priority order:
 
 | # | Work | Why | Size |
 |---|---|---|---|
+| 1 | Move the Atlas data to the `caskkeeper` database | Live data still sits in `test`, where Mongoose silently put it | Small — a dump/restore and an env change |
 | 2 | `next@16` upgrade | The remaining HIGH advisories only close there | Large — async API migration, its own slice |
 | 3 | Repository integration tests | The queries themselves are untested | Medium |
+| 4 | Commit an ESLint config | `next lint` asks an interactive setup question, so CI has **no lint step** | Small |
 
 Details in the technical debt section below.
 
@@ -249,7 +317,7 @@ have** (each verified against the codebase):
 | Server Actions CVEs | `"use server"` is never used |
 | `next/image` / Image Optimizer | `next/image` is not used (see item 7) |
 | rewrites SSRF / request smuggling | No rewrites in `next.config.mjs` |
-| Pages Router + i18n middleware bypass | App Router, no i18n |
+| Pages Router + i18n middleware bypass | App Router; the interface is bilingual but Next's built-in i18n routing is not used — the locale is a cookie, not a URL segment |
 | CSP nonce / `beforeInteractive` XSS | Neither is used |
 
 The ones that could genuinely apply are the RSC-related DoS/cache-poisoning items;
@@ -265,6 +333,16 @@ repository, not from users.
 Repositories are mocked in the test suite, so the queries themselves (filters,
 aggregations, populates) are out of scope. These need to be tested against real
 queries with `mongodb-memory-server`.
+
+#### 4. The same validation rules are written twice — *low*
+Every form defines its own Zod schema (`buildRegisterSchema` in `RegisterForm`)
+alongside the server's (`RegisterSchema` in `server/validations`). PR #24 merged
+the **wording** — both sides now read from one `validation.*` namespace — but not
+the **rules**: a change from `min(2)` to `min(3)` still has to be made in two
+places, and nothing fails if you only make it once. Sharing the schema itself is
+the real fix and deserves its own slice, because the two are not identical
+(the client takes a date as a string, adds a password-confirm field, and omits
+fields the session supplies).
 
 #### 5. The import script bypasses the architecture — *low*
 `scripts/import-whiskeys.ts` writes straight to the Mongoose model instead of
@@ -283,6 +361,26 @@ Whisky images load through a plain `<img>`. The reason: catalogue data comes fro
 arbitrary external sources, so whitelisting every new domain in `next.config.mjs`
 does not scale. The `WhiskeyImage` component handles broken and missing images
 with a fallback.
+
+#### 8. Live data still lives in the `test` database — *medium, operational*
+The first Atlas connection string carried no database name, so Mongoose silently
+wrote to `test` — where production data still is. `MONGODB_URI` currently ends in
+`/test` to keep the site working. Moving it is a dump/restore
+(`mongodump --nsFrom="test.*" --nsTo="caskkeeper.*"`), then `npm run db:indexes`,
+then updating the Vercel variable and redeploying; keep `test` around for a few
+days afterwards. `resolveConnectionString()` (PR #20) makes the original mistake
+impossible to repeat.
+
+#### 9. No ESLint configuration — *low*
+`next lint` asks an interactive setup question when no config exists, which is
+why the CI workflow runs the tests and the build but **not** lint. Committing an
+`.eslintrc` would let that step be added.
+
+#### 10. `tsconfig.tsbuildinfo` is tracked — *low, but noisy*
+The TypeScript incremental build cache was committed in PR #23 and is missing
+from `.gitignore`, so it reappears as a modified file after every
+`npm run build` and leaks into unrelated diffs. It should be untracked
+(`git rm --cached`) and ignored.
 
 ### Resolved
 
@@ -397,9 +495,13 @@ Model        Mongoose schemas
   a Java/Spring Boot backend easier.
 - Validation is **Zod**; error classes live in `src/lib/errors.ts` and routes
   return consistent responses through `handleApiError`.
-- **Interface text is Turkish**; code, variables and file names are English.
-  Documentation is English — the interface addresses users, the docs address
-  contributors.
+- **The interface is Turkish and English**; code, variables and file names are
+  English, comments in code are Turkish. Documentation is English — the
+  interface addresses users, the docs address contributors.
+- **No user-facing text is written in a service, a schema or a route.** They
+  carry translation keys; `handleApiError` turns them into sentences in the
+  language of the request. The error classes only accept a `TranslationKey`, so
+  a hardcoded sentence does not compile.
 - **Avoid N+1 queries on list screens** — fetch relations in batches.
 - Touch targets are **at least 44px** on mobile (WCAG 2.5.5); desktop sizing is
   preserved via `md:`. Information is **never conveyed by colour alone**.

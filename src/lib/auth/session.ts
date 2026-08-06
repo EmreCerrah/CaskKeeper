@@ -80,7 +80,7 @@ export async function requireSession(): Promise<SessionPayload> {
 export async function requireAdmin(): Promise<SessionPayload> {
   const session = await requireSession();
   if (session.role !== "admin") {
-    throw new ForbiddenError("Bu işlem için yönetici yetkisi gerekli");
+    throw new ForbiddenError("errors.adminRequired");
   }
   return session;
 }

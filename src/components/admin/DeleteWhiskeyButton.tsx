@@ -33,7 +33,7 @@ export function DeleteWhiskeyButton({ slug, label }: DeleteWhiskeyButtonProps) {
     const json = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      setError(json.message ?? "Silinemedi");
+      setError(json.message ?? t("admin.deleteFailed"));
       setBusy(false);
       setConfirming(false);
       return;

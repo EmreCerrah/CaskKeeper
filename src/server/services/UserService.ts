@@ -20,7 +20,7 @@ import type { IUser } from "../models/User";
 export class UserService {
   async getById(id: string): Promise<UserDTO> {
     const user = await userRepository.findById(id);
-    if (!user) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!user) throw new NotFoundError("errors.userNotFound");
     return toUserDTO(user);
   }
 
@@ -31,11 +31,11 @@ export class UserService {
    */
   async getPublicProfile(userId: string, viewerId?: string): Promise<PublicProfileDTO> {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      throw new NotFoundError("Kullanıcı bulunamadı");
+      throw new NotFoundError("errors.userNotFound");
     }
 
     const user = await userRepository.findById(userId);
-    if (!user) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!user) throw new NotFoundError("errors.userNotFound");
 
     const isOwnProfile = viewerId === userId;
 
@@ -130,32 +130,32 @@ export class UserService {
    */
   async setRole(actorId: string, targetId: string, role: "user" | "admin"): Promise<UserDTO> {
     if (!mongoose.Types.ObjectId.isValid(targetId)) {
-      throw new NotFoundError("Kullanıcı bulunamadı");
+      throw new NotFoundError("errors.userNotFound");
     }
 
     const target = await userRepository.findById(targetId);
-    if (!target) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!target) throw new NotFoundError("errors.userNotFound");
 
     if (actorId === targetId && role === "user") {
-      throw new ForbiddenError("Kendi yönetici yetkinizi kaldıramazsınız");
+      throw new ForbiddenError("errors.cannotDemoteSelf");
     }
 
     if (target.role === "admin" && role === "user") {
       const adminCount = await userRepository.countAdmins();
       if (adminCount <= 1) {
-        throw new ForbiddenError("Sistemdeki son yöneticinin yetkisi kaldırılamaz");
+        throw new ForbiddenError("errors.cannotDemoteLastAdmin");
       }
     }
 
     const updated = await userRepository.updateRole(targetId, role);
-    if (!updated) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!updated) throw new NotFoundError("errors.userNotFound");
     return toUserDTO(updated);
   }
 
   async updateProfile(userId: string, data: unknown): Promise<UserDTO> {
     const parsed = UpdateProfileSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz profil bilgileri", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidProfile", parsed.error.flatten().fieldErrors);
     }
 
     // Boş string'leri alanı temizleme talebi olarak yorumla
@@ -166,7 +166,7 @@ export class UserService {
     if (profilePicture !== undefined) update.profilePicture = profilePicture;
 
     const updated = await userRepository.update(userId, update);
-    if (!updated) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!updated) throw new NotFoundError("errors.userNotFound");
     return toUserDTO(updated);
   }
 }

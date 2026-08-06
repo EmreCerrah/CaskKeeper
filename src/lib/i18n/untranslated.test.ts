@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
+import { getDictionary } from "./translate";
 
 /**
  * @file untranslated.test.ts
@@ -55,13 +56,18 @@ function stripComments(source: string): string {
     .replace(/^\s*\/\/.*$/gm, ""); // satır yorumu
 }
 
-function walk(dir: string, acc: string[] = []): string[] {
+function walk(dir: string, acc: string[] = [], extension = ".tsx"): string[] {
   for (const entry of readdirSync(dir)) {
     const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, acc);
-    else if (entry.endsWith(".tsx")) acc.push(full);
+    if (statSync(full).isDirectory()) walk(full, acc, extension);
+    else if (entry.endsWith(extension) && !entry.endsWith(".test" + extension)) acc.push(full);
   }
   return acc;
+}
+
+/** Dosya listesini repo köküne göre, eğik çizgili yola çevirir. */
+function relativePaths(files: string[]): string[] {
+  return files.map((f) => path.relative(ROOT, f).split(path.sep).join("/"));
 }
 
 /**
@@ -112,9 +118,7 @@ function findUntranslated(source: string): string[] {
 }
 
 describe("çevrilmemiş arayüz metni", () => {
-  const files = SCAN_DIRS.flatMap((dir) => walk(path.join(ROOT, dir))).map((f) =>
-    path.relative(ROOT, f).split(path.sep).join("/")
-  );
+  const files = relativePaths(SCAN_DIRS.flatMap((dir) => walk(path.join(ROOT, dir))));
 
   it("taranacak dosya bulur (tarama sessizce boşa düşmemeli)", () => {
     expect(files.length).toBeGreaterThan(50);
@@ -158,5 +162,68 @@ describe("çevrilmemiş arayüz metni", () => {
     }
 
     expect(stale.join("\n")).toBe("");
+  });
+});
+
+/**
+ * Sunucu tarafı ayrı bir yüzey ve ayrı bir sızıntı yolu.
+ *
+ * Servisler kullanıcıya metin değil ÇEVİRİ ANAHTARI fırlatır; çeviri
+ * handleApiError'da isteğin dilinde yapılır. Tipli constructor'lar ve mk()
+ * yanlış anahtarı derleme zamanında yakalar — buradaki iki kural derlemenin
+ * göremediğini kapatıyor: sözlükten silinen bir anahtar (kullanıcı ham
+ * `errors.foo` görür) ve katmana geri sızan serbest Türkçe metin.
+ */
+describe("sunucu mesajları", () => {
+  const SERVER_DIRS = ["src/server/services", "src/server/validations"];
+  const KEY_DIRS = ["src/server", "src/lib", "src/app", "src/components"];
+
+  /** `"errors.…"` / `"validation.…"` biçimindeki anahtar kullanımları. */
+  const KEY_LITERAL = /["'](?:(errors|validation)\.[A-Za-z0-9_]+)["']/g;
+
+  it("kullanılan her hata/doğrulama anahtarı sözlükte vardır", () => {
+    const dictionary = getDictionary("tr") as Record<string, string>;
+    const missing: string[] = [];
+    let checked = 0;
+
+    const files = KEY_DIRS.flatMap((dir) => [
+      ...relativePaths(walk(path.join(ROOT, dir), [], ".ts")),
+      ...relativePaths(walk(path.join(ROOT, dir), [], ".tsx")),
+    ]);
+
+    for (const file of files) {
+      const source = stripComments(readFileSync(path.join(ROOT, file), "utf8"));
+      for (const match of source.matchAll(KEY_LITERAL)) {
+        checked += 1;
+        const key = match[0].slice(1, -1);
+        if (!(key in dictionary)) missing.push(`${file}: ${key}`);
+      }
+    }
+
+    expect(missing.join("\n")).toBe("");
+    // Tarama sessizce boşa düşmemeli: yol değişirse hiçbir anahtar bulunmaz ve
+    // test "geçer" — o hâlde koruduğu şey de kalmaz.
+    expect(checked).toBeGreaterThan(50);
+  });
+
+  it("servis ve şema katmanında Türkçe kullanıcı metni kalmamıştır", () => {
+    const offenders: string[] = [];
+    const serverFiles = SERVER_DIRS.flatMap((dir) => relativePaths(walk(path.join(ROOT, dir), [], ".ts")));
+    expect(serverFiles.length).toBeGreaterThan(10);
+
+    for (const file of serverFiles) {
+      const lines = stripComments(readFileSync(path.join(ROOT, file), "utf8")).split(/\r?\n/);
+
+      lines.forEach((line, index) => {
+        // console.* geliştiriciye bakar; proje kuralı gereği Türkçe kalır.
+        if (line.includes("console.")) return;
+
+        for (const match of line.matchAll(STRING_LITERAL)) {
+          if (TURKISH.test(match[2])) offenders.push(`${file}\n    ${index + 1}: ${match[0]}`);
+        }
+      });
+    }
+
+    expect(offenders.join("\n\n")).toBe("");
   });
 });

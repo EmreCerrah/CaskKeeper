@@ -49,12 +49,12 @@ export class TastingNoteService {
   /** Not sahibi değilse NotFound gibi davranmayız — Forbidden ayrımı loglama için değerli. */
   async getNoteForUser(noteId: string, userId: string): Promise<TastingNoteDTO> {
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
-      throw new NotFoundError("Tadım notu bulunamadı");
+      throw new NotFoundError("errors.tastingNoteNotFound");
     }
     const note = await tastingNoteRepository.findById(noteId);
-    if (!note) throw new NotFoundError("Tadım notu bulunamadı");
+    if (!note) throw new NotFoundError("errors.tastingNoteNotFound");
     if (String(note.user) !== userId) {
-      throw new ForbiddenError("Bu tadım notuna erişim yetkiniz yok");
+      throw new ForbiddenError("errors.tastingNoteForbidden");
     }
     return toTastingNoteDTO(note);
   }
@@ -97,15 +97,15 @@ export class TastingNoteService {
    */
   async getPublicNote(noteId: string, viewerId?: string): Promise<TastingNoteDTO> {
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
-      throw new NotFoundError("Tadım notu bulunamadı");
+      throw new NotFoundError("errors.tastingNoteNotFound");
     }
 
     const note = await tastingNoteRepository.findById(noteId);
-    if (!note) throw new NotFoundError("Tadım notu bulunamadı");
+    if (!note) throw new NotFoundError("errors.tastingNoteNotFound");
 
     const authorId = String(note.user);
     if (note.visibility !== "public" && authorId !== viewerId) {
-      throw new NotFoundError("Tadım notu bulunamadı");
+      throw new NotFoundError("errors.tastingNoteNotFound");
     }
 
     const dto = toTastingNoteDTO(note);
@@ -162,12 +162,12 @@ export class TastingNoteService {
   async createNote(userId: string, data: unknown): Promise<TastingNoteDTO> {
     const parsed = CreateTastingNoteSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz tadım notu", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidTastingNote", parsed.error.flatten().fieldErrors);
     }
 
     // Katalogda gerçekten var olan bir viskiye not yazılabilir
     const whiskey = await whiskeyRepository.findById(parsed.data.whiskey);
-    if (!whiskey) throw new NotFoundError("Viski katalogda bulunamadı");
+    if (!whiskey) throw new NotFoundError("errors.whiskeyNotInCatalogue");
 
     const note = await tastingNoteRepository.create(userId, parsed.data);
     return toTastingNoteDTO(note);
@@ -176,14 +176,14 @@ export class TastingNoteService {
   async updateNote(noteId: string, userId: string, data: unknown): Promise<TastingNoteDTO> {
     const parsed = UpdateTastingNoteSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz tadım notu", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidTastingNote", parsed.error.flatten().fieldErrors);
     }
 
     // Sahiplik kontrolü
     await this.getNoteForUser(noteId, userId);
 
     const updated = await tastingNoteRepository.update(noteId, parsed.data);
-    if (!updated) throw new NotFoundError("Tadım notu bulunamadı");
+    if (!updated) throw new NotFoundError("errors.tastingNoteNotFound");
     return toTastingNoteDTO(updated);
   }
 
@@ -192,7 +192,7 @@ export class TastingNoteService {
     await this.getNoteForUser(noteId, userId);
 
     const deleted = await tastingNoteRepository.delete(noteId);
-    if (!deleted) throw new NotFoundError("Tadım notu bulunamadı");
+    if (!deleted) throw new NotFoundError("errors.tastingNoteNotFound");
 
     // Nota bağlı beğeni, yorum ve bildirimler artık öksüz kalmamalı
     await interactionService.removeNoteInteractions(noteId);

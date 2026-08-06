@@ -19,17 +19,17 @@ const buildRegisterSchema = (t: Translator) =>
     .object({
       name: z
         .string()
-        .min(2, t("auth.validation.nameMin"))
-        .max(60, t("auth.validation.nameMax")),
-      email: z.string().email(t("auth.validation.email")),
+        .min(2, t("validation.nameMin"))
+        .max(60, t("validation.nameMax")),
+      email: z.string().email(t("validation.email")),
       password: z
         .string()
-        .min(8, t("auth.validation.passwordMin"))
-        .max(72, t("auth.validation.passwordMax")),
+        .min(8, t("validation.passwordMin"))
+        .max(72, t("validation.passwordMax")),
       passwordConfirm: z.string(),
     })
     .refine((data) => data.password === data.passwordConfirm, {
-      message: t("auth.validation.passwordMismatch"),
+      message: t("validation.passwordMismatch"),
       path: ["passwordConfirm"],
     });
 
