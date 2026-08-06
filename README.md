@@ -7,14 +7,15 @@ dram actually tasted to you, and watch your palate evolve over time.
 > commerce and no stock management anywhere in the product — the entire domain is
 > *what you tasted, and what you thought of it*.
 
-The interface is fully **Turkish**; the codebase (identifiers, files, comments in
-code) is English.
+The interface is available in **Turkish and English**; the codebase (identifiers,
+files) is English.
 
 ---
 
 ## Table of contents
 
 - [What it does](#what-it-does)
+- [Languages](#languages)
 - [How it is built](#how-it-is-built)
 - [Tech stack](#tech-stack)
 - [Getting started](#getting-started)
@@ -87,6 +88,37 @@ This separation is the central rule of the product and shapes the whole data mod
 
 ---
 
+## Languages
+
+The interface is Turkish and English, switchable from the top bar. No i18n
+library was added — the need is a flat dictionary and a cookie.
+
+**Which language you get:** an explicit choice (the `caskkeeper-locale` cookie)
+wins; otherwise the browser's `Accept-Language` header; otherwise **English**.
+That last step is deliberate — someone whose browser asks for neither language
+gets an interface they can read rather than one they cannot.
+
+**What follows the language:**
+
+- Every screen, including validation messages and empty states.
+- **Server responses.** Services throw a translation key rather than a sentence,
+  and `handleApiError` renders it in the language of the request — so an
+  English interface stays English at the moment something goes wrong, which is
+  exactly when a foreign sentence is least welcome. Field-level validation
+  errors are translated too.
+- **Dates and numbers**, via `Intl` (`tr-TR` / `en-GB`).
+
+**What does not:** URLs stay Turkish (`/viskiler`, `/tadimlarim`, `/panel`).
+Translating them would break every link already shared from the live site.
+
+Adding a key to `lib/i18n/dictionaries/tr.ts` without adding it to `en.ts` is a
+**compile error** — `en.ts` is typed against the Turkish dictionary. A test suite
+(`lib/i18n/untranslated.test.ts`) additionally rejects hardcoded interface text,
+untranslatable static page titles, and translation keys missing from the
+dictionary.
+
+---
+
 ## How it is built
 
 ### Layered architecture
@@ -116,6 +148,11 @@ The rules that keep this honest:
   behind the DTO contract.
 - **Validation is Zod**, error classes live in `src/lib/errors.ts`, and routes
   translate them into consistent HTTP responses through `handleApiError`.
+- **No layer below the route writes user-facing prose.** Services and schemas
+  carry translation keys; the language of a request is resolved once, in
+  `handleApiError`. The error classes accept only a `TranslationKey`, so a
+  hardcoded sentence fails the build rather than reaching a user in the wrong
+  language.
 - **Avoid N+1 on list screens** — relations are fetched in batches.
 
 ### Security model
@@ -331,7 +368,10 @@ Deleting a tasting note cascades to its likes, comments and notifications.
 
 ## API reference
 
-All responses share one envelope: `{ success, message?, data?, error? }`.
+All responses share one envelope: `{ success, message?, data?, error? }`. On a
+failure, `message` is rendered in the language of the request (see
+[Languages](#languages)) and `error` carries a stable code — or, for a validation
+failure, the per-field messages.
 
 | Method | Path | Description | Auth |
 |---|---|---|---|
@@ -340,8 +380,10 @@ All responses share one envelope: `{ success, message?, data?, error? }`.
 | POST | `/api/auth/logout` | Sign out | — |
 | GET | `/api/auth/me` | Current user | ✔ |
 | GET | `/api/whiskeys` | Catalogue — search, filters, pagination | — |
-| POST | `/api/whiskeys` | Create a whisky | — |
+| POST | `/api/whiskeys` | Add a whisky to the catalogue | ✔ admin |
 | GET | `/api/whiskeys/[slug]` | Whisky detail | — |
+| PATCH | `/api/whiskeys/[slug]` | Update a whisky | ✔ admin |
+| DELETE | `/api/whiskeys/[slug]` | Delete a whisky | ✔ admin |
 | GET/POST | `/api/tasting-notes` | My notes / create a note | ✔ |
 | GET/PATCH/DELETE | `/api/tasting-notes/[id]` | Note detail / update / delete | ✔ |
 | POST/DELETE | `/api/tasting-notes/[id]/like` | Like / unlike (public notes only) | ✔ |
@@ -391,6 +433,9 @@ chasing coverage:
   with several terms in one category not scoring higher for it.
 - Comparison: untrusted URL parsing (duplicates, blanks, the three-item cap) and
   the shared-aroma intersection.
+- Translation integrity — the two dictionaries carry the same keys, no English
+  entry still contains Turkish, and a source scan rejects hardcoded interface
+  text, static page titles, and keys that are missing from the dictionary.
 
 ---
 

@@ -13,7 +13,7 @@ import mongoose from "mongoose";
 export class FollowService {
   private assertValidId(id: string): void {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new NotFoundError("Kullanıcı bulunamadı");
+      throw new NotFoundError("errors.userNotFound");
     }
   }
 
@@ -21,11 +21,11 @@ export class FollowService {
   async follow(followerId: string, targetId: string): Promise<void> {
     this.assertValidId(targetId);
     if (followerId === targetId) {
-      throw new ValidationError("Kendinizi takip edemezsiniz");
+      throw new ValidationError("errors.cannotFollowSelf");
     }
 
     const target = await userRepository.findById(targetId);
-    if (!target) throw new NotFoundError("Kullanıcı bulunamadı");
+    if (!target) throw new NotFoundError("errors.userNotFound");
 
     await followRepository.create(followerId, targetId);
 

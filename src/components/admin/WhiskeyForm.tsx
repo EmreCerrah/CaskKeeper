@@ -25,14 +25,14 @@ function toList(value?: string): string[] {
 
 const buildWhiskeySchema = (t: Translator) =>
   z.object({
-    brand: z.string().min(2, t("whiskeyForm.brandMin")),
-    name: z.string().min(2, t("whiskeyForm.nameMin")),
-    distillery: z.string().min(2, t("whiskeyForm.distilleryRequired")),
-    type: z.string().min(2, t("whiskeyForm.typeRequired")),
-    region: z.string().min(2, t("whiskeyForm.regionRequired")),
-    country: z.string().min(2, t("whiskeyForm.countryRequired")),
+    brand: z.string().min(2, t("validation.brandMin")),
+    name: z.string().min(2, t("validation.whiskeyNameMin")),
+    distillery: z.string().min(2, t("validation.distilleryRequired")),
+    type: z.string().min(2, t("validation.typeRequired")),
+    region: z.string().min(2, t("validation.regionRequired")),
+    country: z.string().min(2, t("validation.countryRequired")),
     subRegion: z.string().optional(),
-    abv: z.coerce.number().min(0, t("whiskeyForm.abvRange")).max(100, t("whiskeyForm.abvRange")),
+    abv: z.coerce.number().min(0, t("validation.abvRange")).max(100, t("validation.abvRange")),
     age: z.union([z.coerce.number().int().positive(), z.literal("")]).optional(),
     caskType: z.string().optional(),
     bottlingYear: z.union([z.coerce.number().int().min(1700), z.literal("")]).optional(),
@@ -151,7 +151,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
 
     const json = await res.json();
     if (!res.ok || !json.success) {
-      setServerError(json.message ?? "Viski kaydedilemedi");
+      setServerError(json.message ?? t("admin.whiskeySaveFailed"));
       return;
     }
 

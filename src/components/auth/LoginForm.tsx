@@ -20,8 +20,8 @@ import type { Translator } from "@/lib/i18n/translate";
  */
 const buildLoginSchema = (t: Translator) =>
   z.object({
-    email: z.string().email(t("auth.validation.email")),
-    password: z.string().min(1, t("auth.validation.passwordRequired")),
+    email: z.string().email(t("validation.email")),
+    password: z.string().min(1, t("validation.passwordRequired")),
   });
 
 type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>;

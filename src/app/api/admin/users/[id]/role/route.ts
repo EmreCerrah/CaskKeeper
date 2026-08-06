@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 
     const parsed = RoleSchema.safeParse(await req.json());
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz rol", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidRole", parsed.error.flatten().fieldErrors);
     }
 
     const user = await userService.setRole(session.userId, params.id, parsed.data.role);

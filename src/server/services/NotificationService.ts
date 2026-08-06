@@ -79,11 +79,11 @@ export class NotificationService {
   /** Tek bildirimi okundu işaretler. Başkasının bildirimi için NotFound fırlatır. */
   async markRead(notificationId: string, userId: string): Promise<void> {
     if (!mongoose.Types.ObjectId.isValid(notificationId)) {
-      throw new NotFoundError("Bildirim bulunamadı");
+      throw new NotFoundError("errors.notificationNotFound");
     }
 
     const updated = await notificationRepository.markRead(notificationId, userId);
-    if (!updated) throw new NotFoundError("Bildirim bulunamadı");
+    if (!updated) throw new NotFoundError("errors.notificationNotFound");
   }
 
   /** Kullanıcının tüm bildirimlerini okundu işaretler; işaretlenen sayıyı döner. */

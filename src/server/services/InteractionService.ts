@@ -15,15 +15,16 @@ import { tastingNoteRepository } from "../repositories/TastingNoteRepository";
 import { notificationService } from "./NotificationService";
 import { CreateCommentSchema } from "../validations/comment.schema";
 import { ForbiddenError, NotFoundError, ValidationError } from "@/lib/errors";
+import type { TranslationKey } from "@/lib/i18n/translate";
 import { toCommentDTO, type CommentDTO, type NoteInteractionsDTO } from "@/lib/types/dto";
 import type { ITastingNote } from "../models/TastingNote";
 
 export class InteractionService {
   // ---------- Ortak korumalar ----------
 
-  private assertValidId(id: string, message: string): void {
+  private assertValidId(id: string, messageKey: TranslationKey): void {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new NotFoundError(message);
+      throw new NotFoundError(messageKey);
     }
   }
 
@@ -32,11 +33,11 @@ export class InteractionService {
    * Not yoksa ya da herkese açık değilse NotFound fırlatır.
    */
   private async getInteractableNote(noteId: string): Promise<ITastingNote> {
-    this.assertValidId(noteId, "Tadım notu bulunamadı");
+    this.assertValidId(noteId, "errors.tastingNoteNotFound");
 
     const note = await tastingNoteRepository.findById(noteId);
     if (!note || note.visibility !== "public") {
-      throw new NotFoundError("Tadım notu bulunamadı");
+      throw new NotFoundError("errors.tastingNoteNotFound");
     }
     return note;
   }
@@ -46,14 +47,14 @@ export class InteractionService {
    * Yorumları listelemek için kullanılır.
    */
   private async getReadableNote(noteId: string, viewerId?: string): Promise<ITastingNote> {
-    this.assertValidId(noteId, "Tadım notu bulunamadı");
+    this.assertValidId(noteId, "errors.tastingNoteNotFound");
 
     const note = await tastingNoteRepository.findById(noteId);
-    if (!note) throw new NotFoundError("Tadım notu bulunamadı");
+    if (!note) throw new NotFoundError("errors.tastingNoteNotFound");
 
     const isOwner = viewerId !== undefined && String(note.user) === viewerId;
     if (note.visibility !== "public" && !isOwner) {
-      throw new NotFoundError("Tadım notu bulunamadı");
+      throw new NotFoundError("errors.tastingNoteNotFound");
     }
     return note;
   }
@@ -114,7 +115,7 @@ export class InteractionService {
   async addComment(userId: string, noteId: string, data: unknown): Promise<CommentDTO> {
     const parsed = CreateCommentSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz yorum", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidComment", parsed.error.flatten().fieldErrors);
     }
 
     const note = await this.getInteractableNote(noteId);
@@ -141,10 +142,10 @@ export class InteractionService {
    * not sahibinin kendi notundaki yorumları kaldırabilmesi bilinçli bir karardır.
    */
   async deleteComment(commentId: string, userId: string): Promise<void> {
-    this.assertValidId(commentId, "Yorum bulunamadı");
+    this.assertValidId(commentId, "errors.commentNotFound");
 
     const comment = await commentRepository.findById(commentId);
-    if (!comment) throw new NotFoundError("Yorum bulunamadı");
+    if (!comment) throw new NotFoundError("errors.commentNotFound");
 
     const isAuthor = this.resolveAuthorId(comment.user) === userId;
 
@@ -155,7 +156,7 @@ export class InteractionService {
     }
 
     if (!isAuthor && !isNoteOwner) {
-      throw new ForbiddenError("Bu yorumu silme yetkiniz yok");
+      throw new ForbiddenError("errors.commentDeleteForbidden");
     }
 
     await commentRepository.delete(commentId);

@@ -14,7 +14,7 @@ import type { PaginatedResult } from "../repositories/WhiskeyRepository";
 export class WishlistService {
   private assertValidWhiskeyId(whiskeyId: string): void {
     if (!mongoose.Types.ObjectId.isValid(whiskeyId)) {
-      throw new NotFoundError("Viski bulunamadı");
+      throw new NotFoundError("errors.whiskeyNotFound");
     }
   }
 
@@ -23,7 +23,7 @@ export class WishlistService {
     this.assertValidWhiskeyId(whiskeyId);
 
     const whiskey = await whiskeyRepository.findById(whiskeyId);
-    if (!whiskey) throw new NotFoundError("Viski bulunamadı");
+    if (!whiskey) throw new NotFoundError("errors.whiskeyNotFound");
 
     return await wishlistRepository.add(userId, whiskeyId);
   }

@@ -23,18 +23,18 @@ import type { Translator } from "@/lib/i18n/translate";
 // İstemci form şeması — API şemasıyla aynı kurallar, tarih string olarak alınır
 const buildTastingSchema = (t: Translator) =>
   z.object({
-    tastingDate: z.string().min(1, t("noteForm.dateRequired")),
-    rating: z.coerce.number().min(0, t("noteForm.ratingRange")).max(100, t("noteForm.ratingRange")),
+    tastingDate: z.string().min(1, t("validation.tastingDateRequired")),
+    rating: z.coerce.number().min(0, t("validation.ratingRange")).max(100, t("validation.ratingRange")),
     noseTags: z.array(z.string()),
-    noseNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    noseNotes: z.string().max(1000, t("validation.noseNotesMax")).optional(),
     palateTags: z.array(z.string()),
-    palateNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    palateNotes: z.string().max(1000, t("validation.palateNotesMax")).optional(),
     finishTags: z.array(z.string()),
-    finishNotes: z.string().max(1000, t("noteForm.maxChars", { max: 1000 })).optional(),
+    finishNotes: z.string().max(1000, t("validation.finishNotesMax")).optional(),
     finishLength: z.enum(["short", "medium", "long"], {
-      errorMap: () => ({ message: t("noteForm.finishRequired") }),
+      errorMap: () => ({ message: t("validation.finishLengthRequired") }),
     }),
-    personalNotes: z.string().max(2000, t("noteForm.maxChars", { max: 2000 })).optional(),
+    personalNotes: z.string().max(2000, t("validation.personalNotesMax")).optional(),
     visibility: z.enum(["private", "public"]),
     isFavorite: z.boolean(),
   });

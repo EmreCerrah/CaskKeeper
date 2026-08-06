@@ -53,7 +53,11 @@ export function OfflineToggle({ userId, userName, variant = "menu" }: OfflineTog
     } catch (e) {
       setEnabled(!next);
       setOfflineEnabled(!next);
-      setError(e instanceof Error ? e.message : t("offline.actionFailed"));
+      // Ham hata metni çevrilmez (fetch/Cache API'den gelir) — arayüz dili
+      // İngilizceyken Türkçe cümle göstermemek için sabit metne düşülür.
+      // Ayrıntı konsola bırakılır, teşhis için hâlâ orada.
+      console.error("[offline]", e);
+      setError(t("offline.actionFailed"));
     } finally {
       setBusy(false);
     }

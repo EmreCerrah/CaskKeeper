@@ -71,7 +71,9 @@ export function OfflineSyncCard({ userId, userName }: OfflineSyncCardProps) {
     try {
       setMeta(await syncOfflineSnapshot({ userId, userName, force: true }));
     } catch (e) {
-      setError(e instanceof Error ? e.message : t("offline.syncFailed"));
+      // Bkz. OfflineToggle: ham hata metni çevrilemez, konsola bırakılır.
+      console.error("[offline]", e);
+      setError(t("offline.syncFailed"));
     } finally {
       setBusy(false);
     }

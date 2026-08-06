@@ -17,13 +17,13 @@ export class AuthService {
   async register(data: unknown): Promise<UserDTO> {
     const parsed = RegisterSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz kayıt bilgileri", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidRegistration", parsed.error.flatten().fieldErrors);
     }
 
     const { name, email, password } = parsed.data;
 
     if (await userRepository.existsByEmail(email)) {
-      throw new ConflictError("Bu e-posta adresi ile kayıtlı bir hesap zaten var");
+      throw new ConflictError("errors.emailTaken");
     }
 
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
@@ -46,19 +46,19 @@ export class AuthService {
   async login(data: unknown): Promise<UserDTO> {
     const parsed = LoginSchema.safeParse(data);
     if (!parsed.success) {
-      throw new ValidationError("Geçersiz giriş bilgileri", parsed.error.flatten().fieldErrors);
+      throw new ValidationError("errors.invalidLoginData", parsed.error.flatten().fieldErrors);
     }
 
     const { email, password } = parsed.data;
 
     const user = await userRepository.findByEmailWithPassword(email);
     if (!user || !user.passwordHash) {
-      throw new UnauthorizedError("E-posta veya parola hatalı");
+      throw new UnauthorizedError("errors.invalidCredentials");
     }
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
-      throw new UnauthorizedError("E-posta veya parola hatalı");
+      throw new UnauthorizedError("errors.invalidCredentials");
     }
 
     return toUserDTO(user);

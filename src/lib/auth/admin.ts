@@ -23,7 +23,7 @@ export async function requireAdminUser(): Promise<SessionPayload> {
 
   const user = await userRepository.findById(session.userId);
   if (!user || user.role !== "admin") {
-    throw new ForbiddenError("Bu işlem için yönetici yetkisi gerekli");
+    throw new ForbiddenError("errors.adminRequired");
   }
 
   return session;

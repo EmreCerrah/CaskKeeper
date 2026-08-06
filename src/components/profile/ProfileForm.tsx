@@ -18,8 +18,8 @@ const buildProfileSchema = (t: Translator) =>
   z.object({
     name: z
       .string()
-      .min(2, t("auth.validation.nameMin"))
-      .max(60, t("auth.validation.nameMax")),
+      .min(2, t("validation.nameMin"))
+      .max(60, t("validation.nameMax")),
     bio: z.string().max(500, t("profileForm.bioMax")).optional(),
     profilePicture: z.string().url(t("profileForm.urlInvalid")).optional().or(z.literal("")),
   });

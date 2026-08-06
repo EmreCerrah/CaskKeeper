@@ -145,14 +145,6 @@ export const tr = {
   "auth.showPassword": "Parolayı göster",
   "auth.hidePassword": "Parolayı gizle",
 
-  "auth.validation.nameMin": "İsim en az 2 karakter olmalı",
-  "auth.validation.nameMax": "İsim en fazla 60 karakter olabilir",
-  "auth.validation.email": "Geçerli bir e-posta adresi giriniz",
-  "auth.validation.passwordMin": "Parola en az 8 karakter olmalı",
-  "auth.validation.passwordMax": "Parola en fazla 72 karakter olabilir",
-  "auth.validation.passwordRequired": "Parola zorunludur",
-  "auth.validation.passwordMismatch": "Parolalar eşleşmiyor",
-
   // --- Viski kataloğu -----------------------------------------------------
   "catalogue.title": "Viski Kataloğu",
   "catalogue.count": "{count} viski arasından keşfedin.",
@@ -335,6 +327,8 @@ export const tr = {
   "admin.roleGrant": "Yönetici Yap",
   "admin.roleRevoke": "Yetkiyi Kaldır",
   "admin.roleFailed": "Rol değiştirilemedi",
+  "admin.whiskeySaveFailed": "Viski kaydedilemedi",
+  "admin.deleteFailed": "Silinemedi",
   "admin.ownAccount": "Kendi hesabınız",
   "admin.emptyCatalogue": "Katalog boş.",
   "admin.emptyCatalogueHint": "Yeni viski ekleyin veya import script’ini çalıştırın.",
@@ -377,13 +371,6 @@ export const tr = {
   "whiskeyForm.cancel": "Vazgeç",
   "whiskeyForm.create": "Kataloğa Ekle",
   "whiskeyForm.saveChanges": "Değişiklikleri Kaydet",
-  "whiskeyForm.brandMin": "Marka en az 2 karakter olmalı",
-  "whiskeyForm.nameMin": "Ürün adı en az 2 karakter olmalı",
-  "whiskeyForm.distilleryRequired": "Damıtımevi zorunludur",
-  "whiskeyForm.regionRequired": "Bölge zorunludur",
-  "whiskeyForm.countryRequired": "Ülke zorunludur",
-  "whiskeyForm.abvRange": "0-100 arası olmalı",
-  "whiskeyForm.typeRequired": "Tip zorunludur",
 
   // --- İstatistikler ------------------------------------------------------
   "stats.title": "Detaylı İstatistikler",
@@ -426,10 +413,6 @@ export const tr = {
   "noteForm.save": "Tadım Notunu Kaydet",
   "noteForm.saveChanges": "Değişiklikleri Kaydet",
   "noteForm.failed": "Tadım notu kaydedilemedi",
-  "noteForm.dateRequired": "Tadım tarihi zorunludur",
-  "noteForm.ratingRange": "Puan 0-100 arası olmalı",
-  "noteForm.finishRequired": "Bitiş uzunluğu seçiniz",
-  "noteForm.maxChars": "En fazla {max} karakter",
 
   // --- Öneriler -----------------------------------------------------------
   "recommendations.title": "Öneriler",
@@ -512,6 +495,79 @@ export const tr = {
   "home.feature.favorite.body":
     "En sevdiğiniz tadımları işaretleyin, kişisel viski hafızanızı oluşturun.",
   "people.publicNoteCount": "{count} herkese açık tadım",
+
+  // --- Alan doğrulama -----------------------------------------------------
+  // İstemci formları ile sunucu şemaları BU anahtarları paylaşır: aynı kural
+  // iki yerde tanımlı olduğu için metin de iki yerde yazılıydı ve ayrışabilirdi.
+  // İstemci t() ile, sunucu mk() ile aynı anahtara bağlanır.
+  "validation.nameMin": "İsim en az 2 karakter olmalı",
+  "validation.nameMax": "İsim en fazla 60 karakter olabilir",
+  "validation.email": "Geçerli bir e-posta adresi giriniz",
+  "validation.passwordMin": "Parola en az 8 karakter olmalı",
+  "validation.passwordMax": "Parola en fazla 72 karakter olabilir",
+  "validation.passwordRequired": "Parola zorunludur",
+  "validation.passwordMismatch": "Parolalar eşleşmiyor",
+  "validation.bioMax": "Hakkında yazısı en fazla 500 karakter olabilir",
+  "validation.url": "Geçerli bir URL giriniz",
+  "validation.brandMin": "Marka en az 2 karakter olmalı",
+  "validation.whiskeyNameMin": "Ürün adı en az 2 karakter olmalı",
+  "validation.distilleryRequired": "Damıtımevi zorunludur",
+  "validation.typeRequired": "Tip zorunludur",
+  "validation.regionRequired": "Bölge zorunludur",
+  "validation.countryRequired": "Ülke zorunludur",
+  "validation.abvRange": "0-100 arası olmalı",
+  "validation.whiskeyIdInvalid": "Geçersiz viski kimliği",
+  "validation.tastingDateRequired": "Tadım tarihi zorunludur",
+  "validation.ratingNumber": "Puan sayı olmalı",
+  "validation.ratingRange": "Puan 0-100 arası olmalı",
+  "validation.noseNotesMax": "Burun notu en fazla 1000 karakter olabilir",
+  "validation.palateNotesMax": "Damak notu en fazla 1000 karakter olabilir",
+  "validation.finishNotesMax": "Bitiş notu en fazla 1000 karakter olabilir",
+  "validation.finishLengthRequired": "Bitiş uzunluğu seçiniz",
+  "validation.personalNotesMax": "Kişisel notlar en fazla 2000 karakter olabilir",
+  "validation.commentRequired": "Yorum boş olamaz",
+  "validation.commentMax": "Yorum en fazla 1000 karakter olabilir",
+
+  // --- Sunucu hataları ----------------------------------------------------
+  // Servis katmanı bu anahtarları FIRLATIR, metne çevirmez; çeviri isteğin
+  // dilinde handleApiError'da yapılır (bkz. lib/errors.ts).
+  "errors.generic": "Bir hata oluştu",
+  "errors.unexpected": "Beklenmeyen bir hata oluştu",
+  "errors.invalidData": "Geçersiz veri",
+  "errors.notFound": "Kayıt bulunamadı",
+  "errors.conflict": "Bu kayıt zaten mevcut",
+  "errors.forbidden": "Bu işlem için yetkiniz yok",
+  "errors.loginRequired": "Bu işlem için giriş yapmalısınız",
+  "errors.adminRequired": "Bu işlem için yönetici yetkisi gerekli",
+  "errors.tooManyAttempts": "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.",
+
+  "errors.invalidRegistration": "Geçersiz kayıt bilgileri",
+  "errors.invalidLoginData": "Geçersiz giriş bilgileri",
+  "errors.emailTaken": "Bu e-posta adresi ile kayıtlı bir hesap zaten var",
+  "errors.invalidCredentials": "E-posta veya parola hatalı",
+
+  "errors.userNotFound": "Kullanıcı bulunamadı",
+  "errors.cannotFollowSelf": "Kendinizi takip edemezsiniz",
+  "errors.cannotDemoteSelf": "Kendi yönetici yetkinizi kaldıramazsınız",
+  "errors.cannotDemoteLastAdmin": "Sistemdeki son yöneticinin yetkisi kaldırılamaz",
+  "errors.invalidProfile": "Geçersiz profil bilgileri",
+  "errors.invalidRole": "Geçersiz rol",
+
+  "errors.tastingNoteNotFound": "Tadım notu bulunamadı",
+  "errors.tastingNoteForbidden": "Bu tadım notuna erişim yetkiniz yok",
+  "errors.invalidTastingNote": "Geçersiz tadım notu",
+  "errors.whiskeyNotInCatalogue": "Viski katalogda bulunamadı",
+
+  "errors.invalidComment": "Geçersiz yorum",
+  "errors.commentNotFound": "Yorum bulunamadı",
+  "errors.commentDeleteForbidden": "Bu yorumu silme yetkiniz yok",
+  "errors.notificationNotFound": "Bildirim bulunamadı",
+
+  "errors.whiskeyNotFound": "Viski bulunamadı",
+  "errors.whiskeyNotFoundSlug": "Viski bulunamadı: {slug}",
+  "errors.whiskeyAlreadyExists": "Bu viski katalogda zaten mevcut (slug: {slug})",
+  "errors.whiskeyConflict": "Bu bilgilerle başka bir viski zaten mevcut (slug: {slug})",
+  "errors.invalidWhiskeyData": "Geçersiz viski verisi",
 } as const;
 
 export type TranslationKey = keyof typeof tr;

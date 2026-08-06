@@ -60,10 +60,7 @@ export class RateLimitService {
     }
 
     if (used >= rule.limit) {
-      throw new TooManyRequestsError(
-        "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.",
-        rule.windowSeconds
-      );
+      throw new TooManyRequestsError("errors.tooManyAttempts", rule.windowSeconds);
     }
 
     try {
