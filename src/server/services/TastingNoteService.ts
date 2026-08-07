@@ -84,7 +84,10 @@ export class TastingNoteService {
    */
   async getFeed(userId: string, pagination?: TastingNotePaginationOptions): Promise<PaginatedNotes> {
     const followingIds = await followRepository.getFollowingIds(userId);
-    const result = await tastingNoteRepository.findFeed(followingIds, pagination);
+    // Hesabını kapatmış kişilerin notları akıştan düşer. findFeed yazar
+    // id'lerini dışarıdan aldığı için süzmek bir join gerektirmiyor.
+    const activeIds = await userRepository.filterActiveIds(followingIds);
+    const result = await tastingNoteRepository.findFeed(activeIds, pagination);
     return {
       ...result,
       data: await this.withInteractions(result.data.map(toTastingNoteDTO), userId),
@@ -110,9 +113,12 @@ export class TastingNoteService {
 
     const dto = toTastingNoteDTO(note);
 
-    // findById yazarı populate etmez — kart başlığı için ayrıca çekilir
+    // findById yazarı populate etmez — kart başlığı için ayrıca çekilir.
+    // Yazar hesabını kapatmışsa findById null döner; not da görünmemeli,
+    // yoksa gizlenmiş bir profilin yazısı kalıcı bağlantıdan okunabilirdi.
     const author = await userRepository.findById(authorId);
-    if (author) dto.author = toPublicUserDTO(author);
+    if (!author) throw new NotFoundError("errors.tastingNoteNotFound");
+    dto.author = toPublicUserDTO(author);
 
     dto.interactions = await interactionService.getInteractionsForNote(noteId, viewerId);
     return dto;

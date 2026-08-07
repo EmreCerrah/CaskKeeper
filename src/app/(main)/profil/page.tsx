@@ -6,6 +6,7 @@ import { getSession } from "@/lib/auth/session";
 import { userService } from "@/server/services/UserService";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { CloseAccountCard } from "@/components/profile/CloseAccountCard";
 import { OfflineSyncCard } from "@/components/offline/OfflineSyncCard";
 import { getLocale, getTranslations } from "@/lib/i18n/server";
 import { INTL_LOCALE } from "@/lib/i18n/config";
@@ -60,6 +61,8 @@ export default async function ProfilePage() {
       <div id="cevrimdisi" className="scroll-mt-20">
         <OfflineSyncCard userId={session.userId} userName={session.name} />
       </div>
+
+      <CloseAccountCard />
     </div>
   );
 }

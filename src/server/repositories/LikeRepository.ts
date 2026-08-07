@@ -5,6 +5,7 @@
 
 import mongoose from "mongoose";
 import Like, { ILike } from "../models/Like";
+import { ACTIVE_AUTHOR_STAGES } from "./active-author";
 
 export class LikeRepository {
   /** Beğeni ekler. Zaten varsa idempotent davranır; yeni kayıt oluştuysa true döner. */
@@ -28,12 +29,13 @@ export class LikeRepository {
   }
 
   async countByNote(noteId: string): Promise<number> {
-    return await Like.countDocuments({ tastingNote: noteId });
+    return (await this.countByNotes([noteId])).get(noteId) ?? 0;
   }
 
   /**
    * Birden çok notun beğeni sayısını tek aggregate ile döndürür.
    * Liste ekranlarında not başına ayrı sayım yapmamak içindir (N+1 önlenir).
+   * Hesabını kapatmış kullanıcıların beğenileri sayılmaz.
    */
   async countByNotes(noteIds: string[]): Promise<Map<string, number>> {
     if (noteIds.length === 0) return new Map();
@@ -42,6 +44,7 @@ export class LikeRepository {
 
     const rows = await Like.aggregate<{ _id: mongoose.Types.ObjectId; count: number }>([
       { $match: { tastingNote: { $in: objectIds } } },
+      ...ACTIVE_AUTHOR_STAGES,
       { $group: { _id: "$tastingNote", count: { $sum: 1 } } },
     ]);
 

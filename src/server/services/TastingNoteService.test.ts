@@ -14,6 +14,7 @@ vi.mock("../repositories/TastingNoteRepository", () => ({
     findById: vi.fn(),
     findByUser: vi.fn(),
     findByUserAndWhiskey: vi.fn(),
+    findFeed: vi.fn(),
     getStatsByUser: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -24,6 +25,19 @@ vi.mock("../repositories/TastingNoteRepository", () => ({
 vi.mock("../repositories/WhiskeyRepository", () => ({
   whiskeyRepository: {
     findById: vi.fn(),
+  },
+}));
+
+vi.mock("../repositories/UserRepository", () => ({
+  userRepository: {
+    findById: vi.fn(),
+    filterActiveIds: vi.fn(),
+  },
+}));
+
+vi.mock("../repositories/FollowRepository", () => ({
+  followRepository: {
+    getFollowingIds: vi.fn(),
   },
 }));
 
@@ -42,6 +56,8 @@ vi.mock("./InteractionService", () => ({
 const { tastingNoteService } = await import("./TastingNoteService");
 const { tastingNoteRepository } = await import("../repositories/TastingNoteRepository");
 const { whiskeyRepository } = await import("../repositories/WhiskeyRepository");
+const { userRepository } = await import("../repositories/UserRepository");
+const { followRepository } = await import("../repositories/FollowRepository");
 const { interactionService } = await import("./InteractionService");
 
 const OWNER_ID = "aaaaaaaaaaaaaaaaaaaaaaaa";
@@ -211,5 +227,39 @@ describe("createNote", () => {
     await expect(
       tastingNoteService.createNote(OWNER_ID, { rating: 80 })
     ).rejects.toThrow(ValidationError);
+  });
+});
+
+describe("kapatılmış hesapların görünürlüğü", () => {
+  it("akış yalnızca hesabı açık yazarların notlarını sorar", async () => {
+    // Takip kayıtları duruyor; süzme yazar id'leri üzerinden yapılıyor, bu
+    // yüzden findFeed'in join atmasına gerek kalmıyor.
+    vi.mocked(followRepository.getFollowingIds).mockResolvedValue([
+      OWNER_ID,
+      OTHER_USER_ID,
+    ] as never);
+    vi.mocked(userRepository.filterActiveIds).mockResolvedValue([OWNER_ID] as never);
+    vi.mocked(tastingNoteRepository.findFeed).mockResolvedValue({
+      data: [],
+      total: 0,
+      page: 1,
+      limit: 20,
+      totalPages: 0,
+    } as never);
+
+    await tastingNoteService.getFeed(OTHER_USER_ID);
+
+    expect(tastingNoteRepository.findFeed).toHaveBeenCalledWith([OWNER_ID], undefined);
+  });
+
+  it("yazarı hesabını kapatmışsa herkese açık not bulunamaz", async () => {
+    // findById aktif filtresini uyguladığından kapalı yazar null döner.
+    // Not, gizlenmiş bir profilin yazısı olarak kalıcı bağlantıdan okunmamalı.
+    vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
+      buildNote({ visibility: "public" }) as never
+    );
+    vi.mocked(userRepository.findById).mockResolvedValue(null);
+
+    await expect(tastingNoteService.getPublicNote(NOTE_ID)).rejects.toThrow(NotFoundError);
   });
 });

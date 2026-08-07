@@ -54,6 +54,7 @@ experiences**.
 | Bilingual interface (Turkish/English) | ✅ Done | #18, #19, #22, #23 |
 | Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
 | Bilingual server messages | ✅ Done | #24 |
+| Account closure (permanent soft delete) | ✅ Done | #25 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -274,6 +275,56 @@ turned Turkish at exactly the moment the user got stuck.
 > (`createResponse(user, "Giriş başarılı")`, 36 call sites) are still Turkish.
 > Nothing in the client displays them — only the error path reaches the screen.
 
+## Account closure ✅ (PR #25)
+
+A user can close their account from `/profil`. There was no way to leave before
+this; the account you created was the account you kept.
+
+- [x] **Closure is permanent.** There is no reopening. A single `closedAt` field
+      on `User` carries the state — its presence means closed. No separate
+      `status` field, because two fields can disagree with each other
+- [x] **The email is released.** Registering again with the same address creates
+      a brand-new, empty account; it does not lead back to the old data
+- [x] **Nothing is deleted, it is hidden.** Tasting notes, comments on other
+      people's notes, likes and follows all stay in place. Deleting them would
+      damage *other* users' content — every one of those records points at a
+      `User`
+- [x] Visibility is enforced in **one place**: the active filter in
+      `UserRepository`. Sign-in, the public profile, user search and the
+      discovery list all fall into line without their own checks. A closed
+      account's sign-in attempt is indistinguishable from one for an address
+      that was never registered
+- [x] The five places a user is *joined* rather than fetched — follower and
+      following lists, the activity feed, comments, and the note permalink's
+      author — are filtered explicitly
+- [x] Like and comment **counts** exclude closed accounts too, so a number never
+      disagrees with the list beside it
+- [x] Closing requires the account password: an irreversible action should not
+      be one click away on an unlocked device
+- [x] The last remaining administrator cannot close their account — the twin of
+      the existing "the last administrator cannot be demoted" rule
+- [x] Closed accounts stay visible in the admin list with a badge, the only
+      remaining window onto them
+
+> **The one exception to "nothing is deleted": notifications.** They are derived,
+> disposable data — the project already deletes them when a follow or a like is
+> undone. A closed account should not leave "X followed you" sitting in someone's
+> inbox when X is no longer visible anywhere. Filtering them at read time was not
+> an option either: the list is paginated, so the totals and page sizes would
+> have been wrong.
+
+> **Index change — must be run once after deploying:** `npm run db:indexes`.
+> Email uniqueness moved from `{email}` to a compound `{email, closedAt}`, which
+> is what frees the address. A partial index would have been the obvious tool,
+> but MongoDB rejects `$exists: false` inside `partialFilterExpression`
+> (`CannotCreateIndex`), and the `status: "active"` alternative would have needed
+> a backfill. A missing field indexes as null, so every open account holds
+> `(email, null)` and uniqueness among them is unchanged — no migration.
+>
+> `syncIndexes()` drops before it creates. Between the two there is a brief
+> window with no unique index on email at all. At this project's size that is
+> acceptable, but it is a real window.
+
 ---
 
 ## What's Next
@@ -375,6 +426,16 @@ impossible to repeat.
 `next lint` asks an interactive setup question when no config exists, which is
 why the CI workflow runs the tests and the build but **not** lint. Committing an
 `.eslintrc` would let that step be added.
+
+#### 11. A closed account's other sessions live on — *low, accepted*
+The session JWT lasts seven days and `requireSession()` never touches the
+database, so someone who closes their account can still send requests from a
+session open on **another device** until that token expires. The impact is
+narrow: `findById` returns null for them, so the profile, the dashboard and
+profile editing break by themselves, and anything they write is hidden anyway.
+Checking status per request means a database round trip on every request and
+would break the Edge runtime that `middleware.ts` needs — the same trade-off
+already accepted for the role claim in item 6.
 
 #### 10. `tsconfig.tsbuildinfo` is tracked — *low, but noisy*
 The TypeScript incremental build cache was committed in PR #23 and is missing

@@ -6,6 +6,7 @@
 import mongoose from "mongoose";
 import Follow, { IFollow } from "../models/Follow";
 import User, { IUser } from "../models/User";
+import { userRepository } from "./UserRepository";
 
 export class FollowRepository {
   /** Takip ilişkisi oluşturur. Zaten varsa idempotent davranır (upsert). */
@@ -27,12 +28,19 @@ export class FollowRepository {
     return !!(await Follow.exists({ follower: followerId, following: followingId }));
   }
 
+  /**
+   * Takipçi sayısı — yalnızca hesabı AÇIK olanlar sayılır.
+   *
+   * Follow satırını saymak yetmiyordu: kapatılmış bir hesap listede
+   * görünmezken sayıda görünmeye devam ederdi. İki hafif sorgu, aggregation'a
+   * gerek yok.
+   */
   async countFollowers(userId: string): Promise<number> {
-    return await Follow.countDocuments({ following: userId });
+    return await userRepository.countActiveByIds(await this.getFollowerIds(userId));
   }
 
   async countFollowing(userId: string): Promise<number> {
-    return await Follow.countDocuments({ follower: userId });
+    return await userRepository.countActiveByIds(await this.getFollowingIds(userId));
   }
 
   /** Akış için: kullanıcının takip ettiği kişilerin id listesi */
@@ -71,7 +79,8 @@ export class FollowRepository {
       .lean();
     const ids = (follows as Pick<IFollow, "follower">[]).map((f) => f.follower);
     if (ids.length === 0) return [];
-    return await User.find({ _id: { $in: ids } }).lean() as unknown as IUser[];
+    // Kapatılmış hesaplar listede görünmez.
+    return await User.find({ _id: { $in: ids }, closedAt: { $exists: false } }).lean() as unknown as IUser[];
   }
 
   /** Bir kullanıcının takip ettiği kişiler (User dokümanları) */
@@ -82,7 +91,8 @@ export class FollowRepository {
       .lean();
     const ids = (follows as Pick<IFollow, "following">[]).map((f) => f.following);
     if (ids.length === 0) return [];
-    return await User.find({ _id: { $in: ids } }).lean() as unknown as IUser[];
+    // Kapatılmış hesaplar listede görünmez.
+    return await User.find({ _id: { $in: ids }, closedAt: { $exists: false } }).lean() as unknown as IUser[];
   }
 }
 

@@ -330,6 +330,7 @@ export const tr = {
   "admin.whiskeySaveFailed": "Viski kaydedilemedi",
   "admin.deleteFailed": "Silinemedi",
   "admin.ownAccount": "Kendi hesabınız",
+  "admin.accountClosed": "Kapatıldı",
   "admin.emptyCatalogue": "Katalog boş.",
   "admin.emptyCatalogueHint": "Yeni viski ekleyin veya import script’ini çalıştırın.",
   "admin.newWhiskeyTitle": "Kataloğa Yeni Viski Ekle",
@@ -437,6 +438,17 @@ export const tr = {
   "profile.noPublicOther": "Bu kullanıcının henüz herkese açık tadımı yok.",
   "profile.noPublicHint":
     "Tadım notlarınızı “Herkese açık” olarak işaretlerseniz burada görünür.",
+  "profile.closeTitle": "Hesabı Kapat",
+  "profile.closeDescription":
+    "Hesabınızı kapattığınızda profiliniz, tadım notlarınız ve yorumlarınız görünmez olur.",
+  "profile.closeWarning":
+    "Bu işlem geri alınamaz. Hesabınızı sonradan yeniden açamazsınız. Aynı e-posta adresiyle yeni bir hesap açabilirsiniz, ancak eski notlarınıza ulaşamazsınız.",
+  "profile.closeStart": "Hesabımı kapatmak istiyorum",
+  "profile.closePasswordLabel": "Parolanız",
+  "profile.closePasswordHint": "Onaylamak için parolanızı girin.",
+  "profile.closeConfirm": "Hesabımı kalıcı olarak kapat",
+  "profile.closeCancel": "Vazgeç",
+  "profile.closeFailed": "Hesap kapatılamadı",
 
   // --- İstek listesi ------------------------------------------------------
   "wishlist.title": "İstek Listem",
@@ -550,6 +562,8 @@ export const tr = {
   "errors.cannotFollowSelf": "Kendinizi takip edemezsiniz",
   "errors.cannotDemoteSelf": "Kendi yönetici yetkinizi kaldıramazsınız",
   "errors.cannotDemoteLastAdmin": "Sistemdeki son yöneticinin yetkisi kaldırılamaz",
+  "errors.cannotCloseLastAdmin": "Sistemdeki son yönetici hesabını kapatamaz",
+  "errors.passwordRequiredToClose": "Hesabı kapatmak için parolanızı girin",
   "errors.invalidProfile": "Geçersiz profil bilgileri",
   "errors.invalidRole": "Geçersiz rol",
 

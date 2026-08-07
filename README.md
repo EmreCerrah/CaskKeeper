@@ -168,7 +168,11 @@ The rules that keep this honest:
   edited or deleted by its author; likes and comments are only possible on notes
   that are actually public.
 - The first user to register becomes an administrator. An administrator cannot
-  demote themselves, and the last remaining administrator cannot be demoted at all.
+  demote themselves, and the last remaining administrator cannot be demoted at
+  all — nor close their own account.
+- Closing an account requires the account password, and a closed account cannot
+  sign in. Its sign-in attempt is indistinguishable from one for an address that
+  was never registered.
 - Security headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
   `Permissions-Policy`, `HSTS`) are set in `next.config.mjs`.
 - **The authentication endpoints are rate limited.** Attempts are counted in
@@ -364,6 +368,28 @@ src/
 
 Deleting a tasting note cascades to its likes, comments and notifications.
 
+### Closing an account
+
+A user can close their account from `/profil`, confirming with their password.
+Closure is **permanent** — there is no reopening.
+
+Nothing is deleted. Tasting notes, comments on other people's notes, likes and
+follows all remain, because every one of those records points at a `User` and
+removing them would damage other people's content. What changes is visibility: a
+`closedAt` timestamp on the user, and an active-only filter in `UserRepository`
+that the profile, search, sign-in and the discovery list all inherit. Counts are
+filtered too, so a number never disagrees with the list beside it.
+
+The email address is **released**. Registering again with it creates a new, empty
+account — it does not lead back to the old data. Uniqueness is enforced by a
+compound `{email, closedAt}` index: an open account indexes as `(email, null)`,
+so two open accounts can never share an address.
+
+Notifications are the one exception and are deleted, matching how the app already
+discards them when a follow or like is undone.
+
+The last remaining administrator cannot close their account.
+
 ---
 
 ## API reference
@@ -390,6 +416,7 @@ failure, the per-field messages.
 | GET/POST | `/api/tasting-notes/[id]/comments` | List / add comments | GET —, POST ✔ |
 | DELETE | `/api/comments/[id]` | Delete a comment (author or note owner) | ✔ |
 | PATCH | `/api/users/me` | Update profile | ✔ |
+| POST | `/api/users/me/close` | Close the account permanently (body: `password`) | ✔ |
 | GET | `/api/users/search` | User search / discovery | — |
 | POST/DELETE | `/api/users/[id]/follow` | Follow / unfollow | ✔ |
 | GET | `/api/feed` | Public notes from people you follow | ✔ |

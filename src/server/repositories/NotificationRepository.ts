@@ -123,6 +123,25 @@ export class NotificationRepository {
     const result = await Notification.deleteMany({ comment: commentId });
     return result.deletedCount;
   }
+
+  /**
+   * Hesap kapatıldığında o kişiyle ilgili bildirimleri temizler.
+   *
+   * Diğer kayıtlar gizlenirken bunlar SİLİNİYOR, çünkü bildirim zaten türetilmiş
+   * ve geçici bir veri: proje takibi bırakınca ya da beğeniyi kaldırınca da
+   * ilgili bildirimi siliyor (bkz. deleteByAction). Kapanan bir hesabın
+   * başkalarının kutusunda "X sizi takip etti" satırı bırakması, o X artık
+   * hiçbir yerde görünmezken anlamsız olurdu.
+   *
+   * Liste sayfalı olduğu için okuma anında elemek de mümkün değildi — toplam
+   * sayı ve sayfa boyutları tutmazdı.
+   */
+  async deleteByUser(userId: string): Promise<number> {
+    const result = await Notification.deleteMany({
+      $or: [{ actor: userId }, { recipient: userId }],
+    });
+    return result.deletedCount;
+  }
 }
 
 export const notificationRepository = new NotificationRepository();
