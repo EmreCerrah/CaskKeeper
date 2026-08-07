@@ -17,18 +17,20 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # DİKKAT: bunlar gerçek kimlik bilgisi değil, yer tutucu.
+      # MONGODB_URI ve JWT_SECRET BİLEREK yok.
       #
-      # src/lib/db.ts MONGODB_URI'yi MODÜL YÜKLENİRKEN kontrol edip yoksa throw
-      # ediyor, bu yüzden `next build` veritabanı adresi olmadan hiç
-      # başlayamıyor. Dockerfile da aynı nedenle placeholder geçiyor.
-      # Build sırasında veritabanına BAĞLANILMAZ: veri çeken tüm sayfalar
-      # force-dynamic, yani istek anında render ediliyorlar.
+      # Eskiden buraya sahte değerler konuyordu, çünkü src/lib/db.ts
+      # MONGODB_URI'yi modül yüklenirken kontrol ediyordu ve onu import eden
+      # 50 dosya yüzünden `next build` hiç başlayamıyordu. PR #20 kontrolü
+      # connectToDatabase() içine aldı; ikisi de artık yalnızca çağrıldıkları
+      # anda okunuyor (db.ts resolveConnectionString, session.ts getSecretKey).
       #
-      # Bu ihtiyaç ROADMAP.md'deki 4. teknik borç maddesinin belirtisi —
-      # kontrol connectToDatabase() içine alınırsa buradaki iki satır düşer.
-      MONGODB_URI: mongodb://placeholder:27017/caskkeeper
-      JWT_SECRET: ci-placeholder-not-a-real-secret
+      # Build veritabanına bağlanmaz — veri çeken tüm sayfalar force-dynamic.
+      # Testler de bu değişkenlere ihtiyaç duymaz: vitest.config.ts test
+      # ortamına kendi değerlerini enjekte ediyor.
+      #
+      # Yer tutucuları geri koymak gerekiyorsa, önce bir şeyin onları modül
+      # seviyesinde okumaya başladığından şüphelenin.
       NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
