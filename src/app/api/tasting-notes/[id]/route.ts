@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { createResponse, handleApiError } from "@/lib/api-response";
 import connectToDatabase from "@/lib/db";
-import { requireSession } from "@/lib/auth/session";
+import { getSession, requireSession } from "@/lib/auth/session";
 import { tastingNoteService } from "@/server/services/TastingNoteService";
 
 export const dynamic = "force-dynamic";
@@ -10,13 +10,23 @@ interface RouteParams {
   params: { id: string };
 }
 
-/** GET /api/tasting-notes/[id] */
+/**
+ * GET /api/tasting-notes/[id] — kalıcı bağlantı görünümü.
+ *
+ * getNoteForUser değil getPublicNote: birincisi yalnızca sahibine açıktı, oysa
+ * herkese açık bir notun bağlantısı paylaşılabilir olmalı — web'de /tadimlar/[id]
+ * sayfası da öyle davranıyor. getPublicNote "herkese açık ya da sahibi"
+ * kuralını uyguluyor ve yazar bilgisiyle etkileşim özetini de dolduruyor.
+ *
+ * Oturum zorunlu değil, ama varsa viewerId geçilir: sahibi kendi ÖZEL notunu da
+ * görebilsin ve beğeni durumu dolsun diye.
+ */
 export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await requireSession();
+    const session = await getSession();
     await connectToDatabase();
 
-    const note = await tastingNoteService.getNoteForUser(params.id, session.userId);
+    const note = await tastingNoteService.getPublicNote(params.id, session?.userId);
     return createResponse(note);
   } catch (error) {
     return handleApiError(error);

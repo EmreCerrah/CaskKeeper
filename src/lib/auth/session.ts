@@ -7,7 +7,7 @@
  */
 
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { ForbiddenError, UnauthorizedError } from "@/lib/errors";
 
 export const SESSION_COOKIE = "caskkeeper_session";
@@ -59,9 +59,34 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
   }
 }
 
-/** Server component / route handler içinden aktif oturumu okur. */
+/**
+ * `Authorization: Bearer <token>` başlığından token'ı çıkarır.
+ *
+ * Ayrı bir fonksiyon çünkü getSession() next/headers'a bağlı ve birim testte
+ * kurulması pahalı; ayrıştırmanın kendisi saf ve sınanabilir olmalı.
+ * Şema adı büyük/küçük harf duyarsız (RFC 7235).
+ */
+export function extractBearerToken(headerValue: string | null | undefined): string | null {
+  if (!headerValue) return null;
+
+  const match = /^\s*Bearer\s+(\S+)\s*$/i.exec(headerValue);
+  return match ? match[1] : null;
+}
+
+/**
+ * Server component / route handler içinden aktif oturumu okur.
+ *
+ * İki taşıyıcı desteklenir: tarayıcı httpOnly çerez kullanır, native istemci
+ * (mobil uygulama) `Authorization: Bearer` kullanır — çerez kavramı orada yok,
+ * token cihazın güvenli deposunda durur.
+ *
+ * Çerez önce denenir: web isteklerinin ezici çoğunluğu öyle geliyor ve başlığı
+ * okumak gereksiz iş olurdu.
+ */
 export async function getSession(): Promise<SessionPayload | null> {
-  const token = cookies().get(SESSION_COOKIE)?.value;
+  const token =
+    cookies().get(SESSION_COOKIE)?.value ?? extractBearerToken(headers().get("authorization"));
+
   if (!token) return null;
   return await verifySessionToken(token);
 }

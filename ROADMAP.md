@@ -55,6 +55,7 @@ experiences**.
 | Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
 | Bilingual server messages | ✅ Done | #24 |
 | Account closure (permanent soft delete) | ✅ Done | #25 |
+| Mobile · Slice 0 — API a native client can actually use | ✅ Done | #27 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -324,6 +325,55 @@ this; the account you created was the account you kept.
 > `syncIndexes()` drops before it creates. Between the two there is a brief
 > window with no unique index on email at all. At this project's size that is
 > acceptable, but it is a real window.
+
+## Mobile · Slice 0 — an API a native client can actually use ✅ (PR #27)
+
+Groundwork for a React Native (Expo) app that will live in its own repository
+and talk to this one only over HTTP. Two things stood in the way.
+
+**The session was cookie-only.** `getSession()` read the token from `cookies()`
+alone, and an httpOnly cookie is a browser mechanism — a native client holds its
+token in the device keystore and sends `Authorization: Bearer`.
+
+- [x] `getSession()` now falls back to the `Authorization` header. It reads it
+      via `headers()`, the same trick `handleApiError` uses for the locale, so
+      **no function signature changed**. The cookie is still tried first — that
+      is how almost every request arrives
+- [x] Parsing lives in `extractBearerToken`, a pure function, so it can be tested
+      without standing up `next/headers`
+- [x] `middleware.ts` is untouched: its matcher only covers page routes
+
+**`POST /api/auth/token` — sign-in for native clients.** Returns
+`{ token, user }` and sets no cookie. `/api/auth/login` is unchanged.
+
+> The two are separate **on purpose**. Adding the token to the browser's sign-in
+> response would hand any XSS a portable, reusable credential — exactly what an
+> httpOnly cookie denies it today. Both endpoints share one rate-limit counter,
+> so the new one is not a way around the old one's limit.
+
+**Some screens had no HTTP equivalent.** Pages are server components that call
+services directly, so a working screen did not imply a working endpoint. Six
+were added — public profile, that user's public notes, followers, following,
+catalogue facets, and comparison by slug — each a thin route over an existing
+service method, with no business logic written.
+
+- [x] They use `getSession()` rather than `requireSession()`, matching the pages:
+      readable signed out, with follow state filled in when signed in
+- [x] Comparison reuses `parseCompareSlugs` — deduplication and the three-item
+      cap were already solved there because the input is untrusted
+- [x] `GET /api/tasting-notes/[id]` moved from `getNoteForUser` (owner only) to
+      `getPublicNote` (public, or private to its author). A shared permalink
+      should open for the person you shared it with. Nothing in the web client
+      broke — it only ever used PATCH and DELETE on that path
+
+> Deliberately **not** versioned under `/api/v1`. There are no outside
+> consumers, nothing ships to an app store, and both clients are in the same
+> hands; versioning today would only mean rewriting the web app's fetch calls.
+> It can be introduced when a genuinely breaking change needs it.
+
+> `facets` and `compare` sit alongside the `[slug]` dynamic segment. Next.js
+> gives static segments precedence, so they resolve correctly; the only cost is
+> that a whisky slugged "facets" would be unreachable through the API.
 
 ---
 
