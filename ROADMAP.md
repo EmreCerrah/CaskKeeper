@@ -55,6 +55,8 @@ experiences**.
 | Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
 | Bilingual server messages | ✅ Done | #24 |
 | Account closure (permanent soft delete) | ✅ Done | #25 |
+| Mobile · Slice 0 — API a native client can use | ✅ Done | #27 |
+| Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -324,6 +326,65 @@ this; the account you created was the account you kept.
 > `syncIndexes()` drops before it creates. Between the two there is a brief
 > window with no unique index on email at all. At this project's size that is
 > acceptable, but it is a real window.
+
+## Mobile app
+
+A React Native app built with Expo, living in `mobile/`. It will be **moved to
+its own repository** once it stands on its own, so it imports nothing from
+`src/` and talks to the server only over HTTP. Extraction is meant to be
+`git subtree split`, which keeps the history rather than starting from a single
+initial commit.
+
+Deliberate scope: **no app store release** — the goal is an installable APK to
+share directly. That removes Apple's requirements from the picture entirely (in-app
+account deletion, the 17+ rating for alcohol, review). iOS stays possible from the
+same codebase whenever it is wanted. **No admin panel on mobile** either; catalogue
+management is desk work.
+
+### Slice 0 — an API a native client can use ✅ (PR #27)
+
+See the section above. Bearer tokens beside cookies, `POST /api/auth/token`, and
+the six endpoints whose screens existed but whose HTTP equivalents did not.
+
+### Slice 1 — Expo skeleton and sign-in ✅ (PR #28)
+
+The point of this slice is to prove the skeleton stands: an app that opens on a
+phone, signs in against the real API, keeps its token in the device keystore and
+is **still signed in after the app is closed and reopened**.
+
+- [x] Expo SDK 57 + Expo Router — file-based routing, the same mental model as
+      the App Router
+- [x] The token lives in `expo-secure-store` (Android Keystore), not
+      AsyncStorage: it is valid for seven days and personal notes sit behind it
+- [x] One door to the API (`src/api/client.ts`) that adds the base URL, the
+      bearer token and the device language to every request
+- [x] **The app sends `Accept-Language`, so server error messages arrive already
+      translated.** After PR #24 the server renders them in the language of the
+      request; the client only has to display them. The one message the client
+      writes itself is "server unreachable" — there is no server message when
+      there is no server
+- [x] Translation set up from day one (`src/i18n`), flat `tr`/`en` dictionaries
+      with `en` typed against `tr`. Retrofitting this on the web took six PRs
+      (#18–#23); at fifteen keys it costs nothing to do properly now
+- [x] On start the app asks `/api/auth/me` rather than trusting the name inside
+      the token — in seven days an account can be closed or a profile renamed
+- [x] Touch targets are at least 44 px, matching the rule the web UI follows
+
+> **Why the root `tsconfig.json` changed:** it included `**/*.tsx`, so the mobile
+> files were pulled into the web type-check and `next build` failed on React
+> Native types. `mobile` is now excluded. Verified by watching the build break
+> and then pass.
+
+> **Expo's own dependency skew:** SDK 57 pins `react@19.2.3` while
+> `@expo/devtools` pulls `react-dom@19.2.8`, which peer-requires `react@^19.2.8`.
+> `npm install` stops with `ERESOLVE`. Resolved with an `overrides` entry
+> aligning `react-dom` to the pinned React — `react-dom` is only there for the
+> developer tools and never runs in the app.
+
+> **Known advisories:** a fresh Expo install reports 21, tracing to three roots —
+> `image-size` (two DoS-by-infinite-loop parsers) and `uuid` (a missing bounds
+> check). All are **build-time tooling** operating on assets from the repository,
+> not on user input. `npm audit fix --force` would downgrade Expo itself.
 
 ---
 
