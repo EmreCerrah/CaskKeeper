@@ -1,0 +1,79 @@
+# CaskKeeper Mobile
+
+The CaskKeeper tasting journal as a native app, built with Expo and React Native.
+
+It talks to the CaskKeeper server **only over HTTP** and imports nothing from the
+web application, so it can be lifted into its own repository with
+`git subtree split` without losing its history.
+
+## Running it
+
+You need the API running and a phone on the same Wi-Fi as your machine.
+
+```bash
+# 1. from the repository root — the API and its database
+npm run docker:up
+```
+
+```bash
+# 2. tell the app where the API is
+cp mobile/.env.example mobile/.env
+```
+
+Set `EXPO_PUBLIC_API_URL` to **your machine's local IP**, not `localhost` —
+on a phone `localhost` means the phone itself, so the request never leaves the
+device. Find it with `ipconfig` (the IPv4 address of your Wi-Fi adapter):
+
+```
+EXPO_PUBLIC_API_URL=http://192.168.1.199:3000
+```
+
+```bash
+# 3. start the dev server and scan the QR code with Expo Go
+cd mobile
+npx expo start
+```
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npx expo start` | Dev server; scan the QR code with Expo Go |
+| `npm test` | Unit tests (Vitest) |
+| `npm run typecheck` | `tsc --noEmit` |
+
+## How it is put together
+
+```
+app/                 Expo Router — file-based, like the web app's App Router
+  _layout.tsx        session provider wraps everything
+  index.tsx          sends you to sign-in or home
+  (auth)/            sign-in, sign-up
+  (app)/             signed-in screens
+src/
+  api/
+    client.ts        the single door to the API
+    response.ts      envelope handling, kept pure so it can be tested
+  auth/
+    storage.ts       token in expo-secure-store
+    AuthContext.tsx  session state
+  i18n/              flat tr/en dictionaries, device language
+  components/        shared UI
+```
+
+**Errors come from the server already translated.** Every request carries
+`Accept-Language`, and the server renders its messages in the language of the
+request, so the app displays them as they arrive. The only message the app
+writes itself is "could not reach the server" — when there is no server, there
+is no server message either.
+
+**Only pure modules are unit tested.** React Native and Expo modules run on a
+device and cannot be instantiated under Node, so the logic worth protecting —
+envelope handling and language resolution — lives in files with no Expo imports.
+
+## Notes
+
+`android.usesCleartextTraffic` is enabled in `app.json` because development
+targets a plain-HTTP address on the local network. Android blocks cleartext by
+default from API 28 onwards. Point the app at an HTTPS API and this can be
+removed.
