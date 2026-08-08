@@ -157,8 +157,17 @@ The rules that keep this honest:
 
 ### Security model
 
-- Sessions are **JWTs (HS256) in an httpOnly cookie**, signed with `jose` so the
-  same code runs in the Edge runtime that powers `middleware.ts`.
+- Sessions are **JWTs (HS256)**, signed with `jose` so the same code runs in the
+  Edge runtime that powers `middleware.ts`. A browser carries the token in an
+  **httpOnly cookie**; a native client carries it as
+  **`Authorization: Bearer`**, because cookies are a browser mechanism and a
+  mobile app keeps its token in the device keystore instead.
+- **The two sign-in endpoints are deliberately separate.** `/api/auth/login`
+  sets the cookie and never reveals the token; `/api/auth/token` returns the
+  token and sets no cookie. Putting the token in the browser's sign-in response
+  would hand any XSS a portable, reusable credential — which an httpOnly cookie
+  denies it today. Both share one rate-limit counter, so the newer endpoint is
+  not a way around the older one's limit.
 - `middleware.ts` guards every protected route prefix and redirects anonymous
   visitors to the login page, preserving their intended destination.
 - **Roles are verified against the database on every privileged operation**
@@ -402,22 +411,30 @@ failure, the per-field messages.
 | Method | Path | Description | Auth |
 |---|---|---|---|
 | POST | `/api/auth/register` | Register (signs in automatically) | — |
-| POST | `/api/auth/login` | Sign in | — |
+| POST | `/api/auth/login` | Sign in, sets the session cookie | — |
+| POST | `/api/auth/token` | Sign in for native clients — returns `{ token, user }`, sets no cookie | — |
 | POST | `/api/auth/logout` | Sign out | — |
 | GET | `/api/auth/me` | Current user | ✔ |
 | GET | `/api/whiskeys` | Catalogue — search, filters, pagination | — |
 | POST | `/api/whiskeys` | Add a whisky to the catalogue | ✔ admin |
+| GET | `/api/whiskeys/facets` | Type / region / country values for filter menus | — |
+| GET | `/api/whiskeys/compare` | Up to three whiskies by `?slug=` (order preserved) | — |
 | GET | `/api/whiskeys/[slug]` | Whisky detail | — |
 | PATCH | `/api/whiskeys/[slug]` | Update a whisky | ✔ admin |
 | DELETE | `/api/whiskeys/[slug]` | Delete a whisky | ✔ admin |
 | GET/POST | `/api/tasting-notes` | My notes / create a note | ✔ |
-| GET/PATCH/DELETE | `/api/tasting-notes/[id]` | Note detail / update / delete | ✔ |
+| GET | `/api/tasting-notes/[id]` | Note detail — public notes to anyone, private ones only to their author | — |
+| PATCH/DELETE | `/api/tasting-notes/[id]` | Update / delete | ✔ |
 | POST/DELETE | `/api/tasting-notes/[id]/like` | Like / unlike (public notes only) | ✔ |
 | GET/POST | `/api/tasting-notes/[id]/comments` | List / add comments | GET —, POST ✔ |
 | DELETE | `/api/comments/[id]` | Delete a comment (author or note owner) | ✔ |
 | PATCH | `/api/users/me` | Update profile | ✔ |
 | POST | `/api/users/me/close` | Close the account permanently (body: `password`) | ✔ |
 | GET | `/api/users/search` | User search / discovery | — |
+| GET | `/api/users/[id]` | Public profile (follow state filled in when signed in) | — |
+| GET | `/api/users/[id]/notes` | That user's public tasting notes | — |
+| GET | `/api/users/[id]/followers` | Followers | — |
+| GET | `/api/users/[id]/following` | Following | — |
 | POST/DELETE | `/api/users/[id]/follow` | Follow / unfollow | ✔ |
 | GET | `/api/feed` | Public notes from people you follow | ✔ |
 | GET | `/api/notifications` | Notifications + unread count | ✔ |
