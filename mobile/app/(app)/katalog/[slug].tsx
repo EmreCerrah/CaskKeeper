@@ -1,11 +1,13 @@
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Button } from "../../../src/components/Button";
 import { WhiskeyImage } from "../../../src/components/WhiskeyImage";
 import { useWhiskey } from "../../../src/data/whiskeys";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 export default function WhiskeyDetailScreen() {
+  const router = useRouter();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { data: whiskey, isLoading, isError, error } = useWhiskey(slug ?? "");
 
@@ -59,6 +61,18 @@ export default function WhiskeyDetailScreen() {
           </View>
         )}
       </View>
+
+      {/* Katalogdan tadım notuna geçiş: viski zaten seçili olduğu için
+          formda ayrıca viski araması gerekmiyor. */}
+      <Button
+        label={t("notes.addForWhiskey")}
+        onPress={() =>
+          router.push({
+            pathname: "/(app)/tadimlarim/yeni",
+            params: { whiskeyId: whiskey.id, whiskeyLabel: `${whiskey.brand} ${whiskey.name}` },
+          })
+        }
+      />
 
       <Section title={t("whiskey.specs")}>
         {specs.map((spec) => (

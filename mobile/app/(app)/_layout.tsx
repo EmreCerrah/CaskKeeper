@@ -26,6 +26,7 @@ export default function AppLayout() {
       }}
     >
       <Tabs.Screen name="katalog" options={{ title: t("tab.catalogue") }} />
+      <Tabs.Screen name="tadimlarim" options={{ title: t("tab.myTastings") }} />
       <Tabs.Screen name="profil" options={{ title: t("tab.profile") }} />
     </Tabs>
   );

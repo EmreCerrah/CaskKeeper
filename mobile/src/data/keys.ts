@@ -22,4 +22,11 @@ export const queryKeys = {
     detail: (slug: string) => ["whiskeys", "detail", slug] as const,
     facets: () => ["whiskeys", "facets"] as const,
   },
+  tastingNotes: {
+    /** Yazma sonrası tüm not önbelleğini geçersizleştirmek için ortak kök. */
+    all: ["tastingNotes"] as const,
+    mine: () => ["tastingNotes", "mine"] as const,
+    detail: (id: string) => ["tastingNotes", "detail", id] as const,
+  },
+  aromaWheel: () => ["aromaWheel"] as const,
 } as const;
