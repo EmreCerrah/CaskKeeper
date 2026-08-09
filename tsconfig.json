@@ -22,5 +22,8 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // mobile/ ayrı bir uygulama: kendi tsconfig'i, kendi React tipleri ve kendi
+  // node_modules'ü var. Buraya dahil edilirse React Native tipleri web
+  // derlemesine karışıyor ve `next build` kırılıyor.
+  "exclude": ["node_modules", "mobile"]
 }

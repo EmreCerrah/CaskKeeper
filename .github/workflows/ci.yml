@@ -55,6 +55,36 @@ jobs:
       - name: Build
         run: npm run build
 
+  # Mobil uygulama ayrı bir paket: kendi bağımlılıkları, kendi tsconfig'i.
+  # Ayrı bir iş olarak koşuyor çünkü web derlemesiyle hiçbir şey paylaşmıyor
+  # (ayrı repoya taşınacak). Aksi halde sessizce çürürdü.
+  mobile:
+    name: mobile
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      # `expo build` yok: derleme EAS'te bulutta yapılıyor ve hesap gerektiriyor.
+      # Burada tip denetimi, kodun tutarlı kaldığını gösteren en güçlü sinyal.
+      - name: Type check
+        run: npm run typecheck
+
 # `npm run lint` bilerek yok: depoda ESLint yapılandırması bulunmadığı için
 # `next lint` kurulum sorusu sorup interaktif moda giriyor ve CI'da takılıyor.
 # Lint'i eklemek için önce bir .eslintrc dosyası commit'lenmeli.
