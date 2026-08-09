@@ -1,0 +1,25 @@
+/**
+ * @file keys.ts
+ * @description Sorgu anahtarları tek yerde.
+ *
+ * Dağınık bırakılsa her ekran kendi dizisini uydururdu ve iki ekran aynı veriyi
+ * farklı anahtarla isteyip iki kez çekerdi. Daha önemlisi: çevrimdışı kalıcılık
+ * eklendiğinde "neyi saklayacağız" sorusu bu anahtarlar üzerinden cevaplanacak,
+ * yani derli toplu olmaları gerekiyor.
+ */
+
+export interface WhiskeyListParams {
+  search?: string;
+  type?: string;
+  region?: string;
+  country?: string;
+}
+
+export const queryKeys = {
+  whiskeys: {
+    all: ["whiskeys"] as const,
+    list: (params: WhiskeyListParams) => ["whiskeys", "list", params] as const,
+    detail: (slug: string) => ["whiskeys", "detail", slug] as const,
+    facets: () => ["whiskeys", "facets"] as const,
+  },
+} as const;

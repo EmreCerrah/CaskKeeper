@@ -20,7 +20,7 @@ export default function Index() {
     );
   }
 
-  return <Redirect href={user ? "/(app)/home" : "/(auth)/sign-in"} />;
+  return <Redirect href={user ? "/(app)/katalog" : "/(auth)/sign-in"} />;
 }
 
 const styles = StyleSheet.create({

@@ -22,7 +22,7 @@ export default function SignUpScreen() {
     setError(null);
     try {
       await signUp(name.trim(), email.trim(), password);
-      router.replace("/(app)/home");
+      router.replace("/(app)/katalog");
     } catch (e) {
       setError(e instanceof Error ? e.message : t("auth.signUpFailed"));
     } finally {

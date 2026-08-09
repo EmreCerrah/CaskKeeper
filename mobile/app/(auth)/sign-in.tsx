@@ -21,7 +21,7 @@ export default function SignInScreen() {
     setError(null);
     try {
       await signIn(email.trim(), password);
-      router.replace("/(app)/home");
+      router.replace("/(app)/katalog");
     } catch (e) {
       // Sunucu mesajı zaten isteğin dilinde geliyor (Accept-Language
       // gönderiliyor), o yüzden olduğu gibi gösteriliyor.

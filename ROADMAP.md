@@ -57,6 +57,7 @@ experiences**.
 | Account closure (permanent soft delete) | ✅ Done | #25 |
 | Mobile · Slice 0 — API a native client can use | ✅ Done | #27 |
 | Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
+| Mobile · Slice 2 — Catalogue screens | ✅ Done | #30 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -432,9 +433,57 @@ is **still signed in after the app is closed and reopened**.
 > check). All are **build-time tooling** operating on assets from the repository,
 > not on user input. `npm audit fix --force` would downgrade Expo itself.
 
+### Slice 2 — Catalogue screens ✅ (PR #30)
+
+The first real screens: the 194-whisky catalogue with search, filters and a
+detail view, plus the bottom tab bar the later slices will hang off.
+
+- [x] Tab bar introduced **now**, with two tabs (Catalogue, Profile). Later
+      slices add a tab instead of restructuring the navigation. No admin tab —
+      catalogue management is desk work
+- [x] Infinite scroll rather than page numbers; the API already returns
+      `{ data, total, page, limit, totalPages }`
+- [x] Filter options come from `/api/whiskeys/facets` — the values actually
+      present in the catalogue. A hand-written list would quietly go stale the
+      day a new region is imported
+- [x] Search is debounced: typing "Lagavulin" sends one request, not nine
+- [x] Broken image URLs fall back to initials, matching the web's `WhiskeyImage`.
+      Catalogue imagery comes from arbitrary sources, so this is normal, not an
+      error case
+- [x] Selected filter chips are not distinguished by colour alone — the label
+      also changes weight, the same rule the web UI follows
+
+**The data layer is the point of this slice.** Screens never call `apiRequest`
+directly; they use hooks in `src/data/`. That is the web's "database access only
+in repositories" rule applied to the client, and it exists so that offline
+support can be added *inside that layer* rather than by rewriting every screen.
+TanStack Query was adopted for it — a deliberate exception to the
+"no unnecessary new technology" rule, because offline persistence attaches to it
+in a few lines of configuration, whereas hand-rolling meant getting cache
+invalidation and request races right ourselves.
+
+> Query keys live in one file (`src/data/keys.ts`) for the same reason: when
+> offline persistence arrives, *what gets stored* is answered in terms of those
+> keys.
+
 ---
 
 ## What's Next
+
+### Mobile · offline support — requested, not yet built
+
+The app should work offline for some features, as the web PWA does. Slice 2 laid
+the groundwork; the feature itself is its own slice, and two questions get
+answered when it starts:
+
+- **What is stored?** The web caches the user's own tasting notes and wishlist —
+  the things that are theirs and worth reading with no connection. The catalogue
+  is a different case: it is large, shared and rarely changes.
+- **Opt-in or always on?** The web made it an explicit switch, off by default,
+  because a browser is often a shared device. A personal phone is a weaker
+  version of that argument, so this deserves a fresh decision rather than a
+  copied one.
+
 
 Every planned phase is finished. What remains is hardening rather than features —
 items to close before going live, or immediately after. In priority order:
