@@ -381,6 +381,21 @@ is **still signed in after the app is closed and reopened**.
 > aligning `react-dom` to the pinned React — `react-dom` is only there for the
 > developer tools and never runs in the app.
 
+> **Corrected in PR #29 — worth remembering.** The first attempt set
+> `android.usesCleartextTraffic` directly in `app.json`. That field does not
+> exist in the Expo config schema and is **ignored without complaint**: harmless
+> in Expo Go, which permits cleartext anyway, and then broken in a standalone
+> APK, where plain HTTP to the development server is exactly what is needed.
+> Android blocks cleartext from API 28 onwards. It has to go through the
+> `expo-build-properties` plugin. `npx expo-doctor` catches it; the type checker
+> and the tests never would.
+>
+> The same PR added `.env` to `mobile/.gitignore`. It was only being ignored by
+> the **root** `.gitignore`, which does not travel with the folder — so the file
+> would have started being committed the moment the app moved to its own
+> repository. Both were found by actually extracting the folder to an empty
+> directory and building it there, rather than reasoning about it.
+
 > **Known advisories:** a fresh Expo install reports 21, tracing to three roots —
 > `image-size` (two DoS-by-infinite-loop parsers) and `uuid` (a missing bounds
 > check). All are **build-time tooling** operating on assets from the repository,
