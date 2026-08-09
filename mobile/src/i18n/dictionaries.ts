@@ -113,6 +113,38 @@ export const tr = {
   "noteForm.public": "Herkese açık",
   "noteForm.favorite": "Favori",
 
+  "tab.feed": "Akış",
+
+  "feed.title": "Akış",
+  "feed.empty": "Akışınız henüz boş.",
+  "feed.emptyHint": "Kişileri keşfedin ve takip etmeye başlayın.",
+  "feed.findPeople": "Kişileri keşfet",
+
+  "people.title": "Kişiler",
+  "people.searchPlaceholder": "İsimle ara",
+  "people.empty": "Kimse bulunamadı.",
+  "people.noteCount": "{count} herkese açık tadım",
+  "people.follow": "Takip Et",
+  "people.unfollow": "Takibi Bırak",
+  "people.friend": "Arkadaş",
+  "people.followsYou": "Sizi takip ediyor",
+  "people.followFailed": "İşlem tamamlanamadı",
+
+  "profile.followers": "Takipçi",
+  "profile.following": "Takip",
+  "profile.publicNotes": "Herkese Açık Tadım",
+  "profile.noPublicNotes": "Bu kullanıcının herkese açık tadımı yok.",
+  "profile.memberSince": "{date} tarihinden beri üye",
+
+  "note.likes": "{count} beğeni",
+  "note.like": "Beğen",
+  "note.unlike": "Beğeniyi kaldır",
+  "note.byAuthor": "{name} yazdı",
+  "note.nose": "Burun",
+  "note.palate": "Damak",
+  "note.finish": "Bitiş",
+  "note.personal": "Kişisel notlar",
+
   "common.loading": "Yükleniyor…",
   "common.back": "Geri",
 } as const;
@@ -219,6 +251,38 @@ export const en: Record<TranslationKey, string> = {
   "noteForm.personalPlaceholder": "What made this tasting special?",
   "noteForm.public": "Public",
   "noteForm.favorite": "Favourite",
+
+  "tab.feed": "Feed",
+
+  "feed.title": "Feed",
+  "feed.empty": "Your feed is empty.",
+  "feed.emptyHint": "Find people and start following them.",
+  "feed.findPeople": "Find people",
+
+  "people.title": "People",
+  "people.searchPlaceholder": "Search by name",
+  "people.empty": "Nobody found.",
+  "people.noteCount": "{count} public tastings",
+  "people.follow": "Follow",
+  "people.unfollow": "Unfollow",
+  "people.friend": "Friend",
+  "people.followsYou": "Follows you",
+  "people.followFailed": "Could not complete the action",
+
+  "profile.followers": "Followers",
+  "profile.following": "Following",
+  "profile.publicNotes": "Public Tastings",
+  "profile.noPublicNotes": "This user has no public tastings.",
+  "profile.memberSince": "Member since {date}",
+
+  "note.likes": "{count} likes",
+  "note.like": "Like",
+  "note.unlike": "Remove like",
+  "note.byAuthor": "by {name}",
+  "note.nose": "Nose",
+  "note.palate": "Palate",
+  "note.finish": "Finish",
+  "note.personal": "Personal notes",
 
   "common.loading": "Loading…",
   "common.back": "Back",

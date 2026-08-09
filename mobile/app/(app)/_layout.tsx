@@ -25,7 +25,11 @@ export default function AppLayout() {
         sceneStyle: { backgroundColor: theme.background },
       }}
     >
+      {/* Dört sekme: beşinci eklendiğinde küçük telefonlarda etiketler
+          kırpılıyor. Kişi arama bu yüzden ayrı sekme değil, Akış yığınının
+          içinde bir ekran. */}
       <Tabs.Screen name="katalog" options={{ title: t("tab.catalogue") }} />
+      <Tabs.Screen name="akis" options={{ title: t("tab.feed") }} />
       <Tabs.Screen name="tadimlarim" options={{ title: t("tab.myTastings") }} />
       <Tabs.Screen name="profil" options={{ title: t("tab.profile") }} />
     </Tabs>

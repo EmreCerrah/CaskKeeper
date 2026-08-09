@@ -63,6 +63,26 @@ curl -o /dev/null -w "%{http_code}\n" "http://localhost:8081/node_modules/expo-r
 missing `babel-preset-expo` was caught, which had left the app unable to bundle
 while every other check stayed green.
 
+### Typed routes: regenerate before trusting the type check
+
+Route types live in `.expo/types/router.d.ts` and are written by the dev server,
+not by `tsc`. After adding or renaming a screen the file is stale, and
+`npm run typecheck` will report every `router.push()` as invalid — a wall of
+errors that say nothing about your code.
+
+Start the dev server, wait for the file to list the routes you expect, and only
+then type-check:
+
+```bash
+npx expo start          # leave it running
+grep -o "akis\|katalog\|profil" .expo/types/router.d.ts | sort -u
+npm run typecheck
+```
+
+Killing the server too early leaves the file half-written, which produces the
+same misleading wall. CI never sees this: with no `.expo` directory the check
+falls back to loose route typing.
+
 ## How it is put together
 
 ```
