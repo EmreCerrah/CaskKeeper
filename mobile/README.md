@@ -67,10 +67,13 @@ while every other check stayed green.
 
 ```
 app/                 Expo Router — file-based, like the web app's App Router
-  _layout.tsx        session provider wraps everything
-  index.tsx          sends you to sign-in or home
+  _layout.tsx        session and data providers wrap everything
+  index.tsx          sends you to the catalogue or to sign-in
   (auth)/            sign-in, sign-up
-  (app)/             signed-in screens
+  (app)/
+    _layout.tsx      bottom tab bar
+    katalog/         list + whisky detail
+    profil.tsx       account, sign out
 src/
   api/
     client.ts        the single door to the API
@@ -78,9 +81,20 @@ src/
   auth/
     storage.ts       token in expo-secure-store
     AuthContext.tsx  session state
+  data/              the only way screens reach the API — see below
   i18n/              flat tr/en dictionaries, device language
   components/        shared UI
 ```
+
+**Screens never call the API directly.** They use the hooks in `src/data/`,
+which wrap TanStack Query. This is the web app's "database access lives only in
+repositories" rule applied on the client, and it exists for a specific reason:
+offline support is meant to be added *inside that layer*, without touching a
+single screen.
+
+Query keys live in `src/data/keys.ts` rather than being written inline, because
+when offline persistence arrives, deciding *what gets stored* is a question
+about those keys.
 
 **Errors come from the server already translated.** Every request carries
 `Accept-Language`, and the server renders its messages in the language of the

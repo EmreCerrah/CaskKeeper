@@ -6,14 +6,8 @@ import { Button } from "../../src/components/Button";
 import { t } from "../../src/i18n";
 import { theme } from "../../src/theme";
 
-/**
- * Geçici ana ekran.
- *
- * Bu dilimin amacı iskeletin ayakta olduğunu göstermek: oturum gerçek API'den
- * geldi, token güvenli depoda duruyor ve uygulama yeniden açıldığında hâlâ
- * geçerli. Katalog, tadım notu ve akış sıradaki dilimde.
- */
-export default function HomeScreen() {
+/** Kullanıcı bilgisi ve çıkış. Dilim 1'deki ana ekranın devamı. */
+export default function ProfileScreen() {
   const router = useRouter();
   const { user, signOut } = useAuth();
 
@@ -23,14 +17,12 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.flex}>
+    <SafeAreaView style={styles.flex} edges={["top"]}>
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.greeting}>{t("home.greeting", { name: user?.name ?? "" })}</Text>
           <Text style={styles.email}>{user?.email}</Text>
         </View>
-
-        <Text style={styles.placeholder}>{t("home.placeholder")}</Text>
 
         <Button label={t("home.signOut")} onPress={handleSignOut} />
       </View>
@@ -44,5 +36,4 @@ const styles = StyleSheet.create({
   header: { gap: 4 },
   greeting: { color: theme.text, fontSize: 26, fontWeight: "700" },
   email: { color: theme.textMuted, fontSize: 14 },
-  placeholder: { color: theme.textMuted, fontSize: 15 },
 });
