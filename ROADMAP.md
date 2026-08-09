@@ -61,6 +61,7 @@ experiences**.
 | Mobile · Slice 3 — Tasting notes | ✅ Done | #31 |
 | Mobile · Slice 4 — Feed, people and following | ✅ Done | #32 |
 | Mobile · Tab icons, app icon and a real profile screen | ✅ Done | #33 |
+| Mobile · Slice 5 — Offline reading | ✅ Done | #34 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -537,23 +538,49 @@ needs already existed; **nothing on the server changed.**
 > `interactions`, but its return type said the field stayed optional. Fixed in
 > the source rather than papered over in the test.
 
+### Slice 5 — Offline reading ✅ (PR #34)
+
+The app opens and is useful with no connection. This is the slice Slice 2 was
+built for, and the claim it made — *offline goes inside the data layer, not into
+the screens* — held: **not one file under `app/(app)/` changed.**
+
+- [x] The query cache is written to disk with TanStack Query's persistence
+      plugin, which is why that library was chosen in Slice 2
+- [x] **Always on, no switch.** The web's opt-in exists because a browser is
+      often a shared device; a phone is personal and app storage is sandboxed,
+      so that reasoning does not carry over
+- [x] **Stored:** the catalogue and the user's own notes. The catalogue is the
+      valuable case — looking up a bottle in a bar with no signal
+- [x] **Not stored:** the feed, other people's profiles, and single-note details
+- [x] Signing out deletes the stored copy, exactly as `logout-client.ts` does on
+      the web, and for the same reason: the next person to sign in on that
+      device must not inherit it
+- [x] A banner says when data is coming from disk. Showing stale data silently
+      would leave the user thinking the list is current
+- [x] `expo-network` feeds TanStack's `onlineManager`, so reconnecting refetches
+      by itself and offline requests are not retried pointlessly. Expo's own
+      module rather than a community package
+
+> **The persistence rule is a privacy boundary, so it is pure and tested.**
+> `shouldPersistQuery` decides what lands on disk. Its default is **no** — a
+> query added later is not stored until someone decides it should be. The tests
+> use the real key builders, so a change to the key shape breaks them rather
+> than silently passing.
+
+> Known limit, accepted: offline, tapping a note in My Tastings fails, because
+> single-note details are not stored — the same query key serves a note opened
+> from the feed, which may belong to someone else, and the key cannot tell them
+> apart. The list card already shows the whisky, score and date.
+
 ---
 
 ## What's Next
 
-### Mobile · offline support — requested, not yet built
+### Mobile · offline writing — not built
 
-The app should work offline for some features, as the web PWA does. Slice 2 laid
-the groundwork; the feature itself is its own slice, and two questions get
-answered when it starts:
-
-- **What is stored?** The web caches the user's own tasting notes and wishlist —
-  the things that are theirs and worth reading with no connection. The catalogue
-  is a different case: it is large, shared and rarely changes.
-- **Opt-in or always on?** The web made it an explicit switch, off by default,
-  because a browser is often a shared device. A personal phone is a weaker
-  version of that argument, so this deserves a fresh decision rather than a
-  copied one.
+Reading works offline; writing does not. Saving a tasting note with no
+connection means a mutation queue and a conflict story, which is its own slice
+rather than an extension of this one.
 
 
 Every planned phase is finished. What remains is hardening rather than features —
