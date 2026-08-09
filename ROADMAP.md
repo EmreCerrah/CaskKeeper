@@ -60,6 +60,7 @@ experiences**.
 | Mobile · Slice 2 — Catalogue screens | ✅ Done | #30 |
 | Mobile · Slice 3 — Tasting notes | ✅ Done | #31 |
 | Mobile · Slice 4 — Feed, people and following | ✅ Done | #32 |
+| Mobile · Tab icons, app icon and a real profile screen | ✅ Done | #33 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue

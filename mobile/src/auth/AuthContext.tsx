@@ -38,6 +38,8 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  /** Profil güncellendikten sonra ekrandaki adı tazelemek için. */
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -106,9 +108,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  /**
+   * Kullanıcıyı sunucudan yeniden okur.
+   *
+   * Profil güncellendiğinde çağrılıyor: oturum durumu token'dan değil
+   * sunucudan besleniyor, aksi halde ekranda eski isim kalırdı.
+   */
+  const refreshUser = useCallback(async () => {
+    if (!token) return;
+    try {
+      setUser(await apiRequest<SessionUser>("/api/auth/me", { token }));
+    } catch {
+      // Tazeleme başarısız olursa eldeki bilgi korunur; oturum düşürülmez.
+    }
+  }, [token]);
+
   const value = useMemo<AuthState>(
-    () => ({ user, token, isRestoring, signIn, signUp, signOut }),
-    [user, token, isRestoring, signIn, signUp, signOut]
+    () => ({ user, token, isRestoring, signIn, signUp, signOut, refreshUser }),
+    [user, token, isRestoring, signIn, signUp, signOut, refreshUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
