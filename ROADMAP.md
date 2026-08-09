@@ -55,7 +55,8 @@ experiences**.
 | Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
 | Bilingual server messages | ✅ Done | #24 |
 | Account closure (permanent soft delete) | ✅ Done | #25 |
-| Mobile · Slice 0 — API a native client can actually use | ✅ Done | #27 |
+| Mobile · Slice 0 — API a native client can use | ✅ Done | #27 |
+| Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -326,54 +327,64 @@ this; the account you created was the account you kept.
 > window with no unique index on email at all. At this project's size that is
 > acceptable, but it is a real window.
 
-## Mobile · Slice 0 — an API a native client can actually use ✅ (PR #27)
+## Mobile app
 
-Groundwork for a React Native (Expo) app that will live in its own repository
-and talk to this one only over HTTP. Two things stood in the way.
+A React Native app built with Expo, living in `mobile/`. It will be **moved to
+its own repository** once it stands on its own, so it imports nothing from
+`src/` and talks to the server only over HTTP. Extraction is meant to be
+`git subtree split`, which keeps the history rather than starting from a single
+initial commit.
 
-**The session was cookie-only.** `getSession()` read the token from `cookies()`
-alone, and an httpOnly cookie is a browser mechanism — a native client holds its
-token in the device keystore and sends `Authorization: Bearer`.
+Deliberate scope: **no app store release** — the goal is an installable APK to
+share directly. That removes Apple's requirements from the picture entirely (in-app
+account deletion, the 17+ rating for alcohol, review). iOS stays possible from the
+same codebase whenever it is wanted. **No admin panel on mobile** either; catalogue
+management is desk work.
 
-- [x] `getSession()` now falls back to the `Authorization` header. It reads it
-      via `headers()`, the same trick `handleApiError` uses for the locale, so
-      **no function signature changed**. The cookie is still tried first — that
-      is how almost every request arrives
-- [x] Parsing lives in `extractBearerToken`, a pure function, so it can be tested
-      without standing up `next/headers`
-- [x] `middleware.ts` is untouched: its matcher only covers page routes
+### Slice 0 — an API a native client can use ✅ (PR #27)
 
-**`POST /api/auth/token` — sign-in for native clients.** Returns
-`{ token, user }` and sets no cookie. `/api/auth/login` is unchanged.
+See the section above. Bearer tokens beside cookies, `POST /api/auth/token`, and
+the six endpoints whose screens existed but whose HTTP equivalents did not.
 
-> The two are separate **on purpose**. Adding the token to the browser's sign-in
-> response would hand any XSS a portable, reusable credential — exactly what an
-> httpOnly cookie denies it today. Both endpoints share one rate-limit counter,
-> so the new one is not a way around the old one's limit.
+### Slice 1 — Expo skeleton and sign-in ✅ (PR #28)
 
-**Some screens had no HTTP equivalent.** Pages are server components that call
-services directly, so a working screen did not imply a working endpoint. Six
-were added — public profile, that user's public notes, followers, following,
-catalogue facets, and comparison by slug — each a thin route over an existing
-service method, with no business logic written.
+The point of this slice is to prove the skeleton stands: an app that opens on a
+phone, signs in against the real API, keeps its token in the device keystore and
+is **still signed in after the app is closed and reopened**.
 
-- [x] They use `getSession()` rather than `requireSession()`, matching the pages:
-      readable signed out, with follow state filled in when signed in
-- [x] Comparison reuses `parseCompareSlugs` — deduplication and the three-item
-      cap were already solved there because the input is untrusted
-- [x] `GET /api/tasting-notes/[id]` moved from `getNoteForUser` (owner only) to
-      `getPublicNote` (public, or private to its author). A shared permalink
-      should open for the person you shared it with. Nothing in the web client
-      broke — it only ever used PATCH and DELETE on that path
+- [x] Expo SDK 57 + Expo Router — file-based routing, the same mental model as
+      the App Router
+- [x] The token lives in `expo-secure-store` (Android Keystore), not
+      AsyncStorage: it is valid for seven days and personal notes sit behind it
+- [x] One door to the API (`src/api/client.ts`) that adds the base URL, the
+      bearer token and the device language to every request
+- [x] **The app sends `Accept-Language`, so server error messages arrive already
+      translated.** After PR #24 the server renders them in the language of the
+      request; the client only has to display them. The one message the client
+      writes itself is "server unreachable" — there is no server message when
+      there is no server
+- [x] Translation set up from day one (`src/i18n`), flat `tr`/`en` dictionaries
+      with `en` typed against `tr`. Retrofitting this on the web took six PRs
+      (#18–#23); at fifteen keys it costs nothing to do properly now
+- [x] On start the app asks `/api/auth/me` rather than trusting the name inside
+      the token — in seven days an account can be closed or a profile renamed
+- [x] Touch targets are at least 44 px, matching the rule the web UI follows
 
-> Deliberately **not** versioned under `/api/v1`. There are no outside
-> consumers, nothing ships to an app store, and both clients are in the same
-> hands; versioning today would only mean rewriting the web app's fetch calls.
-> It can be introduced when a genuinely breaking change needs it.
+> **Why the root `tsconfig.json` changed:** it included `**/*.tsx`, so the mobile
+> files were pulled into the web type-check and `next build` failed on React
+> Native types. `mobile` is now excluded. Verified by watching the build break
+> and then pass.
 
-> `facets` and `compare` sit alongside the `[slug]` dynamic segment. Next.js
-> gives static segments precedence, so they resolve correctly; the only cost is
-> that a whisky slugged "facets" would be unreachable through the API.
+> **Expo's own dependency skew:** SDK 57 pins `react@19.2.3` while
+> `@expo/devtools` pulls `react-dom@19.2.8`, which peer-requires `react@^19.2.8`.
+> `npm install` stops with `ERESOLVE`. Resolved with an `overrides` entry
+> aligning `react-dom` to the pinned React — `react-dom` is only there for the
+> developer tools and never runs in the app.
+
+> **Known advisories:** a fresh Expo install reports 21, tracing to three roots —
+> `image-size` (two DoS-by-infinite-loop parsers) and `uuid` (a missing bounds
+> check). All are **build-time tooling** operating on assets from the repository,
+> not on user input. `npm audit fix --force` would downgrade Expo itself.
 
 ---
 

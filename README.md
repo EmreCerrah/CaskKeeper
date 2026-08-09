@@ -335,6 +335,7 @@ Where each file is used:
 ## Project structure
 
 ```
+mobile/                   Expo app — see mobile/README.md (own package, own deps)
 data/                     Whisky catalogue source (16 JSON parts, 194 entries)
 scripts/
   import-whiskeys.ts      Catalogue importer (file / directory / URL, upsert)
