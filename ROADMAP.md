@@ -352,7 +352,7 @@ The point of this slice is to prove the skeleton stands: an app that opens on a
 phone, signs in against the real API, keeps its token in the device keystore and
 is **still signed in after the app is closed and reopened**.
 
-- [x] Expo SDK 57 + Expo Router — file-based routing, the same mental model as
+- [x] Expo SDK 54 + Expo Router — file-based routing, the same mental model as
       the App Router
 - [x] The token lives in `expo-secure-store` (Android Keystore), not
       AsyncStorage: it is valid for seven days and personal notes sit behind it
@@ -375,11 +375,57 @@ is **still signed in after the app is closed and reopened**.
 > Native types. `mobile` is now excluded. Verified by watching the build break
 > and then pass.
 
-> **Expo's own dependency skew:** SDK 57 pins `react@19.2.3` while
-> `@expo/devtools` pulls `react-dom@19.2.8`, which peer-requires `react@^19.2.8`.
-> `npm install` stops with `ERESOLVE`. Resolved with an `overrides` entry
-> aligning `react-dom` to the pinned React — `react-dom` is only there for the
-> developer tools and never runs in the app.
+> **Why SDK 54 and not the newest.** The app was first built on SDK 57, the
+> current release, and would not open: *Project is incompatible with this version
+> of Expo Go*. Expo Go ships support for one SDK at a time, and the newest build
+> the target phone could install supports **SDK 54** — updating from the Play
+> Store did not change that, which usually means the device's Android version
+> caps how new an Expo Go it can take.
+>
+> Expo Go pins the SDK, so the project follows the phone rather than the other
+> way round. Nothing in the app's own code had to change: routing, secure
+> storage, localisation and the API client are all the same. Dropping to 54 also
+> removed the `react-dom` override that SDK 57 needed for its own dependency
+> skew.
+>
+> `expo-status-bar` had to leave the `plugins` array — it is not a config plugin
+> at this version and `expo config` refuses to resolve it. The package is still a
+> dependency and `<StatusBar />` still works; only the plugin entry was wrong.
+>
+> Moving back up is a matter of `npx expo install expo@^57 --fix` whenever the
+> phone can take a newer Expo Go, or once the app moves to development builds,
+> where Expo Go's version stops mattering at all.
+
+> **The app could not bundle at all — also PR #29.** `babel.config.js` names
+> `babel-preset-expo`, but the package was never added as a dependency. Metro
+> died on startup with *Failed to construct transformer:
+> Cannot find module 'babel-preset-expo'*, so no bundle was ever produced.
+>
+> The lesson is about what the existing checks can and cannot see: the tests
+> passed, the type check passed, and `expo-doctor` reported 20/20 — none of them
+> ever ask Metro to build anything. The gap closed by requesting a bundle from
+> the dev server directly, which needs no phone:
+>
+> ```
+> curl "http://localhost:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true"
+> ```
+>
+> A 200 with a few megabytes means the app builds; a 500 carries the real error.
+
+> **Corrected in PR #29 — worth remembering.** The first attempt set
+> `android.usesCleartextTraffic` directly in `app.json`. That field does not
+> exist in the Expo config schema and is **ignored without complaint**: harmless
+> in Expo Go, which permits cleartext anyway, and then broken in a standalone
+> APK, where plain HTTP to the development server is exactly what is needed.
+> Android blocks cleartext from API 28 onwards. It has to go through the
+> `expo-build-properties` plugin. `npx expo-doctor` catches it; the type checker
+> and the tests never would.
+>
+> The same PR added `.env` to `mobile/.gitignore`. It was only being ignored by
+> the **root** `.gitignore`, which does not travel with the folder — so the file
+> would have started being committed the moment the app moved to its own
+> repository. Both were found by actually extracting the folder to an empty
+> directory and building it there, rather than reasoning about it.
 
 > **Known advisories:** a fresh Expo install reports 21, tracing to three roots —
 > `image-size` (two DoS-by-infinite-loop parsers) and `uuid` (a missing bounds

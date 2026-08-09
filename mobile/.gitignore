@@ -31,6 +31,11 @@ yarn-error.*
 *.pem
 
 # local env files
+#
+# `.env` de burada olmalı: bu klasör ayrı bir repoya taşınacak ve o gün kök
+# .gitignore gelmeyecek. Yalnızca `.env*.local` yazsaydı, taşındıktan sonra
+# .env sessizce commit'lenmeye başlardı.
+.env
 .env*.local
 
 # typescript
