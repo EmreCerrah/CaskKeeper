@@ -58,6 +58,7 @@ experiences**.
 | Mobile · Slice 0 — API a native client can use | ✅ Done | #27 |
 | Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
 | Mobile · Slice 2 — Catalogue screens | ✅ Done | #30 |
+| Mobile · Slice 3 — Tasting notes | ✅ Done | #31 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -465,6 +466,40 @@ invalidation and request races right ourselves.
 > Query keys live in one file (`src/data/keys.ts`) for the same reason: when
 > offline persistence arrives, *what gets stored* is answered in terms of those
 > keys.
+
+### Slice 3 — Tasting notes ✅ (PR #31)
+
+The app's actual purpose: writing down what you tasted. My Tastings tab, the
+note form, editing and deleting.
+
+- [x] The aroma wheel is **served from the API** (`GET /api/aroma-wheel`) rather
+      than copied into the app — see below, this is the point of the slice
+- [x] One scrolling form, not a wizard: the same sections as the web (session,
+      nose, palate, finish, personal). Steps would add state and back-button
+      behaviour and give nothing back
+- [x] Aroma categories start collapsed with a selected count in the header —
+      sixty tags in one flat list is unusable on a phone, and a collapsed
+      category must not hide the fact that you chose something in it
+- [x] Score is stepped (±1, ±5), not a slider: a tasting score is a whole number
+      the user usually has in mind, and picking 88 over 89 on a slider is a fight
+- [x] Editing included. With only delete, a typo would be permanent — and the
+      form is already shared, so editing is the same component with initial values
+- [x] Deleting is two-step, the same pattern as the web's `DeleteWhiskeyButton`
+
+> **Why the aroma wheel became an endpoint.** Tags are written to the database
+> **as text** (`"Elma (Apple)"`), and the statistics and recommendation engine
+> match on those strings. A copy in the mobile app would drift the moment the
+> web's list changed, and the two clients would start producing different tags —
+> no error anywhere, just wrong statistics.
+>
+> The response carries only what can drift: `category` and `tags`. The Tailwind
+> `color` is not sent (it means nothing off the web) and neither is `label` —
+> category headings are presentation, so the client translates them from the
+> id. **Tags pass through untouched**; translating them would corrupt the data.
+>
+> A test pins the constant's integrity — unique category ids, no tag in two
+> categories, no stray whitespace — because that list is part of the data schema,
+> not decoration.
 
 ---
 

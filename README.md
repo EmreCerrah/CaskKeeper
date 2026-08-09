@@ -418,6 +418,7 @@ failure, the per-field messages.
 | GET | `/api/auth/me` | Current user | ✔ |
 | GET | `/api/whiskeys` | Catalogue — search, filters, pagination | — |
 | POST | `/api/whiskeys` | Add a whisky to the catalogue | ✔ admin |
+| GET | `/api/aroma-wheel` | Aroma categories and their tags, for tasting-note clients | — |
 | GET | `/api/whiskeys/facets` | Type / region / country values for filter menus | — |
 | GET | `/api/whiskeys/compare` | Up to three whiskies by `?slug=` (order preserved) | — |
 | GET | `/api/whiskeys/[slug]` | Whisky detail | — |
