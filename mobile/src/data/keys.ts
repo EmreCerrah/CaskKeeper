@@ -29,4 +29,12 @@ export const queryKeys = {
     detail: (id: string) => ["tastingNotes", "detail", id] as const,
   },
   aromaWheel: () => ["aromaWheel"] as const,
+  feed: () => ["feed"] as const,
+  users: {
+    /** Takip değişince arama sonuçlarındaki durumlar da tazelenmeli. */
+    all: ["users"] as const,
+    search: (query: string) => ["users", "search", query] as const,
+    profile: (id: string) => ["users", "profile", id] as const,
+    notes: (id: string) => ["users", "notes", id] as const,
+  },
 } as const;

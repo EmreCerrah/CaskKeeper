@@ -59,6 +59,7 @@ experiences**.
 | Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
 | Mobile · Slice 2 — Catalogue screens | ✅ Done | #30 |
 | Mobile · Slice 3 — Tasting notes | ✅ Done | #31 |
+| Mobile · Slice 4 — Feed, people and following | ✅ Done | #32 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -500,6 +501,40 @@ note form, editing and deleting.
 > A test pins the constant's integrity — unique category ids, no tag in two
 > categories, no stray whitespace — because that list is part of the data schema,
 > not decoration.
+
+### Slice 4 — Feed, people and following ✅ (PR #32)
+
+The social layer: the public tastings of the people you follow.
+
+A feed screen on its own is useless — following nobody means an empty list — so
+this slice carries **finding and following people** with it. Every endpoint it
+needs already existed; **nothing on the server changed.**
+
+- [x] Four tabs, not five. Catalogue · Feed · My Tastings · Profile. People
+      search lives inside the Feed stack, reached from the header and from the
+      empty feed — which is itself the natural prompt, since an empty feed means
+      "you follow nobody"
+- [x] Likes update **optimistically**. A heart that waits for a network round
+      trip feels broken
+- [x] Following does **not** update optimistically, deliberately: following
+      changes the whole feed, and guessing the server's ordering client-side
+      would be worse than a spinner
+- [x] Privacy stays on the server. `/api/feed` returns only public notes from
+      followed users; the client does not filter again — a second filter is one
+      that can be forgotten, and that day it leaks
+- [x] The public note view has no editing. Editing your own note lives in
+      `tadimlarim/[id]`; this screen can be showing someone else's
+
+> **The fiddly part earned its own module.** The feed is paginated
+> (`useInfiniteQuery`), so an optimistic like has to find the right note across
+> pages without disturbing anything else. `like-cache.ts` is pure and tested —
+> the tests pin that only the target note changes and that page boundaries,
+> totals and ordering survive, because quietly corrupting a neighbouring page is
+> exactly the bug this shape invites.
+
+> A test also caught an imprecise signature: `toggleLikeOnNote` always produces
+> `interactions`, but its return type said the field stayed optional. Fixed in
+> the source rather than papered over in the test.
 
 ---
 
