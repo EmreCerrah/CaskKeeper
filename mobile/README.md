@@ -113,8 +113,27 @@ offline support is meant to be added *inside that layer*, without touching a
 single screen.
 
 Query keys live in `src/data/keys.ts` rather than being written inline, because
-when offline persistence arrives, deciding *what gets stored* is a question
-about those keys.
+deciding *what gets stored offline* is a question about those keys.
+
+## Offline
+
+The query cache is written to disk, so the app opens without a connection. It is
+**always on** — no switch. A phone is a personal device and app storage is
+sandboxed, so the web's opt-in switch (which exists because a browser is often
+shared) does not carry over.
+
+**What is stored:** the catalogue and your own tasting notes. **What is not:**
+the feed, other people's profiles, and single-note details — a note opened from
+the feed may belong to someone else, and the query key cannot tell the two
+apart. The rule lives in `src/data/persist-rules.ts`, is pure, and is **tested**,
+because it is a privacy boundary rather than a performance tweak.
+
+Signing out deletes the stored copy, for the same reason the web wipes its
+offline copy: the next person to sign in on that device must not inherit it.
+
+> Known limit: offline, tapping a note in My Tastings fails, because single-note
+> details are deliberately not stored. The list card already shows the whisky,
+> score and date.
 
 **Errors come from the server already translated.** Every request carries
 `Accept-Language`, and the server renders its messages in the language of the

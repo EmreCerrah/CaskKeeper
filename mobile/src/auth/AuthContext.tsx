@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { apiRequest, ApiError } from "../api/client";
+import { clearPersistedCache } from "../data/persist";
 import { clearToken, readToken, writeToken } from "./storage";
 
 /**
@@ -45,6 +47,7 @@ interface AuthState {
 const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isRestoring, setIsRestoring] = useState(true);
@@ -104,9 +107,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await clearToken();
+
+    // Cihazdaki kalıcı önbellekte kullanıcının KENDİ tadım notları var.
+    // Aynı telefona giren bir sonraki kişi onları devralmamalı — web tarafında
+    // logout-client.ts de çıkışta çevrimdışı kopyayı aynı gerekçeyle siliyor.
+    // Sırası önemli: önce diskteki kopya, sonra bellekteki önbellek.
+    await clearPersistedCache();
+    queryClient.clear();
+
     setToken(null);
     setUser(null);
-  }, []);
+  }, [queryClient]);
 
   /**
    * Kullanıcıyı sunucudan yeniden okur.

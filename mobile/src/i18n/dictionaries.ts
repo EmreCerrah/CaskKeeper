@@ -164,6 +164,8 @@ export const tr = {
   "profile.closeCancel": "Vazgeç",
   "profile.closeFailed": "Hesap kapatılamadı",
 
+  "offline.banner": "Çevrimdışısınız — kayıtlı veriler gösteriliyor",
+
   "common.loading": "Yükleniyor…",
   "common.back": "Geri",
 } as const;
@@ -320,6 +322,8 @@ export const en: Record<TranslationKey, string> = {
   "profile.closeConfirm": "Close my account permanently",
   "profile.closeCancel": "Cancel",
   "profile.closeFailed": "Could not close the account",
+
+  "offline.banner": "You are offline — showing saved data",
 
   "common.loading": "Loading…",
   "common.back": "Back",
