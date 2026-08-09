@@ -42,6 +42,20 @@ npx expo start
 | `npm test` | Unit tests (Vitest) |
 | `npm run typecheck` | `tsc --noEmit` |
 
+### Checking that the app actually builds — without a phone
+
+Tests, the type check and `expo-doctor` all pass without ever asking Metro to
+build anything, so none of them notice a broken bundle. Ask the dev server for
+one directly:
+
+```bash
+curl -o /dev/null -w "%{http_code}\n" "http://localhost:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true"
+```
+
+`200` means the app builds. A `500` body carries the real error — that is how a
+missing `babel-preset-expo` was caught, which had left the app unable to bundle
+while every other check stayed green.
+
 ## How it is put together
 
 ```

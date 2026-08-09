@@ -381,6 +381,22 @@ is **still signed in after the app is closed and reopened**.
 > aligning `react-dom` to the pinned React — `react-dom` is only there for the
 > developer tools and never runs in the app.
 
+> **The app could not bundle at all — also PR #29.** `babel.config.js` names
+> `babel-preset-expo`, but the package was never added as a dependency. Metro
+> died on startup with *Failed to construct transformer:
+> Cannot find module 'babel-preset-expo'*, so no bundle was ever produced.
+>
+> The lesson is about what the existing checks can and cannot see: the tests
+> passed, the type check passed, and `expo-doctor` reported 20/20 — none of them
+> ever ask Metro to build anything. The gap closed by requesting a bundle from
+> the dev server directly, which needs no phone:
+>
+> ```
+> curl "http://localhost:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true"
+> ```
+>
+> A 200 with a few megabytes means the app builds; a 500 carries the real error.
+
 > **Corrected in PR #29 — worth remembering.** The first attempt set
 > `android.usesCleartextTraffic` directly in `app.json`. That field does not
 > exist in the Expo config schema and is **ignored without complaint**: harmless
