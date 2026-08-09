@@ -221,6 +221,16 @@ const TARGETS: Array<{ path: string; size: number; opts?: IconOptions }> = [
   { path: "public/icons/icon-192.png", size: 192 },
   { path: "public/icons/icon-512.png", size: 512 },
   { path: "public/icons/icon-maskable-512.png", size: 512, opts: { maskable: true } },
+
+  // Mobil uygulama (mobile/). Aynı tasarım kullanılıyor ki iki uygulama aynı
+  // görünsün; mobil tarafta üretilmiş PNG'ler commit'li duruyor, o yüzden
+  // ayrı repoya taşındığında beraber gidiyorlar ve bu script'e ihtiyaç kalmıyor.
+  //
+  // Şeffaf köşe YOK (opaqueSquare): Android ve iOS uygulama ikonuna kendi
+  // maskesini uyguluyor, şeffaf köşe bırakmak çift yuvarlatma demek olurdu.
+  { path: "mobile/assets/icon.png", size: 1024, opts: { opaqueSquare: true } },
+  { path: "mobile/assets/splash-icon.png", size: 512, opts: { opaqueSquare: true } },
+  { path: "mobile/assets/favicon.png", size: 48 },
 ];
 
 function main() {

@@ -145,6 +145,25 @@ export const tr = {
   "note.finish": "Bitiş",
   "note.personal": "Kişisel notlar",
 
+  "profile.title": "Profilim",
+  "profile.edit": "Profil Bilgileri",
+  "profile.name": "İsim",
+  "profile.bio": "Hakkımda",
+  "profile.picture": "Profil fotoğrafı (URL)",
+  "profile.save": "Kaydet",
+  "profile.saved": "Kaydedildi",
+  "profile.saveFailed": "Profil güncellenemedi",
+  "profile.dangerZone": "Hesabı Kapat",
+  "profile.closeDescription":
+    "Hesabınızı kapattığınızda profiliniz, tadım notlarınız ve yorumlarınız görünmez olur.",
+  "profile.closeWarning":
+    "Bu işlem geri alınamaz. Hesabınızı sonradan yeniden açamazsınız.",
+  "profile.closeStart": "Hesabımı kapatmak istiyorum",
+  "profile.closePassword": "Parolanız",
+  "profile.closeConfirm": "Hesabımı kalıcı olarak kapat",
+  "profile.closeCancel": "Vazgeç",
+  "profile.closeFailed": "Hesap kapatılamadı",
+
   "common.loading": "Yükleniyor…",
   "common.back": "Geri",
 } as const;
@@ -283,6 +302,24 @@ export const en: Record<TranslationKey, string> = {
   "note.palate": "Palate",
   "note.finish": "Finish",
   "note.personal": "Personal notes",
+
+  "profile.title": "My Profile",
+  "profile.edit": "Profile Details",
+  "profile.name": "Name",
+  "profile.bio": "About me",
+  "profile.picture": "Profile picture (URL)",
+  "profile.save": "Save",
+  "profile.saved": "Saved",
+  "profile.saveFailed": "Could not update the profile",
+  "profile.dangerZone": "Close Account",
+  "profile.closeDescription":
+    "Closing your account hides your profile, your tasting notes and your comments.",
+  "profile.closeWarning": "This cannot be undone. You will not be able to reopen the account.",
+  "profile.closeStart": "I want to close my account",
+  "profile.closePassword": "Your password",
+  "profile.closeConfirm": "Close my account permanently",
+  "profile.closeCancel": "Cancel",
+  "profile.closeFailed": "Could not close the account",
 
   "common.loading": "Loading…",
   "common.back": "Back",

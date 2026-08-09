@@ -138,6 +138,20 @@ from API 28 onwards. Point the app at an HTTPS API and this can be removed.
 > costs nothing in Expo Go (it permits cleartext anyway) and then fails in a
 > standalone APK, where it matters. `npx expo-doctor` catches this.
 
+## Icons
+
+The app icon and splash are **generated from code** by the web repository's
+`scripts/generate-icons.ts` (`npm run icons:generate` from the repository root),
+which draws the same whisky glass the web app uses. No image library, no
+hand-made asset — the design lives in one place so the two apps cannot drift
+apart visually.
+
+The PNGs are committed, so they travel with this folder when it moves to its own
+repository; the generator stays behind, and regenerating then means either
+copying the script or replacing the files by hand.
+
+Tab bar icons come from `@expo/vector-icons`, which ships with Expo.
+
 ## Moving this into its own repository
 
 The folder is self-contained: nothing here imports from the web app, and it has
