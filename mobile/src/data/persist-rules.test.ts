@@ -25,6 +25,11 @@ describe("shouldPersistQuery — saklananlar", () => {
   it("kendi tadım notlarım saklanır", () => {
     expect(shouldPersistQuery(queryKeys.tastingNotes.mine())).toBe(true);
   });
+
+  it("panel ve istatistikler saklanır — kendi notlarımdan hesaplanıyor", () => {
+    expect(shouldPersistQuery(queryKeys.dashboard())).toBe(true);
+    expect(shouldPersistQuery(queryKeys.analytics())).toBe(true);
+  });
 });
 
 describe("shouldPersistQuery — saklanmayanlar", () => {
@@ -36,6 +41,10 @@ describe("shouldPersistQuery — saklanmayanlar", () => {
     expect(shouldPersistQuery(queryKeys.users.search("emre"))).toBe(false);
     expect(shouldPersistQuery(queryKeys.users.profile("abc"))).toBe(false);
     expect(shouldPersistQuery(queryKeys.users.notes("abc"))).toBe(false);
+  });
+
+  it("ÖNERİLER saklanmaz — her yeni notla değişen hesaplanmış liste", () => {
+    expect(shouldPersistQuery(queryKeys.recommendations())).toBe(false);
   });
 
   it("tek not detayı saklanmaz — akıştan açılan başkasının olabilir", () => {

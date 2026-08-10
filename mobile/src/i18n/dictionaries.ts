@@ -166,6 +166,50 @@ export const tr = {
 
   "offline.banner": "Çevrimdışısınız — kayıtlı veriler gösteriliyor",
 
+  "dashboard.title": "Panelim",
+  "dashboard.subtitle": "İşte tadım yolculuğunuzun özeti.",
+  "dashboard.statTotal": "Toplam Tadım",
+  "dashboard.statDistinct": "Farklı Viski",
+  "dashboard.statAverage": "Ortalama Puan",
+  "dashboard.statFavorites": "Favori Tadım",
+  "dashboard.palateProfile": "Damak Profiliniz",
+  "dashboard.topFlavors": "En Çok Seçtiğiniz Aromalar",
+  "dashboard.noFlavors":
+    "Tadım notlarınızda aroma etiketi seçtikçe damak profiliniz burada şekillenecek.",
+
+  "stats.trendTitle": "Zaman İçinde Aroma Değişimi",
+  "stats.byType": "Tipe Göre",
+  "stats.byRegion": "Bölgeye Göre",
+  "stats.topDistilleries": "En Çok Tadılan Damıtımevleri",
+  "stats.empty": "Henüz tadım notunuz yok.",
+
+  "trend.empty":
+    "Tadım notlarınızda aroma etiketi seçtikçe zaman içindeki değişim burada görünecek.",
+  "trend.barLabel": "{period}: {count} aroma etiketi",
+  "trend.tagCount": "{count} etiket",
+
+  "recommendations.title": "Öneriler",
+  "recommendations.subtitle":
+    "Tadım notlarınızdaki aroma tercihlerinize göre, henüz denemediğiniz viskiler.",
+  "recommendations.empty": "Henüz size özel öneri oluşturamadık.",
+  "recommendations.emptyHint":
+    "Tadım notlarınızda aroma etiketi seçtikçe damak profiliniz oluşur ve öneriler burada görünür.",
+  "match.percent": "%{percent} eşleşme",
+
+  // Ay adları sözlükte: Intl.DateTimeFormat yerine (bkz. period.ts).
+  "month.1": "Ocak",
+  "month.2": "Şubat",
+  "month.3": "Mart",
+  "month.4": "Nisan",
+  "month.5": "Mayıs",
+  "month.6": "Haziran",
+  "month.7": "Temmuz",
+  "month.8": "Ağustos",
+  "month.9": "Eylül",
+  "month.10": "Ekim",
+  "month.11": "Kasım",
+  "month.12": "Aralık",
+
   "common.loading": "Yükleniyor…",
   "common.back": "Geri",
 } as const;
@@ -324,6 +368,49 @@ export const en: Record<TranslationKey, string> = {
   "profile.closeFailed": "Could not close the account",
 
   "offline.banner": "You are offline — showing saved data",
+
+  "dashboard.title": "My Dashboard",
+  "dashboard.subtitle": "Here is your tasting journey so far.",
+  "dashboard.statTotal": "Total Tastings",
+  "dashboard.statDistinct": "Distinct Whiskies",
+  "dashboard.statAverage": "Average Score",
+  "dashboard.statFavorites": "Favourite Tastings",
+  "dashboard.palateProfile": "Your Palate Profile",
+  "dashboard.topFlavors": "The Aromas You Pick Most",
+  "dashboard.noFlavors":
+    "As you tag aromas in your tasting notes, your palate profile will take shape here.",
+
+  "stats.trendTitle": "Aroma Shift Over Time",
+  "stats.byType": "By Type",
+  "stats.byRegion": "By Region",
+  "stats.topDistilleries": "Most Tasted Distilleries",
+  "stats.empty": "No tasting notes yet.",
+
+  "trend.empty":
+    "As you tag aromas in your tasting notes, the shift over time will show up here.",
+  "trend.barLabel": "{period}: {count} aroma tags",
+  "trend.tagCount": "{count} tags",
+
+  "recommendations.title": "Recommendations",
+  "recommendations.subtitle":
+    "Whiskies you have not tried yet, ranked by the aromas you reach for most.",
+  "recommendations.empty": "We cannot suggest anything for you yet.",
+  "recommendations.emptyHint":
+    "As you tag aromas in your tasting notes, your palate profile builds up and recommendations appear here.",
+  "match.percent": "{percent}% match",
+
+  "month.1": "January",
+  "month.2": "February",
+  "month.3": "March",
+  "month.4": "April",
+  "month.5": "May",
+  "month.6": "June",
+  "month.7": "July",
+  "month.8": "August",
+  "month.9": "September",
+  "month.10": "October",
+  "month.11": "November",
+  "month.12": "December",
 
   "common.loading": "Loading…",
   "common.back": "Back",

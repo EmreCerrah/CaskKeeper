@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "../../src/auth/AuthContext";
-import { Button } from "../../src/components/Button";
-import { WhiskeyImage } from "../../src/components/WhiskeyImage";
-import { useCloseAccount, useUpdateProfile } from "../../src/data/profile";
-import { t } from "../../src/i18n";
-import { theme } from "../../src/theme";
+import { useAuth } from "../../../src/auth/AuthContext";
+import { Button } from "../../../src/components/Button";
+import { Section } from "../../../src/components/Section";
+import { WhiskeyImage } from "../../../src/components/WhiskeyImage";
+import { useCloseAccount, useUpdateProfile } from "../../../src/data/profile";
+import { t } from "../../../src/i18n";
+import { theme } from "../../../src/theme";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -62,6 +64,22 @@ export default function ProfileScreen() {
             <WhiskeyImage uri={picture || undefined} fallbackText={user?.name ?? "?"} size={72} />
             <Text style={styles.name}>{user?.name}</Text>
             <Text style={styles.email}>{user?.email}</Text>
+          </View>
+
+          {/* Panel ve öneriler ayrı bir sekme değil, buradan açılıyor: sekme
+              çubuğu dörtte kalsın diye (beşincide etiketler kırpılıyor) ve
+              çıkış düğmesi alıştığı yerde dursun diye. */}
+          <View style={styles.links}>
+            <LinkRow
+              icon="stats-chart-outline"
+              label={t("dashboard.title")}
+              onPress={() => router.push("/(app)/profil/panelim")}
+            />
+            <LinkRow
+              icon="sparkles-outline"
+              label={t("recommendations.title")}
+              onPress={() => router.push("/(app)/profil/oneriler")}
+            />
           </View>
 
           <Section title={t("profile.edit")}>
@@ -123,12 +141,26 @@ export default function ProfileScreen() {
   );
 }
 
-function Section({ title, children, danger }: { title: string; children: React.ReactNode; danger?: boolean }) {
+/** Panelim / Öneriler satırı — ikon, etiket ve ileri oku. */
+function LinkRow({
+  icon,
+  label,
+  onPress,
+}: {
+  icon: React.ComponentProps<typeof Ionicons>["name"];
+  label: string;
+  onPress: () => void;
+}) {
   return (
-    <View style={styles.section}>
-      <Text style={[styles.sectionTitle, danger && styles.sectionTitleDanger]}>{title}</Text>
-      <View style={[styles.sectionBody, danger && styles.sectionBodyDanger]}>{children}</View>
-    </View>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.linkRow, pressed && styles.linkRowPressed]}
+    >
+      <Ionicons name={icon} size={20} color={theme.primary} />
+      <Text style={styles.linkLabel}>{label}</Text>
+      <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
+    </Pressable>
   );
 }
 
@@ -159,18 +191,21 @@ const styles = StyleSheet.create({
   header: { alignItems: "center", gap: 4 },
   name: { color: theme.text, fontSize: 22, fontWeight: "700", marginTop: 8 },
   email: { color: theme.textMuted, fontSize: 13 },
-  section: { gap: 8 },
-  sectionTitle: { color: theme.text, fontSize: 17, fontWeight: "700" },
-  sectionTitleDanger: { color: theme.danger },
-  sectionBody: {
+  links: { gap: 8 },
+  linkRow: {
+    alignItems: "center",
     backgroundColor: theme.surface,
     borderColor: theme.border,
     borderRadius: 12,
     borderWidth: 1,
+    flexDirection: "row",
     gap: 12,
-    padding: 14,
+    // 48px dokunma hedefi.
+    minHeight: 48,
+    paddingHorizontal: 14,
   },
-  sectionBodyDanger: { borderColor: theme.danger },
+  linkRowPressed: { opacity: 0.75 },
+  linkLabel: { color: theme.text, flex: 1, fontSize: 15, fontWeight: "600" },
   field: { gap: 6 },
   label: { color: theme.textMuted, fontSize: 13 },
   input: {

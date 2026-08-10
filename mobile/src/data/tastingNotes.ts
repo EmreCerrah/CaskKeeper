@@ -93,7 +93,15 @@ export function useNote(id: string) {
  */
 function useInvalidateNotes() {
   const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries({ queryKey: queryKeys.tastingNotes.all });
+  return () => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.tastingNotes.all });
+    // Panel bu notlardan hesaplanıyor: yeni not yazıldıktan sonra tazelenmezse
+    // "Toplam Tadım" eski sayıda kalır ve kullanıcı notunun kaydolmadığını
+    // sanar.
+    queryClient.invalidateQueries({ queryKey: queryKeys.dashboard() });
+    queryClient.invalidateQueries({ queryKey: queryKeys.analytics() });
+    queryClient.invalidateQueries({ queryKey: queryKeys.recommendations() });
+  };
 }
 
 export function useCreateNote() {
