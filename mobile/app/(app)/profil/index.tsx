@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../../src/auth/AuthContext";
 import { Button } from "../../../src/components/Button";
+import { Field } from "../../../src/components/Field";
 import { Section } from "../../../src/components/Section";
 import { WhiskeyImage } from "../../../src/components/WhiskeyImage";
 import { useCloseAccount, useUpdateProfile } from "../../../src/data/profile";
@@ -83,9 +84,16 @@ export default function ProfileScreen() {
           </View>
 
           <Section title={t("profile.edit")}>
-            <Field label={t("profile.name")} value={name} onChangeText={setName} autoCapitalize="words" />
-            <Field label={t("profile.bio")} value={bio} onChangeText={setBio} multiline />
-            <Field label={t("profile.picture")} value={picture} onChangeText={setPicture} />
+            {/* tone="card": bu alanlar Section'ın surface zemininde duruyor. */}
+            <Field
+              label={t("profile.name")}
+              tone="card"
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
+            />
+            <Field label={t("profile.bio")} tone="card" value={bio} onChangeText={setBio} multiline />
+            <Field label={t("profile.picture")} tone="card" value={picture} onChangeText={setPicture} />
 
             {saveError && <Text style={styles.error}>{saveError}</Text>}
             {saved && !saveError && <Text style={styles.success}>{t("profile.saved")}</Text>}
@@ -109,6 +117,7 @@ export default function ProfileScreen() {
                 <Text style={styles.warning}>{t("profile.closeWarning")}</Text>
                 <Field
                   label={t("profile.closePassword")}
+                  tone="card"
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -164,27 +173,6 @@ function LinkRow({
   );
 }
 
-function Field({
-  label,
-  multiline,
-  ...props
-}: { label: string; multiline?: boolean } & React.ComponentProps<typeof TextInput>) {
-  return (
-    <View style={styles.field}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={[styles.input, multiline && styles.inputMultiline]}
-        placeholderTextColor={theme.textMuted}
-        autoCapitalize="none"
-        autoCorrect={false}
-        multiline={multiline}
-        textAlignVertical={multiline ? "top" : "center"}
-        {...props}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: theme.background },
   content: { gap: 18, padding: 16, paddingBottom: 48 },
@@ -206,19 +194,6 @@ const styles = StyleSheet.create({
   },
   linkRowPressed: { opacity: 0.75 },
   linkLabel: { color: theme.text, flex: 1, fontSize: 15, fontWeight: "600" },
-  field: { gap: 6 },
-  label: { color: theme.textMuted, fontSize: 13 },
-  input: {
-    backgroundColor: theme.background,
-    borderColor: theme.border,
-    borderRadius: 8,
-    borderWidth: 1,
-    color: theme.text,
-    fontSize: 15,
-    minHeight: 48,
-    paddingHorizontal: 14,
-  },
-  inputMultiline: { minHeight: 88, paddingTop: 12 },
   muted: { color: theme.textMuted, fontSize: 13, lineHeight: 19 },
   warning: { color: theme.danger, fontSize: 13, lineHeight: 19 },
   error: { color: theme.danger, fontSize: 13 },
