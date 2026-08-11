@@ -572,9 +572,64 @@ the screens* — held: **not one file under `app/(app)/` changed.**
 > from the feed, which may belong to someone else, and the key cannot tell them
 > apart. The list card already shows the whisky, score and date.
 
+### Slice 6 — Dashboard, statistics and recommendations ✅ (PR #35)
+
+The app could write tasting notes but never showed what they added up to. This
+brings the web's `/panel`, `/panel/istatistikler` and `/panel/oneriler` to the
+phone. **Nothing on the server changed** — all three endpoints existed and
+already accepted a bearer token.
+
+- [x] **The tab bar stays at four.** A fifth tab clips its label on small
+      phones, so *My Dashboard* and *Recommendations* open from inside the
+      Profile tab, which becomes its own stack. The sign-out button keeps its
+      place — the profile was hard enough to find the first time
+- [x] The dashboard and the detailed statistics are **one screen**, not the
+      web's two. On a phone one scroll beats a round trip
+- [x] The "Recent tastings" block is **left out**: the My Tastings tab already
+      shows that list
+- [x] Charts are plain `View`s. **No charting library was added**, matching the
+      web side where they are plain CSS
+- [x] The stacked trend bars carry **no per-segment numbers**. The web reads
+      them from a hover tooltip, which has no touch equivalent, and a
+      few-pixel segment cannot be hit with a finger. Screen readers get the
+      month and total through `accessibilityLabel`
+- [x] `WhiskeyCard` grew a `footer` slot rather than gaining a second copy for
+      the recommendation list
+
+> **Two translation traps, both real, both closed.** The server sends aroma
+> category labels in Turkish — `{"category": "sweet", "label": "Tatlı (Sweet)"}`,
+> confirmed against the running app — so the mobile side ignores that field and
+> translates from the `category` id (`i18n/aroma.ts`). Month names come from the
+> dictionary rather than `Intl`, whose Hermes support varies by build and
+> degrades silently, leaving a raw `2026-03` on screen.
+
+> **The chart maths is pure and tested** (`charts/chart-math.ts`). A wrong
+> percentage never raises an error; it just draws a wrong picture. The tests pin
+> the zero and empty cases, because every number is zero before the first note.
+
+> **The offline decision is a privacy boundary, so it was made explicitly, not
+> inherited.** The dashboard and analytics are persisted — both are computed
+> from the user's own notes, the same category as "your own tasting notes are
+> stored". Recommendations are **not**: the list is recomputed from the palate
+> profile with every new note, and a stale copy would keep claiming something
+> that is no longer true. The catalogue behind it is cached anyway; only the
+> ranking is lost.
+
 ---
 
 ## What's Next
+
+### Mobile · wishlist — not built
+
+The web has a wishlist (Phase 3, Slice C) and `/api/wishlist` is live, but the
+app cannot reach it. The recommendation screen makes the gap obvious: there is
+nowhere to say "I want to try this one."
+
+### Mobile · comments and notifications — not built
+
+`/api/tasting-notes/[id]/comments`, `/api/comments/[id]` and the three
+`/api/notifications` endpoints are all live and unused by the app. Two jobs
+really: commenting on a note, and a notification screen with an unread badge.
 
 ### Mobile · offline writing — not built
 
