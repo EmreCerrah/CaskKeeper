@@ -10,7 +10,7 @@
  */
 
 /** Kalıcı depoya yazılacak sorgu kökleri. */
-const PERSISTED_ROOTS = ["whiskeys", "aromaWheel", "dashboard", "analytics"] as const;
+const PERSISTED_ROOTS = ["whiskeys", "aromaWheel", "dashboard", "analytics", "wishlist"] as const;
 
 export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
   const [root, scope] = queryKey;
@@ -22,6 +22,10 @@ export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
   //
   // Panel ve istatistikler: kullanıcının KENDİ notlarından hesaplanıyor, yani
   // "kendi notların saklanır" kuralının aynısı. Başkasının verisi içermiyor.
+  //
+  // İstek listesi: yine kendi verin, içindeki viskiler zaten saklanan
+  // katalogdan. Barda çekmezken "ne almak istiyordum" tam çevrimdışı senaryo.
+  // Ekleme/kaldırma yine ağ istiyor — çevrimdışı YAZMA ayrı bir iş.
   if ((PERSISTED_ROOTS as readonly string[]).includes(root)) return true;
 
   // Öneriler saklanmıyor — burada teknik bir engel yok, bilinçli bir tercih.

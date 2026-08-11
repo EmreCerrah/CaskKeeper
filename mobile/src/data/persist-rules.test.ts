@@ -30,6 +30,11 @@ describe("shouldPersistQuery — saklananlar", () => {
     expect(shouldPersistQuery(queryKeys.dashboard())).toBe(true);
     expect(shouldPersistQuery(queryKeys.analytics())).toBe(true);
   });
+
+  it("istek listesi ve tek viski durumu saklanır", () => {
+    expect(shouldPersistQuery(queryKeys.wishlist.list())).toBe(true);
+    expect(shouldPersistQuery(queryKeys.wishlist.status("abc"))).toBe(true);
+  });
 });
 
 describe("shouldPersistQuery — saklanmayanlar", () => {

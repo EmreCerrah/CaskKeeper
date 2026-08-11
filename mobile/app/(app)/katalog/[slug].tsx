@@ -2,6 +2,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-nat
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "../../../src/components/Button";
 import { WhiskeyImage } from "../../../src/components/WhiskeyImage";
+import { WishlistButton } from "../../../src/components/whiskey/WishlistButton";
 import { useWhiskey } from "../../../src/data/whiskeys";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
@@ -73,6 +74,10 @@ export default function WhiskeyDetailScreen() {
           })
         }
       />
+
+      {/* Not yazmak birincil eylem; istek listesi "henüz tatmadım ama
+          istiyorum" durumu, o yüzden altında ve ikincil görünümde. */}
+      <WishlistButton whiskey={whiskey} />
 
       <Section title={t("whiskey.specs")}>
         {specs.map((spec) => (

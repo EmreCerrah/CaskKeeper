@@ -196,6 +196,15 @@ export const tr = {
     "Tadım notlarınızda aroma etiketi seçtikçe damak profiliniz oluşur ve öneriler burada görünür.",
   "match.percent": "%{percent} eşleşme",
 
+  "wishlist.title": "İstek Listem",
+  "wishlist.count": "Denemeyi düşündüğünüz {count} viski.",
+  "wishlist.empty": "İstek listeniz henüz boş.",
+  "wishlist.emptyHint":
+    "Katalogdan bir viski açıp \"İstek Listeme Ekle\" deyin, burada toplansın.",
+  "whiskey.wishlistAdd": "İstek Listeme Ekle",
+  "whiskey.wishlistAdded": "İstek Listemde",
+  "whiskey.wishlistRemove": "İstek listesinden kaldır",
+
   // Ay adları sözlükte: Intl.DateTimeFormat yerine (bkz. period.ts).
   "month.1": "Ocak",
   "month.2": "Şubat",
@@ -398,6 +407,14 @@ export const en: Record<TranslationKey, string> = {
   "recommendations.emptyHint":
     "As you tag aromas in your tasting notes, your palate profile builds up and recommendations appear here.",
   "match.percent": "{percent}% match",
+
+  "wishlist.title": "My Wishlist",
+  "wishlist.count": "{count} whiskies you mean to try.",
+  "wishlist.empty": "Your wishlist is empty.",
+  "wishlist.emptyHint": "Open a whisky in the catalogue and tap \"Add to Wishlist\" to collect it here.",
+  "whiskey.wishlistAdd": "Add to Wishlist",
+  "whiskey.wishlistAdded": "On Your Wishlist",
+  "whiskey.wishlistRemove": "Remove from wishlist",
 
   "month.1": "January",
   "month.2": "February",

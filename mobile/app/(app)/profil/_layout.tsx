@@ -16,6 +16,7 @@ export default function ProfileLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="panelim" options={{ title: t("dashboard.title") }} />
       <Stack.Screen name="oneriler" options={{ title: t("recommendations.title") }} />
+      <Stack.Screen name="istek-listem" options={{ title: t("wishlist.title") }} />
     </Stack>
   );
 }
