@@ -7,7 +7,7 @@ is known.
 > Update rule: when a feature lands on `main`, tick its box and record the PR
 > number. When you notice new technical debt, add it to the relevant section.
 
-**Last updated:** 2026-08-06 · **Status:** live at
+**Last updated:** 2026-08-12 · **Status:** live at
 <https://cask-keeper.vercel.app>; all planned phases complete, remaining work is
 hardening (see [What's Next](#whats-next))
 
@@ -62,6 +62,9 @@ experiences**.
 | Mobile · Slice 4 — Feed, people and following | ✅ Done | #32 |
 | Mobile · Tab icons, app icon and a real profile screen | ✅ Done | #33 |
 | Mobile · Slice 5 — Offline reading | ✅ Done | #34 |
+| Mobile · Slice 6 — Dashboard, statistics and recommendations | ✅ Done | #35 |
+| Mobile · One shared `Field` component across the forms | ✅ Done | #36 |
+| Mobile · Slice 7 — Wishlist | ✅ Done | #38 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -572,9 +575,92 @@ the screens* — held: **not one file under `app/(app)/` changed.**
 > from the feed, which may belong to someone else, and the key cannot tell them
 > apart. The list card already shows the whisky, score and date.
 
+### Slice 6 — Dashboard, statistics and recommendations ✅ (PR #35)
+
+The app could write tasting notes but never showed what they added up to. This
+brings the web's `/panel`, `/panel/istatistikler` and `/panel/oneriler` to the
+phone. **Nothing on the server changed** — all three endpoints existed and
+already accepted a bearer token.
+
+- [x] **The tab bar stays at four.** A fifth tab clips its label on small
+      phones, so *My Dashboard* and *Recommendations* open from inside the
+      Profile tab, which becomes its own stack. The sign-out button keeps its
+      place — the profile was hard enough to find the first time
+- [x] The dashboard and the detailed statistics are **one screen**, not the
+      web's two. On a phone one scroll beats a round trip
+- [x] The "Recent tastings" block is **left out**: the My Tastings tab already
+      shows that list
+- [x] Charts are plain `View`s. **No charting library was added**, matching the
+      web side where they are plain CSS
+- [x] The stacked trend bars carry **no per-segment numbers**. The web reads
+      them from a hover tooltip, which has no touch equivalent, and a
+      few-pixel segment cannot be hit with a finger. Screen readers get the
+      month and total through `accessibilityLabel`
+- [x] `WhiskeyCard` grew a `footer` slot rather than gaining a second copy for
+      the recommendation list
+
+> **Two translation traps, both real, both closed.** The server sends aroma
+> category labels in Turkish — `{"category": "sweet", "label": "Tatlı (Sweet)"}`,
+> confirmed against the running app — so the mobile side ignores that field and
+> translates from the `category` id (`i18n/aroma.ts`). Month names come from the
+> dictionary rather than `Intl`, whose Hermes support varies by build and
+> degrades silently, leaving a raw `2026-03` on screen.
+
+> **The chart maths is pure and tested** (`charts/chart-math.ts`). A wrong
+> percentage never raises an error; it just draws a wrong picture. The tests pin
+> the zero and empty cases, because every number is zero before the first note.
+
+> **The offline decision is a privacy boundary, so it was made explicitly, not
+> inherited.** The dashboard and analytics are persisted — both are computed
+> from the user's own notes, the same category as "your own tasting notes are
+> stored". Recommendations are **not**: the list is recomputed from the palate
+> profile with every new note, and a stale copy would keep claiming something
+> that is no longer true. The catalogue behind it is cached anyway; only the
+> ranking is lost.
+
+### Slice 7 — Wishlist ✅ (PR #38)
+
+The web has had a wishlist since Phase 3 and `/api/wishlist` was live all along,
+but the app could not reach it. Slice 6 made the gap obvious: the recommendation
+screen says "you should try this" and there was nowhere to say "yes, I want that
+one."
+
+- [x] Add/remove on the whisky detail screen, list under Profile → My Wishlist
+      (the tab bar still stays at four)
+- [x] The list screen has **no remove button**. Tapping a whisky opens the
+      catalogue detail, where adding and removing already live — two buttons in
+      two places would both have to reflect the same state
+- [x] Persisted offline. The user's own data, and the whiskies in it come from
+      the catalogue, which is already stored. Adding and removing still need the
+      network
+- [x] `WhiskeyCard` reused as-is; no second card component
+
+> **One endpoint was added rather than worked around.**
+> `GET /api/whiskeys/[slug]` is public and carries no `isWishlisted` field — the
+> web reads that state through the service directly, because its detail page is
+> a server component. Fetching the whole list and searching it client-side would
+> have avoided touching the server, but `WishlistRepository.findByUser` caps
+> `limit` at 100, so a user past that number would have seen a button in the
+> wrong state with nothing to signal it. `GET /api/wishlist/[whiskeyId]` is thin
+> and reuses `wishlistService.isWishlisted`; the web is untouched.
+
+> **Optimistic here, unlike the web**, where the button waits for the server. On
+> a phone a bookmark that waits feels broken — the same reasoning as the like
+> button. The list carries a `total` alongside its contents, so the
+> transformation lives in `wishlist-cache.ts`, pure and tested: updating one and
+> forgetting the other would show "3 whiskies" above two cards and raise no
+> error anywhere. The newest-first ordering the cache assumes was checked
+> against the running server rather than guessed.
+
 ---
 
 ## What's Next
+
+### Mobile · comments and notifications — not built
+
+`/api/tasting-notes/[id]/comments`, `/api/comments/[id]` and the three
+`/api/notifications` endpoints are all live and unused by the app. Two jobs
+really: commenting on a note, and a notification screen with an unread badge.
 
 ### Mobile · offline writing — not built
 
