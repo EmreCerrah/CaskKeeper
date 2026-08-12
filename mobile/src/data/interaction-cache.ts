@@ -1,19 +1,20 @@
 /**
  * @file interaction-cache.ts
- * @description Bir notun beğeni ve yorum sayılarını önbellekte yerinde
- * günceller — SAF.
+ * @description Updates a note's like and comment counts in place in the
+ * cache — PURE.
  *
- * Beğeni iyimser uygulanıyor: ağ turunu bekleyen bir kalp bozuk hissettiriyor.
- * Ama akış `useInfiniteQuery` ile SAYFALAR hâlinde duruyor, yani doğru notu
- * bulmak için sayfalarda gezmek gerekiyor ve yanlış sayfayı bozmak kolay.
- * O yüzden dönüşüm burada, ağdan ayrı ve sınanabilir.
+ * Liking is optimistic: a heart that waits for a network round trip feels
+ * broken. But the feed is held in PAGES by `useInfiniteQuery`, so finding the
+ * right note means walking those pages, and corrupting the wrong one is easy.
+ * That is why the transformation lives here, away from the network and
+ * testable.
  *
- * Yorum sayısı da aynı `interactions` nesnesinde ve aynı iki önbellekte
- * duruyor; ikinci bir sayfa gezme kopyası çıkmasın diye o da burada. Dosya
- * eskiden `like-cache.ts` idi, adı bu yüzden genişledi.
+ * The comment count sits in the same `interactions` object and in the same two
+ * caches, so it lives here too rather than growing a second page-walking copy.
+ * The file used to be `like-cache.ts`; the name widened for that reason.
  *
- * Kural: yalnızca hedef not değişir. Diğer notlar, sayfa sınırları, toplam
- * sayılar ve sıralama olduğu gibi kalır.
+ * The rule: only the target note changes. Other notes, page boundaries, totals
+ * and ordering all survive untouched.
  */
 
 export interface Interactions {
@@ -41,11 +42,11 @@ export interface InfiniteData<T> {
 }
 
 /**
- * Tek bir notun beğeni durumunu ters çevirir.
+ * Flips a single note's like state.
  *
- * Dönüş tipinde `interactions` ARTIK isteğe bağlı değil: bilgi hiç yokken bile
- * fonksiyon onu üretiyor, dolayısıyla çağıranın tekrar boşluk kontrolü
- * yapması gerekmiyor.
+ * `interactions` is NO LONGER optional in the return type: the function
+ * produces it even when the information was missing, so callers do not have to
+ * check for absence a second time.
  */
 export function toggleLikeOnNote<T extends LikeableNote>(note: T): T & { interactions: Interactions } {
   const current = note.interactions ?? { likeCount: 0, commentCount: 0, isLikedByViewer: false };
@@ -56,14 +57,14 @@ export function toggleLikeOnNote<T extends LikeableNote>(note: T): T & { interac
     interactions: {
       ...current,
       isLikedByViewer: liked,
-      // Sayı asla negatife düşmemeli: sunucu ile önbellek bir an ayrışırsa
-      // ekranda "-1 beğeni" görünmesin.
+      // The count must never go negative: if the cache and the server drift
+      // apart for a moment, do not show "-1 likes".
       likeCount: Math.max(0, current.likeCount + (liked ? 1 : -1)),
     },
   };
 }
 
-/** Sayfalı akış önbelleğinde hedef notu bulup günceller. */
+/** Finds the target note in the paginated feed cache and updates it. */
 export function toggleLikeInPages<T extends LikeableNote>(
   cached: InfiniteData<T> | undefined,
   noteId: string
@@ -80,11 +81,12 @@ export function toggleLikeInPages<T extends LikeableNote>(
 }
 
 /**
- * Yorum sayısını `delta` kadar kaydırır.
+ * Shifts the comment count by `delta`.
  *
- * Yorumun KENDİSİ iyimser eklenmiyor (bkz. comments.ts) — sunucudan gerçek
- * yorum dönüyor. Ama sayı akış kartında da yazıyor ve orası ayrı bir önbellek;
- * dokunulmazsa kart "2 yorum" derken altında üç yorum görünür.
+ * The comment ITSELF is not added optimistically (see comments.ts) — the
+ * server returns the real one. But the count also appears on the feed card,
+ * which is a separate cache; left alone, the card says "2 comments" above
+ * three of them.
  */
 export function adjustCommentCount<T extends LikeableNote>(
   note: T,
@@ -96,13 +98,13 @@ export function adjustCommentCount<T extends LikeableNote>(
     ...note,
     interactions: {
       ...current,
-      // Beğenideki koruma: ekranda "-1 yorum" görünmesin.
+      // Same guard as likes: never show "-1 comments".
       commentCount: Math.max(0, current.commentCount + delta),
     },
   };
 }
 
-/** Sayfalı akış önbelleğinde hedef notun yorum sayısını kaydırır. */
+/** Shifts the target note's comment count in the paginated feed cache. */
 export function adjustCommentCountInPages<T extends LikeableNote>(
   cached: InfiniteData<T> | undefined,
   noteId: string,

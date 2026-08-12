@@ -8,10 +8,10 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * Bildirimler.
+ * Notifications.
  *
- * Akış yığınının içinde: bildirimlerin neredeyse tamamı akıştaki insanlardan
- * geliyor ve sekme çubuğu dörtte kalıyor.
+ * Inside the feed stack: almost every notification comes from the people in
+ * the feed, and the tab bar stays at four.
  */
 export default function NotificationsScreen() {
   const router = useRouter();
@@ -54,8 +54,8 @@ export default function NotificationsScreen() {
           <Text style={styles.summary}>
             {unreadCount > 0 ? t("notifications.unreadCount", { count: unreadCount }) : t("notifications.allRead")}
           </Text>
-          {/* Okunacak bir şey yokken düğme gösterilmiyor — basıldığında hiçbir
-              şey olmayan bir düğme, bozuk bir düğmeden ayırt edilemez. */}
+          {/* With nothing to read the button is hidden — a button that does
+              nothing when pressed is indistinguishable from a broken one. */}
           {unreadCount > 0 && (
             <Pressable
               onPress={() => markAllRead.mutate()}
@@ -71,8 +71,8 @@ export default function NotificationsScreen() {
         <NotificationRow
           notification={item}
           onPress={() => {
-            // Okundu işaretlemek yönlendirmeyi beklemiyor: iyimser uygulanıyor
-            // ve kullanıcı hedefe gidiyor.
+            // Marking as read does not hold up the navigation: it is applied
+            // optimistically and the user moves on to the target.
             if (!item.isRead) markRead.mutate(item.id);
             router.push(notificationRoute(item));
           }}

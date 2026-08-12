@@ -10,11 +10,12 @@ const STEP = 1;
 const BIG_STEP = 5;
 
 /**
- * 0–100 puan girişi.
+ * A 0–100 score input.
  *
- * Kaydırıcı yerine düğmeler: telefonda kaydırıcıyla 88 ile 89 arasında karar
- * vermek zor, oysa tadım puanı tam sayı ve kullanıcı genelde belirli bir sayıyı
- * hedefliyor. Beşer adım kaba ayar, birer adım ince ayar için.
+ * Buttons rather than a slider: on a phone a slider makes choosing between 88
+ * and 89 hard, while a tasting score is an integer and people usually have a
+ * particular number in mind. Steps of five are the coarse adjustment, steps of
+ * one the fine one.
  */
 export function RatingInput({ value, onChange }: RatingInputProps) {
   function step(delta: number) {
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     justifyContent: "center",
-    // Dokunma hedefi 44px altına düşmemeli (WCAG 2.5.5).
+    // The touch target must not drop below 44px (WCAG 2.5.5).
     minHeight: 48,
     minWidth: 48,
   },

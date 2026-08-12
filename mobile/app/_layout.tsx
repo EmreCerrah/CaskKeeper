@@ -12,25 +12,25 @@ import { OfflineBanner } from "../src/components/OfflineBanner";
 import { theme } from "../src/theme";
 
 /**
- * Uygulamanın kökü: oturum ve veri sağlayıcıları burada.
+ * The root of the app: the session and data providers live here.
  *
- * QueryClientProvider yerine PersistQueryClientProvider — önbellek diske
- * yazılıyor, böylece uygulama bağlantısız açıldığında katalog ve kendi
- * notların okunabiliyor. Neyin yazıldığı persist-rules.ts'te ve testli.
- * Ekranların hiçbiri bu değişiklikten haberdar değil.
+ * PersistQueryClientProvider rather than QueryClientProvider — the cache is
+ * written to disk, so the catalogue and your own notes can be read when the
+ * app opens with no connection. What gets written is decided, and tested, in
+ * persist-rules.ts. No screen knows any of this happened.
  *
- * QueryClient useState ile bir kez kuruluyor — modül seviyesinde oluşturulsaydı
- * geliştirme sırasında her sıcak yenilemede önbellek sıfırlanırdı.
+ * The QueryClient is built once through useState — created at module level it
+ * would reset the cache on every hot reload during development.
  */
 export default function RootLayout() {
   const [queryClient] = useState(createQueryClient);
 
-  // Cihazın ağ durumunu TanStack'e bildirir: bağlantı gelince tazeleme
-  // kendiliğinden oluyor, çevrimdışıyken boşuna istek denenmiyor.
+  // Reports the device's network state to TanStack: refetching happens by
+  // itself on reconnect, and offline requests are not retried pointlessly.
   useEffect(startOnlineManager, []);
 
-  // Uygulama ön plana dönünce bunu isteyen sorgular tazeleniyor — bugün
-  // yalnızca bildirim rozeti.
+  // When the app returns to the foreground, queries that opt in are refetched
+  // — today that is only the notification badge.
   useEffect(startFocusManager, []);
 
   return (

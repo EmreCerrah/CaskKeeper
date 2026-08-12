@@ -3,25 +3,27 @@ import { ApiError, unwrapApiResponse } from "./response";
 
 /**
  * @file client.ts
- * @description API'ye giden tek kapı.
+ * @description The single door to the API.
  *
- * Her istekte üç şey ekler: taban adres, oturum token'ı ve cihazın dili.
- * Sonuncusu önemli — sunucu hata mesajlarını isteğin diline göre döndürüyor
- * (PR #24), yani hata metinlerini burada çevirmeye gerek kalmıyor.
+ * It adds three things to every request: the base URL, the session token and
+ * the device language. The last one matters — the server returns error
+ * messages in the language of the request (PR #24), so error text never has to
+ * be translated here.
  */
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 if (!BASE_URL) {
-  // Sessizce localhost'a düşmek en kötüsü olurdu: telefonda "localhost"
-  // telefonun kendisidir, istek hiç çıkmaz ve sebebi anlaşılmaz.
-  throw new Error("EXPO_PUBLIC_API_URL tanımlı değil — mobile/.env dosyasını kontrol edin.");
+  // Quietly falling back to localhost would be the worst outcome: on a phone
+  // "localhost" is the phone itself, the request never leaves, and the reason
+  // is impossible to guess.
+  throw new Error("EXPO_PUBLIC_API_URL is not set — check mobile/.env.");
 }
 
 export interface RequestOptions {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
-  /** Oturum token'ı; verilmezse istek anonim gider. */
+  /** Session token; without it the request goes out anonymously. */
   token?: string | null;
 }
 
@@ -43,8 +45,8 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
-    // Sunucuya hiç ulaşılamadı: gösterilecek bir sunucu mesajı da yok, bu
-    // yüzden metin istemcide üretiliyor. Tek böyle yer burası.
+    // The server was never reached, so there is no server message to show and
+    // the text is produced on the client. This is the only such place.
     throw new ApiError(t("error.network"), 0);
   }
 

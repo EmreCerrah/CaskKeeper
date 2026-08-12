@@ -11,14 +11,14 @@ interface FeedNoteCardProps {
   onAuthorPress: () => void;
 }
 
-/** Akıştaki tek tadım kartı. */
+/** A single tasting card in the feed. */
 export function FeedNoteCard({ note, onPress, onAuthorPress }: FeedNoteCardProps) {
   const whiskey = note.whiskey;
   const interactions = note.interactions;
 
   return (
     <View style={styles.card}>
-      {/* Yazara gitmek ayrı bir dokunuş hedefi: kartın tamamı nota gidiyor. */}
+      {/* Reaching the author is its own touch target: the rest of the card opens the note. */}
       <Pressable onPress={onAuthorPress} accessibilityRole="button" style={styles.author}>
         <WhiskeyImage uri={note.author?.profilePicture} fallbackText={note.author?.name ?? "?"} size={32} />
         <Text style={styles.authorName}>{note.author?.name ?? ""}</Text>

@@ -9,12 +9,12 @@ interface FollowButtonProps {
 }
 
 /**
- * Takip düğmesi.
+ * The follow button.
  *
- * İyimser güncelleme YOK: takip değişince akışın tamamı değişiyor (o kişinin
- * bütün notları giriyor ya da çıkıyor) ve bunu istemcide taklit etmek
- * sunucunun sıralamasını tahmin etmek olurdu. İstek dönene kadar dönen
- * gösterge var.
+ * NO optimistic update: following changes the entire feed (every one of that
+ * person's notes enters or leaves it), and imitating that on the client would
+ * mean guessing the server's ordering. A spinner runs until the request
+ * returns.
  */
 export function FollowButton({ userId, following }: FollowButtonProps) {
   const toggleFollow = useToggleFollow(userId);
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     minWidth: 110,
     paddingHorizontal: 16,
   },
-  // Takip ediliyorken düğme ters çevriliyor: durum yalnızca metinle değil
-  // biçimle de belli oluyor.
+  // While following, the button inverts: the state shows in the shape as well
+  // as the label.
   buttonFollowing: { backgroundColor: "transparent", borderColor: theme.border },
   pressed: { opacity: 0.8 },
   label: { color: theme.onPrimary, fontSize: 14, fontWeight: "700" },

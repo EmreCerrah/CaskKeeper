@@ -2,15 +2,16 @@ import type { TranslationKey } from "./dictionaries";
 
 /**
  * @file period.ts
- * @description "YYYY-MM" dönemini okunur bir ay adına çevirir — SAF.
+ * @description Turns a "YYYY-MM" period into a readable month name — PURE.
  *
- * Web tarafı bunu `Intl.DateTimeFormat` ile yapıyor. Mobilde ay adları sözlüğe
- * yazıldı: Hermes'in Intl desteği yapıya ve sürüme göre değişiyor ve eksik
- * olduğunda hata vermiyor, sessizce "2026-03" gibi ham bir metin bırakıyor.
- * Sözlükten okumak hem her cihazda aynı, hem test edilebilir.
+ * The web does this with `Intl.DateTimeFormat`. On mobile the month names went
+ * into the dictionary instead: Hermes' Intl support varies by build and
+ * version, and when it is missing it does not error — it quietly leaves raw
+ * text like "2026-03". Reading from the dictionary is identical on every
+ * device and testable.
  *
- * `translate` dışarıdan geçiliyor: bu dosya expo'ya bağımlı olmasın, testte
- * gerçek sözlükle çalışabilsin diye.
+ * `translate` is passed in so this file does not depend on expo and can run
+ * against the real dictionary in tests.
  */
 
 const MONTH_KEYS: TranslationKey[] = [
@@ -29,10 +30,10 @@ const MONTH_KEYS: TranslationKey[] = [
 ];
 
 /**
- * "2026-03" → "Mart 2026".
+ * "2026-03" → "March 2026".
  *
- * Tanınmayan bir biçim gelirse metin olduğu gibi döner: grafiğin tamamını
- * çökertmek yerine o satırda ham dönemi göstermek yeterli.
+ * An unrecognised format is returned unchanged: showing the raw period on that
+ * one row beats bringing down the whole chart.
  */
 export function formatPeriod(period: string, translate: (key: TranslationKey) => string): string {
   const match = /^(\d{4})-(\d{2})$/.exec(period);

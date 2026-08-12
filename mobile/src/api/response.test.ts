@@ -2,26 +2,26 @@ import { describe, it, expect } from "vitest";
 import { ApiError, unwrapApiResponse } from "./response";
 
 /**
- * Sunucunun zarfı tek biçimli: `{ success, message?, data?, error? }`.
- * Burada sınanan şey, istemcinin o sözleşmeye sadık kalması.
+ * The server's envelope has one shape: `{ success, message?, data?, error? }`.
+ * What is tested here is that the client keeps to that contract.
  *
- * Önemli olan nokta: hata metni İSTEMCİDE üretilmiyor. Sunucu mesajı isteğin
- * diline göre döndürüyor (PR #24); istemci onu olduğu gibi taşımazsa,
- * çevirinin tamamı boşa gider.
+ * The point that matters: error text is not produced ON THE CLIENT. The server
+ * returns the message in the language of the request (PR #24); if the client
+ * does not carry it through untouched, the whole translation effort is wasted.
  */
 describe("unwrapApiResponse", () => {
-  it("başarılı yanıtta data'yı açar", () => {
+  it("unwraps data from a successful response", () => {
     const data = unwrapApiResponse<{ id: string }>(200, { success: true, data: { id: "abc" } }, "fallback");
     expect(data).toEqual({ id: "abc" });
   });
 
-  it("başarısızlıkta sunucunun mesajını taşıyan hata fırlatır", () => {
+  it("throws an error carrying the server's message on failure", () => {
     expect(() =>
       unwrapApiResponse(401, { success: false, message: "Incorrect email or password", error: "UNAUTHORIZED" }, "fallback")
     ).toThrow("Incorrect email or password");
   });
 
-  it("hata kodunu ve durumu saklar", () => {
+  it("keeps the error code and the status", () => {
     try {
       unwrapApiResponse(401, { success: false, message: "x", error: "UNAUTHORIZED" }, "fallback");
       expect.unreachable("hata bekleniyordu");
@@ -33,7 +33,7 @@ describe("unwrapApiResponse", () => {
     }
   });
 
-  it("doğrulama hatasında alan bazlı mesajları ayırır", () => {
+  it("separates per-field messages on a validation error", () => {
     try {
       unwrapApiResponse(
         400,
@@ -44,23 +44,24 @@ describe("unwrapApiResponse", () => {
     } catch (e) {
       const error = e as ApiError;
       expect(error.fieldErrors).toEqual({ email: ["Enter a valid email address"] });
-      // Alan sözlüğü kodla karıştırılmamalı
+      // The field map must not be mistaken for a code
       expect(error.code).toBeUndefined();
     }
   });
 
-  it("mesaj gelmezse yedek metne düşer, boş hata göstermez", () => {
+  it("falls back to the spare text when no message arrives, never an empty error", () => {
     expect(() => unwrapApiResponse(500, { success: false }, "Beklenmeyen bir hata")).toThrow(
       "Beklenmeyen bir hata"
     );
   });
 
-  it("gövde hiç ayrıştırılamadıysa çökmez", () => {
+  it("does not crash when the body could not be parsed at all", () => {
     expect(() => unwrapApiResponse(502, null, "Beklenmeyen bir hata")).toThrow("Beklenmeyen bir hata");
   });
 
-  it("HTTP 200 ama success:false ise yine hata sayar", () => {
-    // Zarf sözleşmesi durum kodundan önce gelir; ikisi çelişirse zarfa uyulur.
+  it("treats HTTP 200 with success:false as a failure", () => {
+    // The envelope contract wins over the status code; if they disagree, the
+    // envelope is believed.
     expect(() => unwrapApiResponse(200, { success: false, message: "Bir hata" }, "fallback")).toThrow("Bir hata");
   });
 });

@@ -6,18 +6,21 @@ import type { Whiskey } from "./whiskeys";
 
 /**
  * @file dashboard.ts
- * @description Kendi istatistiklerine ve önerilere erişimin tek yolu.
+ * @description The only way into your own statistics and recommendations.
  *
- * Üçü de kişisel veri: her istek oturum token'ı taşıyor, token AuthContext'ten
- * geliyor. Ekranlar apiRequest görmez (bkz. whiskeys.ts'teki gerekçe).
+ * All three are personal data: every request carries the session token, taken
+ * from AuthContext. Screens never see apiRequest (see the reasoning in
+ * whiskeys.ts).
  */
 
 /**
- * Sunucunun DashboardStatsDTO'sundan mobilin kullandığı alanlar.
- * Bilerek kopya — mobil web'in dto.ts'ini import etmiyor (ayrı repo kuralı).
+ * The fields of the server's DashboardStatsDTO the app uses.
+ * A deliberate copy — the app does not import the web's dto.ts (separate
+ * repository rule).
  *
- * `recentNotes` kasıtlı olarak DIŞARIDA: paneldeki son tadımlar listesinin
- * mobil karşılığı Tadımlarım sekmesi, aynı liste iki yerde çizilmiyor.
+ * `recentNotes` is deliberately LEFT OUT: the mobile equivalent of the
+ * dashboard's recent-tastings list is the My Tastings tab, and the same list
+ * is not drawn twice.
  */
 export interface DashboardStats {
   totalNotes: number;
@@ -28,11 +31,11 @@ export interface DashboardStats {
 }
 
 export interface FlavorTrendCategory {
-  /** "fruity", "smoky_peaty" … — etiketi istemci bu kimlikten çeviriyor. */
+  /** "fruity", "smoky_peaty" … — the client translates the label from this id. */
   category: string;
   count: number;
-  // NOT: sunucu bir de `label` gönderiyor ama TÜRKÇE üretiliyor; mobilde
-  // kullanılmıyor, bkz. i18n/aroma.ts.
+  // NOTE: the server also sends a `label`, but it is generated in TURKISH; the
+  // app does not use it — see i18n/aroma.ts.
 }
 
 export interface FlavorTrendPoint {
@@ -58,12 +61,12 @@ export interface Analytics {
 
 export interface Recommendation {
   whiskey: Whiskey;
-  /** 0-1 arası eşleşme skoru. */
+  /** Match score between 0 and 1. */
   score: number;
   matchedCategories: { category: string }[];
 }
 
-/** Panelin özet sayıları ve damak profili. */
+/** The dashboard summary figures and palate profile. */
 export function useDashboard() {
   const { token } = useAuth();
 
@@ -74,7 +77,7 @@ export function useDashboard() {
   });
 }
 
-/** Aylık aroma trendi ve katalog dağılımı. */
+/** Monthly aroma trend and catalogue distribution. */
 export function useAnalytics() {
   const { token } = useAuth();
 
@@ -85,7 +88,7 @@ export function useAnalytics() {
   });
 }
 
-/** Damak profiline göre henüz tadılmamış viskiler. */
+/** Whiskies not yet tasted, ranked against the palate profile. */
 export function useRecommendations() {
   const { token } = useAuth();
 

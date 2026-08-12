@@ -8,11 +8,11 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * Yeni tadım notu.
+ * A new tasting note.
  *
- * Viski katalogdan seçiliyor: bu ekrana `whiskeyId` ile geliniyor
- * (viski detayındaki "Tadım notu ekle" düğmesi). Uygulamada viski arama
- * yeniden yazılmıyor — katalog zaten o iş için var.
+ * The whisky is chosen in the catalogue: this screen is reached with a
+ * `whiskeyId` (the "Add tasting note" button on the whisky detail). Whisky
+ * search is not rebuilt here — the catalogue already does that job.
  */
 export default function NewNoteScreen() {
   const router = useRouter();

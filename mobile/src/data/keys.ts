@@ -1,11 +1,11 @@
 /**
  * @file keys.ts
- * @description Sorgu anahtarları tek yerde.
+ * @description Query keys in one place.
  *
- * Dağınık bırakılsa her ekran kendi dizisini uydururdu ve iki ekran aynı veriyi
- * farklı anahtarla isteyip iki kez çekerdi. Daha önemlisi: çevrimdışı kalıcılık
- * eklendiğinde "neyi saklayacağız" sorusu bu anahtarlar üzerinden cevaplanacak,
- * yani derli toplu olmaları gerekiyor.
+ * Scattered, every screen would invent its own array and two screens would
+ * fetch the same data twice under different keys. More importantly: when
+ * offline persistence arrived, "what do we store" was answered in terms of
+ * these keys — so they have to stay tidy.
  */
 
 export interface WhiskeyListParams {
@@ -23,7 +23,7 @@ export const queryKeys = {
     facets: () => ["whiskeys", "facets"] as const,
   },
   tastingNotes: {
-    /** Yazma sonrası tüm not önbelleğini geçersizleştirmek için ortak kök. */
+    /** Shared root for invalidating the whole note cache after a write. */
     all: ["tastingNotes"] as const,
     mine: () => ["tastingNotes", "mine"] as const,
     detail: (id: string) => ["tastingNotes", "detail", id] as const,
@@ -35,26 +35,26 @@ export const queryKeys = {
     list: (noteId: string) => ["comments", "list", noteId] as const,
   },
   notifications: {
-    /** Okundu işaretlenince hem liste hem rozet tazelenmeli. */
+    /** Marking as read must refresh both the list and the badge. */
     all: ["notifications"] as const,
     list: () => ["notifications", "list"] as const,
-    /** Rozet için ayrı ve hafif sorgu — 20 bildirimlik gövdeyi taşımaz. */
+    /** A separate, light query for the badge — it does not carry 20 notifications. */
     unread: () => ["notifications", "unread"] as const,
   },
-  /** Panelin özet sayıları — not yazılınca eskir. */
+  /** The dashboard's summary figures — stale as soon as a note is written. */
   dashboard: () => ["dashboard"] as const,
-  /** Aroma trendi + katalog dağılımı. */
+  /** Aroma trend + catalogue distribution. */
   analytics: () => ["analytics"] as const,
-  /** Damak profilinden hesaplanan öneriler. */
+  /** Recommendations computed from the palate profile. */
   recommendations: () => ["recommendations"] as const,
   wishlist: {
-    /** Ekleme/kaldırma sonrası hem listeyi hem tek viski durumunu tazelemek için. */
+    /** Refreshes both the list and a single whisky's state after add/remove. */
     all: ["wishlist"] as const,
     list: () => ["wishlist", "list"] as const,
     status: (whiskeyId: string) => ["wishlist", "status", whiskeyId] as const,
   },
   users: {
-    /** Takip değişince arama sonuçlarındaki durumlar da tazelenmeli. */
+    /** A follow change must also refresh the states in search results. */
     all: ["users"] as const,
     search: (query: string) => ["users", "search", query] as const,
     profile: (id: string) => ["users", "profile", id] as const,

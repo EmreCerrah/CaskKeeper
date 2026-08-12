@@ -3,21 +3,23 @@ import { AppState, type AppStateStatus } from "react-native";
 
 /**
  * @file focus.ts
- * @description TanStack Query'ye uygulamanın ön planda olup olmadığını bildirir.
+ * @description Tells TanStack Query whether the app is in the foreground.
  *
- * online.ts'in ikizi: orası ağ durumunu, burası odağı taşıyor. Kütüphane
- * tarayıcının `window.focus` olayını dinliyor, React Native'de öyle bir şey yok
- * ve bağlanmadığı sürece `refetchOnWindowFocus` hiçbir şey yapmaz — sessizce.
+ * The twin of online.ts: that one carries network state, this one carries
+ * focus. The library listens for the browser's `window.focus` event, which
+ * does not exist on React Native — and until this is wired up,
+ * `refetchOnWindowFocus` does nothing at all, silently.
  *
- * Genel varsayılan yine `false` (bkz. queryClient.ts: her dönüşte ağa çıkmak
- * pili yorar). Bu bağlantı yalnızca açıkça isteyen sorgular için: bildirim
- * rozetinin uygulamayı geri açtığında güncel olması gerekiyor.
+ * The global default stays `false` (see queryClient.ts: hitting the network on
+ * every return drains the battery). This wiring is only for queries that opt
+ * in: the notification badge has to be current when the app comes back.
  */
 export function startFocusManager(): () => void {
   const subscription = AppState.addEventListener("change", (status: AppStateStatus) => {
-    // "inactive" ne ön plan ne arka plan — iOS'ta bildirim merkezi açılırken ya
-    // da uygulama değiştirici gösterilirken geçilen ara durum. Odağı kaybetmiş
-    // saymak, kullanıcı geri döndüğünde gereksiz bir tazeleme turu başlatırdı.
+    // "inactive" is neither foreground nor background — it is the state iOS
+    // passes through when the notification centre or the app switcher opens.
+    // Treating it as lost focus would start a pointless refetch every time the
+    // user came back.
     focusManager.setFocused(status === "active");
   });
 

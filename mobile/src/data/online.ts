@@ -3,23 +3,23 @@ import * as Network from "expo-network";
 
 /**
  * @file online.ts
- * @description TanStack Query'ye cihazın ağ durumunu bildirir.
+ * @description Reports the device's network state to TanStack Query.
  *
- * Varsayılan olarak React Native'de kütüphane hep "çevrimiçi" varsayıyor.
- * Bağlanınca kendiliğinden tazeleme ve çevrimdışıyken boşuna denememe
- * davranışı bu bağlantıya dayanıyor.
+ * By default the library assumes "online" forever on React Native. Refetching
+ * on reconnect, and not retrying pointlessly while offline, both rest on this
+ * wiring.
  *
- * expo-network kullanılıyor, ayrı bir topluluk paketi değil — Expo'nun kendi
- * modülü ve zaten aynı bilgiyi veriyor.
+ * expo-network is used rather than a community package — it is Expo's own
+ * module and already reports the same thing.
  */
 export function startOnlineManager(): () => void {
-  // Açılışta bir kez sor: dinleyici yalnızca DEĞİŞİMDE tetikleniyor, yani
-  // uygulama uçak modunda açılırsa ilk durum hiç bildirilmezdi.
+  // Ask once at startup: the listener only fires on CHANGE, so if the app
+  // launches in airplane mode the initial state would never be reported.
   Network.getNetworkStateAsync()
     .then((state) => onlineManager.setOnline(Boolean(state.isInternetReachable ?? state.isConnected)))
     .catch(() => {
-      // Durum okunamadıysa çevrimiçi varsay: istek denenir ve gerçek hata
-      // kullanıcıya normal yoldan gösterilir.
+      // If the state cannot be read, assume online: the request is attempted
+      // and the real error reaches the user through the normal path.
       onlineManager.setOnline(true);
     });
 

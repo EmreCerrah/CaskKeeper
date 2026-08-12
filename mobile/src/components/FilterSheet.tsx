@@ -16,11 +16,11 @@ interface FilterSheetProps {
 type FilterField = "type" | "region" | "country";
 
 /**
- * Filtre seçimi.
+ * Filter selection.
  *
- * Seçenekler /api/whiskeys/facets'ten geliyor — katalogda GERÇEKTEN bulunan
- * değerler. Elle yazılmış bir liste, kataloğa yeni bir bölge girdiğinde
- * sessizce eksik kalırdı.
+ * The options come from /api/whiskeys/facets — the values ACTUALLY present in
+ * the catalogue. A hand-written list would quietly fall behind the day a new
+ * region was imported.
  */
 export function FilterSheet({ visible, facets, value, onChange, onClose }: FilterSheetProps) {
   const groups: { field: FilterField; label: string; options: string[] }[] = [
@@ -84,8 +84,8 @@ function Chip({ label, selected, onPress }: { label: string; selected: boolean; 
       accessibilityState={{ selected }}
       style={[styles.chip, selected && styles.chipSelected]}
     >
-      {/* Seçili olmak yalnızca renkle anlatılmıyor: metin de kalınlaşıyor.
-          Web tarafındaki "bilgi asla yalnızca renkle verilmez" kuralı. */}
+      {/* Being selected is not conveyed by colour alone: the text goes bold
+          too. The web's "never carry information in colour alone" rule. */}
       <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
     </Pressable>
   );

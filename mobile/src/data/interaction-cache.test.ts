@@ -23,28 +23,29 @@ function pages(): InfiniteData<LikeableNote> {
 }
 
 describe("toggleLikeOnNote", () => {
-  it("beğenir: sayıyı artırır, işareti çevirir", () => {
+  it("likes: increments the count and flips the flag", () => {
     const result = toggleLikeOnNote(note("a", 3, false));
     expect(result.interactions).toMatchObject({ likeCount: 4, isLikedByViewer: true });
   });
 
-  it("beğeniyi kaldırır: sayıyı azaltır", () => {
+  it("unlikes: decrements the count", () => {
     const result = toggleLikeOnNote(note("a", 3, true));
     expect(result.interactions).toMatchObject({ likeCount: 2, isLikedByViewer: false });
   });
 
-  it("sayı asla negatife düşmez", () => {
-    // Önbellek ile sunucu bir an ayrışırsa ekranda "-1 beğeni" görünmemeli.
+  it("never lets the count go negative", () => {
+    // If the cache and the server drift apart for a moment, "-1 likes" must
+    // not appear on screen.
     const result = toggleLikeOnNote(note("a", 0, true));
     expect(result.interactions?.likeCount).toBe(0);
   });
 
-  it("etkileşim bilgisi hiç yoksa çökmez", () => {
+  it("does not crash when there is no interaction data at all", () => {
     const result = toggleLikeOnNote({ id: "a" });
     expect(result.interactions).toMatchObject({ likeCount: 1, isLikedByViewer: true });
   });
 
-  it("girdiyi değiştirmez", () => {
+  it("does not mutate the input", () => {
     const original = note("a", 3, false);
     toggleLikeOnNote(original);
     expect(original.interactions).toMatchObject({ likeCount: 3, isLikedByViewer: false });
@@ -52,13 +53,14 @@ describe("toggleLikeOnNote", () => {
 });
 
 describe("toggleLikeInPages", () => {
-  it("ikinci sayfadaki notu bulup günceller", () => {
+  it("finds and updates a note on the second page", () => {
     const result = toggleLikeInPages(pages(), "c");
     expect(result?.pages[1].data[0].interactions).toMatchObject({ likeCount: 6, isLikedByViewer: false });
   });
 
-  it("YALNIZCA hedef notu değiştirir", () => {
-    // Asıl risk bu: sayfalarda gezerken yanlış notu ya da yanlış sayfayı bozmak.
+  it("changes ONLY the target note", () => {
+    // This is the real risk: corrupting the wrong note or the wrong page while
+    // walking them.
     const result = toggleLikeInPages(pages(), "b");
     const untouched = [
       result?.pages[0].data[0],
@@ -70,44 +72,44 @@ describe("toggleLikeInPages", () => {
     expect(untouched.map((n) => n?.interactions?.likeCount)).toEqual([3, 7, 1]);
   });
 
-  it("sayfa sınırlarını ve toplamları korur", () => {
+  it("preserves page boundaries and totals", () => {
     const result = toggleLikeInPages(pages(), "a");
     expect(result?.pages.map((p) => p.data.length)).toEqual([2, 2]);
     expect(result?.pages.map((p) => p.total)).toEqual([4, 4]);
     expect(result?.pageParams).toEqual([1, 2]);
   });
 
-  it("olmayan not için hiçbir şeyi değiştirmez", () => {
+  it("changes nothing for a note that is not there", () => {
     const before = pages();
     const result = toggleLikeInPages(before, "yok");
     expect(result).toEqual(before);
   });
 
-  it("önbellek boşsa çökmez", () => {
+  it("does not crash on an empty cache", () => {
     expect(toggleLikeInPages(undefined, "a")).toBeUndefined();
   });
 });
 
 describe("adjustCommentCount", () => {
-  it("yorum eklenince artar, silinince azalır", () => {
+  it("goes up when a comment is added and down when one is deleted", () => {
     expect(adjustCommentCount(note("a", 0, false, 2), 1).interactions.commentCount).toBe(3);
     expect(adjustCommentCount(note("a", 0, false, 2), -1).interactions.commentCount).toBe(1);
   });
 
-  it("sayı asla negatife düşmez", () => {
+  it("never lets the count go negative", () => {
     expect(adjustCommentCount(note("a", 0, false, 0), -1).interactions.commentCount).toBe(0);
   });
 
-  it("beğeni bilgisine dokunmaz", () => {
+  it("leaves the like data alone", () => {
     const result = adjustCommentCount(note("a", 5, true, 1), 1);
     expect(result.interactions).toMatchObject({ likeCount: 5, isLikedByViewer: true, commentCount: 2 });
   });
 
-  it("etkileşim bilgisi hiç yoksa çökmez", () => {
+  it("does not crash when there is no interaction data at all", () => {
     expect(adjustCommentCount({ id: "a" }, 1).interactions.commentCount).toBe(1);
   });
 
-  it("girdiyi değiştirmez", () => {
+  it("does not mutate the input", () => {
     const input = note("a", 0, false, 1);
     adjustCommentCount(input, 1);
     expect(input.interactions?.commentCount).toBe(1);
@@ -125,7 +127,7 @@ describe("adjustCommentCountInPages", () => {
     };
   }
 
-  it("YALNIZCA hedef notun yorum sayısını değiştirir", () => {
+  it("changes ONLY the target note's comment count", () => {
     const result = adjustCommentCountInPages(commentPages(), "b", 1);
 
     expect(result?.pages[0].data[1].interactions?.commentCount).toBe(5);
@@ -136,14 +138,14 @@ describe("adjustCommentCountInPages", () => {
     ).toEqual([1, 0, 9]);
   });
 
-  it("sayfa sınırlarını ve toplamları korur", () => {
+  it("preserves page boundaries and totals", () => {
     const result = adjustCommentCountInPages(commentPages(), "a", -1);
     expect(result?.pages.map((p) => p.data.length)).toEqual([2, 2]);
     expect(result?.pages.map((p) => p.total)).toEqual([4, 4]);
     expect(result?.pageParams).toEqual([1, 2]);
   });
 
-  it("olmayan not ve boş önbellek için güvenli", () => {
+  it("is safe for a missing note and an empty cache", () => {
     const before = commentPages();
     expect(adjustCommentCountInPages(before, "yok", 1)).toEqual(before);
     expect(adjustCommentCountInPages(undefined, "a", 1)).toBeUndefined();

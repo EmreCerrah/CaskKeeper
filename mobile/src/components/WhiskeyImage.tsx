@@ -4,16 +4,16 @@ import { theme } from "../theme";
 
 interface WhiskeyImageProps {
   uri?: string;
-  /** Görsel yoksa baş harfleri gösterilir — ekranda boş bir kutu kalmasın. */
+  /** With no image the initials are shown — never an empty box on screen. */
   fallbackText: string;
   size: number;
   style?: StyleProp<ImageStyle>;
 }
 
 /**
- * Katalog görselleri DIŞ kaynaklardan geliyor, dolayısıyla kırık ya da eksik
- * URL normal bir durum. Web tarafındaki WhiskeyImage ile aynı yaklaşım:
- * yüklenemeyeni sessizce yedek gösterime çevir, ekranı bozma.
+ * Catalogue images come from EXTERNAL sources, so a broken or missing URL is
+ * an ordinary case. The same approach as WhiskeyImage on the web: turn what
+ * will not load into the fallback quietly, do not break the screen.
  */
 export function WhiskeyImage({ uri, fallbackText, size, style }: WhiskeyImageProps) {
   const [failed, setFailed] = useState(false);

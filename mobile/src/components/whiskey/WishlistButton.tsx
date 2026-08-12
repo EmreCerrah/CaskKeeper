@@ -10,13 +10,14 @@ interface WishlistButtonProps {
 }
 
 /**
- * İstek listesine ekle / kaldır.
+ * Add to / remove from the wishlist.
  *
- * Durum önbellekten okunuyor ve iyimser güncelleniyor, bu yüzden burada yerel
- * durum tutulmuyor — iki kaynak olsaydı ayrışırlardı (LikeButton'daki gerekçe).
+ * The state is read from the cache and updated optimistically, so no local
+ * state is kept here — two sources would drift apart (the reasoning from
+ * LikeButton).
  *
- * Durum yalnızca renkle anlatılmıyor: dolu/boş yer imi ikonu, metin ve
- * `accessibilityState` birlikte değişiyor.
+ * State is not conveyed by colour alone: the filled/outline bookmark icon, the
+ * label and `accessibilityState` all change together.
  */
 export function WishlistButton({ whiskey }: WishlistButtonProps) {
   const { data, isLoading } = useIsWishlisted(whiskey.id);
@@ -24,8 +25,9 @@ export function WishlistButton({ whiskey }: WishlistButtonProps) {
 
   const wishlisted = data?.wishlisted ?? false;
 
-  // Durum daha bilinmiyorken düğme çizilmiyor: "Ekle" gösterip bir saniye
-  // sonra "Listemde"ye dönmek, kullanıcının dokunduğu şeyi altından çekerdi.
+  // The button is not drawn until the state is known: showing "Add" and
+  // flipping to "On your list" a second later would pull the thing the user
+  // was reaching for out from under them.
   if (isLoading) {
     return (
       <Pressable style={[styles.button, styles.loading]} disabled accessibilityRole="button">
@@ -66,12 +68,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     justifyContent: "center",
-    // Dokunma hedefi en az 44px (WCAG 2.5.5).
+    // Touch target at least 44px (WCAG 2.5.5).
     minHeight: 48,
     paddingHorizontal: 20,
   },
-  // Listede değilken birincil düğme; listedeyken çerçeveli — web'deki
-  // varyant değişiminin aynısı.
+  // Primary button when it is not on the list, outlined when it is — the same
+  // variant switch as the web.
   inactive: { backgroundColor: theme.primary, borderColor: theme.primary },
   active: { backgroundColor: "transparent", borderColor: theme.primary },
   loading: { backgroundColor: "transparent", borderColor: theme.border },

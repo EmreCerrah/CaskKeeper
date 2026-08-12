@@ -46,8 +46,8 @@ export default function FeedScreen() {
               size={22}
               color={unreadCount > 0 ? theme.primary : theme.textMuted}
             />
-            {/* Sayı sekme rozetinde de var; buradaki nokta, kullanıcı zaten
-                Akış'tayken zilin neden dolu olduğunu söylüyor. */}
+            {/* The count is on the tab badge too; this dot explains why the bell
+                is filled while the user is already on the Feed. */}
             {unreadCount > 0 && <View style={styles.bellDot} />}
           </Pressable>
         </View>
@@ -87,7 +87,7 @@ export default function FeedScreen() {
             />
           )}
           ListEmptyComponent={
-            // Boş akış "kimseyi takip etmiyorsun" demek — doğal giriş noktası.
+            // An empty feed means "you follow nobody" — the natural entry point.
             <View style={styles.center}>
               <Text style={styles.empty}>{t("feed.empty")}</Text>
               <Text style={styles.emptyHint}>{t("feed.emptyHint")}</Text>

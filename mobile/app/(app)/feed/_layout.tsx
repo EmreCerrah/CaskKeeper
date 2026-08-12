@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
-/** Akış yığını: akış → kişiler / profil / not detayı. */
+/** The feed stack: feed → people / profile / note detail. */
 export default function FeedLayout() {
   return (
     <Stack

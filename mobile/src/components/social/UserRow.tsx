@@ -10,7 +10,7 @@ interface UserRowProps {
   onPress: () => void;
 }
 
-/** Kişi arama sonuçlarındaki satır. */
+/** A row in the people search results. */
 export function UserRow({ user, onPress }: UserRowProps) {
   return (
     <Pressable
@@ -18,7 +18,7 @@ export function UserRow({ user, onPress }: UserRowProps) {
       accessibilityRole="button"
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >
-      {/* Avatar için aynı yedek gösterim: profil fotoğrafı da dış bir URL. */}
+      {/* The same fallback for the avatar: a profile picture is an external URL too. */}
       <WhiskeyImage uri={user.profilePicture} fallbackText={user.name} size={44} />
 
       <View style={styles.body}>
@@ -28,7 +28,7 @@ export function UserRow({ user, onPress }: UserRowProps) {
         <Text style={styles.meta} numberOfLines={1}>
           {t("people.noteCount", { count: user.publicNoteCount })}
         </Text>
-        {/* İlişki metinle anlatılıyor, rozet rengiyle değil. */}
+        {/* The relationship is stated in words, not in the badge colour. */}
         {user.isMutual ? (
           <Text style={styles.badge}>{t("people.friend")}</Text>
         ) : user.isFollowingViewer ? (

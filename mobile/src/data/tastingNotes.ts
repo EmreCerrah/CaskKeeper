@@ -6,19 +6,19 @@ import type { Whiskey } from "./whiskeys";
 
 /**
  * @file tastingNotes.ts
- * @description Tadım notlarına erişimin tek yolu.
+ * @description The only way into tasting notes.
  *
- * Notlar kişisel veri: her istek oturum token'ı taşımak zorunda, bu yüzden
- * hook'lar token'ı AuthContext'ten alıyor. Ekranların token'ı elden ele
- * taşıması gerekmiyor.
+ * Notes are personal data: every request has to carry the session token, so
+ * the hooks take it from AuthContext. Screens never pass the token around.
  */
 
 export type FinishLength = "short" | "medium" | "long";
 export type Visibility = "private" | "public";
 
 /**
- * Sunucunun TastingNoteDTO'sundan mobilin kullandığı alanlar.
- * Bilerek kopya — mobil web'in dto.ts'ini import etmiyor (ayrı repo kuralı).
+ * The fields of the server's TastingNoteDTO the app uses.
+ * A deliberate copy — the app does not import the web's dto.ts (separate
+ * repository rule).
  */
 export interface TastingNote {
   id: string;
@@ -39,7 +39,7 @@ export interface TastingNote {
   createdAt: string;
 }
 
-/** Formun sunucuya gönderdiği gövde. */
+/** The body the form sends to the server. */
 export interface TastingNoteInput {
   whiskey: string;
   tastingDate: string;
@@ -85,19 +85,20 @@ export function useNote(id: string) {
 }
 
 /**
- * Yazma işlemlerinden sonra not önbelleği tümden geçersizleştirilir.
+ * After any write, the whole note cache is invalidated.
  *
- * Tek tek güncellemek yerine kökü geçersizleştirmek bilinçli: listenin sırası
- * ve sayfalaması sunucuda belirleniyor, elle yama yapmak kolayca yanlış sıra
- * üretirdi. Notlar az sayıda, yeniden çekmenin maliyeti önemsiz.
+ * Invalidating the root rather than patching entries is deliberate: the
+ * server decides ordering and pagination, and hand-patching would easily
+ * produce the wrong order. There are few notes; refetching costs nothing
+ * worth saving.
  */
 function useInvalidateNotes() {
   const queryClient = useQueryClient();
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.tastingNotes.all });
-    // Panel bu notlardan hesaplanıyor: yeni not yazıldıktan sonra tazelenmezse
-    // "Toplam Tadım" eski sayıda kalır ve kullanıcı notunun kaydolmadığını
-    // sanar.
+    // The dashboard is computed from these notes: without a refresh after a
+    // write, "Total Tastings" keeps the old number and the user concludes
+    // their note was not saved.
     queryClient.invalidateQueries({ queryKey: queryKeys.dashboard() });
     queryClient.invalidateQueries({ queryKey: queryKeys.analytics() });
     queryClient.invalidateQueries({ queryKey: queryKeys.recommendations() });

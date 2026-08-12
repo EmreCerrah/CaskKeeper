@@ -19,7 +19,7 @@ export default function CatalogueScreen() {
   const [filters, setFilters] = useState<WhiskeyListParams>({});
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // Arama kutusu her harfte istek atmasın diye geciktirilir.
+  // The search box is debounced so it does not fire a request per keystroke.
   const search = useDebounced(searchInput);
 
   const params = useMemo<WhiskeyListParams>(
@@ -63,7 +63,7 @@ export default function CatalogueScreen() {
 
       {isError && (
         <View style={styles.center}>
-          {/* Sunucu mesajı zaten cihazın dilinde geliyor (Accept-Language). */}
+          {/* The server's message already arrives in the device's language (Accept-Language). */}
           <Text style={styles.error}>{error instanceof Error ? error.message : t("error.unexpected")}</Text>
           <View style={styles.retry}>
             <Button label={t("catalogue.retry")} onPress={() => refetch()} />

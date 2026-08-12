@@ -9,22 +9,22 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * Panelim — kendi tadım istatistiklerin.
+ * My Dashboard — your own tasting statistics.
  *
- * Web'deki /panel ve /panel/istatistikler tek ekranda birleşti: telefonda iki
- * ayrı sayfa arasında gidip gelmek yerine tek kaydırma daha az iş.
+ * The web's /dashboard and /dashboard/statistics merged into one screen: on a
+ * phone, one scroll is less work than a round trip between two pages.
  *
- * Web'deki "Son Tadımlarınız" listesi burada YOK — Tadımlarım sekmesi zaten
- * aynı listeyi gösteriyor.
+ * The web's "Your Recent Tastings" list is NOT here — the My Tastings tab
+ * already shows it.
  */
 export default function DashboardScreen() {
   const dashboard = useDashboard();
   const analytics = useAnalytics();
 
   const isLoading = dashboard.isLoading || analytics.isLoading;
-  // İki sorgudan biri düşse de ekranın tamamı hata gösteriyor: yarısı dolu
-  // yarısı boş bir panel, kullanıcının hangi sayının güncel olduğunu
-  // anlayamayacağı bir durum bırakırdı.
+  // If either query fails the whole screen shows the error: a dashboard half
+  // full and half empty would leave the user unable to tell which numbers are
+  // current.
   const error = dashboard.error ?? analytics.error;
   const isRefetching = dashboard.isRefetching || analytics.isRefetching;
 
@@ -89,8 +89,8 @@ export default function DashboardScreen() {
         {stats && stats.topFlavorTags.length > 0 ? (
           <View style={styles.tags}>
             {stats.topFlavorTags.map((item) => (
-              // Etiket metni ÇEVRİLMİYOR: veritabanına yazıldığı haliyle
-              // duruyor (bkz. data/aromaWheel.ts).
+              // The tag text is NOT translated: it stands exactly as written
+              // to the database (see data/aromaWheel.ts).
               <Text key={item.tag} style={styles.tag}>
                 {item.tag} · {item.count}
               </Text>
@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
   content: { gap: 18, padding: 16, paddingBottom: 48 },
   center: { alignItems: "center", backgroundColor: theme.background, flex: 1, gap: 8, justifyContent: "center", padding: 32 },
   subtitle: { color: theme.textMuted, fontSize: 14 },
-  // İki sütun: dört kart 2×2 diziliyor, dar telefonlarda da sayı okunur kalıyor.
+  // Two columns: the four cards lay out 2×2 and the figures stay readable on
+  // narrow phones.
   statGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   statCard: {
     backgroundColor: theme.surface,

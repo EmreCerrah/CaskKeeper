@@ -9,11 +9,11 @@ import { t } from "../../../../src/i18n";
 import { theme } from "../../../../src/theme";
 
 /**
- * Tadım notunun herkese açık görünümü.
+ * The public view of a tasting note.
  *
- * Düzenleme burada YOK: kendi notunu düzenlemek `tadimlarim/[id]` ekranında.
- * Bu ekran akıştan ve profillerden açılıyor, yani başkasının notu olabilir.
- * Sunucu zaten "herkese açık ya da sahibi" kuralını uyguluyor.
+ * There is NO editing here: editing your own note lives in `my-tastings/[id]`.
+ * This screen opens from the feed and from profiles, so the note may belong to
+ * someone else. The server already enforces "public, or yours".
  */
 export default function PublicNoteScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

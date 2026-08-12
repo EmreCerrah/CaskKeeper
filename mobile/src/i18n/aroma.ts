@@ -2,16 +2,17 @@ import type { TranslationKey } from "./dictionaries";
 
 /**
  * @file aroma.ts
- * @description Aroma kategorisi kimliğini çeviri anahtarına çevirir — SAF.
+ * @description Maps an aroma category id to a translation key — PURE.
  *
- * Sunucu istatistik uçlarında kategoriyi hem `category` (kimlik) hem `label`
- * ile gönderiyor, ama `label` TÜRKÇE üretiliyor ("Meyvemsi (Fruity)"). Cihazı
- * İngilizce olan bir kullanıcıya o metni göstermek arayüzün ortasında Türkçe
- * bir ada bırakırdı, o yüzden mobil `label` alanını hiç kullanmıyor.
+ * The statistics endpoints send the category as both `category` (an id) and
+ * `label` — but the label is generated in TURKISH ("Meyvemsi (Fruity)").
+ * Showing that to someone running the app in English would leave a Turkish
+ * name in the middle of the interface, so the app never uses the `label`
+ * field.
  *
- * `t()` bilerek yalnızca `TranslationKey` kabul ediyor (eksik anahtar derleme
- * hatası olsun diye), yani `"aroma." + category` gibi bir birleştirme geçmez.
- * Eşleme bu yüzden burada, tek yerde ve tip güvenli.
+ * `t()` deliberately accepts only a `TranslationKey` (so a missing key is a
+ * compile error), which means a concatenation like `"aroma." + category` will
+ * not pass. Hence the mapping lives here, in one place and type-safe.
  */
 
 const CATEGORY_KEYS: Record<string, TranslationKey> = {
@@ -27,11 +28,11 @@ const CATEGORY_KEYS: Record<string, TranslationKey> = {
 };
 
 /**
- * Bilinmeyen kimlik "Diğer"e düşer.
+ * An unknown id falls back to "Other".
  *
- * Kataloğa yeni bir kategori eklenirse mobil sürüm güncellenene kadar o
- * kategoriyi "Diğer" diye gösterir — ham kimliği ("smoky_peaty") ekranda
- * göstermekten iyi.
+ * If a new category is added to the catalogue, the app shows it as "Other"
+ * until the mobile release catches up — better than putting a raw id
+ * ("smoky_peaty") on screen.
  */
 export function aromaCategoryKey(category: string): TranslationKey {
   return CATEGORY_KEYS[category] ?? "aroma.feinty_other";

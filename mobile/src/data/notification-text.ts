@@ -2,18 +2,19 @@ import type { TranslationKey } from "../i18n/dictionaries";
 
 /**
  * @file notification-text.ts
- * @description Bildirimin cümlesini ve hedefini belirler — SAF.
+ * @description Works out a notification's sentence and its target — PURE.
  *
- * Metin iki katmanlı kuruluyor: dış cümle türe göre ("… beğendi"), içindeki
- * `{target}` de ayrı bir anahtardan ("“Lagavulin 16” tadımınızı" ya da "tadım
- * notunuzu"). Tür başına dallanma yanlış cümleyi hata vermeden üretebilecek
- * türden — takip bildiriminde hedef hiç kullanılmıyor, beğenide zorunlu.
- * O yüzden ağdan ve React'ten ayrı, testli.
+ * The text is built in two layers: the outer sentence depends on the type
+ * ("liked …"), and the `{target}` inside it comes from its own key ("your
+ * 'Lagavulin 16' tasting" or "your tasting note"). Branching per type is the
+ * kind of logic that produces a wrong sentence without raising an error — a
+ * follow notification has no target at all, a like requires one. Hence: away
+ * from the network and from React, and tested.
  */
 
 export type NotificationType = "follow" | "like" | "comment";
 
-/** Sunucunun NotificationDTO'sundan mobilin kullandığı alanlar (bilerek kopya). */
+/** The fields of the server's NotificationDTO the app uses (a deliberate copy). */
 export interface AppNotification {
   id: string;
   type: NotificationType;
@@ -21,17 +22,17 @@ export interface AppNotification {
   isRead: boolean;
   createdAt: string;
   tastingNoteId?: string;
-  /** Bildirim metnindeki viski adı ("Lagavulin 16") */
+  /** The whisky name inside the notification text ("Lagavulin 16") */
   whiskeyLabel?: string;
   commentExcerpt?: string;
 }
 
 export interface NotificationMessage {
-  /** Dış cümlenin anahtarı. */
+  /** Key for the outer sentence. */
   key: TranslationKey;
-  /** `{target}` yerine konacak metnin anahtarı; takip bildiriminde yok. */
+  /** Key for the text replacing `{target}`; absent on follow notifications. */
   targetKey?: TranslationKey;
-  /** targetKey "targetNamed" ise cümleye giren viski adı. */
+  /** The whisky name that goes into the sentence when targetKey is "targetNamed". */
   whiskeyLabel?: string;
 }
 
@@ -42,10 +43,10 @@ const MESSAGE_KEYS: Record<NotificationType, TranslationKey> = {
 };
 
 /**
- * Hangi cümle, hangi hedef.
+ * Which sentence, which target.
  *
- * Takipte hedef YOK: "sizi takip etmeye başladı" cümlesinde `{target}` yer
- * tutucusu bulunmuyor, gereksiz yere üretmek çeviriye sızabilirdi.
+ * A follow has NO target: "started following you" contains no `{target}`
+ * placeholder, and producing one anyway could leak into the translation.
  */
 export function notificationMessage(notification: AppNotification): NotificationMessage {
   const key = MESSAGE_KEYS[notification.type];
@@ -58,15 +59,16 @@ export function notificationMessage(notification: AppNotification): Notification
 }
 
 /**
- * Bildirime dokununca gidilecek ekran.
+ * The screen a notification opens when tapped.
  *
- * Beğeni/yorum bildiriminde not kimliği eksikse aktörün profiline düşülüyor —
- * web'deki geri düşüşün aynısı. Not silinmişse bildirim ortada kalabiliyor ve
- * boş bir ekrana götürmek, hiçbir yere götürmemekten kötü.
+ * If a like/comment notification is missing its note id, it falls back to the
+ * actor's profile — the same fallback as the web. A notification can outlive
+ * its note, and leading somewhere empty is worse than leading nowhere.
  *
- * Dönüş tipi düz `string` değil: expo-router'ın ürettiği rota tipleri serbest
- * metni kabul etmiyor. Şablon literal tipi bu dosyayı expo'ya bağlamadan
- * `router.push`'a geçecek kadar dar — modül Node altında test edilebilir kalıyor.
+ * The return type is not a plain `string`: expo-router's generated route types
+ * reject free text. A template literal type is narrow enough to pass to
+ * `router.push` without tying this file to expo — the module stays testable
+ * under Node.
  */
 export type NotificationRoute =
   | `/(app)/feed/note/${string}`

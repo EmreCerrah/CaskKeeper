@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 /**
- * Değeri belirtilen süre boyunca sakinleşene kadar geciktirir.
+ * Holds a value back until it has been quiet for the given delay.
  *
- * Arama kutusu için: her harfte istek atmak hem sunucuyu hem pili yorar.
- * "Lagavulin" yazan biri 9 istek yerine 1 istek üretir.
+ * For the search box: firing a request per keystroke taxes both the server and
+ * the battery. Someone typing "Lagavulin" produces one request instead of
+ * nine.
  */
 export function useDebounced<T>(value: T, delayMs = 350): T {
   const [debounced, setDebounced] = useState(value);

@@ -2,11 +2,12 @@ import type { WhiskeyListParams } from "./keys";
 
 /**
  * @file list-query.ts
- * @description Katalog listesinin sorgu dizesi — SAF.
+ * @description The query string for the catalogue list — PURE.
  *
- * whiskeys.ts'ten ayrı duruyor çünkü orası react-query ve API istemcisini içeri
- * alıyor, onlar da React Native'e kadar gidiyor; Node altında kurulamıyorlar.
- * Sınanmaya değer mantık burada, ağa dokunan kısım orada.
+ * Kept out of whiskeys.ts because that file pulls in react-query and the API
+ * client, which reach all the way down to React Native and cannot be loaded
+ * under Node. The logic worth testing is here; the part that touches the
+ * network is there.
  */
 
 export const PAGE_SIZE = 20;
@@ -14,8 +15,9 @@ export const PAGE_SIZE = 20;
 export function buildListQuery(params: WhiskeyListParams, page: number): string {
   const search = new URLSearchParams();
 
-  // Verilmeyen filtre HİÇ gönderilmez: boş bir `type=` sunucuda "tipi boş
-  // olanlar" gibi yorumlanabilir ve liste sessizce yanlış olurdu.
+  // A filter that was not set is not sent AT ALL: an empty `type=` could be
+  // read by the server as "those with an empty type", and the list would be
+  // quietly wrong.
   if (params.search) search.set("search", params.search);
   if (params.type) search.set("type", params.type);
   if (params.region) search.set("region", params.region);

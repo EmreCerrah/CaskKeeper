@@ -63,8 +63,8 @@ export default function WhiskeyDetailScreen() {
         )}
       </View>
 
-      {/* Katalogdan tadım notuna geçiş: viski zaten seçili olduğu için
-          formda ayrıca viski araması gerekmiyor. */}
+      {/* From the catalogue to a tasting note: the whisky is already chosen,
+          so the form needs no whisky search of its own. */}
       <Button
         label={t("notes.addForWhiskey")}
         onPress={() =>
@@ -75,8 +75,8 @@ export default function WhiskeyDetailScreen() {
         }
       />
 
-      {/* Not yazmak birincil eylem; istek listesi "henüz tatmadım ama
-          istiyorum" durumu, o yüzden altında ve ikincil görünümde. */}
+      {/* Writing a note is the primary action; the wishlist is the "have not
+          tried it yet but want to" case, so it sits below and secondary. */}
       <WishlistButton whiskey={whiskey} />
 
       <Section title={t("whiskey.specs")}>

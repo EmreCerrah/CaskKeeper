@@ -7,10 +7,10 @@ import type { Whiskey } from "./whiskeys";
 
 /**
  * @file wishlist.ts
- * @description İstek listesine erişimin tek yolu.
+ * @description The only way into the wishlist.
  *
- * Kişisel veri: her istek oturum token'ı taşıyor. Ekranlar apiRequest görmez
- * (bkz. whiskeys.ts'teki gerekçe).
+ * Personal data: every request carries the session token. Screens never see
+ * apiRequest (see the reasoning in whiskeys.ts).
  */
 
 interface WishlistStatus {
@@ -18,13 +18,12 @@ interface WishlistStatus {
 }
 
 /**
- * Listenin tamamı.
+ * The whole list.
  *
- * Sunucu `limit`'i 100'de tavanlıyor; sayfalama eklenmedi çünkü istek listesi
- * doğası gereği küçük ve kullanıcı 100'ün üstüne çıkarsa da liste ekranı
- * doğru çalışır — eksik kalan yalnızca en eski kayıtlar olur. Detay
- * ekranındaki düğme bu listeye BAKMIYOR, kendi ucundan soruyor, yani o
- * durumda bile yanlış durum göstermez.
+ * The server caps `limit` at 100. No pagination was added: a wishlist is small
+ * by nature, and even past 100 the list screen still works — only the oldest
+ * entries fall off. The button on the detail screen does NOT read this list;
+ * it asks its own endpoint, so even then it cannot show the wrong state.
  */
 export function useWishlist() {
   const { token } = useAuth();
@@ -36,7 +35,7 @@ export function useWishlist() {
   });
 }
 
-/** Tek viskinin durumu — katalog detayındaki düğme için. */
+/** One whisky's state — for the button on the catalogue detail screen. */
 export function useIsWishlisted(whiskeyId: string) {
   const { token } = useAuth();
 
@@ -48,14 +47,14 @@ export function useIsWishlisted(whiskeyId: string) {
 }
 
 /**
- * Ekle / kaldır — İYİMSER.
+ * Add / remove — OPTIMISTIC.
  *
- * Web'deki düğme sunucuyu bekliyor; mobilde beklemiyor, beğeni düğmesiyle aynı
- * gerekçe: dokunup bekleyen bir yer imi bozuk hissettiriyor. İstek başarısız
- * olursa önbellek eski hâline döner ve sunucudan tazelenir.
+ * The web button waits for the server; this one does not, for the same reason
+ * as the like button: a bookmark that waits after a tap feels broken. If the
+ * request fails the cache is restored and refetched.
  *
- * Listeye eklerken viskinin kendisi gerekiyor, o yüzden çağıran onu geçiyor —
- * detay ekranında zaten elde.
+ * Adding to the list needs the whisky itself, so the caller passes it — the
+ * detail screen already has it in hand.
  */
 export function useToggleWishlist() {
   const { token } = useAuth();
@@ -72,7 +71,8 @@ export function useToggleWishlist() {
       const statusKey = queryKeys.wishlist.status(whiskey.id);
       const listKey = queryKeys.wishlist.list();
 
-      // Uçuştaki tazeleme, az sonra yazacağımız iyimser değeri ezmesin.
+      // Stop an in-flight refetch from overwriting the optimistic value we are
+      // about to write.
       await queryClient.cancelQueries({ queryKey: statusKey });
       await queryClient.cancelQueries({ queryKey: listKey });
 
@@ -96,7 +96,8 @@ export function useToggleWishlist() {
     },
 
     onSettled: () => {
-      // Sıralama ve toplam sunucudan gelsin — iyimser kopya yakın, birebir değil.
+      // Let the ordering and total come from the server — the optimistic copy
+      // is close, not exact.
       queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
     },
   });

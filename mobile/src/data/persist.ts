@@ -6,13 +6,14 @@ import { shouldPersistQuery } from "./persist-rules";
 
 /**
  * @file persist.ts
- * @description Sorgu önbelleğinin diske yazılması.
+ * @description Writing the query cache to disk.
  *
- * Ekranların hiçbiri bunu bilmiyor — Dilim 2'de veri katmanı tam olarak bunun
- * için kurulmuştu: çevrimdışı desteği o katmanın içine girsin, ekranlar
- * değişmesin.
+ * No screen knows about any of this — the data layer was built in slice 2 for
+ * exactly this: offline support goes inside that layer, and the screens do not
+ * change.
  *
- * Neyin yazılacağı persist-rules.ts'te ve testli; orası bir gizlilik sınırı.
+ * What gets written is decided in persist-rules.ts and tested there; that file
+ * is a privacy boundary.
  */
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
@@ -25,28 +26,28 @@ export const persister = createAsyncStoragePersister({
 export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
   persister,
 
-  // Yedi gün: katalog neredeyse hiç değişmiyor, notlar da kullanıcının kendi
-  // verisi. Bundan eskisi sessizce atılır ve ağdan yeniden alınır.
+  // Seven days: the catalogue barely changes and the notes are the user's own
+  // data. Anything older is dropped quietly and refetched.
   maxAge: SEVEN_DAYS,
 
-  // Uygulama sürümü değişince eski önbellek düşer. Veri şekli bir sürümde
-  // değişirse, eski kayıtların yeni ekranlara sızmasını bu engelliyor.
+  // A new app version drops the old cache. If the shape of the data changes
+  // in a release, this is what stops old records leaking into new screens.
   buster: Constants.expoConfig?.version ?? "dev",
 
   dehydrateOptions: {
     shouldDehydrateQuery: (query) =>
-      // Yalnızca başarılı sorgular: hata durumunu diske yazıp sonraki açılışta
-      // "hata" göstermek anlamsız olurdu.
+      // Successful queries only: persisting an error state and showing "error"
+      // on the next launch would be meaningless.
       query.state.status === "success" && shouldPersistQuery(query.queryKey),
   },
 };
 
 /**
- * Cihazdaki kopyayı siler.
+ * Deletes the copy on the device.
  *
- * Çıkışta çağrılıyor: kalıcı önbellekte kullanıcının kendi tadım notları var ve
- * aynı cihaza giren bir sonraki kişi onları devralmamalı. Web tarafında
- * logout-client.ts aynı şeyi aynı gerekçeyle yapıyor.
+ * Called on sign-out: the persistent cache holds the user's own tasting notes,
+ * and the next person to sign in on this device must not inherit them. On the
+ * web, logout-client.ts does the same thing for the same reason.
  */
 export async function clearPersistedCache(): Promise<void> {
   await persister.removeClient();

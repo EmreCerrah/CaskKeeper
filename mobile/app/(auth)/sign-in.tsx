@@ -23,8 +23,8 @@ export default function SignInScreen() {
       await signIn(email.trim(), password);
       router.replace("/(app)/catalogue");
     } catch (e) {
-      // Sunucu mesajı zaten isteğin dilinde geliyor (Accept-Language
-      // gönderiliyor), o yüzden olduğu gibi gösteriliyor.
+      // The server's message already arrives in the language of the request
+      // (Accept-Language is sent), so it is shown as-is.
       setError(e instanceof Error ? e.message : t("auth.signInFailed"));
     } finally {
       setBusy(false);

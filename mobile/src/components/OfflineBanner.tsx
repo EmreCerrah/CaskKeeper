@@ -5,13 +5,13 @@ import { t } from "../i18n";
 import { theme } from "../theme";
 
 /**
- * Bağlantı yokken görünen şerit.
+ * The strip shown when there is no connection.
  *
- * Neden var: çevrimdışıyken ekranda diskten gelen veri duruyor. Bunu
- * söylemeden göstermek kafa karıştırır — kullanıcı listeyi güncel sanar.
+ * Why it exists: offline, what is on screen came from disk. Showing that
+ * without saying so is confusing — the user takes the list for current.
  *
- * Durum onlineManager'dan okunuyor, ayrı bir ağ dinleyicisinden değil: iki
- * kaynak olsaydı biri diğerini yalanlayabilirdi.
+ * The state is read from onlineManager rather than a separate network
+ * listener: two sources could contradict each other.
  */
 export function OfflineBanner() {
   const [online, setOnline] = useState(() => onlineManager.isOnline());

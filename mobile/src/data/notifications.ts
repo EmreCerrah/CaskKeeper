@@ -6,15 +6,16 @@ import { markAllReadInList, markReadInList, type NotificationList } from "./noti
 
 /**
  * @file notifications.ts
- * @description Bildirimlere erişimin tek yolu.
+ * @description The only way into notifications.
  *
- * İki ayrı sorgu var: liste (bildirim ekranı) ve rozet. Rozet sekme çubuğunda
- * her zaman canlı duruyor; onu liste sorgusundan beslemek, kullanıcı bildirim
- * ekranını hiç açmasa bile her açılışta 20 bildirimlik gövde indirmek olurdu.
- * Sunucuda yalnızca sayıyı veren bir uç yok, o yüzden `limit=1`.
+ * There are two separate queries: the list (for the notification screen) and
+ * the badge. The badge is always live in the tab bar; feeding it from the list
+ * query would mean downloading twenty notifications on every launch even for
+ * someone who never opens the screen. The server has no count-only endpoint,
+ * hence `limit=1`.
  */
 
-/** Rozet, uygulama geri açıldığında güncel olmalı — bkz. data/focus.ts. */
+/** The badge must be current when the app comes back — see data/focus.ts. */
 const BADGE_STALE_TIME = 30 * 1000;
 
 export function useNotifications() {
@@ -29,7 +30,7 @@ export function useNotifications() {
   });
 }
 
-/** Yalnızca okunmamış sayısı — sekme rozeti için. */
+/** The unread count only — for the tab badge. */
 export function useUnreadCount(): number {
   const { token } = useAuth();
 
@@ -45,10 +46,10 @@ export function useUnreadCount(): number {
 }
 
 /**
- * Rozet ve liste önbelleğini birlikte günceller.
+ * Updates the badge and list caches together.
  *
- * İkisi ayrı sorgu ama aynı gerçeği anlatıyor; biri güncellenip diğeri
- * unutulursa rozet yalan söyler ve bu hiçbir yerde hata vermez.
+ * They are separate queries telling the same truth; update one and forget the
+ * other and the badge lies, without erroring anywhere.
  */
 function useApplyToBothCaches() {
   const queryClient = useQueryClient();
@@ -63,10 +64,10 @@ function useApplyToBothCaches() {
 }
 
 /**
- * Tek bildirimi okundu işaretler — İYİMSER.
+ * Marks one notification read — OPTIMISTIC.
  *
- * Kullanıcı satıra dokunup hemen hedef ekrana gidiyor; sunucuyu beklemek,
- * geri döndüğünde satırın hâlâ okunmamış görünmesi demek olurdu.
+ * The user taps a row and leaves for the target screen straight away; waiting
+ * for the server would mean the row still looks unread when they come back.
  */
 export function useMarkRead() {
   const { token } = useAuth();
@@ -102,7 +103,7 @@ export function useMarkRead() {
   });
 }
 
-/** Tümünü okundu işaretler — aynı gerekçeyle iyimser. */
+/** Marks everything read — optimistic for the same reason. */
 export function useMarkAllRead() {
   const { token } = useAuth();
   const queryClient = useQueryClient();

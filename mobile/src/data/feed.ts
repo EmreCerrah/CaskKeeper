@@ -6,11 +6,12 @@ import type { TastingNote } from "./tastingNotes";
 
 /**
  * @file feed.ts
- * @description Takip edilen kişilerin herkese açık tadımları.
+ * @description The public tastings of the people you follow.
  *
- * Gizlilik sunucuda: `/api/feed` yalnızca `visibility: "public"` notları
- * döndürüyor ve yalnızca takip edilenlerden. İstemci ayrıca filtrelemiyor —
- * filtreyi iki yere koymak, birinin unutulduğu gün sessiz bir sızıntı olurdu.
+ * Privacy is enforced on the server: `/api/feed` returns only notes with
+ * `visibility: "public"`, and only from followed users. The client does not
+ * filter again — a filter in two places is one that can be forgotten, and that
+ * day it leaks.
  */
 
 export interface FeedNote extends TastingNote {

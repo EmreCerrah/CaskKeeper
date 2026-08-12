@@ -4,10 +4,11 @@ import { useAuth } from "../src/auth/AuthContext";
 import { theme } from "../src/theme";
 
 /**
- * Giriş noktası: oturumu olan ana ekrana, olmayan giriş ekranına gider.
+ * The entry point: with a session you land on the main screen, without one on
+ * sign-in.
  *
- * Token cihazdan okunurken hiçbir yere yönlendirilmez — aksi halde girişli bir
- * kullanıcı her açılışta bir an giriş ekranını görürdü.
+ * While the token is being read from the device nothing is redirected —
+ * otherwise a signed-in user would glimpse the sign-in screen on every launch.
  */
 export default function Index() {
   const { user, isRestoring } = useAuth();

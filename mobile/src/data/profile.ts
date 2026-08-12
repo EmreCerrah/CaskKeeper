@@ -6,7 +6,7 @@ import type { SessionUser } from "../auth/AuthContext";
 
 /**
  * @file profile.ts
- * @description Kendi profilini güncelleme ve hesabı kapatma.
+ * @description Updating your own profile and closing your account.
  */
 
 export interface ProfileInput {
@@ -23,7 +23,8 @@ export function useUpdateProfile() {
     mutationFn: (input: ProfileInput) =>
       apiRequest<SessionUser>("/api/users/me", { method: "PATCH", body: input, token }),
     onSuccess: async () => {
-      // İsim değiştiyse akıştaki ve profillerdeki görünen ad da eskir.
+      // If the name changed, the displayed name in the feed and on profiles
+      // is stale too.
       await refreshUser();
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.feed() });
@@ -32,8 +33,9 @@ export function useUpdateProfile() {
 }
 
 /**
- * Hesabı KALICI olarak kapatır — geri dönüşü yok.
- * Parola zorunlu; sunucu doğruluyor (bkz. UserService.closeAccount).
+ * Closes the account PERMANENTLY — there is no way back.
+ * The password is required and verified by the server (see
+ * UserService.closeAccount).
  */
 export function useCloseAccount() {
   const { token } = useAuth();

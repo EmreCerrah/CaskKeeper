@@ -5,27 +5,27 @@ import { t } from "../../src/i18n";
 import { theme } from "../../src/theme";
 
 /**
- * Alt sekme çubuğu.
+ * The bottom tab bar.
  *
- * Dört sekme: beşinci eklendiğinde küçük telefonlarda etiketler kırpılıyor.
- * Kişi arama bu yüzden ayrı sekme değil, Akış yığınının içinde bir ekran.
- * Yönetim sekmesi de bilerek yok — katalog yönetimi masabaşı işi.
+ * Four tabs: a fifth clips the labels on small phones. People search is
+ * therefore not its own tab but a screen inside the Feed stack. There is
+ * deliberately no admin tab either — managing the catalogue is desk work.
  *
- * İkonlar `@expo/vector-icons` ile geliyor; Expo ile birlikte kurulu olduğu
- * için yeni bir bağımlılık değil. İkonsuz bırakıldığında React Navigation
- * etiketin üstünde boş bir alan bırakıyor ve çubuk bozuk görünüyor.
+ * The icons come from `@expo/vector-icons`, which ships with Expo, so it is
+ * not a new dependency. Left without icons, React Navigation leaves an empty
+ * space above the label and the bar looks broken.
  */
 
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
-/** Seçili sekme dolu, diğerleri çizgi — durum yalnızca renkle anlatılmıyor. */
+/** The active tab is filled, the rest outlined — state is not carried by colour alone. */
 function tabIcon(active: IoniconName, inactive: IoniconName) {
   return ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
     <Ionicons name={focused ? active : inactive} size={size} color={color} />
   );
 }
 
-/** Rozet metni: sıfırda hiç gösterilmiyor, üç haneli sayı rozete sığmıyor. */
+/** Badge text: nothing at zero, and a three-digit number does not fit. */
 function badgeText(count: number): string | undefined {
   if (count <= 0) return undefined;
   return count > 99 ? "99+" : String(count);
@@ -56,9 +56,10 @@ export default function AppLayout() {
         options={{
           title: t("tab.feed"),
           tabBarIcon: tabIcon("people", "people-outline"),
-          // Rozet Akış sekmesinde, çünkü bildirim ekranı o yığının içinde ve
-          // bildirimlerin tamamı akıştaki insanlardan geliyor. Sıfırken
-          // `undefined`: "0" yazan bir rozet gösterilmemeli.
+          // The badge sits on the Feed tab because the notification screen is
+          // inside that stack and the notifications all come from the people
+          // in the feed. `undefined` at zero: a badge reading "0" should never
+          // be shown.
           tabBarBadge: badgeText(unreadCount),
           tabBarBadgeStyle: { backgroundColor: theme.primary, color: theme.onPrimary },
         }}

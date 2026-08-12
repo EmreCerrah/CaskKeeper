@@ -19,12 +19,12 @@ interface TastingNoteFormProps {
 }
 
 /**
- * Bitiş uzunlukları ve sözlük anahtarları.
+ * Finish lengths and their dictionary keys.
  *
- * Anahtar şablonla üretilmiyor (`\`noteForm.finish.${length}\``): şablon
- * TranslationKey'e uymadığı için `as never` gerekirdi ve o, eksik anahtarı
- * derleme hatasına çeviren korumayı devre dışı bırakırdı. Açık eşleme
- * yazınca tip sistemi her üçünü de denetliyor.
+ * The keys are not built from a template (`\`noteForm.finish.${length}\``):
+ * a template does not satisfy TranslationKey, so it would need `as never` —
+ * and that would disable the very guard that turns a missing key into a
+ * compile error. Written out explicitly, the type system checks all three.
  */
 const FINISH_LENGTHS: { value: FinishLength; labelKey: TranslationKey }[] = [
   { value: "short", labelKey: "noteForm.finish.short" },
@@ -33,11 +33,11 @@ const FINISH_LENGTHS: { value: FinishLength; labelKey: TranslationKey }[] = [
 ];
 
 /**
- * Tadım notu formu — yeni not ve düzenleme ekranlarının ortak gövdesi.
+ * The tasting note form — the shared body of the new-note and edit screens.
  *
- * Tek kaydırmalı, çok adımlı sihirbaz değil: web'deki bölümlerin aynısı
- * (seans, burun, damak, bitiş, kişisel) alt alta. Adımlara bölmek durum
- * yönetimi ve "geri" davranışı getirir, karşılığında bir şey vermezdi.
+ * One scroll, not a multi-step wizard: the same sections as the web (session,
+ * nose, palate, finish, personal) stacked. Splitting them into steps would
+ * bring state management and back-button behaviour, and give nothing back.
  */
 export function TastingNoteForm({ initial, submitLabel, busy, error, onSubmit }: TastingNoteFormProps) {
   const [form, setForm] = useState<NoteFormState>(initial);
@@ -65,7 +65,8 @@ export function TastingNoteForm({ initial, submitLabel, busy, error, onSubmit }:
             mode="date"
             maximumDate={new Date()}
             onChange={(_event, date) => {
-              // Android'de seçici her etkileşimde kapanır; iOS'ta açık kalır.
+              // On Android the picker closes on every interaction; on iOS it
+              // stays open.
               if (Platform.OS !== "ios") setDatePickerOpen(false);
               if (date) update("tastingDate", date);
             }}
