@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useUnreadCount } from "../../src/data/notifications";
 import { t } from "../../src/i18n";
 import { theme } from "../../src/theme";
 
@@ -24,7 +25,15 @@ function tabIcon(active: IoniconName, inactive: IoniconName) {
   );
 }
 
+/** Rozet metni: sıfırda hiç gösterilmiyor, üç haneli sayı rozete sığmıyor. */
+function badgeText(count: number): string | undefined {
+  if (count <= 0) return undefined;
+  return count > 99 ? "99+" : String(count);
+}
+
 export default function AppLayout() {
+  const unreadCount = useUnreadCount();
+
   return (
     <Tabs
       screenOptions={{
@@ -44,7 +53,15 @@ export default function AppLayout() {
       />
       <Tabs.Screen
         name="akis"
-        options={{ title: t("tab.feed"), tabBarIcon: tabIcon("people", "people-outline") }}
+        options={{
+          title: t("tab.feed"),
+          tabBarIcon: tabIcon("people", "people-outline"),
+          // Rozet Akış sekmesinde, çünkü bildirim ekranı o yığının içinde ve
+          // bildirimlerin tamamı akıştaki insanlardan geliyor. Sıfırken
+          // `undefined`: "0" yazan bir rozet gösterilmemeli.
+          tabBarBadge: badgeText(unreadCount),
+          tabBarBadgeStyle: { backgroundColor: theme.primary, color: theme.onPrimary },
+        }}
       />
       <Tabs.Screen
         name="tadimlarim"

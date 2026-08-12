@@ -56,6 +56,11 @@ describe("shouldPersistQuery — saklanmayanlar", () => {
     expect(shouldPersistQuery(queryKeys.comments.list("abc"))).toBe(false);
   });
 
+  it("BİLDİRİMLER saklanmaz — başkalarının adları, üstelik bayat sayı yalan söyler", () => {
+    expect(shouldPersistQuery(queryKeys.notifications.list())).toBe(false);
+    expect(shouldPersistQuery(queryKeys.notifications.unread())).toBe(false);
+  });
+
   it("tek not detayı saklanmaz — akıştan açılan başkasının olabilir", () => {
     expect(shouldPersistQuery(queryKeys.tastingNotes.detail("abc"))).toBe(false);
   });
