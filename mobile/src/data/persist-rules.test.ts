@@ -52,6 +52,10 @@ describe("shouldPersistQuery — saklanmayanlar", () => {
     expect(shouldPersistQuery(queryKeys.recommendations())).toBe(false);
   });
 
+  it("YORUMLAR saklanmaz — başkalarının yazdığı metinler", () => {
+    expect(shouldPersistQuery(queryKeys.comments.list("abc"))).toBe(false);
+  });
+
   it("tek not detayı saklanmaz — akıştan açılan başkasının olabilir", () => {
     expect(shouldPersistQuery(queryKeys.tastingNotes.detail("abc"))).toBe(false);
   });

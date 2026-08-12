@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { TastingNoteForm } from "../../../src/components/tasting/TastingNoteForm";
 import { toNotePayload, type NoteFormState } from "../../../src/data/note-payload";
+import type { FeedNote } from "../../../src/data/feed";
 import { useDeleteNote, useNote, useUpdateNote } from "../../../src/data/tastingNotes";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
@@ -34,6 +35,11 @@ export default function EditNoteScreen() {
       </View>
     );
   }
+
+  // Sunucu tek not yanıtında etkileşim sayılarını da gönderiyor (akıştaki
+  // görünümle aynı gövde); TastingNote tipi onu taşımıyor, bu yüzden FeedNote
+  // olarak okunuyor.
+  const commentCount = (note as FeedNote).interactions?.commentCount ?? 0;
 
   const initial: NoteFormState = {
     whiskeyId: note.whiskeyId,
@@ -95,6 +101,22 @@ export default function EditNoteScreen() {
         onSubmit={handleSubmit}
       />
 
+      {/* Yorumlar bu ekranda değil: burası bir düzenleme formu, yorum bölümü
+          formu ikiye bölerdi. Bağlantı olmasa kendi notuna yazılmış yorumlara
+          mobilde hiçbir yoldan ulaşılamazdı. Yalnızca herkese açık notlarda —
+          özel bir nota kimse yorum yazamaz. */}
+      {note.visibility === "public" && (
+        <Pressable
+          onPress={() => router.push(`/(app)/akis/not/${noteId}`)}
+          style={styles.comments}
+          accessibilityRole="button"
+        >
+          <Text style={styles.commentsText}>
+            {t("comments.openPublic", { count: commentCount })}
+          </Text>
+        </Pressable>
+      )}
+
       <Pressable onPress={handleDelete} style={styles.delete} accessibilityRole="button">
         <Text style={styles.deleteText}>
           {confirmingDelete ? t("notes.deleteConfirm") : t("notes.delete")}
@@ -110,6 +132,8 @@ const styles = StyleSheet.create({
   title: { color: theme.text, fontSize: 24, fontWeight: "700" },
   subtitle: { color: theme.textMuted, fontSize: 14, marginBottom: 10 },
   error: { color: theme.danger, fontSize: 14, textAlign: "center" },
+  comments: { alignItems: "center", justifyContent: "center", marginTop: 8, minHeight: 48 },
+  commentsText: { color: theme.primary, fontSize: 15, fontWeight: "600" },
   delete: { alignItems: "center", justifyContent: "center", marginTop: 8, minHeight: 48 },
   deleteText: { color: theme.danger, fontSize: 15, fontWeight: "600" },
 });

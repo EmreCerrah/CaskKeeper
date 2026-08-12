@@ -30,6 +30,10 @@ export const queryKeys = {
   },
   aromaWheel: () => ["aromaWheel"] as const,
   feed: () => ["feed"] as const,
+  comments: {
+    all: ["comments"] as const,
+    list: (noteId: string) => ["comments", "list", noteId] as const,
+  },
   /** Panelin özet sayıları — not yazılınca eskir. */
   dashboard: () => ["dashboard"] as const,
   /** Aroma trendi + katalog dağılımı. */

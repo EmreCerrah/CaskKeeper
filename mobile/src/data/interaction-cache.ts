@@ -1,11 +1,16 @@
 /**
- * @file like-cache.ts
- * @description Beğeni sayısını önbellekte yerinde günceller — SAF.
+ * @file interaction-cache.ts
+ * @description Bir notun beğeni ve yorum sayılarını önbellekte yerinde
+ * günceller — SAF.
  *
  * Beğeni iyimser uygulanıyor: ağ turunu bekleyen bir kalp bozuk hissettiriyor.
  * Ama akış `useInfiniteQuery` ile SAYFALAR hâlinde duruyor, yani doğru notu
  * bulmak için sayfalarda gezmek gerekiyor ve yanlış sayfayı bozmak kolay.
  * O yüzden dönüşüm burada, ağdan ayrı ve sınanabilir.
+ *
+ * Yorum sayısı da aynı `interactions` nesnesinde ve aynı iki önbellekte
+ * duruyor; ikinci bir sayfa gezme kopyası çıkmasın diye o da burada. Dosya
+ * eskiden `like-cache.ts` idi, adı bu yüzden genişledi.
  *
  * Kural: yalnızca hedef not değişir. Diğer notlar, sayfa sınırları, toplam
  * sayılar ve sıralama olduğu gibi kalır.
@@ -70,6 +75,46 @@ export function toggleLikeInPages<T extends LikeableNote>(
     pages: cached.pages.map((page) => ({
       ...page,
       data: page.data.map((note) => (note.id === noteId ? toggleLikeOnNote(note) : note)),
+    })),
+  };
+}
+
+/**
+ * Yorum sayısını `delta` kadar kaydırır.
+ *
+ * Yorumun KENDİSİ iyimser eklenmiyor (bkz. comments.ts) — sunucudan gerçek
+ * yorum dönüyor. Ama sayı akış kartında da yazıyor ve orası ayrı bir önbellek;
+ * dokunulmazsa kart "2 yorum" derken altında üç yorum görünür.
+ */
+export function adjustCommentCount<T extends LikeableNote>(
+  note: T,
+  delta: number
+): T & { interactions: Interactions } {
+  const current = note.interactions ?? { likeCount: 0, commentCount: 0, isLikedByViewer: false };
+
+  return {
+    ...note,
+    interactions: {
+      ...current,
+      // Beğenideki koruma: ekranda "-1 yorum" görünmesin.
+      commentCount: Math.max(0, current.commentCount + delta),
+    },
+  };
+}
+
+/** Sayfalı akış önbelleğinde hedef notun yorum sayısını kaydırır. */
+export function adjustCommentCountInPages<T extends LikeableNote>(
+  cached: InfiniteData<T> | undefined,
+  noteId: string,
+  delta: number
+): InfiniteData<T> | undefined {
+  if (!cached) return cached;
+
+  return {
+    ...cached,
+    pages: cached.pages.map((page) => ({
+      ...page,
+      data: page.data.map((note) => (note.id === noteId ? adjustCommentCount(note, delta) : note)),
     })),
   };
 }
