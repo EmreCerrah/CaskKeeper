@@ -34,7 +34,7 @@ export function OfflineAutoSync({ userId, userName }: OfflineAutoSyncProps) {
     const run = (force = false) => {
       if (cancelled || !isOfflineEnabled()) return;
       // Senkron başarısız olursa sessiz kalınır: bu arka plan işi, kullanıcının
-      // o an yaptığı işi kesmemeli. Durum /profil'deki kartta görünür.
+      // o an yaptığı işi kesmemeli. Durum /profile'deki kartta görünür.
       syncOfflineSnapshot({ userId, userName, force }).catch(() => {});
     };
 

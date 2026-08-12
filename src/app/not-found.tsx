@@ -27,7 +27,7 @@ export default function NotFound() {
             {t("notFound.body")}
           </p>
           <Button asChild>
-            <Link href="/viskiler">{t("notFound.cta")}</Link>
+            <Link href="/whiskeys">{t("notFound.cta")}</Link>
           </Button>
         </div>
       </main>

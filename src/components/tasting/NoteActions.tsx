@@ -72,7 +72,7 @@ export function NoteActions({ noteId, isFavorite }: NoteActionsProps) {
       </Button>
 
       <Button asChild variant="ghost" size="icon" title={t("note.edit")}>
-        <Link href={`/tadimlarim/${noteId}/duzenle`}>
+        <Link href={`/my-tastings/${noteId}/edit`}>
           <Pencil className="h-4 w-4 text-muted-foreground" aria-hidden />
         </Link>
       </Button>

@@ -26,7 +26,7 @@ interface OfflineSyncCardProps {
 }
 
 /**
- * /profil sayfasındaki çevrimdışı kullanım bölümü — anahtarın ayrıntılı hâli.
+ * /profile sayfasındaki çevrimdışı kullanım bölümü — anahtarın ayrıntılı hâli.
  * Anahtarın kendisi ayrıca kullanıcı menüsünde de bulunur; ikisi aynı tercihi
  * paylaşır (bkz. preference.ts).
  */

@@ -26,8 +26,8 @@ export function Pagination({ page, totalPages, basePath, searchParams = {} }: Pa
     for (const [key, value] of Object.entries(searchParams)) {
       if (value) params.set(key, value);
     }
-    if (target > 1) params.set("sayfa", String(target));
-    else params.delete("sayfa");
+    if (target > 1) params.set("page", String(target));
+    else params.delete("page");
     const qs = params.toString();
     return qs ? `${basePath}?${qs}` : basePath;
   }

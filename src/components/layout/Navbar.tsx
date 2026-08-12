@@ -26,27 +26,27 @@ export async function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           <Button asChild variant="ghost" size="sm">
-            <Link href="/viskiler">{t("nav.whiskies")}</Link>
+            <Link href="/whiskeys">{t("nav.whiskies")}</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/kullanicilar">{t("nav.people")}</Link>
+            <Link href="/users">{t("nav.people")}</Link>
           </Button>
           {session && (
             <>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/panel">{t("nav.dashboard")}</Link>
+                <Link href="/dashboard">{t("nav.dashboard")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/akis">{t("nav.feed")}</Link>
+                <Link href="/feed">{t("nav.feed")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/tadimlarim">{t("nav.myTastings")}</Link>
+                <Link href="/my-tastings">{t("nav.myTastings")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/favoriler">{t("nav.favorites")}</Link>
+                <Link href="/favourites">{t("nav.favorites")}</Link>
               </Button>
               <Button asChild variant="ghost" size="sm">
-                <Link href="/istek-listem">{t("nav.wishlist")}</Link>
+                <Link href="/wishlist">{t("nav.wishlist")}</Link>
               </Button>
             </>
           )}
@@ -74,10 +74,10 @@ export async function Navbar() {
             <>
               {/* Mobilde "Giriş" alt çubukta bir sekme; üstte yalnızca kayıt kalır */}
               <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
-                <Link href="/giris">{t("nav.login")}</Link>
+                <Link href="/sign-in">{t("nav.login")}</Link>
               </Button>
               <Button asChild size="sm">
-                <Link href="/kayit">{t("nav.register")}</Link>
+                <Link href="/sign-up">{t("nav.register")}</Link>
               </Button>
             </>
           )}

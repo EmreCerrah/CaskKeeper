@@ -24,7 +24,7 @@ export async function NotificationBell({ userId }: NotificationBellProps) {
 
   return (
     <Link
-      href="/bildirimler"
+      href="/notifications"
       title={label}
       aria-label={label}
       className="relative inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-accent md:h-9 md:w-9"

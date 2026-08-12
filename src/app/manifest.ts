@@ -50,17 +50,17 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Yeni tadım notu",
         short_name: "Yeni tadım",
-        url: "/tadimlarim/yeni",
+        url: "/my-tastings/new",
       },
       {
         name: "Viskiler",
         short_name: "Viskiler",
-        url: "/viskiler",
+        url: "/whiskeys",
       },
       {
         name: "Akış",
         short_name: "Akış",
-        url: "/akis",
+        url: "/feed",
       },
     ],
   };

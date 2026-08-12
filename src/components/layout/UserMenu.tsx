@@ -57,7 +57,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
           className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border bg-popover shadow-lg"
         >
           <Link
-            href={`/kullanicilar/${userId}`}
+            href={`/users/${userId}`}
             role="menuitem"
             className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent"
             onClick={() => setOpen(false)}
@@ -66,7 +66,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
             {t("nav.publicProfile")}
           </Link>
           <Link
-            href="/profil"
+            href="/profile"
             role="menuitem"
             className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent"
             onClick={() => setOpen(false)}
@@ -77,7 +77,7 @@ export function UserMenu({ name, userId, isAdmin = false }: UserMenuProps) {
           <OfflineToggle userId={userId} userName={name} />
           {isAdmin && (
             <Link
-              href="/yonetim"
+              href="/admin"
               role="menuitem"
               className="flex items-center gap-2 border-t border-border/60 px-4 py-2.5 text-sm text-primary hover:bg-accent"
               onClick={() => setOpen(false)}

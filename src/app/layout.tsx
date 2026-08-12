@@ -11,10 +11,10 @@ import { LocaleProvider } from "@/lib/i18n/client";
  * Navbar oturumu sunucuda okuyor; burada dursaydı uygulamadaki HER sayfa
  * kullanıcıya özel ve dinamik olurdu ve çevrimdışı açılabilecek tek bir sayfa
  * bile kalmazdı. Oturuma bağlı çerçeve bu yüzden (main)/layout.tsx'e taşındı.
- * Bu sayede (main) dışındaki /cevrimdisi statik render edilebiliyor, service
+ * Bu sayede (main) dışındaki /offline statik render edilebiliyor, service
  * worker onu önbelleğe alabiliyor ve bağlantı yokken sunabiliyor.
  *
- * Route grupları URL'leri etkilemez: (main)/viskiler yine /viskiler'dir.
+ * Route grupları URL'leri etkilemez: (main)/whiskeys yine /whiskeys'dir.
  */
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });

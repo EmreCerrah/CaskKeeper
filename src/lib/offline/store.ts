@@ -22,7 +22,7 @@ const DATA_CACHE = "caskkeeper-offline-v1";
 const SHELL_CACHE = "caskkeeper-v1";
 
 /** Çevrimdışı sayfanın adresi — service worker gezinme hatasında bunu sunar. */
-export const OFFLINE_PAGE = "/cevrimdisi";
+export const OFFLINE_PAGE = "/offline";
 
 const KEY_NOTES = "/__offline/tasting-notes";
 const KEY_WISHLIST = "/__offline/wishlist";

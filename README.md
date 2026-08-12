@@ -64,7 +64,7 @@ follows, likes and comments.
 
 The app installs to the home screen on Android and iOS (web app manifest,
 generated icon set, standalone display). A switch in the user menu — mirrored on
-`/profil` — turns on offline use: your own tasting notes and wishlist are copied
+`/profile` — turns on offline use: your own tasting notes and wishlist are copied
 to the device and kept current, so you can read them with no connection.
 
 The switch is **off by default and never flips itself on**: on a shared device
@@ -108,8 +108,10 @@ gets an interface they can read rather than one they cannot.
   errors are translated too.
 - **Dates and numbers**, via `Intl` (`tr-TR` / `en-GB`).
 
-**What does not:** URLs stay Turkish (`/viskiler`, `/tadimlarim`, `/panel`).
-Translating them would break every link already shared from the live site.
+**What does not:** URLs. They are English (`/whiskeys`, `/my-tastings`,
+`/dashboard`) regardless of the interface language, and so are query parameters
+(`?page=`, `?search=`, `?type=`). They were Turkish until the rename; see the
+note in ROADMAP about what that cost.
 
 Adding a key to `lib/i18n/dictionaries/tr.ts` without adding it to `en.ts` is a
 **compile error** — `en.ts` is typed against the Turkish dictionary. A test suite
@@ -267,8 +269,8 @@ npm run dev
 
 ### First run
 
-Register an account at `/kayit`. **The first account created becomes the
-administrator** and gains access to `/yonetim` for catalogue and user management.
+Register an account at `/sign-up`. **The first account created becomes the
+administrator** and gains access to `/admin` for catalogue and user management.
 
 ---
 
@@ -343,7 +345,7 @@ scripts/
 src/
   app/                    App Router — 27 pages, 26 API routes
     api/                  Route handlers (thin HTTP layer)
-    ...                   Turkish URLs: /viskiler, /tadimlarim, /akis, /panel …
+    ...                   English URLs: /whiskeys, /my-tastings, /feed, /dashboard …
   components/
     ui/                   Primitives (button, input, select, card, badge …)
     layout/               Navbar, mobile tab bar, footer
@@ -380,7 +382,7 @@ Deleting a tasting note cascades to its likes, comments and notifications.
 
 ### Closing an account
 
-A user can close their account from `/profil`, confirming with their password.
+A user can close their account from `/profile`, confirming with their password.
 Closure is **permanent** — there is no reopening.
 
 Nothing is deleted. Tasting notes, comments on other people's notes, likes and
@@ -580,7 +582,7 @@ Known gaps, deliberately recorded rather than hidden:
 
 - **The offline copy survives on the device until sign-out.** If a user turns the
   switch on and then walks away without signing out, someone else on that device
-  could read the copy from `/cevrimdisi`. Accepted deliberately: the switch is
+  could read the copy from `/offline`. Accepted deliberately: the switch is
   off by default, the page names whose copy it is, turning the switch off deletes
   it instantly, and signing out both deletes it and resets the switch.
 - **Repository-layer integration tests are missing.** Repositories are mocked in

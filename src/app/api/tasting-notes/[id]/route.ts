@@ -14,7 +14,7 @@ interface RouteParams {
  * GET /api/tasting-notes/[id] — kalıcı bağlantı görünümü.
  *
  * getNoteForUser değil getPublicNote: birincisi yalnızca sahibine açıktı, oysa
- * herkese açık bir notun bağlantısı paylaşılabilir olmalı — web'de /tadimlar/[id]
+ * herkese açık bir notun bağlantısı paylaşılabilir olmalı — web'de /tastings/[id]
  * sayfası da öyle davranıyor. getPublicNote "herkese açık ya da sahibi"
  * kuralını uyguluyor ve yazar bilgisiyle etkileşim özetini de dolduruyor.
  *

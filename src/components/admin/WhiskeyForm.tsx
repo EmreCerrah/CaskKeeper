@@ -155,7 +155,7 @@ export function WhiskeyForm({ whiskey }: WhiskeyFormProps) {
       return;
     }
 
-    router.push("/yonetim/viskiler");
+    router.push("/admin/whiskeys");
     router.refresh();
   }
 
