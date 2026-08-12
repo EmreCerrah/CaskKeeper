@@ -7,7 +7,7 @@ is known.
 > Update rule: when a feature lands on `main`, tick its box and record the PR
 > number. When you notice new technical debt, add it to the relevant section.
 
-**Last updated:** 2026-08-06 · **Status:** live at
+**Last updated:** 2026-08-12 · **Status:** live at
 <https://cask-keeper.vercel.app>; all planned phases complete, remaining work is
 hardening (see [What's Next](#whats-next))
 
@@ -62,6 +62,9 @@ experiences**.
 | Mobile · Slice 4 — Feed, people and following | ✅ Done | #32 |
 | Mobile · Tab icons, app icon and a real profile screen | ✅ Done | #33 |
 | Mobile · Slice 5 — Offline reading | ✅ Done | #34 |
+| Mobile · Slice 6 — Dashboard, statistics and recommendations | ✅ Done | #35 |
+| Mobile · One shared `Field` component across the forms | ✅ Done | #36 |
+| Mobile · Slice 7 — Wishlist | ✅ Done | #38 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -615,15 +618,43 @@ already accepted a bearer token.
 > that is no longer true. The catalogue behind it is cached anyway; only the
 > ranking is lost.
 
+### Slice 7 — Wishlist ✅ (PR #38)
+
+The web has had a wishlist since Phase 3 and `/api/wishlist` was live all along,
+but the app could not reach it. Slice 6 made the gap obvious: the recommendation
+screen says "you should try this" and there was nowhere to say "yes, I want that
+one."
+
+- [x] Add/remove on the whisky detail screen, list under Profile → My Wishlist
+      (the tab bar still stays at four)
+- [x] The list screen has **no remove button**. Tapping a whisky opens the
+      catalogue detail, where adding and removing already live — two buttons in
+      two places would both have to reflect the same state
+- [x] Persisted offline. The user's own data, and the whiskies in it come from
+      the catalogue, which is already stored. Adding and removing still need the
+      network
+- [x] `WhiskeyCard` reused as-is; no second card component
+
+> **One endpoint was added rather than worked around.**
+> `GET /api/whiskeys/[slug]` is public and carries no `isWishlisted` field — the
+> web reads that state through the service directly, because its detail page is
+> a server component. Fetching the whole list and searching it client-side would
+> have avoided touching the server, but `WishlistRepository.findByUser` caps
+> `limit` at 100, so a user past that number would have seen a button in the
+> wrong state with nothing to signal it. `GET /api/wishlist/[whiskeyId]` is thin
+> and reuses `wishlistService.isWishlisted`; the web is untouched.
+
+> **Optimistic here, unlike the web**, where the button waits for the server. On
+> a phone a bookmark that waits feels broken — the same reasoning as the like
+> button. The list carries a `total` alongside its contents, so the
+> transformation lives in `wishlist-cache.ts`, pure and tested: updating one and
+> forgetting the other would show "3 whiskies" above two cards and raise no
+> error anywhere. The newest-first ordering the cache assumes was checked
+> against the running server rather than guessed.
+
 ---
 
 ## What's Next
-
-### Mobile · wishlist — not built
-
-The web has a wishlist (Phase 3, Slice C) and `/api/wishlist` is live, but the
-app cannot reach it. The recommendation screen makes the gap obvious: there is
-nowhere to say "I want to try this one."
 
 ### Mobile · comments and notifications — not built
 
