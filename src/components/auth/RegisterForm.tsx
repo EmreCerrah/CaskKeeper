@@ -66,7 +66,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.push("/panel");
+    router.push("/dashboard");
     router.refresh();
   }
 

@@ -111,7 +111,7 @@ export function OfflineView() {
         </p>
         {online && (
           <Button asChild>
-            <Link href="/panel">{t("offline.goToDashboard")}</Link>
+            <Link href="/dashboard">{t("offline.goToDashboard")}</Link>
           </Button>
         )}
       </div>
@@ -140,7 +140,7 @@ export function OfflineView() {
 
         {online && (
           <Button asChild variant="ghost" size="sm">
-            <Link href="/panel">{t("offline.backOnline")}</Link>
+            <Link href="/dashboard">{t("offline.backOnline")}</Link>
           </Button>
         )}
       </header>

@@ -58,8 +58,8 @@ export function LoginForm() {
       return;
     }
 
-    const donus = searchParams.get("donus");
-    router.push(donus && donus.startsWith("/") ? donus : "/panel");
+    const returnTo = searchParams.get("return");
+    router.push(returnTo && returnTo.startsWith("/") ? returnTo : "/dashboard");
     router.refresh();
   }
 

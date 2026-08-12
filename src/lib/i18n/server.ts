@@ -8,7 +8,7 @@ import { createTranslator, getDictionary, type Translator } from "./translate";
  *
  * cookies()/headers() kullandığı için bu modülü içe aktaran her sayfa dinamik
  * render edilir. Uygulamadaki sayfalar zaten `force-dynamic`; TEK İSTİSNA
- * /cevrimdisi — orası statik kalmalı, bu yüzden orada bu modül KULLANILMAZ,
+ * /offline — orası statik kalmalı, bu yüzden orada bu modül KULLANILMAZ,
  * dil istemci tarafında okunur.
  */
 

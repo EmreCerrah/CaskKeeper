@@ -9,7 +9,7 @@
 export const MAX_COMPARE_ITEMS = 3;
 
 /**
- * URL'deki `viski` parametresini temiz bir slug listesine çevirir.
+ * URL'deki `whisky` parametresini temiz bir slug listesine çevirir.
  *
  * Next.js tekrar eden query parametrelerini `string | string[]` olarak verir;
  * ikisi de desteklenir. Yinelenen slug'lar atılır ve liste üst sınıra kırpılır —
@@ -59,11 +59,11 @@ export function findSharedFlavors(flavorProfiles: string[][]): Set<string> {
  * Verilen slug listesinden karşılaştırma sayfasının bağlantısını üretir.
  * Boş listede parametresiz yol döner (temiz URL).
  */
-export function buildCompareHref(slugs: string[], basePath = "/karsilastir"): string {
+export function buildCompareHref(slugs: string[], basePath = "/compare"): string {
   if (slugs.length === 0) return basePath;
 
   const params = new URLSearchParams();
-  for (const slug of slugs) params.append("viski", slug);
+  for (const slug of slugs) params.append("whisky", slug);
 
   return `${basePath}?${params.toString()}`;
 }

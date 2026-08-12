@@ -114,7 +114,7 @@ export function TastingNoteForm({ whiskey, note }: TastingNoteFormProps) {
     }
 
     notifyOfflineDataChanged();
-    router.push("/tadimlarim");
+    router.push("/my-tastings");
     router.refresh();
   }
 

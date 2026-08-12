@@ -21,7 +21,7 @@ export function UserResultCard({ user, isAuthenticated }: UserResultCardProps) {
 
   return (
     <Card className="flex items-center justify-between gap-4 p-4">
-      <Link href={`/kullanicilar/${user.id}`} className="flex min-w-0 items-center gap-3">
+      <Link href={`/users/${user.id}`} className="flex min-w-0 items-center gap-3">
         <UserAvatar name={user.name} src={user.profilePicture} size="md" />
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -40,7 +40,7 @@ export function UserResultCard({ user, isAuthenticated }: UserResultCardProps) {
         {isAuthenticated ? (
           <FollowButton targetUserId={user.id} initialFollowing={user.isFollowedByViewer} />
         ) : (
-          <Link href="/giris" className="text-sm text-primary hover:underline">
+          <Link href="/sign-in" className="text-sm text-primary hover:underline">
             {t("people.loginToFollow")}
           </Link>
         )}

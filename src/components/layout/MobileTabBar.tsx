@@ -46,18 +46,18 @@ interface TabItem {
 
 /** Oturum açmış kullanıcı için birincil hedefler (4 sekme + "Daha fazla"). */
 const AUTHED_TABS: TabItem[] = [
-  { href: "/viskiler", labelKey: "nav.whiskies", icon: GlassWater },
-  { href: "/tadimlarim", labelKey: "nav.myTastings", icon: NotebookPen },
-  { href: "/akis", labelKey: "nav.feed", icon: Compass },
-  { href: "/istek-listem", labelKey: "nav.wishlistShort", icon: Bookmark },
+  { href: "/whiskeys", labelKey: "nav.whiskies", icon: GlassWater },
+  { href: "/my-tastings", labelKey: "nav.myTastings", icon: NotebookPen },
+  { href: "/feed", labelKey: "nav.feed", icon: Compass },
+  { href: "/wishlist", labelKey: "nav.wishlistShort", icon: Bookmark },
 ];
 
 /** Oturumsuz kullanıcı için: herkese açık sayfalar erişilebilir kalmalı. */
 const GUEST_TABS: TabItem[] = [
-  { href: "/viskiler", labelKey: "nav.whiskies", icon: GlassWater },
-  { href: "/kullanicilar", labelKey: "nav.people", icon: Users },
-  { href: "/karsilastir", labelKey: "nav.compare", icon: BarChart3 },
-  { href: "/giris", labelKey: "nav.loginShort", icon: LogIn },
+  { href: "/whiskeys", labelKey: "nav.whiskies", icon: GlassWater },
+  { href: "/users", labelKey: "nav.people", icon: Users },
+  { href: "/compare", labelKey: "nav.compare", icon: BarChart3 },
+  { href: "/sign-in", labelKey: "nav.loginShort", icon: LogIn },
 ];
 
 /**
@@ -190,16 +190,16 @@ function MoreSheet({ isAdmin, userId, userName, unreadCount, onClose, onLogout }
   const t = useTranslations();
 
   const items: { href: string; labelKey: TranslationKey; icon: LucideIcon; badge?: number }[] = [
-    { href: "/panel", labelKey: "nav.dashboard", icon: BarChart3 },
-    { href: "/bildirimler", labelKey: "nav.notifications", icon: Bell, badge: unreadCount },
-    { href: "/favoriler", labelKey: "nav.favorites", icon: Heart },
-    { href: "/kullanicilar", labelKey: "nav.people", icon: Users },
-    { href: "/karsilastir", labelKey: "nav.compareLong", icon: BarChart3 },
+    { href: "/dashboard", labelKey: "nav.dashboard", icon: BarChart3 },
+    { href: "/notifications", labelKey: "nav.notifications", icon: Bell, badge: unreadCount },
+    { href: "/favourites", labelKey: "nav.favorites", icon: Heart },
+    { href: "/users", labelKey: "nav.people", icon: Users },
+    { href: "/compare", labelKey: "nav.compareLong", icon: BarChart3 },
     ...(userId
-      ? [{ href: `/kullanicilar/${userId}`, labelKey: "nav.publicProfile" as TranslationKey, icon: UserCircle }]
+      ? [{ href: `/users/${userId}`, labelKey: "nav.publicProfile" as TranslationKey, icon: UserCircle }]
       : []),
-    { href: "/profil", labelKey: "nav.profileSettings", icon: User },
-    ...(isAdmin ? [{ href: "/yonetim", labelKey: "nav.admin" as TranslationKey, icon: ShieldCheck }] : []),
+    { href: "/profile", labelKey: "nav.profileSettings", icon: User },
+    ...(isAdmin ? [{ href: "/admin", labelKey: "nav.admin" as TranslationKey, icon: ShieldCheck }] : []),
   ];
 
   return (

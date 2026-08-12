@@ -187,7 +187,7 @@ export function NoteInteractions({
         </Button>
 
         <Link
-          href={`/tadimlar/${noteId}`}
+          href={`/tastings/${noteId}`}
           className="ml-auto text-xs text-muted-foreground hover:text-primary"
         >
           {t("interactions.openNote")}
@@ -213,7 +213,7 @@ export function NoteInteractions({
 
           {comments?.map((comment) => (
             <div key={comment.id} className="flex items-start gap-2">
-              <Link href={`/kullanicilar/${comment.author.id}`} className="shrink-0">
+              <Link href={`/users/${comment.author.id}`} className="shrink-0">
                 <UserAvatar
                   name={comment.author.name}
                   src={comment.author.profilePicture}
@@ -223,7 +223,7 @@ export function NoteInteractions({
               <div className="min-w-0 flex-1 rounded-md bg-secondary/40 px-3 py-2">
                 <p className="flex flex-wrap items-baseline gap-x-2 text-xs">
                   <Link
-                    href={`/kullanicilar/${comment.author.id}`}
+                    href={`/users/${comment.author.id}`}
                     className="font-medium text-foreground hover:text-primary"
                   >
                     {comment.author.name}
@@ -273,7 +273,7 @@ export function NoteInteractions({
           ) : (
             <p className="text-sm text-muted-foreground">
               {t("interactions.signInToCommentBefore")}{" "}
-              <Link href="/giris" className="text-primary hover:underline">
+              <Link href="/sign-in" className="text-primary hover:underline">
                 {t("interactions.signInToCommentLink")}
               </Link>
               .

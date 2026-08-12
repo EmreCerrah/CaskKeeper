@@ -81,7 +81,7 @@ export function ComparisonTable({ whiskeys }: ComparisonTableProps) {
                     className="h-32 w-full rounded-md border"
                   />
                   <Link
-                    href={`/viskiler/${whiskey.slug}`}
+                    href={`/whiskeys/${whiskey.slug}`}
                     className="flex min-h-11 items-center font-serif text-base font-semibold leading-snug hover:text-primary md:min-h-0"
                   >
                     {whiskey.name}

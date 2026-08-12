@@ -10,7 +10,7 @@ interface UserListItemProps {
 /** Takipçi/takip listelerinde bir kullanıcı satırı. */
 export function UserListItem({ user }: UserListItemProps) {
   return (
-    <Link href={`/kullanicilar/${user.id}`}>
+    <Link href={`/users/${user.id}`}>
       <Card className="flex items-center gap-3 p-3 transition-colors hover:border-primary/40">
         <UserAvatar name={user.name} src={user.profilePicture} size="md" />
         <span className="font-medium">{user.name}</span>

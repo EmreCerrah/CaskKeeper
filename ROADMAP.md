@@ -67,6 +67,8 @@ experiences**.
 | Mobile · Slice 7 — Wishlist | ✅ Done | #38 |
 | Mobile · Slice 8 — Comments | ✅ Done | #39 |
 | Mobile · Slice 9 — Notifications | ✅ Done | #40 |
+| Mobile · English route names | ✅ Done | #42 |
+| Web · English route names and query parameters | ✅ Done | #43 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -90,15 +92,15 @@ deletion commit.
 
 ### Slice 1 — Social layer ✅
 
-- [x] Public profiles (`/kullanicilar/[id]`)
+- [x] Public profiles (`/users/[id]`)
 - [x] Public tasting notes (`visibility: public`)
 - [x] Follow system (one-way)
 - [x] Follower / following lists
-- [x] Activity feed (`/akis`)
+- [x] Activity feed (`/feed`)
 
 ### Slice 2 — User search & friendship ✅
 
-- [x] User search page (`/kullanicilar`)
+- [x] User search page (`/users`)
 - [x] Discovery list (newest members when the search box is empty)
 - [x] "Friend" badge — mutual follow
 - [x] N+1 avoided with batched queries
@@ -112,9 +114,9 @@ deletion commit.
       no notification)
 - [x] Comments on tasting notes (deletable by the comment's author or the note's
       owner)
-- [x] Notifications (follow, like, comment) — `/bildirimler`, bell in the navbar
+- [x] Notifications (follow, like, comment) — `/notifications`, bell in the navbar
 - [x] Read/unread state — individually and "mark all as read"
-- [x] Tasting note permalink (`/tadimlar/[id]`) — the target of notifications
+- [x] Tasting note permalink (`/tastings/[id]`) — the target of notifications
 - [x] Reversing an action (unfollow, unlike) deletes the matching notification
 - [x] Deleting a note cascades to its likes, comments and notifications
 
@@ -127,13 +129,13 @@ Practices).
 
 - [x] How the palate changes over time (monthly aroma trend, stacked bar chart)
 - [x] Region/type/distillery distribution charts
-- [x] `/panel/istatistikler` page, `GET /api/analytics`
+- [x] `/dashboard/statistics` page, `GET /api/analytics`
 - [x] Bonus: show/hide toggle on password fields (small fix in the same PR)
 
 ### Slice B — Recommendation engine ✅
 
 - [x] Whisky recommendations ranked by the aroma tags the user picks most
-- [x] `/panel/oneriler` page, `GET /api/recommendations`
+- [x] `/dashboard/recommendations` page, `GET /api/recommendations`
 - [x] Bridges the catalogue's free-text English `flavorProfile` field and the
       user's Turkish aroma-wheel tags: both are mapped onto the same 9 aroma
       categories (`src/lib/constants/flavor-profile-map.ts`)
@@ -145,14 +147,14 @@ Practices).
 - [x] Scope is deliberately just that: **no** quantity, price or location fields
       (the "bottle collection" idea was dropped to respect the product rule that
       this is not inventory management)
-- [x] `/istek-listem` page, `GET/POST/DELETE /api/wishlist`
+- [x] `/wishlist` page, `GET/POST/DELETE /api/wishlist`
 - [x] Add/remove button on the whisky detail page
 
 ### Slice D — Whisky comparison ✅
 
 - [x] Up to 3 whiskies side by side (specs + aroma profile)
 - [x] No new persistent model needed — state lives in the URL
-      (`/karsilastir?viski=…`), so links are shareable and the back button works
+      (`/compare?whisky=…`), so links are shareable and the back button works
 - [x] Shared aroma notes are highlighted (set intersection); the distinction does
       not rest on colour alone — the badge also carries an "ortak" (shared) label
 - [x] Add via search, remove in one click; entry points on the catalogue and
@@ -162,8 +164,8 @@ Practices).
 
 ## Mobile Optimisation ✅ (PR #15)
 
-- [x] Bottom tab bar — the desktop nav is hidden on mobile, which left `/panel`
-      and `/istek-listem` unreachable, and signed-out users with no links at all
+- [x] Bottom tab bar — the desktop nav is hidden on mobile, which left `/dashboard`
+      and `/wishlist` unreachable, and signed-out users with no links at all
 - [x] Touch targets raised to 44px (WCAG 2.5.5) on mobile only — desktop sizing
       preserved via `md:`
 - [x] Row headers made sticky in the comparison table
@@ -196,9 +198,9 @@ self-hosting.
       render `Navbar` as a session-reading server component, so every page was
       user-specific
 - [x] Root layout split: session-dependent chrome moved to `(main)/layout.tsx`,
-      so `/cevrimdisi` can live outside it and be statically rendered. URLs are
+      so `/offline` can live outside it and be statically rendered. URLs are
       unchanged — route groups do not affect paths
-- [x] Opt-in offline copy behind a switch (user menu + `/profil`), **off by
+- [x] Opt-in offline copy behind a switch (user menu + `/profile`), **off by
       default**. While on, the user's own tasting notes and wishlist are kept in
       the Cache API (`caskkeeper-offline-v1`), separate from the asset cache so
       sign-out clears only personal data
@@ -210,7 +212,7 @@ self-hosting.
       the switch, so the next person to sign in on that device does not inherit
       an enabled setting. If the app ever starts with the switch off but a copy
       present, it is cleared
-- [x] `/cevrimdisi` renders that copy, reusing `TastingNoteCard` and
+- [x] `/offline` renders that copy, reusing `TastingNoteCard` and
       `WhiskeyCard` — no duplicated markup
 - [x] Client-side logout consolidated into `lib/auth/logout-client.ts`; it was
       duplicated in `UserMenu` and `MobileTabBar`, and the wipe had to happen in
@@ -245,8 +247,9 @@ flat key/value dictionary and a cookie, which is roughly a hundred lines.
       it is called from both sides and cannot read the cookie itself
 - [x] Module-level Zod schemas and constant tables became functions taking `t`
       (`buildXSchema(t)` + `useMemo`), because a hook cannot run at module level
-- [x] **URLs stay Turkish** (`/viskiler`, `/tadimlarim`, `/panel`). Translating
-      them would break every link already shared from the live site
+- [x] ~~**URLs stay Turkish**~~ — held at the time, **reversed later**: the URLs
+      and query parameters are English now. The cost this bullet predicted was
+      paid deliberately; see "English routes" below
 
 > `lib/i18n/untranslated.test.ts` is the guard that makes this stick. Missing
 > translation is a **silent** failure — the build passes, the page renders, only
@@ -289,7 +292,7 @@ turned Turkish at exactly the moment the user got stuck.
 
 ## Account closure ✅ (PR #25)
 
-A user can close their account from `/profil`. There was no way to leave before
+A user can close their account from `/profile`. There was no way to leave before
 this; the account you created was the account you kept.
 
 - [x] **Closure is permanent.** There is no reopening. A single `closedAt` field
@@ -580,7 +583,7 @@ the screens* — held: **not one file under `app/(app)/` changed.**
 ### Slice 6 — Dashboard, statistics and recommendations ✅ (PR #35)
 
 The app could write tasting notes but never showed what they added up to. This
-brings the web's `/panel`, `/panel/istatistikler` and `/panel/oneriler` to the
+brings the web's `/dashboard`, `/dashboard/statistics` and `/dashboard/recommendations` to the
 phone. **Nothing on the server changed** — all three endpoints existed and
 already accepted a bearer token.
 
@@ -737,6 +740,42 @@ the social layer on the phone. **Nothing on the server changed.**
 > like or comment deletes the matching notification — the documented cascade,
 > measured rather than trusted.
 
+## Interlude — English routes ✅ (PRs #42, #43)
+
+Class, type and function names were English from the start; the route folders
+were not, and they were the first thing a newcomer would trip over. Mobile first
+(#42, no risk — expo-router names never leave the app), then the web (#43).
+
+- [x] Mobile: `akis→feed`, `katalog→catalogue`, `tadimlarim→my-tastings`,
+      `profil→profile`, and every screen inside them
+- [x] Web: 30 route folders, plus `middleware.ts` (prefixes, auth pages **and**
+      the matcher), `manifest.ts` shortcuts, and `OFFLINE_PAGE`, which is written
+      out twice — in `public/sw.js` and `src/lib/offline/store.ts`
+- [x] Query parameters too: `?sayfa=`→`?page=`, `?arama=`→`?search=`,
+      `?viski=`→`?whisky=`, `?tip=`→`?type=`, `?bolge=`→`?region=`,
+      `?ulke=`→`?country=`, `?donus=`→`?return=`. The API already used the
+      English names, so the two halves now agree
+
+> **This reversed an earlier decision and broke live links, knowingly.** The
+> bilingual slice had kept the URLs Turkish precisely to protect links already
+> shared from the live site. No redirects were added: every old URL now returns
+> 404, and search engines will carry the stale ones for a while. The call was
+> made explicitly with that cost on the table — readability for anyone opening
+> the repo was judged worth more than the shared links.
+
+> **The mechanical trap, twice.** Rewriting `/profil` → `/profile` with
+> sequential replacements re-matched its own output and produced `profilee`;
+> doing the web side in a single-pass alternation avoided that, but the same
+> pattern then matched the `/profil` prefix inside the *already English*
+> `@/components/profile` import path. Search-and-replace across a codebase is not
+> a safe default — both were caught by reading the diff, and the second by the
+> build.
+
+> A stale test expectation caught the third: `buildCompareHref` produced
+> `?whisky=a&whisky=b` while the test still expected `&viski=b`, because the
+> `?x=` pattern does not match `&x=`. The code was right and the test was old —
+> the failure was the tell.
+
 ---
 
 ## What's Next
@@ -779,7 +818,7 @@ Details in the technical debt section below.
 #### 1. The offline copy outlives the session on a shared device — *accepted*
 While the offline switch is on, the copy stays on the device until the user turns
 it off or signs out. A user who walks away without signing out leaves a readable
-copy behind at `/cevrimdisi`. **Deliberately accepted** — the switch is off by
+copy behind at `/offline`. **Deliberately accepted** — the switch is off by
 default and never enables itself, the page names whose copy it is and when it was
 synced, turning it off deletes the copy instantly, and `logout-client.ts` wipes
 the copy *and* resets the switch on sign-out. Revisit if the product ever stores

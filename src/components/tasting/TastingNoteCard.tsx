@@ -57,7 +57,7 @@ export function TastingNoteCard({
       <CardHeader className="space-y-3 pb-3">
         {showAuthor && note.author && (
           <Link
-            href={`/kullanicilar/${note.author.id}`}
+            href={`/users/${note.author.id}`}
             className="flex w-fit items-center gap-2 text-sm hover:text-primary"
           >
             <UserAvatar name={note.author.name} src={note.author.profilePicture} size="sm" />
@@ -69,7 +69,7 @@ export function TastingNoteCard({
           <div className="min-w-0 space-y-1">
             {!hideWhiskey && note.whiskey && (
               <Link
-                href={`/viskiler/${note.whiskey.slug}`}
+                href={`/whiskeys/${note.whiskey.slug}`}
                 className="block truncate font-serif text-lg font-semibold hover:text-primary"
               >
                 {note.whiskey.brand} {note.whiskey.name}

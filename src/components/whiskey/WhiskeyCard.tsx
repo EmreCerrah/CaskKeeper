@@ -20,7 +20,7 @@ export function WhiskeyCard({ whiskey, footer }: WhiskeyCardProps) {
   const t = useTranslations();
 
   return (
-    <Link href={`/viskiler/${whiskey.slug}`} className="group">
+    <Link href={`/whiskeys/${whiskey.slug}`} className="group">
       <Card className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
         <WhiskeyImage
           src={whiskey.imageUrl}

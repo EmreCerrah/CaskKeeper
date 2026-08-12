@@ -58,19 +58,19 @@ export default async function HomePage() {
           {session ? (
             <>
               <Button asChild size="lg">
-                <Link href="/panel">{t("home.ctaDashboard")}</Link>
+                <Link href="/dashboard">{t("home.ctaDashboard")}</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/viskiler">{t("home.ctaCatalogue")}</Link>
+                <Link href="/whiskeys">{t("home.ctaCatalogue")}</Link>
               </Button>
             </>
           ) : (
             <>
               <Button asChild size="lg">
-                <Link href="/kayit">{t("home.ctaSignUp")}</Link>
+                <Link href="/sign-up">{t("home.ctaSignUp")}</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/viskiler">{t("home.ctaCatalogue")}</Link>
+                <Link href="/whiskeys">{t("home.ctaCatalogue")}</Link>
               </Button>
             </>
           )}

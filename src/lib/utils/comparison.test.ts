@@ -1,7 +1,7 @@
 /**
  * comparison.ts testleri.
  *
- * Odak: URL'den gelen güvenilmeyen `viski` parametresinin doğru
+ * Odak: URL'den gelen güvenilmeyen `whisky` parametresinin doğru
  * ayrıştırılması (tek/çoklu değer, yinelenen, üst sınır) ve ortak aroma
  * kesişiminin sınır durumları.
  */
@@ -89,14 +89,14 @@ describe("findSharedFlavors", () => {
 
 describe("buildCompareHref", () => {
   it("boş listede parametresiz yol döner", () => {
-    expect(buildCompareHref([])).toBe("/karsilastir");
+    expect(buildCompareHref([])).toBe("/compare");
   });
 
   it("her slug için tekrar eden parametre üretir", () => {
-    expect(buildCompareHref(["a", "b"])).toBe("/karsilastir?viski=a&viski=b");
+    expect(buildCompareHref(["a", "b"])).toBe("/compare?whisky=a&whisky=b");
   });
 
   it("URL'de güvenli olmayan karakterleri kodlar", () => {
-    expect(buildCompareHref(["a b"])).toBe("/karsilastir?viski=a+b");
+    expect(buildCompareHref(["a b"])).toBe("/compare?whisky=a+b");
   });
 });

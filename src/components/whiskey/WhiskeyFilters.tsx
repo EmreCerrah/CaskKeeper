@@ -23,7 +23,7 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
   const searchParams = useSearchParams();
   const t = useTranslations();
 
-  const [search, setSearch] = useState(searchParams.get("arama") ?? "");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const updateParams = useCallback(
@@ -33,7 +33,7 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
         if (value) params.set(key, value);
         else params.delete(key);
       }
-      params.delete("sayfa"); // filtre değişince ilk sayfaya dön
+      params.delete("page"); // filtre değişince ilk sayfaya dön
       router.push(`${pathname}?${params.toString()}`);
     },
     [router, pathname, searchParams]
@@ -41,14 +41,14 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
 
   // Arama kutusu: 400ms debounce
   useEffect(() => {
-    const current = searchParams.get("arama") ?? "";
+    const current = searchParams.get("search") ?? "";
     if (search === current) return;
-    debounceRef.current = setTimeout(() => updateParams({ arama: search || null }), 400);
+    debounceRef.current = setTimeout(() => updateParams({ search: search || null }), 400);
     return () => clearTimeout(debounceRef.current);
   }, [search, searchParams, updateParams]);
 
   const hasFilters =
-    !!searchParams.get("arama") || !!searchParams.get("tip") || !!searchParams.get("bolge") || !!searchParams.get("ulke");
+    !!searchParams.get("search") || !!searchParams.get("type") || !!searchParams.get("region") || !!searchParams.get("country");
 
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -64,8 +64,8 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
       </div>
 
       <Select
-        value={searchParams.get("tip") ?? ""}
-        onChange={(e) => updateParams({ tip: e.target.value || null })}
+        value={searchParams.get("type") ?? ""}
+        onChange={(e) => updateParams({ type: e.target.value || null })}
         className="md:w-44"
         aria-label={t("catalogue.filterType")}
       >
@@ -78,8 +78,8 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
       </Select>
 
       <Select
-        value={searchParams.get("bolge") ?? ""}
-        onChange={(e) => updateParams({ bolge: e.target.value || null })}
+        value={searchParams.get("region") ?? ""}
+        onChange={(e) => updateParams({ region: e.target.value || null })}
         className="md:w-44"
         aria-label={t("catalogue.filterRegion")}
       >
@@ -92,8 +92,8 @@ export function WhiskeyFilters({ facets }: WhiskeyFiltersProps) {
       </Select>
 
       <Select
-        value={searchParams.get("ulke") ?? ""}
-        onChange={(e) => updateParams({ ulke: e.target.value || null })}
+        value={searchParams.get("country") ?? ""}
+        onChange={(e) => updateParams({ country: e.target.value || null })}
         className="md:w-44"
         aria-label={t("catalogue.filterCountry")}
       >

@@ -9,7 +9,7 @@ import { OfflineAutoSync } from "@/components/offline/OfflineAutoSync";
  *
  * Navbar bir server component olarak oturumu okur, dolayısıyla bu layout'un
  * altındaki her sayfa kullanıcıya özeldir ve dinamik render edilir. Bu yüzden
- * kök layout'ta değil burada duruyor; (main) dışında kalan /cevrimdisi böylece
+ * kök layout'ta değil burada duruyor; (main) dışında kalan /offline böylece
  * statik kalabiliyor.
  */
 export default async function MainLayout({

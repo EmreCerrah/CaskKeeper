@@ -19,9 +19,9 @@ const ICONS = {
 
 /** Bildirimin yönlendirdiği sayfa: takip → profil, beğeni/yorum → tadım notu. */
 function targetHref(notification: NotificationDTO): string {
-  if (notification.type === "follow") return `/kullanicilar/${notification.actor.id}`;
-  if (notification.tastingNoteId) return `/tadimlar/${notification.tastingNoteId}`;
-  return `/kullanicilar/${notification.actor.id}`;
+  if (notification.type === "follow") return `/users/${notification.actor.id}`;
+  if (notification.tastingNoteId) return `/tastings/${notification.tastingNoteId}`;
+  return `/users/${notification.actor.id}`;
 }
 
 /** Bildirim metni — viski adı biliniyorsa cümleye eklenir. */

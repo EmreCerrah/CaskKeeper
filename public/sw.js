@@ -28,7 +28,7 @@ const CACHE_VERSION = "caskkeeper-v1";
  * "sayfa HTML'i önbelleğe alınmaz" kuralının tek istisnası olabiliyor.
  * Kullanıcı panelden veri indirdiğinde önbelleğe alınır (cacheOfflineShell).
  */
-const OFFLINE_PAGE = "/cevrimdisi";
+const OFFLINE_PAGE = "/offline";
 
 self.addEventListener("install", (event) => {
   // Ön yükleme yok: önbellek kullanıldıkça dolar.

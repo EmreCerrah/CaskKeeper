@@ -18,14 +18,14 @@ export function UserSearchBar() {
 
   const t = useTranslations();
 
-  const [value, setValue] = useState(searchParams.get("arama") ?? "");
+  const [value, setValue] = useState(searchParams.get("search") ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const applySearch = useCallback(
     (next: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (next) params.set("arama", next);
-      else params.delete("arama");
+      if (next) params.set("search", next);
+      else params.delete("search");
 
       const qs = params.toString();
       router.push(qs ? `${pathname}?${qs}` : pathname);
@@ -34,7 +34,7 @@ export function UserSearchBar() {
   );
 
   useEffect(() => {
-    const current = searchParams.get("arama") ?? "";
+    const current = searchParams.get("search") ?? "";
     if (value === current) return;
 
     debounceRef.current = setTimeout(() => applySearch(value), 400);
