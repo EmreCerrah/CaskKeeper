@@ -1,6 +1,7 @@
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { LikeButton } from "../../../../src/components/social/LikeButton";
+import { NoteComments } from "../../../../src/components/social/NoteComments";
 import { WhiskeyImage } from "../../../../src/components/WhiskeyImage";
 import { useNote } from "../../../../src/data/tastingNotes";
 import type { FeedNote } from "../../../../src/data/feed";
@@ -70,6 +71,8 @@ export default function PublicNoteScreen() {
           </View>
         </View>
       ) : null}
+
+      <NoteComments noteId={note.id} />
     </ScrollView>
   );
 }

@@ -1,8 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { toggleLikeInPages, toggleLikeOnNote, type InfiniteData, type LikeableNote } from "./like-cache";
+import {
+  adjustCommentCount,
+  adjustCommentCountInPages,
+  toggleLikeInPages,
+  toggleLikeOnNote,
+  type InfiniteData,
+  type LikeableNote,
+} from "./interaction-cache";
 
-function note(id: string, likeCount: number, liked: boolean): LikeableNote {
-  return { id, interactions: { likeCount, commentCount: 0, isLikedByViewer: liked } };
+function note(id: string, likeCount: number, liked: boolean, commentCount = 0): LikeableNote {
+  return { id, interactions: { likeCount, commentCount, isLikedByViewer: liked } };
 }
 
 function pages(): InfiniteData<LikeableNote> {
@@ -78,5 +85,67 @@ describe("toggleLikeInPages", () => {
 
   it("önbellek boşsa çökmez", () => {
     expect(toggleLikeInPages(undefined, "a")).toBeUndefined();
+  });
+});
+
+describe("adjustCommentCount", () => {
+  it("yorum eklenince artar, silinince azalır", () => {
+    expect(adjustCommentCount(note("a", 0, false, 2), 1).interactions.commentCount).toBe(3);
+    expect(adjustCommentCount(note("a", 0, false, 2), -1).interactions.commentCount).toBe(1);
+  });
+
+  it("sayı asla negatife düşmez", () => {
+    expect(adjustCommentCount(note("a", 0, false, 0), -1).interactions.commentCount).toBe(0);
+  });
+
+  it("beğeni bilgisine dokunmaz", () => {
+    const result = adjustCommentCount(note("a", 5, true, 1), 1);
+    expect(result.interactions).toMatchObject({ likeCount: 5, isLikedByViewer: true, commentCount: 2 });
+  });
+
+  it("etkileşim bilgisi hiç yoksa çökmez", () => {
+    expect(adjustCommentCount({ id: "a" }, 1).interactions.commentCount).toBe(1);
+  });
+
+  it("girdiyi değiştirmez", () => {
+    const input = note("a", 0, false, 1);
+    adjustCommentCount(input, 1);
+    expect(input.interactions?.commentCount).toBe(1);
+  });
+});
+
+describe("adjustCommentCountInPages", () => {
+  function commentPages(): InfiniteData<LikeableNote> {
+    return {
+      pageParams: [1, 2],
+      pages: [
+        { data: [note("a", 0, false, 1), note("b", 0, false, 4)], total: 4, page: 1, limit: 2, totalPages: 2 },
+        { data: [note("c", 0, false, 0), note("d", 0, false, 9)], total: 4, page: 2, limit: 2, totalPages: 2 },
+      ],
+    };
+  }
+
+  it("YALNIZCA hedef notun yorum sayısını değiştirir", () => {
+    const result = adjustCommentCountInPages(commentPages(), "b", 1);
+
+    expect(result?.pages[0].data[1].interactions?.commentCount).toBe(5);
+    expect(
+      [result?.pages[0].data[0], result?.pages[1].data[0], result?.pages[1].data[1]].map(
+        (n) => n?.interactions?.commentCount
+      )
+    ).toEqual([1, 0, 9]);
+  });
+
+  it("sayfa sınırlarını ve toplamları korur", () => {
+    const result = adjustCommentCountInPages(commentPages(), "a", -1);
+    expect(result?.pages.map((p) => p.data.length)).toEqual([2, 2]);
+    expect(result?.pages.map((p) => p.total)).toEqual([4, 4]);
+    expect(result?.pageParams).toEqual([1, 2]);
+  });
+
+  it("olmayan not ve boş önbellek için güvenli", () => {
+    const before = commentPages();
+    expect(adjustCommentCountInPages(before, "yok", 1)).toEqual(before);
+    expect(adjustCommentCountInPages(undefined, "a", 1)).toBeUndefined();
   });
 });

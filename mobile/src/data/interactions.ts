@@ -3,7 +3,7 @@ import { apiRequest } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { queryKeys } from "./keys";
 import type { FeedNote } from "./feed";
-import { toggleLikeInPages, toggleLikeOnNote, type InfiniteData } from "./like-cache";
+import { toggleLikeInPages, toggleLikeOnNote, type InfiniteData } from "./interaction-cache";
 
 /**
  * @file interactions.ts
@@ -12,7 +12,7 @@ import { toggleLikeInPages, toggleLikeOnNote, type InfiniteData } from "./like-c
  * İYİMSER güncelleniyor: ağ turunu bekleyen bir kalp bozuk hissettirir. İstek
  * başarısız olursa önbellek eski hâline döner, sonra sunucudan tazelenir.
  *
- * Dönüşümün kendisi like-cache.ts'te ve testli — akış sayfalı olduğu için
+ * Dönüşümün kendisi interaction-cache.ts'te ve testli — akış sayfalı olduğu için
  * doğru notu bulmak sayfalarda gezmek demek ve yanlış sayfayı bozmak kolay.
  */
 export function useToggleLike() {

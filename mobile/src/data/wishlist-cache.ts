@@ -8,7 +8,7 @@ import type { Whiskey } from "./whiskeys";
  * önbelleğine elle dokunuluyor. Liste içeriğinin YANINDA bir de `total`
  * taşıyor: biri güncellenip diğeri unutulduğunda ekranda "3 viski" yazarken
  * iki kart görünür ve bu hiçbir yerde hata vermez. O yüzden dönüşüm ağdan
- * ayrı ve testli — like-cache.ts ile aynı gerekçe.
+ * ayrı ve testli — interaction-cache.ts ile aynı gerekçe.
  */
 
 export interface WishlistItem {
