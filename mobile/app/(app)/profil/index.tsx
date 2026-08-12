@@ -81,6 +81,11 @@ export default function ProfileScreen() {
               label={t("recommendations.title")}
               onPress={() => router.push("/(app)/profil/oneriler")}
             />
+            <LinkRow
+              icon="bookmark-outline"
+              label={t("wishlist.title")}
+              onPress={() => router.push("/(app)/profil/istek-listem")}
+            />
           </View>
 
           <Section title={t("profile.edit")}>

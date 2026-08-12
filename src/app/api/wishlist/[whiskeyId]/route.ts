@@ -10,6 +10,26 @@ interface RouteParams {
   params: { whiskeyId: string };
 }
 
+/**
+ * GET /api/wishlist/[whiskeyId] — bu viski istek listesinde mi
+ *
+ * Web'de gerek yok: viski detay sayfası sunucu bileşeni olduğu için servisi
+ * doğrudan çağırıyor. Yerel istemcinin böyle bir yolu yok ve katalog uçları
+ * herkese açık olduğu için `isWishlisted` alanını oraya eklemek katalog
+ * yanıtını oturuma bağlardı.
+ */
+export async function GET(_req: NextRequest, { params }: RouteParams) {
+  try {
+    const session = await requireSession();
+    await connectToDatabase();
+
+    const wishlisted = await wishlistService.isWishlisted(session.userId, params.whiskeyId);
+    return createResponse({ wishlisted });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
 /** POST /api/wishlist/[whiskeyId] — istek listesine ekle */
 export async function POST(_req: NextRequest, { params }: RouteParams) {
   try {

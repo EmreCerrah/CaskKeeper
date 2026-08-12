@@ -36,6 +36,12 @@ export const queryKeys = {
   analytics: () => ["analytics"] as const,
   /** Damak profilinden hesaplanan öneriler. */
   recommendations: () => ["recommendations"] as const,
+  wishlist: {
+    /** Ekleme/kaldırma sonrası hem listeyi hem tek viski durumunu tazelemek için. */
+    all: ["wishlist"] as const,
+    list: () => ["wishlist", "list"] as const,
+    status: (whiskeyId: string) => ["wishlist", "status", whiskeyId] as const,
+  },
   users: {
     /** Takip değişince arama sonuçlarındaki durumlar da tazelenmeli. */
     all: ["users"] as const,
