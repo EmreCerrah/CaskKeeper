@@ -45,7 +45,7 @@ export default function MyTastingsScreen() {
           onRefresh={refetch}
           refreshing={isRefetching}
           renderItem={({ item }) => (
-            <NoteCard note={item} onPress={() => router.push(`/(app)/tadimlarim/${item.id}`)} />
+            <NoteCard note={item} onPress={() => router.push(`/(app)/my-tastings/${item.id}`)} />
           )}
           ListEmptyComponent={
             <View style={styles.center}>

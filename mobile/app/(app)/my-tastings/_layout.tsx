@@ -12,7 +12,7 @@ export default function MyTastingsLayout() {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="yeni" options={{ title: "" }} />
+      <Stack.Screen name="new" options={{ title: "" }} />
       <Stack.Screen name="[id]" options={{ title: "" }} />
     </Stack>
   );

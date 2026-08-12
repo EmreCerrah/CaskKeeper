@@ -48,11 +48,11 @@ export default function AppLayout() {
       }}
     >
       <Tabs.Screen
-        name="katalog"
+        name="catalogue"
         options={{ title: t("tab.catalogue"), tabBarIcon: tabIcon("wine", "wine-outline") }}
       />
       <Tabs.Screen
-        name="akis"
+        name="feed"
         options={{
           title: t("tab.feed"),
           tabBarIcon: tabIcon("people", "people-outline"),
@@ -64,11 +64,11 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="tadimlarim"
+        name="my-tastings"
         options={{ title: t("tab.myTastings"), tabBarIcon: tabIcon("bookmark", "bookmark-outline") }}
       />
       <Tabs.Screen
-        name="profil"
+        name="profile"
         options={{ title: t("tab.profile"), tabBarIcon: tabIcon("person", "person-outline") }}
       />
     </Tabs>

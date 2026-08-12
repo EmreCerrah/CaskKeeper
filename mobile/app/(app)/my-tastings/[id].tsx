@@ -63,7 +63,7 @@ export default function EditNoteScreen() {
       // whiskey güncellemede değişmiyor — not, viskiye bağlı bir seans kaydı.
       const { whiskey: _whiskey, ...changes } = toNotePayload(form);
       await updateNote.mutateAsync(changes);
-      router.replace("/(app)/tadimlarim");
+      router.replace("/(app)/my-tastings");
     } catch (e) {
       setFormError(e instanceof Error ? e.message : t("notes.saveFailed"));
     }
@@ -80,7 +80,7 @@ export default function EditNoteScreen() {
     setFormError(null);
     try {
       await deleteNote.mutateAsync(noteId);
-      router.replace("/(app)/tadimlarim");
+      router.replace("/(app)/my-tastings");
     } catch (e) {
       setFormError(e instanceof Error ? e.message : t("notes.deleteFailed"));
     }
@@ -107,7 +107,7 @@ export default function EditNoteScreen() {
           özel bir nota kimse yorum yazamaz. */}
       {note.visibility === "public" && (
         <Pressable
-          onPress={() => router.push(`/(app)/akis/not/${noteId}`)}
+          onPress={() => router.push(`/(app)/feed/note/${noteId}`)}
           style={styles.comments}
           accessibilityRole="button"
         >

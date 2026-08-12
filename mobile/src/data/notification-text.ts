@@ -69,13 +69,13 @@ export function notificationMessage(notification: AppNotification): Notification
  * `router.push`'a geçecek kadar dar — modül Node altında test edilebilir kalıyor.
  */
 export type NotificationRoute =
-  | `/(app)/akis/not/${string}`
-  | `/(app)/akis/kullanici/${string}`;
+  | `/(app)/feed/note/${string}`
+  | `/(app)/feed/user/${string}`;
 
 export function notificationRoute(notification: AppNotification): NotificationRoute {
   if (notification.type !== "follow" && notification.tastingNoteId) {
-    return `/(app)/akis/not/${notification.tastingNoteId}`;
+    return `/(app)/feed/note/${notification.tastingNoteId}`;
   }
 
-  return `/(app)/akis/kullanici/${notification.actor.id}`;
+  return `/(app)/feed/user/${notification.actor.id}`;
 }

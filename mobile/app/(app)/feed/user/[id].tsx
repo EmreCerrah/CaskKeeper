@@ -58,7 +58,7 @@ export default function PublicProfileScreen() {
         </View>
       }
       renderItem={({ item }) => (
-        <NoteCard note={item} onPress={() => router.push(`/(app)/akis/not/${item.id}`)} />
+        <NoteCard note={item} onPress={() => router.push(`/(app)/feed/note/${item.id}`)} />
       )}
       ListEmptyComponent={
         <View style={styles.center}>
