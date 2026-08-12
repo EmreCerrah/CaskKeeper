@@ -40,7 +40,7 @@ export default function NewNoteScreen() {
     setError(null);
     try {
       await createNote.mutateAsync(toNotePayload(form));
-      router.replace("/(app)/tadimlarim");
+      router.replace("/(app)/my-tastings");
     } catch (e) {
       setError(e instanceof Error ? e.message : t("notes.saveFailed"));
     }

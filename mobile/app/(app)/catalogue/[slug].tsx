@@ -69,7 +69,7 @@ export default function WhiskeyDetailScreen() {
         label={t("notes.addForWhiskey")}
         onPress={() =>
           router.push({
-            pathname: "/(app)/tadimlarim/yeni",
+            pathname: "/(app)/my-tastings/new",
             params: { whiskeyId: whiskey.id, whiskeyLabel: `${whiskey.brand} ${whiskey.name}` },
           })
         }

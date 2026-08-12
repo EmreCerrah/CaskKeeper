@@ -63,21 +63,21 @@ describe("notificationMessage", () => {
 
 describe("notificationRoute", () => {
   it("takip bildirimi aktörün profiline gider", () => {
-    expect(notificationRoute(notification("follow"))).toBe("/(app)/akis/kullanici/u1");
+    expect(notificationRoute(notification("follow"))).toBe("/(app)/feed/user/u1");
   });
 
   it("beğeni ve yorum nota gider", () => {
     expect(notificationRoute(notification("like", { tastingNoteId: "n9" }))).toBe(
-      "/(app)/akis/not/n9"
+      "/(app)/feed/note/n9"
     );
     expect(notificationRoute(notification("comment", { tastingNoteId: "n9" }))).toBe(
-      "/(app)/akis/not/n9"
+      "/(app)/feed/note/n9"
     );
   });
 
   it("not kimliği eksikse profile düşer", () => {
     // Not silinmişse bildirim ortada kalabiliyor; boş ekrana götürmektense
     // aktörün profiline götürmek yeğ.
-    expect(notificationRoute(notification("like"))).toBe("/(app)/akis/kullanici/u1");
+    expect(notificationRoute(notification("like"))).toBe("/(app)/feed/user/u1");
   });
 });

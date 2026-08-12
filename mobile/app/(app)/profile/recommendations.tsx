@@ -2,22 +2,21 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-nativ
 import { useRouter } from "expo-router";
 import { Button } from "../../../src/components/Button";
 import { WhiskeyCard } from "../../../src/components/WhiskeyCard";
-import { useWishlist } from "../../../src/data/wishlist";
+import { MatchInfo } from "../../../src/components/recommendations/MatchInfo";
+import { useRecommendations } from "../../../src/data/dashboard";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * İstek Listem — denemeyi düşündüğün viskiler.
+ * Öneriler — damak profiline göre henüz tadılmamış viskiler.
  *
- * Kaldırma düğmesi burada YOK: viskiye dokununca katalog detayı açılıyor ve
- * ekleme/kaldırma tek bir yerde duruyor. İki ayrı yerde iki ayrı düğme, ikisi
- * de aynı durumu göstermek zorunda kalırdı.
+ * Kart, katalogdaki WhiskeyCard'ın kendisi; eşleşme bilgisi footer olarak
+ * geçiyor. Dokununca katalog sekmesindeki detaya gidiyor: viskinin künyesi
+ * zaten orada, ikinci bir detay ekranı kopyalanmadı.
  */
-export default function WishlistScreen() {
+export default function RecommendationsScreen() {
   const router = useRouter();
-  const { data, isLoading, isError, error, refetch, isRefetching } = useWishlist();
-
-  const items = data?.data ?? [];
+  const { data, isLoading, isError, error, refetch, isRefetching } = useRecommendations();
 
   if (isLoading) {
     return (
@@ -41,26 +40,23 @@ export default function WishlistScreen() {
   return (
     <FlatList
       style={styles.flex}
-      data={items}
-      keyExtractor={(item) => item.whiskey.id}
+      data={data ?? []}
+      keyExtractor={(rec) => rec.whiskey.id}
       contentContainerStyle={styles.list}
       onRefresh={refetch}
       refreshing={isRefetching}
-      ListHeaderComponent={
-        items.length > 0 ? (
-          <Text style={styles.count}>{t("wishlist.count", { count: data?.total ?? 0 })}</Text>
-        ) : null
-      }
+      ListHeaderComponent={<Text style={styles.subtitle}>{t("recommendations.subtitle")}</Text>}
       renderItem={({ item }) => (
         <WhiskeyCard
           whiskey={item.whiskey}
-          onPress={() => router.push(`/(app)/katalog/${item.whiskey.slug}`)}
+          onPress={() => router.push(`/(app)/catalogue/${item.whiskey.slug}`)}
+          footer={<MatchInfo score={item.score} matchedCategories={item.matchedCategories} />}
         />
       )}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text style={styles.empty}>{t("wishlist.empty")}</Text>
-          <Text style={styles.emptyHint}>{t("wishlist.emptyHint")}</Text>
+          <Text style={styles.empty}>{t("recommendations.empty")}</Text>
+          <Text style={styles.emptyHint}>{t("recommendations.emptyHint")}</Text>
         </View>
       }
     />
@@ -71,7 +67,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: theme.background },
   list: { gap: 10, padding: 16, paddingBottom: 48 },
   center: { alignItems: "center", backgroundColor: theme.background, flex: 1, gap: 8, justifyContent: "center", padding: 32 },
-  count: { color: theme.textMuted, fontSize: 14, marginBottom: 4 },
+  subtitle: { color: theme.textMuted, fontSize: 14, marginBottom: 4 },
   empty: { color: theme.text, fontSize: 16, textAlign: "center" },
   emptyHint: { color: theme.textMuted, fontSize: 13, lineHeight: 19, textAlign: "center" },
   error: { color: theme.danger, fontSize: 14, textAlign: "center" },

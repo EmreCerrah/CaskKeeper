@@ -46,7 +46,7 @@ export default function PeopleScreen() {
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
-            <UserRow user={item} onPress={() => router.push(`/(app)/akis/kullanici/${item.id}`)} />
+            <UserRow user={item} onPress={() => router.push(`/(app)/feed/user/${item.id}`)} />
           )}
           ListEmptyComponent={
             <View style={styles.center}>

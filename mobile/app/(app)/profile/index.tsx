@@ -74,17 +74,17 @@ export default function ProfileScreen() {
             <LinkRow
               icon="stats-chart-outline"
               label={t("dashboard.title")}
-              onPress={() => router.push("/(app)/profil/panelim")}
+              onPress={() => router.push("/(app)/profile/dashboard")}
             />
             <LinkRow
               icon="sparkles-outline"
               label={t("recommendations.title")}
-              onPress={() => router.push("/(app)/profil/oneriler")}
+              onPress={() => router.push("/(app)/profile/recommendations")}
             />
             <LinkRow
               icon="bookmark-outline"
               label={t("wishlist.title")}
-              onPress={() => router.push("/(app)/profil/istek-listem")}
+              onPress={() => router.push("/(app)/profile/wishlist")}
             />
           </View>
 

@@ -24,7 +24,7 @@ export default function FeedScreen() {
 
         <View style={styles.headerActions}>
           <Pressable
-            onPress={() => router.push("/(app)/akis/kisiler")}
+            onPress={() => router.push("/(app)/feed/people")}
             accessibilityRole="button"
             style={styles.headerAction}
           >
@@ -32,7 +32,7 @@ export default function FeedScreen() {
           </Pressable>
 
           <Pressable
-            onPress={() => router.push("/(app)/akis/bildirimler")}
+            onPress={() => router.push("/(app)/feed/notifications")}
             accessibilityRole="button"
             accessibilityLabel={
               unreadCount > 0
@@ -82,8 +82,8 @@ export default function FeedScreen() {
           renderItem={({ item }) => (
             <FeedNoteCard
               note={item}
-              onPress={() => router.push(`/(app)/akis/not/${item.id}`)}
-              onAuthorPress={() => item.author && router.push(`/(app)/akis/kullanici/${item.author.id}`)}
+              onPress={() => router.push(`/(app)/feed/note/${item.id}`)}
+              onAuthorPress={() => item.author && router.push(`/(app)/feed/user/${item.author.id}`)}
             />
           )}
           ListEmptyComponent={
@@ -92,7 +92,7 @@ export default function FeedScreen() {
               <Text style={styles.empty}>{t("feed.empty")}</Text>
               <Text style={styles.emptyHint}>{t("feed.emptyHint")}</Text>
               <View style={styles.retry}>
-                <Button label={t("feed.findPeople")} onPress={() => router.push("/(app)/akis/kisiler")} />
+                <Button label={t("feed.findPeople")} onPress={() => router.push("/(app)/feed/people")} />
               </View>
             </View>
           }

@@ -77,7 +77,7 @@ export default function CatalogueScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
-            <WhiskeyCard whiskey={item} onPress={() => router.push(`/(app)/katalog/${item.slug}`)} />
+            <WhiskeyCard whiskey={item} onPress={() => router.push(`/(app)/catalogue/${item.slug}`)} />
           )}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
