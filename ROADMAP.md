@@ -65,6 +65,8 @@ experiences**.
 | Mobile · Slice 6 — Dashboard, statistics and recommendations | ✅ Done | #35 |
 | Mobile · One shared `Field` component across the forms | ✅ Done | #36 |
 | Mobile · Slice 7 — Wishlist | ✅ Done | #38 |
+| Mobile · Slice 8 — Comments | ✅ Done | #39 |
+| Mobile · Slice 9 — Notifications | ✅ Done | #40 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -652,21 +654,108 @@ one."
 > error anywhere. The newest-first ordering the cache assumes was checked
 > against the running server rather than guessed.
 
+### Slice 8 — Comments ✅ (PR #39)
+
+The social layer was half built on the phone: feed, following and likes were
+there, but you could like a note without being able to say anything, and
+comments written on your own notes were invisible. **Nothing on the server
+changed.**
+
+- [x] Comments live on the public note view, which is what the feed and profiles
+      open. Not collapsible — on a phone the note screen is one scroll anyway,
+      so hiding them only adds a tap
+- [x] The edit screen keeps **no** comment section; it is a form and a thread
+      would split it in half. It links to the public view instead, and only for
+      public notes — the server refuses comments on private ones, verified
+- [x] Deleting takes two taps, the same as deleting a note. Whether the button
+      appears comes from the server's `canDelete`
+- [x] The 1000-character server limit is mirrored client-side with a counter
+      that appears near the end
+- [x] Not persisted offline — other people's words, the same reasoning that
+      keeps the feed off disk
+
+> **Posting is not optimistic; the count is.** The server returns the real
+> comment — id, timestamp, populated author. Inventing those client-side and
+> swapping them a moment later would make the user's own words move under them.
+> That does not contradict the optimistic like button, where the only thing that
+> changes is a number. The *count* does move immediately, because it lives in
+> two other caches, and a feed card saying "2 comments" above three of them is
+> exactly the silent wrongness this project keeps testing for.
+
+> **`like-cache.ts` became `interaction-cache.ts`.** The page-walking logic that
+> finds the right note across paginated feed data already existed for likes; the
+> comment count needed the same walk, so it moved in rather than growing a
+> second copy. The rename is a `git mv` and the like logic is untouched.
+
+> `canDelete` is computed per requester — the same comment reports `true` with a
+> token and `false` without one. That is why the list query sends a token even
+> though the endpoint allows anonymous reads.
+
+### Slice 9 — Notifications ✅ (PR #40)
+
+The other side of likes, comments and follows: being told about them. Completes
+the social layer on the phone. **Nothing on the server changed.**
+
+- [x] The badge sits on the **Feed tab**, visible from anywhere in the app
+      rather than only from the screen that owns it. Zero shows no badge; past
+      99 it shows `99+`
+- [x] The screen is in the Feed stack, opened from a bell in the header — the
+      tab bar still has four tabs
+- [x] Tapping a row marks it read *and* navigates: follow → the actor's profile,
+      like/comment → the note. A missing note id falls back to the profile, so a
+      notification for a deleted note does not lead to an empty screen
+- [x] Not persisted offline — other people's names and comment excerpts, and a
+      stale "3 unread" is simply a lie
+
+> **`refetchOnWindowFocus` was silently doing nothing.** TanStack listens for the
+> browser's `window` focus event, which does not exist in React Native. `focus.ts`
+> binds `AppState` to `focusManager` — the twin of `online.ts`. The global
+> default stays `false` (the battery argument in `queryClient.ts` still holds);
+> only the notification queries opt in. Polling was considered and rejected: the
+> user chose refreshing on foreground.
+
+> **Two queries, deliberately.** The badge asks for `limit=1` and reads only
+> `unreadCount`; the list asks for 20. Driving the badge from the list would mean
+> downloading twenty notifications on every launch for a user who never opens the
+> screen, and the server has no count-only endpoint.
+
+> **Marking as read is optimistic** because the badge has to move with the row.
+> That splits one truth across two caches, so `notification-cache.ts` is pure and
+> tested: tapping twice does not decrement twice, and mark-all *zeroes* the
+> counter rather than subtracting the visible rows — the server marks everything
+> while the list holds one page.
+
+> The notification sentence is built in two layers (`"liked {target}"` wrapping
+> `"your 'Lagavulin 16' tasting"`) and branches per type — follow notifications
+> have no target at all. Wrong sentences raise no errors, so `notification-text.ts`
+> is pure and tested, including a check that every key it emits exists in **both**
+> dictionaries.
+
+> Verified against a second local account, since your own actions do not notify
+> you: all three types arrive with their DTO fields populated, a notification
+> cannot be read by anyone but its recipient (`NOT_FOUND`), and undoing a follow,
+> like or comment deletes the matching notification — the documented cascade,
+> measured rather than trusted.
+
 ---
 
 ## What's Next
 
-### Mobile · comments and notifications — not built
-
-`/api/tasting-notes/[id]/comments`, `/api/comments/[id]` and the three
-`/api/notifications` endpoints are all live and unused by the app. Two jobs
-really: commenting on a note, and a notification screen with an unread badge.
-
 ### Mobile · offline writing — not built
 
-Reading works offline; writing does not. Saving a tasting note with no
-connection means a mutation queue and a conflict story, which is its own slice
-rather than an extension of this one.
+The last mobile slice, and the only feature gap left. Reading works offline;
+writing does not.
+
+The scope grew as the slices landed. It is no longer just "save a tasting note
+with no connection" — it now has to cover every write the app learned along the
+way: notes, likes, comments, wishlist add/remove and mark-as-read. Several of
+those are already optimistic, so their cache transformations exist and are
+tested; what is missing is a durable mutation queue, a replay order, and an
+answer for what happens when the server rejects a replayed write.
+
+The optimistic paths make this both easier and more delicate: the UI already
+shows the intended result, so a queued write that later fails would have to
+walk back a change the user has been looking at for hours.
 
 
 Every planned phase is finished. What remains is hardening rather than features —
