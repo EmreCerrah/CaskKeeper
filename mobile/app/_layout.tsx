@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "../src/auth/AuthContext";
 import { createQueryClient } from "../src/data/queryClient";
 import { startOnlineManager } from "../src/data/online";
+import { startFocusManager } from "../src/data/focus";
 import { persistOptions } from "../src/data/persist";
 import { OfflineBanner } from "../src/components/OfflineBanner";
 import { theme } from "../src/theme";
@@ -27,6 +28,10 @@ export default function RootLayout() {
   // Cihazın ağ durumunu TanStack'e bildirir: bağlantı gelince tazeleme
   // kendiliğinden oluyor, çevrimdışıyken boşuna istek denenmiyor.
   useEffect(startOnlineManager, []);
+
+  // Uygulama ön plana dönünce bunu isteyen sorgular tazeleniyor — bugün
+  // yalnızca bildirim rozeti.
+  useEffect(startFocusManager, []);
 
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>

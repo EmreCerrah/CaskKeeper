@@ -145,6 +145,23 @@ export const tr = {
   "note.finish": "Bitiş",
   "note.personal": "Kişisel notlar",
 
+  "notifications.title": "Bildirimler",
+  "notifications.bell": "Bildirimler",
+  "notifications.bellWithCount": "Bildirimler — {count} okunmamış",
+  "notifications.unreadCount": "{count} okunmamış bildiriminiz var.",
+  "notifications.allRead": "Tüm bildirimleriniz okundu.",
+  "notifications.empty": "Henüz bildiriminiz yok.",
+  "notifications.emptyHint": "Biri sizi takip ettiğinde ya da notunuza dokunduğunda burada görünecek.",
+  "notifications.markAllRead": "Tümünü okundu işaretle",
+  "notifications.unread": "Okunmamış",
+  // Cümle iki parçadan kuruluyor: dış kalıp + içindeki hedef (bkz.
+  // notification-text.ts). Takip bildiriminde hedef yok.
+  "notifications.follow": "sizi takip etmeye başladı",
+  "notifications.like": "{target} beğendi",
+  "notifications.comment": "{target} yorumladı",
+  "notifications.targetNamed": "“{whiskey}” tadımınızı",
+  "notifications.targetGeneric": "tadım notunuzu",
+
   "comments.title": "Yorumlar",
   "comments.count": "{count} yorum",
   "comments.empty": "Henüz yorum yok. İlk siz yazın.",
@@ -370,6 +387,22 @@ export const en: Record<TranslationKey, string> = {
   "note.palate": "Palate",
   "note.finish": "Finish",
   "note.personal": "Personal notes",
+
+  "notifications.title": "Notifications",
+  "notifications.bell": "Notifications",
+  "notifications.bellWithCount": "Notifications — {count} unread",
+  "notifications.unreadCount": "You have {count} unread notifications.",
+  "notifications.allRead": "You are all caught up.",
+  "notifications.empty": "No notifications yet.",
+  "notifications.emptyHint":
+    "When somebody follows you, or likes or comments on a tasting, it shows up here.",
+  "notifications.markAllRead": "Mark all as read",
+  "notifications.unread": "Unread",
+  "notifications.follow": "started following you",
+  "notifications.like": "liked {target}",
+  "notifications.comment": "commented on {target}",
+  "notifications.targetNamed": "your “{whiskey}” tasting",
+  "notifications.targetGeneric": "your tasting note",
 
   "comments.title": "Comments",
   "comments.count": "{count} comments",

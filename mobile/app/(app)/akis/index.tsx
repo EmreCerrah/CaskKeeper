@@ -1,9 +1,11 @@
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../../src/components/Button";
 import { FeedNoteCard } from "../../../src/components/social/FeedNoteCard";
 import { useFeed } from "../../../src/data/feed";
+import { useUnreadCount } from "../../../src/data/notifications";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
@@ -13,18 +15,42 @@ export default function FeedScreen() {
     useFeed();
 
   const notes = data?.pages.flatMap((page) => page.data) ?? [];
+  const unreadCount = useUnreadCount();
 
   return (
     <SafeAreaView style={styles.flex} edges={["top"]}>
       <View style={styles.header}>
         <Text style={styles.title}>{t("feed.title")}</Text>
-        <Pressable
-          onPress={() => router.push("/(app)/akis/kisiler")}
-          accessibilityRole="button"
-          style={styles.headerAction}
-        >
-          <Text style={styles.headerActionText}>{t("people.title")}</Text>
-        </Pressable>
+
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => router.push("/(app)/akis/kisiler")}
+            accessibilityRole="button"
+            style={styles.headerAction}
+          >
+            <Text style={styles.headerActionText}>{t("people.title")}</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/(app)/akis/bildirimler")}
+            accessibilityRole="button"
+            accessibilityLabel={
+              unreadCount > 0
+                ? t("notifications.bellWithCount", { count: unreadCount })
+                : t("notifications.bell")
+            }
+            style={styles.bell}
+          >
+            <Ionicons
+              name={unreadCount > 0 ? "notifications" : "notifications-outline"}
+              size={22}
+              color={unreadCount > 0 ? theme.primary : theme.textMuted}
+            />
+            {/* Sayı sekme rozetinde de var; buradaki nokta, kullanıcı zaten
+                Akış'tayken zilin neden dolu olduğunu söylüyor. */}
+            {unreadCount > 0 && <View style={styles.bellDot} />}
+          </Pressable>
+        </View>
       </View>
 
       {isLoading && (
@@ -91,6 +117,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingTop: 12,
+  },
+  headerActions: { alignItems: "center", flexDirection: "row", gap: 4 },
+  bell: { alignItems: "center", justifyContent: "center", minHeight: 44, minWidth: 44 },
+  bellDot: {
+    backgroundColor: theme.primary,
+    borderRadius: 4,
+    height: 8,
+    position: "absolute",
+    right: 8,
+    top: 8,
+    width: 8,
   },
   title: { color: theme.text, fontSize: 26, fontWeight: "700" },
   headerAction: { justifyContent: "center", minHeight: 44, paddingHorizontal: 4 },

@@ -34,6 +34,13 @@ export const queryKeys = {
     all: ["comments"] as const,
     list: (noteId: string) => ["comments", "list", noteId] as const,
   },
+  notifications: {
+    /** Okundu işaretlenince hem liste hem rozet tazelenmeli. */
+    all: ["notifications"] as const,
+    list: () => ["notifications", "list"] as const,
+    /** Rozet için ayrı ve hafif sorgu — 20 bildirimlik gövdeyi taşımaz. */
+    unread: () => ["notifications", "unread"] as const,
+  },
   /** Panelin özet sayıları — not yazılınca eskir. */
   dashboard: () => ["dashboard"] as const,
   /** Aroma trendi + katalog dağılımı. */
