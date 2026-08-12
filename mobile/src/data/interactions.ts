@@ -7,13 +7,15 @@ import { toggleLikeInPages, toggleLikeOnNote, type InfiniteData } from "./intera
 
 /**
  * @file interactions.ts
- * @description Beğeni.
+ * @description Likes.
  *
- * İYİMSER güncelleniyor: ağ turunu bekleyen bir kalp bozuk hissettirir. İstek
- * başarısız olursa önbellek eski hâline döner, sonra sunucudan tazelenir.
+ * Updated OPTIMISTICALLY: a heart that waits for a network round trip feels
+ * broken. If the request fails the cache is restored, then refetched from the
+ * server.
  *
- * Dönüşümün kendisi interaction-cache.ts'te ve testli — akış sayfalı olduğu için
- * doğru notu bulmak sayfalarda gezmek demek ve yanlış sayfayı bozmak kolay.
+ * The transformation itself lives in interaction-cache.ts and is tested — the
+ * feed is paginated, so finding the right note means walking pages, and
+ * corrupting the wrong one is easy.
  */
 export function useToggleLike() {
   const { token } = useAuth();
@@ -27,7 +29,8 @@ export function useToggleLike() {
       }),
 
     onMutate: async ({ noteId }) => {
-      // Uçuştaki tazeleme, az sonra yazacağımız iyimser değeri ezmesin.
+      // Stop an in-flight refetch from overwriting the optimistic value we
+      // are about to write.
       await queryClient.cancelQueries({ queryKey: queryKeys.feed() });
       await queryClient.cancelQueries({ queryKey: queryKeys.tastingNotes.detail(noteId) });
 
@@ -52,7 +55,8 @@ export function useToggleLike() {
     },
 
     onSettled: (_data, _error, { noteId }) => {
-      // Gerçek sayı sunucudan gelsin: başka biri aynı anda beğenmiş olabilir.
+      // Let the real count come from the server: somebody else may have liked
+      // it at the same moment.
       queryClient.invalidateQueries({ queryKey: queryKeys.tastingNotes.detail(noteId) });
     },
   });

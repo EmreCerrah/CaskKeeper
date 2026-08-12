@@ -3,15 +3,15 @@ import { ApiError } from "../api/response";
 
 /**
  * @file queryClient.ts
- * @description Uygulamanın tek QueryClient'ı.
+ * @description The app's single QueryClient.
  *
- * Çevrimdışı desteği ileride BURAYA girecek: kalıcı bir depo takılıp
- * `persistQueryClient` ile bağlanacak, ekranlar hiç değişmeyecek. Ayarların
- * bugünkü hâli de o günü düşünerek seçildi — özellikle `gcTime`, önbelleğin
- * diske yazılmadan çöpe atılmaması için uzun tutuluyor.
+ * Offline support was always going to land HERE: a persistent store plugged in
+ * through `persistQueryClient`, with no screen changing. The settings were
+ * chosen with that day in mind — `gcTime` in particular is long, so the cache
+ * is not discarded before it reaches disk.
  */
 
-/** Katalog neredeyse hiç değişmiyor; tazeliği dakikalarla ölçmek yeterli. */
+/** The catalogue barely changes; measuring freshness in minutes is enough. */
 const FIVE_MINUTES = 5 * 60 * 1000;
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -22,8 +22,8 @@ export function createQueryClient(): QueryClient {
         staleTime: FIVE_MINUTES,
         gcTime: ONE_DAY,
 
-        // Kimlik hataları tekrar denenmez: token süresi dolmuşsa üç kez daha
-        // sormanın anlamı yok, kullanıcı yeniden giriş yapmalı.
+        // Auth failures are not retried: if the token has expired, asking
+        // three more times means nothing — the user has to sign in again.
         retry: (failureCount, error) => {
           if (error instanceof ApiError && (error.status === 401 || error.status === 404)) {
             return false;
@@ -31,8 +31,8 @@ export function createQueryClient(): QueryClient {
           return failureCount < 2;
         },
 
-        // Mobilde ekrana her dönüşte ağa çıkmak pili yorar; veri zaten
-        // staleTime boyunca taze sayılıyor.
+        // On mobile, hitting the network every time a screen regains focus
+        // drains the battery; the data counts as fresh for staleTime anyway.
         refetchOnWindowFocus: false,
       },
     },

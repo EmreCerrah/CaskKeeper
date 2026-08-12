@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
-/** Profil sekmesi kendi yığınını taşır: profil → panelim / öneriler. */
+/** The profile tab carries its own stack: profile → dashboard / recommendations / wishlist. */
 export default function ProfileLayout() {
   return (
     <Stack

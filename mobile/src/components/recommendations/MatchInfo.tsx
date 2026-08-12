@@ -9,11 +9,11 @@ interface MatchInfoProps {
 }
 
 /**
- * Öneri kartının altındaki eşleşme yüzdesi ve kategori rozetleri —
- * "neden önerildi" sorusunun cevabı.
+ * The match percentage and category badges under a recommendation card — the
+ * answer to "why was this suggested".
  *
- * Rozet metni sunucunun `label` alanından değil `category` kimliğinden
- * üretiliyor; `label` Türkçe geliyor (bkz. i18n/aroma.ts).
+ * The badge text is built from the `category` id rather than the server's
+ * `label` field; the label arrives in Turkish (see i18n/aroma.ts).
  */
 export function MatchInfo({ score, matchedCategories }: MatchInfoProps) {
   const percent = Math.round(score * 100);

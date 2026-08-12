@@ -4,16 +4,17 @@ import { theme } from "../theme";
 interface FieldProps extends TextInputProps {
   label: string;
   /**
-   * Alanın hangi zeminin üstünde durduğu.
+   * Which surface the field sits on.
    *
-   * Kutu rengi zeminin TERSİ olmak zorunda, yoksa alan kaybolur: giriş
-   * ekranlarında zemin `background` olduğu için kutu `surface`, profil
-   * ekranındaki kart zemininde ise tam tersi.
+   * The box colour has to be the OPPOSITE of what is behind it, or the field
+   * disappears: on the sign-in screens the background is `background`, so the
+   * box is `surface`; inside a card on the profile screen it is the other way
+   * round.
    */
   tone?: "page" | "card";
 }
 
-/** Etiketli metin alanı — bütün formlar aynı görünümü ve dokunma hedefini paylaşsın diye. */
+/** A labelled text field — so every form shares one look and one touch target. */
 export function Field({ label, tone = "page", multiline, ...props }: FieldProps) {
   return (
     <View style={styles.wrapper}>
@@ -28,8 +29,9 @@ export function Field({ label, tone = "page", multiline, ...props }: FieldProps)
         autoCapitalize="none"
         autoCorrect={false}
         multiline={multiline}
-        // Çok satırlı alanda metin ortadan değil üstten başlamalı; Android'de
-        // varsayılan dikey ortalama uzun bir kutuda yazıyı havada bırakıyor.
+        // In a multiline field the text must start at the top, not the
+        // middle; Android centres vertically by default and leaves the text
+        // floating in a tall box.
         textAlignVertical={multiline ? "top" : "center"}
         {...props}
       />
@@ -47,8 +49,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: theme.text,
     fontSize: 16,
-    // 48: dokunma hedefi en az 44px olmalı (WCAG 2.5.5) — web tarafında da
-    // aynı kural uygulanıyor.
+    // 48: the touch target must be at least 44px (WCAG 2.5.5) — the same rule
+    // is applied on the web.
     minHeight: 48,
     paddingHorizontal: 14,
   },

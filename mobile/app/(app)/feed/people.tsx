@@ -9,10 +9,11 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * Kişi arama ve keşfet.
+ * People search and discovery.
  *
- * Arama boşken sunucu son üyeleri döndürüyor, yani ekran hiç boş kalmıyor —
- * yeni kullanıcının takip edecek birini bulması için arama yapması gerekmiyor.
+ * With an empty search the server returns the newest members, so the screen is
+ * never blank — a new user does not have to search before finding somebody to
+ * follow.
  */
 export default function PeopleScreen() {
   const router = useRouter();

@@ -5,21 +5,22 @@ import { buildListQuery } from "./list-query";
 
 /**
  * @file whiskeys.ts
- * @description Katalog verisine erişimin TEK yolu.
+ * @description The ONLY way into catalogue data.
  *
- * Ekranlar apiRequest'i doğrudan çağırmaz; buradaki hook'ları kullanır. Sebebi
- * çevrimdışı: kalıcılık eklendiğinde değişecek yer burası olacak, ekranlar
- * değil. Web tarafındaki "veritabanına yalnızca repository'den erişilir"
- * kuralının istemci karşılığı.
+ * Screens never call apiRequest directly; they use the hooks here. The reason
+ * is offline: when persistence arrived, this is the layer that changed, not
+ * the screens. It is the client-side counterpart of the web's "the database is
+ * reached only through a repository" rule.
  */
 
 /**
- * Sunucunun WhiskeyDTO'sundan mobilin kullandığı alanlar.
+ * The fields of the server's WhiskeyDTO that the app uses.
  *
- * BİLEREK kopya: mobil, web'in `src/lib/types/dto.ts` dosyasını import etmiyor
- * (ayrı repoya taşınacak). Sözleşme tek yönlü — sunucu alan eklerse burası
- * bozulmaz, alan kaldırırsa derleme değil çalışma zamanı bozulur; onu da
- * ekranlar isteğe bağlı alanlarla karşılıyor.
+ * A DELIBERATE copy: the app does not import the web's `src/lib/types/dto.ts`
+ * (it will move to its own repository). The contract is one-way — if the
+ * server adds a field nothing breaks here; if it removes one, the break is at
+ * runtime rather than compile time, which the screens absorb with optional
+ * fields.
  */
 export interface Whiskey {
   id: string;
@@ -58,7 +59,7 @@ export interface WhiskeyFacets {
   countries: string[];
 }
 
-/** Katalog listesi — sonsuz kaydırma. */
+/** The catalogue list — infinite scroll. */
 export function useWhiskeys(params: WhiskeyListParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.whiskeys.list(params),
@@ -69,7 +70,7 @@ export function useWhiskeys(params: WhiskeyListParams) {
   });
 }
 
-/** Tek viski (detay ekranı). */
+/** A single whisky (detail screen). */
 export function useWhiskey(slug: string) {
   return useQuery({
     queryKey: queryKeys.whiskeys.detail(slug),
@@ -79,10 +80,11 @@ export function useWhiskey(slug: string) {
 }
 
 /**
- * Filtre menüsünün değerleri.
+ * The values behind the filter menu.
  *
- * Katalogda gerçekten bulunan tip/bölge/ülke listesi — elle yazılmış bir liste
- * kataloğa yeni bir bölge girdiğinde sessizce eksik kalırdı.
+ * The types, regions and countries actually present in the catalogue — a
+ * hand-written list would quietly fall behind the day a new region was
+ * imported.
  */
 export function useFacets() {
   return useQuery({

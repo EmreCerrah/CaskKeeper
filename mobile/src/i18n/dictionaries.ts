@@ -1,14 +1,16 @@
 /**
  * @file dictionaries.ts
- * @description Arayüz metinleri — Türkçe kaynak dil, İngilizce karşılığı.
+ * @description Interface text — Turkish is the source language, English its
+ * counterpart. The interface stays bilingual; only the code around it is
+ * English.
  *
- * Web tarafındaki desenin aynısı: düz anahtar-değer sözlük, kütüphane yok.
- * `en`'in tipi `tr`'den türüyor, yani eksik ya da fazla anahtar DERLEME
- * HATASI verir; çeviri sessizce geride kalamaz.
+ * The same pattern as the web: a flat key-value dictionary, no library. The
+ * type of `en` is derived from `tr`, so a missing or extra key is a COMPILE
+ * ERROR — a translation cannot quietly fall behind.
  *
- * Neden ilk günden: web'de çeviriyi sonradan eklemek altı PR sürdü (#18–#23),
- * çünkü metinler bileşenlerin içine gömülmüştü. Burada anahtar sayısı henüz
- * az; alışkanlığı baştan kurmak bedavaya geliyor.
+ * Why from day one: on the web, retrofitting translation took six PRs
+ * (#18–#23) because the text was buried inside components. Here the key count
+ * is still small, so setting the habit early costs nothing.
  */
 
 export const tr = {
@@ -69,7 +71,7 @@ export const tr = {
 
   "tab.myTastings": "Tadımlarım",
 
-  // Aroma kategorileri: sunucu yalnızca kimliği gönderiyor, başlık burada.
+  // Aroma categories: the server sends only the id, the heading lives here.
   "aroma.fruity": "Meyvemsi",
   "aroma.floral": "Çiçeksi",
   "aroma.woody": "Odunsu",
@@ -154,8 +156,8 @@ export const tr = {
   "notifications.emptyHint": "Biri sizi takip ettiğinde ya da notunuza dokunduğunda burada görünecek.",
   "notifications.markAllRead": "Tümünü okundu işaretle",
   "notifications.unread": "Okunmamış",
-  // Cümle iki parçadan kuruluyor: dış kalıp + içindeki hedef (bkz.
-  // notification-text.ts). Takip bildiriminde hedef yok.
+  // The sentence is built from two parts: the outer pattern and the target
+  // inside it (see notification-text.ts). A follow notification has no target.
   "notifications.follow": "sizi takip etmeye başladı",
   "notifications.like": "{target} beğendi",
   "notifications.comment": "{target} yorumladı",
@@ -235,7 +237,8 @@ export const tr = {
   "whiskey.wishlistAdded": "İstek Listemde",
   "whiskey.wishlistRemove": "İstek listesinden kaldır",
 
-  // Ay adları sözlükte: Intl.DateTimeFormat yerine (bkz. period.ts).
+  // Month names live in the dictionary instead of Intl.DateTimeFormat (see
+  // period.ts).
   "month.1": "Ocak",
   "month.2": "Şubat",
   "month.3": "Mart",

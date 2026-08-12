@@ -10,13 +10,13 @@ interface LikeButtonProps {
 }
 
 /**
- * Beğeni düğmesi.
+ * The like button.
  *
- * Sayı ve durum önbellekten geliyor ve iyimser güncelleniyor, bu yüzden burada
- * yerel durum tutulmuyor — iki kaynak olsaydı ayrışırlardı.
+ * The count and the state come from the cache and are updated optimistically,
+ * so no local state is kept here — two sources would drift apart.
  *
- * Durum yalnızca renkle anlatılmıyor: dolu/boş kalp ve erişilebilirlik etiketi
- * de değişiyor.
+ * State is not conveyed by colour alone: the filled/outline heart and the
+ * accessibility label change too.
  */
 export function LikeButton({ noteId, liked, count }: LikeButtonProps) {
   const toggleLike = useToggleLike();
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: 6,
-    // Dokunma hedefi (WCAG 2.5.5).
+    // Touch target (WCAG 2.5.5).
     minHeight: 44,
     paddingRight: 12,
   },

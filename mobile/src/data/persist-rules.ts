@@ -1,15 +1,17 @@
 /**
  * @file persist-rules.ts
- * @description Hangi sorgunun diske yazılacağına karar verir — SAF.
+ * @description Decides which queries are written to disk — PURE.
  *
- * Bu fonksiyon aynı zamanda bir GİZLİLİK SINIRI. Cihazda kalıcı olarak duracak
- * şeyi burası belirliyor, o yüzden ağdan ve depodan ayrı duruyor ve testi var.
+ * This function is also a PRIVACY BOUNDARY. It alone determines what stays on
+ * the device, which is why it sits apart from the network and the store, and
+ * why it has tests.
  *
- * Karar (kullanıcıyla konuşuldu): kendi tadım notların + katalog + kendi
- * istatistiklerin saklanır. Başkalarının verisi — akış, profiller — saklanmaz.
+ * The decision (agreed with the user): your own tasting notes, the catalogue
+ * and your own statistics are stored. Other people's data — the feed,
+ * profiles — is not.
  */
 
-/** Kalıcı depoya yazılacak sorgu kökleri. */
+/** Query roots that are written to persistent storage. */
 const PERSISTED_ROOTS = ["whiskeys", "aromaWheel", "dashboard", "analytics", "wishlist"] as const;
 
 export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
@@ -17,31 +19,32 @@ export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
 
   if (typeof root !== "string") return false;
 
-  // Katalog: paylaşımlı ve kişisel değil. Çevrimdışı asıl değerli senaryo bu —
-  // barda çekmezken şişenin künyesine bakmak.
+  // The catalogue: shared, not personal. This is the case offline is really
+  // for — looking up a bottle in a bar with no signal.
   //
-  // Panel ve istatistikler: kullanıcının KENDİ notlarından hesaplanıyor, yani
-  // "kendi notların saklanır" kuralının aynısı. Başkasının verisi içermiyor.
+  // Dashboard and statistics: computed from the user's OWN notes, so the same
+  // rule as "your own notes are stored". They contain nobody else's data.
   //
-  // İstek listesi: yine kendi verin, içindeki viskiler zaten saklanan
-  // katalogdan. Barda çekmezken "ne almak istiyordum" tam çevrimdışı senaryo.
-  // Ekleme/kaldırma yine ağ istiyor — çevrimdışı YAZMA ayrı bir iş.
+  // The wishlist: your own data again, and the whiskies in it come from the
+  // catalogue, which is already stored. "What was I meaning to buy" in a bar
+  // is squarely the offline case. Adding and removing still need the network —
+  // offline WRITING is its own job.
   if ((PERSISTED_ROOTS as readonly string[]).includes(root)) return true;
 
-  // Öneriler saklanmıyor — burada teknik bir engel yok, bilinçli bir tercih.
-  // Liste sunucuda damak profilinden hesaplanıyor ve her yeni notla değişiyor;
-  // çevrimdışı gösterilen kopya "sana bunu öneriyoruz" diye duran ama artık
-  // geçerli olmayan bir liste olurdu. Katalog zaten saklanıyor, kaybedilen tek
-  // şey sıralama.
+  // Recommendations are not stored. Nothing technical stops it; it is a
+  // deliberate choice. The server recomputes the list from the palate profile
+  // with every new note, so a stored copy would sit there saying "we recommend
+  // this" long after it stopped being true. The catalogue behind it is cached
+  // anyway — the only thing lost is the ranking.
 
-  // Tadım notlarının YALNIZCA kendi listem dalı saklanır.
+  // Of the tasting notes, ONLY the "mine" branch is stored.
   //
-  // `detail` saklanmıyor çünkü aynı anahtar akıştan açılan BAŞKASININ notu için
-  // de kullanılıyor; anahtara bakarak ikisini ayırmak mümkün değil. Bedeli:
-  // çevrimdışıyken listeden bir nota dokunmak hata verir. Liste kartı zaten
-  // viski, puan ve tarihi gösteriyor.
+  // `detail` is not, because the same key also serves SOMEBODY ELSE'S note
+  // opened from the feed, and the key cannot tell the two apart. The price:
+  // offline, tapping a note in the list fails. The list card already shows the
+  // whisky, the score and the date.
   if (root === "tastingNotes") return scope === "mine";
 
-  // Akış ve kullanıcılar: başkalarının notları ve profilleri. Asla.
+  // Feed and users: other people's notes and profiles. Never.
   return false;
 }

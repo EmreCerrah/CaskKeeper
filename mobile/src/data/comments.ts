@@ -7,7 +7,7 @@ import type { FeedNote } from "./feed";
 
 /**
  * @file comments.ts
- * @description Tadım notu yorumlarına erişimin tek yolu.
+ * @description The only way into tasting note comments.
  */
 
 export interface CommentAuthor {
@@ -16,22 +16,22 @@ export interface CommentAuthor {
   profilePicture?: string;
 }
 
-/** Sunucunun CommentDTO'sundan mobilin kullandığı alanlar (bilerek kopya). */
+/** The fields of the server's CommentDTO the app uses (a deliberate copy). */
 export interface Comment {
   id: string;
   tastingNoteId: string;
   author: CommentAuthor;
   body: string;
   createdAt: string;
-  /** Silme yetkisini SUNUCU hesaplıyor — yazarı ya da notun sahibi. */
+  /** The SERVER decides who may delete — the author or the note's owner. */
   canDelete: boolean;
 }
 
 /**
- * Bir notun yorumları.
+ * One note's comments.
  *
- * Token zorunlu değil ama gönderiliyor: `canDelete` isteği yapana göre
- * hesaplanıyor, anonim istekte her yorum silinemez görünür.
+ * The token is not required but is sent anyway: `canDelete` is computed per
+ * requester, and anonymously every comment looks undeletable.
  */
 export function useComments(noteId: string) {
   const { token } = useAuth();
@@ -44,10 +44,11 @@ export function useComments(noteId: string) {
 }
 
 /**
- * Yorum sayısını akış ve not detayı önbelleklerinde kaydırır.
+ * Shifts the comment count in the feed and note-detail caches.
  *
- * Yorumun kendisi listede sunucudan geliyor, ama sayı bambaşka iki önbellekte
- * duruyor; dokunulmazsa akış kartı "2 yorum" derken altında üç yorum görünür.
+ * The comment itself arrives from the server in the list, but the count lives
+ * in two entirely different caches; left alone, the feed card says "2
+ * comments" above three of them.
  */
 function useShiftCommentCount() {
   const queryClient = useQueryClient();
@@ -64,12 +65,13 @@ function useShiftCommentCount() {
 }
 
 /**
- * Yorum ekler — İYİMSER DEĞİL.
+ * Posts a comment — NOT optimistic.
  *
- * Sunucu gerçek yorumu döndürüyor: kimlik, tarih ve populate edilmiş yazar.
- * Bunları istemcide uydurup bir saniye sonra gerçeğiyle değiştirmek,
- * kullanıcının kendi yazdığı yorumun gözünün önünde yer değiştirmesi olurdu.
- * Beğeninin iyimser olmasıyla çelişmiyor: orada değişen tek şey bir sayı.
+ * The server returns the real comment: its id, its timestamp and its populated
+ * author. Inventing those on the client and swapping them for the real ones a
+ * second later would make the user's own words move in front of them. This
+ * does not contradict the optimistic like: there, the only thing that changes
+ * is a number.
  */
 export function useAddComment(noteId: string) {
   const { token } = useAuth();
@@ -90,7 +92,7 @@ export function useAddComment(noteId: string) {
   });
 }
 
-/** Yorumu siler. Yetkiyi sunucu doğruluyor; `canDelete` yalnızca arayüz içindir. */
+/** Deletes a comment. The server enforces permission; `canDelete` is only for the UI. */
 export function useDeleteComment(noteId: string) {
   const { token } = useAuth();
   const queryClient = useQueryClient();

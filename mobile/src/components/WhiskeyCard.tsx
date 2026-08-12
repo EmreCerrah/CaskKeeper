@@ -7,11 +7,11 @@ import { theme } from "../theme";
 interface WhiskeyCardProps {
   whiskey: Whiskey;
   onPress: () => void;
-  /** Kartın altına eklenen serbest alan — öneri listesinde eşleşme bilgisi. */
+  /** Free slot at the bottom of the card — the match info in the recommendation list. */
   footer?: React.ReactNode;
 }
 
-/** Katalog listesindeki tek satır. */
+/** A single row in the catalogue list. */
 export function WhiskeyCard({ whiskey, onPress, footer }: WhiskeyCardProps) {
   return (
     <Pressable
@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     gap: 10,
-    // Dokunma hedefi rahatça 44px üstünde (WCAG 2.5.5).
+    // Comfortably above the 44px touch target (WCAG 2.5.5).
     padding: 12,
   },
-  // Künye satırı: görsel · ad · sağda derece. Footer'ın altına geçebilmesi için
-  // kart dikey, bu satır yatay.
+  // The identity row: image · name · strength on the right. The card is
+  // vertical so the footer can sit below it; this row is horizontal.
   row: { alignItems: "center", flexDirection: "row", gap: 12 },
   pressed: { opacity: 0.75 },
   body: { flex: 1, gap: 2 },

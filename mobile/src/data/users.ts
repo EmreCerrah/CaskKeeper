@@ -6,7 +6,7 @@ import type { TastingNote } from "./tastingNotes";
 
 /**
  * @file users.ts
- * @description Kişi arama, herkese açık profil ve takip.
+ * @description People search, public profiles and following.
  */
 
 export interface UserSearchResult {
@@ -17,7 +17,7 @@ export interface UserSearchResult {
   publicNoteCount: number;
   isFollowedByViewer: boolean;
   isFollowingViewer: boolean;
-  /** Karşılıklı takip — arayüzde "Arkadaş" rozeti. */
+  /** A mutual follow — shown as a "Friend" badge in the interface. */
   isMutual: boolean;
 }
 
@@ -33,7 +33,7 @@ export interface PublicProfile {
   isFollowedByViewer: boolean;
   isFollowingViewer: boolean;
   isMutual: boolean;
-  /** Kendi profilinse takip düğmesi gösterilmez. */
+  /** On your own profile the follow button is not shown. */
   isOwnProfile: boolean;
 }
 
@@ -45,7 +45,7 @@ interface PaginatedNotes {
   totalPages: number;
 }
 
-/** Arama boşsa sunucu "keşfet" listesini (son üyeler) döndürüyor. */
+/** With an empty search the server returns the "discover" list (newest members). */
 export function useUserSearch(query: string) {
   const { token } = useAuth();
 
@@ -77,12 +77,12 @@ export function useUserNotes(id: string) {
 }
 
 /**
- * Takip et / bırak.
+ * Follow / unfollow.
  *
- * Burada iyimser güncelleme YOK, bilerek: takip değişince akışın içeriği
- * baştan aşağı değişiyor (o kişinin bütün notları giriyor ya da çıkıyor) ve
- * bunu istemcide taklit etmek, sunucunun sıralamasını yanlış tahmin etmek
- * demek olurdu. Liste sunucudan yeniden alınır.
+ * NO optimistic update here, deliberately: following changes the whole feed
+ * (every one of that person's notes enters or leaves it), and imitating that
+ * on the client would mean guessing the server's ordering wrong. The list is
+ * refetched instead.
  */
 export function useToggleFollow(userId: string) {
   const { token } = useAuth();

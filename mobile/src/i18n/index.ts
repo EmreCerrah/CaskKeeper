@@ -4,8 +4,9 @@ import { resolveLocale, type Locale } from "./locale";
 
 /**
  * @file i18n/index.ts
- * @description Cihaz diline göre metin üretir.
- * Kuralın kendisi locale.ts'te (saf, test edilebilir); burası cihazdan okuyor.
+ * @description Produces text in the device's language.
+ * The rule itself lives in locale.ts (pure, testable); this file reads the
+ * device.
  */
 
 const DICTIONARIES: Record<Locale, Record<TranslationKey, string>> = { tr, en };
@@ -13,9 +14,9 @@ const DICTIONARIES: Record<Locale, Record<TranslationKey, string>> = { tr, en };
 export const deviceLocale: Locale = resolveLocale(getLocales().map((l) => l.languageCode));
 
 /**
- * Metin üretir. `{ad}` yer tutucuları params ile değiştirilir.
- * Anahtar bulunamazsa anahtarın kendisi döner — ekranda boşluk yerine neyin
- * eksik olduğu görünsün diye.
+ * Produces text. `{name}` placeholders are replaced from params.
+ * An unknown key returns the key itself — so the screen shows what is missing
+ * rather than a blank.
  */
 export function t(key: TranslationKey, params?: Record<string, string | number>): string {
   const template = DICTIONARIES[deviceLocale][key] ?? key;

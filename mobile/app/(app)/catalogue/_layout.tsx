@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { theme } from "../../../src/theme";
 
-/** Katalog sekmesi kendi yığınını taşır: liste → detay. */
+/** The catalogue tab carries its own stack: list → detail. */
 export default function CatalogueLayout() {
   return (
     <Stack

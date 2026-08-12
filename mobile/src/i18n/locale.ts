@@ -1,20 +1,20 @@
 /**
  * @file locale.ts
- * @description Dil çözümlemesinin SAF kısmı.
+ * @description The PURE part of resolving the language.
  *
- * expo-localization'dan ayrı tutuluyor: o modül yalnızca cihazda çalışıyor ve
- * yüklenirken cihaza soruyor, dolayısıyla birim testte kurulamaz. Kural burada,
- * cihazdan okuma index.ts'te.
+ * Kept apart from expo-localization: that module only runs on a device and
+ * queries it on import, so it cannot be loaded in a unit test. The rule lives
+ * here; reading from the device lives in index.ts.
  */
 
 export type Locale = "tr" | "en";
 
 /**
- * Cihazın tercih ettiği dillerden uygulama dilini seçer.
+ * Picks the app language from the device's preferred languages.
  *
- * Kural web ile aynı: Türkçe isteniyorsa Türkçe, aksi halde İNGİLİZCE.
- * Son adım bilinçli — Türkçe bilmeyen biri anlamadığı bir arayüzle
- * karşılaşmasın (bkz. web'deki resolveLocale).
+ * The same rule as the web: Turkish if Turkish is asked for, ENGLISH
+ * otherwise. That last step is deliberate — somebody who does not read Turkish
+ * should not meet an interface they cannot use (see resolveLocale on the web).
  */
 export function resolveLocale(languageCodes: (string | null | undefined)[]): Locale {
   const primary = languageCodes[0]?.toLowerCase().split("-")[0];
@@ -22,10 +22,11 @@ export function resolveLocale(languageCodes: (string | null | undefined)[]): Loc
 }
 
 /**
- * `Accept-Language` başlığının değeri.
+ * The value of the `Accept-Language` header.
  *
- * Sunucu hata mesajlarını isteğin diline göre üretiyor (PR #24), yani bu
- * başlığı göndermek hata metinlerini istemcide çevirme derdinden kurtarıyor.
+ * The server produces error messages in the language of the request (PR #24),
+ * so sending this header removes any need to translate error text on the
+ * client.
  */
 export function acceptLanguageHeader(locale: Locale): string {
   return locale === "tr" ? "tr-TR,tr;q=0.9,en;q=0.8" : "en-GB,en;q=0.9";

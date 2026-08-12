@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { theme } from "../../../src/theme";
 
-/** Tadımlarım sekmesinin yığını: liste → yeni not / not düzenleme. */
+/** The My Tastings stack: list → new note / edit note. */
 export default function MyTastingsLayout() {
   return (
     <Stack

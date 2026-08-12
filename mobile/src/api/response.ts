@@ -1,17 +1,18 @@
 /**
  * @file response.ts
- * @description Sunucu yanıtının çözümlenmesi — SAF kısım.
+ * @description Parsing the server's response — the PURE part.
  *
- * API'nin tek bir zarfı var: `{ success, message?, data?, error? }`. Bu dosya
- * zarfı açar ve başarısızlıkta hata fırlatır. fetch'ten ayrı tutuluyor ki
- * ağ olmadan test edilebilsin.
+ * The API has a single envelope: `{ success, message?, data?, error? }`. This
+ * file opens it and throws on failure. It is kept apart from fetch so it can
+ * be tested without a network.
  *
- * Hata METİNLERİ burada üretilmez: sunucu mesajı isteğin dilinde döndürüyor
- * (PR #24), istemci onu olduğu gibi gösteriyor. Tek istisna, sunucuya hiç
- * ulaşılamadığı durum — o zaman gösterilecek bir sunucu mesajı da yoktur.
+ * Error TEXT is never produced here: the server returns the message in the
+ * language of the request (PR #24) and the client shows it as-is. The one
+ * exception is failing to reach the server at all — then there is no server
+ * message to show.
  */
 
-/** Sunucunun döndürdüğü zarf. */
+/** The envelope the server returns. */
 export interface ApiEnvelope<T> {
   success: boolean;
   message?: string;
@@ -21,9 +22,9 @@ export interface ApiEnvelope<T> {
 
 export class ApiError extends Error {
   readonly status: number;
-  /** VALIDATION_ERROR, UNAUTHORIZED gibi sabit kod — metin değil, karar için. */
+  /** A stable code like VALIDATION_ERROR or UNAUTHORIZED — for branching, not display. */
   readonly code?: string;
-  /** Doğrulama hatalarında alan bazlı mesajlar; sunucu bunları da çeviriyor. */
+  /** Per-field messages on validation errors; the server translates these too. */
   readonly fieldErrors?: Record<string, string[]>;
 
   constructor(message: string, status: number, code?: string, fieldErrors?: Record<string, string[]>) {
@@ -34,15 +35,15 @@ export class ApiError extends Error {
     this.fieldErrors = fieldErrors;
   }
 
-  /** Oturum düşmüş mü — çağıran token'ı silmeli. */
+  /** Has the session lapsed — the caller should delete the token. */
   get isUnauthorized(): boolean {
     return this.status === 401;
   }
 }
 
 /**
- * `error` alanı iki şekilde geliyor: doğrulama hatasında alan→mesaj sözlüğü,
- * diğer hatalarda sabit bir kod dizesi. İkisini ayırır.
+ * The `error` field arrives in two shapes: a field→messages map on validation
+ * errors, a stable code string otherwise. This tells them apart.
  */
 function splitError(error: unknown): { code?: string; fieldErrors?: Record<string, string[]> } {
   if (typeof error === "string") return { code: error };
@@ -55,10 +56,10 @@ function splitError(error: unknown): { code?: string; fieldErrors?: Record<strin
 }
 
 /**
- * Zarfı açar: başarılıysa `data`, değilse ApiError.
+ * Opens the envelope: `data` on success, an ApiError otherwise.
  *
- * `fallbackMessage` yalnızca sunucu mesaj göndermediğinde kullanılır — bu
- * beklenmez, ama boş bir hata kutusu göstermekten iyidir.
+ * `fallbackMessage` is used only when the server sends no message — which is
+ * not expected, but beats showing an empty error box.
  */
 export function unwrapApiResponse<T>(status: number, body: unknown, fallbackMessage: string): T {
   const envelope = (body ?? {}) as ApiEnvelope<T>;

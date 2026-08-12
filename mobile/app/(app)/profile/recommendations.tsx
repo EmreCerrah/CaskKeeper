@@ -8,11 +8,12 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * Öneriler — damak profiline göre henüz tadılmamış viskiler.
+ * Recommendations — whiskies not tasted yet, ranked against the palate
+ * profile.
  *
- * Kart, katalogdaki WhiskeyCard'ın kendisi; eşleşme bilgisi footer olarak
- * geçiyor. Dokununca katalog sekmesindeki detaya gidiyor: viskinin künyesi
- * zaten orada, ikinci bir detay ekranı kopyalanmadı.
+ * The card is the catalogue's own WhiskeyCard, with the match information
+ * passed as its footer. Tapping opens the detail in the catalogue tab: the
+ * whisky's specs already live there, so no second detail screen was copied.
  */
 export default function RecommendationsScreen() {
   const router = useRouter();

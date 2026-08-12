@@ -22,12 +22,12 @@ function notification(
 }
 
 describe("notificationMessage", () => {
-  it("takip bildiriminde hedef YOK", () => {
-    // "sizi takip etmeye başladı" cümlesinde {target} yer tutucusu yok.
+  it("has NO target on a follow notification", () => {
+    // "started following you" contains no {target} placeholder.
     expect(notificationMessage(notification("follow"))).toEqual({ key: "notifications.follow" });
   });
 
-  it("viski adı biliniyorsa adlı hedefi kullanır", () => {
+  it("uses the named target when the whisky name is known", () => {
     const result = notificationMessage(
       notification("like", { whiskeyLabel: "Lagavulin 16", tastingNoteId: "n9" })
     );
@@ -39,16 +39,16 @@ describe("notificationMessage", () => {
     });
   });
 
-  it("viski adı yoksa genel hedefe düşer", () => {
+  it("falls back to the generic target without a whisky name", () => {
     expect(notificationMessage(notification("comment", { tastingNoteId: "n9" }))).toEqual({
       key: "notifications.comment",
       targetKey: "notifications.targetGeneric",
     });
   });
 
-  it("ürettiği her anahtar sözlükte gerçekten var", () => {
-    // Anahtar bulunamazsa t() anahtarın kendisini döndürür ve ekranda
-    // "notifications.like" yazar.
+  it("emits only keys that actually exist in the dictionaries", () => {
+    // A missing key makes t() return the key itself, and the screen ends up
+    // reading "notifications.like".
     for (const type of ["follow", "like", "comment"] as NotificationType[]) {
       const message = notificationMessage(notification(type, { whiskeyLabel: "X" }));
       expect(tr[message.key]).toBeTruthy();
@@ -62,11 +62,11 @@ describe("notificationMessage", () => {
 });
 
 describe("notificationRoute", () => {
-  it("takip bildirimi aktörün profiline gider", () => {
+  it("sends a follow notification to the actor's profile", () => {
     expect(notificationRoute(notification("follow"))).toBe("/(app)/feed/user/u1");
   });
 
-  it("beğeni ve yorum nota gider", () => {
+  it("sends likes and comments to the note", () => {
     expect(notificationRoute(notification("like", { tastingNoteId: "n9" }))).toBe(
       "/(app)/feed/note/n9"
     );
@@ -75,9 +75,9 @@ describe("notificationRoute", () => {
     );
   });
 
-  it("not kimliği eksikse profile düşer", () => {
-    // Not silinmişse bildirim ortada kalabiliyor; boş ekrana götürmektense
-    // aktörün profiline götürmek yeğ.
+  it("falls back to the profile when the note id is missing", () => {
+    // A notification can outlive its note; better to land on the actor's
+    // profile than on an empty screen.
     expect(notificationRoute(notification("like"))).toBe("/(app)/feed/user/u1");
   });
 });

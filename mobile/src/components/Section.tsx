@@ -4,11 +4,11 @@ import { theme } from "../theme";
 interface SectionProps {
   title: string;
   children: React.ReactNode;
-  /** Geri dönüşü olmayan işlemler için kırmızı çerçeve (hesap kapatma). */
+  /** A red border for irreversible actions (closing an account). */
   danger?: boolean;
 }
 
-/** Başlıklı kart — profil ve panel ekranlarındaki bölümlerin ortak kabı. */
+/** A titled card — the shared container for sections on the profile and dashboard screens. */
 export function Section({ title, children, danger }: SectionProps) {
   return (
     <View style={styles.section}>

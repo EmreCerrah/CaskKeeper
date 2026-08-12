@@ -49,7 +49,7 @@ export default function PublicProfileScreen() {
             <Stat value={profile.publicNoteCount} label={t("profile.publicNotes")} />
           </View>
 
-          {/* Kendi profilinde takip düğmesi gösterilmez — sunucu söylüyor. */}
+          {/* No follow button on your own profile — the server says which it is. */}
           {!profile.isOwnProfile && (
             <FollowButton userId={profile.id} following={profile.isFollowedByViewer} />
           )}

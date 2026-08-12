@@ -12,16 +12,16 @@ interface FlavorTrendChartProps {
 }
 
 /**
- * Aylık aroma dağılımı — her ay bir yığılmış yatay bar.
+ * Monthly aroma distribution — one stacked horizontal bar per month.
  *
- * Web'de segment değerleri hover tooltip'iyle okunuyor; mobilde hover yok ve
- * parmakla birkaç piksellik bir segmenti seçmek de mümkün değil. Karar
- * (kullanıcıyla konuşuldu): segment başına sayı gösterilmiyor, grafik oranı
- * anlatıyor. Ay satırındaki toplam duruyor — o segment değeri değil, barın kaç
- * etikete dayandığını söylüyor.
+ * On the web the segment values are read from a hover tooltip; there is no
+ * hover on mobile, and a segment a few pixels wide cannot be hit with a
+ * finger. The decision (agreed with the user): no per-segment numbers, the
+ * chart carries the proportion. The total on the month row stays — that is not
+ * a segment value, it says how many tags the bar rests on.
  *
- * Ekran okuyucu barı tek bir görsel olarak okur (accessibilityLabel), yoksa
- * dokuz renk kutusunu tek tek gezerdi.
+ * A screen reader reads the bar as a single image (accessibilityLabel);
+ * otherwise it would step through nine coloured boxes one by one.
  */
 export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
   if (trend.length === 0) {
@@ -67,8 +67,9 @@ export function FlavorTrendChart({ trend }: FlavorTrendChartProps) {
                         backgroundColor: categoryColor(segment.key),
                         width: `${segment.widthPct}%`,
                       },
-                      // Komşu iki kategori benzer tonda olabiliyor; ince bir
-                      // ayırıcı sınırı görünür kılıyor, genişliği bozmadan.
+                      // Two neighbouring categories can be close in tone; a
+                      // hairline divider makes the boundary visible without
+                      // disturbing the widths.
                       index < segments.length - 1 && styles.segmentDivider,
                     ]}
                   />

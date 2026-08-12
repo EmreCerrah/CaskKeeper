@@ -2,15 +2,15 @@ import type { AppNotification } from "./notification-text";
 
 /**
  * @file notification-cache.ts
- * @description Okundu işaretlemeyi önbellekte yerinde uygular — SAF.
+ * @description Applies "mark as read" in place in the cache — PURE.
  *
- * İşaretleme iyimser, çünkü sekme rozeti de aynı anda değişmeli; sunucuyu
- * beklemek, dokunulan bildirim okunmuş görünürken rozetin bir saniye eski
- * kalması demek olurdu.
+ * Marking is optimistic because the tab badge has to move at the same time;
+ * waiting for the server would leave the count stale for a second under a
+ * notification that already looks read.
  *
- * Ama satırın `isRead`'i ile `unreadCount` AYNI yanıtın iki ayrı parçası: biri
- * güncellenip diğeri unutulduğunda hiçbir hata çıkmaz, yalnızca rozet yalan
- * söyler. interaction-cache.ts'teki gerekçenin aynısı.
+ * But a row's `isRead` and `unreadCount` are two parts of the SAME response:
+ * update one and forget the other and nothing errors, the badge simply lies.
+ * The same reasoning as interaction-cache.ts.
  */
 
 export interface NotificationList {
@@ -23,10 +23,10 @@ export interface NotificationList {
 }
 
 /**
- * Tek bildirimi okunmuş yapar ve sayacı bir azaltır.
+ * Marks one notification read and decrements the counter.
  *
- * Zaten okunmuşsa hiçbir şey değişmez: aynı satıra ikinci kez dokunmak sayacı
- * olduğundan düşük göstermemeli.
+ * Nothing changes if it was already read: tapping the same row twice must not
+ * push the counter below the truth.
  */
 export function markReadInList(
   cached: NotificationList | undefined,
@@ -45,10 +45,10 @@ export function markReadInList(
 }
 
 /**
- * Hepsini okunmuş yapar.
+ * Marks everything read.
  *
- * Sayaç sıfırlanıyor, "görünen satır sayısı kadar azalt" değil: sunucu tüm
- * bildirimleri işaretliyor, oysa liste yalnızca ilk sayfayı taşıyor.
+ * The counter is zeroed rather than reduced by the number of visible rows: the
+ * server marks every notification, while the list holds only the first page.
  */
 export function markAllReadInList(
   cached: NotificationList | undefined

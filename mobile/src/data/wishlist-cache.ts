@@ -2,18 +2,18 @@ import type { Whiskey } from "./whiskeys";
 
 /**
  * @file wishlist-cache.ts
- * @description İstek listesi önbelleğini yerinde günceller — SAF.
+ * @description Updates the wishlist cache in place — PURE.
  *
- * Ekleme/kaldırma iyimser uygulanıyor (bkz. wishlist.ts), yani liste
- * önbelleğine elle dokunuluyor. Liste içeriğinin YANINDA bir de `total`
- * taşıyor: biri güncellenip diğeri unutulduğunda ekranda "3 viski" yazarken
- * iki kart görünür ve bu hiçbir yerde hata vermez. O yüzden dönüşüm ağdan
- * ayrı ve testli — interaction-cache.ts ile aynı gerekçe.
+ * Adding and removing are optimistic (see wishlist.ts), which means the list
+ * cache is edited by hand. Alongside its contents the list also carries a
+ * `total`: update one and forget the other and the screen says "3 whiskies"
+ * above two cards, without erroring anywhere. So the transformation lives away
+ * from the network and has tests — the same reasoning as interaction-cache.ts.
  */
 
 export interface WishlistItem {
   whiskey: Whiskey;
-  /** Listeye eklendiği an (ISO). */
+  /** When it was added to the list (ISO). */
   addedAt: string;
 }
 
@@ -26,11 +26,11 @@ export interface WishlistPage {
 }
 
 /**
- * Viskiyi listeden çıkarır ve toplamı bir azaltır.
+ * Removes the whisky from the list and decrements the total.
  *
- * Listede yoksa hiçbir şey değişmez: kullanıcı listeyi bir ekranda açıkken
- * başka bir cihazdan kaldırmış olabilir, o durumda toplamı bir eksiltmek
- * sayıyı gerçekten yanlış yapardı.
+ * Nothing changes if it is not in the list: the user may have removed it from
+ * another device while this screen was open, and decrementing then would make
+ * the count genuinely wrong.
  */
 export function removeFromWishlist(
   cached: WishlistPage | undefined,
@@ -45,11 +45,11 @@ export function removeFromWishlist(
 }
 
 /**
- * Viskiyi listenin BAŞINA ekler ve toplamı bir artırır.
+ * Adds the whisky to the FRONT of the list and increments the total.
  *
- * Başa, çünkü sunucu eklenme tarihine göre azalan sıralıyor
- * (WishlistRepository.findByUser) — sona eklemek, tazelemeden sonra kartın
- * gözden kaybolup listenin başında yeniden belirmesi demek olurdu.
+ * The front, because the server sorts by date added, descending
+ * (WishlistRepository.findByUser) — appending would mean the card disappears
+ * on the next refresh and reappears at the top.
  */
 export function addToWishlist(
   cached: WishlistPage | undefined,
@@ -57,8 +57,8 @@ export function addToWishlist(
   addedAt: string
 ): WishlistPage | undefined {
   if (!cached) return cached;
-  // Zaten varsa dokunma: çift dokunuş ya da uçuştaki bir tazeleme yüzünden
-  // aynı viski iki kez görünmesin.
+  // Leave it alone if already present: a double tap or an in-flight refetch
+  // must not make the same whisky appear twice.
   if (cached.data.some((item) => item.whiskey.id === whiskey.id)) return cached;
 
   return {

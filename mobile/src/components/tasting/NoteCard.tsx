@@ -8,7 +8,7 @@ interface NoteCardProps {
   onPress: () => void;
 }
 
-/** Tadımlarım listesindeki tek satır. */
+/** A single row in the My Tastings list. */
 export function NoteCard({ note, onPress }: NoteCardProps) {
   const whiskey = note.whiskey;
 
@@ -32,7 +32,7 @@ export function NoteCard({ note, onPress }: NoteCardProps) {
 
       <Text style={styles.date}>{new Date(note.tastingDate).toLocaleDateString()}</Text>
 
-      {/* Durumlar yalnızca renkle değil, metinle de anlatılıyor. */}
+      {/* States are carried in text as well as colour. */}
       <View style={styles.badges}>
         {note.isFavorite && <Badge label={t("notes.favorite")} />}
         {note.visibility === "public" && <Badge label={t("notes.public")} />}

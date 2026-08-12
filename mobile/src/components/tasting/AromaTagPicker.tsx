@@ -12,15 +12,15 @@ interface AromaTagPickerProps {
 }
 
 /**
- * Aroma etiketi seçici.
+ * The aroma tag picker.
  *
- * Kategoriler KAPALI başlıyor: ~60 etiketi tek listede göstermek telefonda
- * kullanılamaz. Seçili sayı başlıkta duruyor, böylece kapalı bir kategoride
- * seçim yaptığını unutmuyorsun.
+ * Categories start COLLAPSED: showing ~60 tags in one list is unusable on a
+ * phone. The number selected stays in the header, so you do not forget you
+ * picked something inside a collapsed category.
  *
- * Kategori başlığı sunucudan gelmiyor — sunucu yalnızca kimliği ("fruity")
- * gönderiyor, çeviri burada yapılıyor. Etiketlerin KENDİSİ çevrilmez:
- * veritabanına olduğu gibi yazılıyorlar.
+ * The category heading does not come from the server — the server sends only
+ * the id ("fruity") and the translation happens here. The tags THEMSELVES are
+ * never translated: they are written to the database exactly as they are.
  */
 export function AromaTagPicker({ categories, selected, onChange }: AromaTagPickerProps) {
   const [open, setOpen] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export function AromaTagPicker({ categories, selected, onChange }: AromaTagPicke
               style={styles.head}
             >
               <Text style={styles.headLabel}>{categoryLabel(category.category)}</Text>
-              {/* Seçim sayısı yalnızca renkle değil, rakamla anlatılıyor. */}
+              {/* The number selected is given as a figure, not just a colour. */}
               <Text style={styles.headMeta}>
                 {count > 0 ? `${count} · ` : ""}
                 {isOpen ? "−" : "+"}
@@ -73,10 +73,11 @@ export function AromaTagPicker({ categories, selected, onChange }: AromaTagPicke
 }
 
 /**
- * Kategori kimliğini kullanıcının diline çevirir.
+ * Translates a category id into the user's language.
  *
- * Sözlükte karşılığı yoksa kimliğin kendisi gösterilir — sunucuya yeni bir
- * kategori eklendiğinde ekran boş kalmasın, ne eklendiği görünsün.
+ * With no entry in the dictionary the id itself is shown — so when a new
+ * category is added on the server the screen does not go blank, it shows what
+ * arrived.
  */
 function categoryLabel(category: string): string {
   const key = `aroma.${category}` as TranslationKey;

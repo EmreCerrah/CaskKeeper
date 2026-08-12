@@ -9,11 +9,13 @@ interface DistributionBarsProps {
 }
 
 /**
- * Tek serili yatay bar listesi (tip / bölge / damıtımevi dağılımı).
+ * A single-series horizontal bar list (type / region / distillery
+ * distribution).
  *
- * Web'deki DistributionBars'ın karşılığı, düz View'larla — mobilde grafik
- * kütüphanesi eklenmedi. Tek renk kullanıldığı için lejant gerekmiyor: renk
- * kategorik bir kimlik taşımıyor, her satırın sayısı zaten yanında yazıyor.
+ * The counterpart of the web's DistributionBars, built from plain Views — no
+ * charting library was added on mobile. One colour is used, so no legend is
+ * needed: the colour carries no categorical identity, and every row already
+ * shows its count beside it.
  */
 export function DistributionBars({ items, emptyLabel }: DistributionBarsProps) {
   if (items.length === 0) {

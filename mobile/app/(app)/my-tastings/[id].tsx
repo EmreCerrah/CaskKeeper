@@ -36,9 +36,9 @@ export default function EditNoteScreen() {
     );
   }
 
-  // Sunucu tek not yanıtında etkileşim sayılarını da gönderiyor (akıştaki
-  // görünümle aynı gövde); TastingNote tipi onu taşımıyor, bu yüzden FeedNote
-  // olarak okunuyor.
+  // The single-note response carries the interaction counts too (the same
+  // body as the feed view); the TastingNote type does not model them, so it is
+  // read as a FeedNote here.
   const commentCount = (note as FeedNote).interactions?.commentCount ?? 0;
 
   const initial: NoteFormState = {
@@ -60,7 +60,8 @@ export default function EditNoteScreen() {
   async function handleSubmit(form: NoteFormState) {
     setFormError(null);
     try {
-      // whiskey güncellemede değişmiyor — not, viskiye bağlı bir seans kaydı.
+      // The whisky does not change on update — a note is a session recorded
+      // against one whisky.
       const { whiskey: _whiskey, ...changes } = toNotePayload(form);
       await updateNote.mutateAsync(changes);
       router.replace("/(app)/my-tastings");
@@ -70,7 +71,7 @@ export default function EditNoteScreen() {
   }
 
   async function handleDelete() {
-    // İki aşamalı: geri dönüşü yok, tek dokunuşla silinmemeli.
+    // Two steps: there is no way back, so one tap must not delete it.
     if (!confirmingDelete) {
       setConfirmingDelete(true);
       setTimeout(() => setConfirmingDelete(false), 4000);
@@ -101,10 +102,10 @@ export default function EditNoteScreen() {
         onSubmit={handleSubmit}
       />
 
-      {/* Yorumlar bu ekranda değil: burası bir düzenleme formu, yorum bölümü
-          formu ikiye bölerdi. Bağlantı olmasa kendi notuna yazılmış yorumlara
-          mobilde hiçbir yoldan ulaşılamazdı. Yalnızca herkese açık notlarda —
-          özel bir nota kimse yorum yazamaz. */}
+      {/* Comments are not on this screen: it is an edit form, and a thread
+          would split it in half. Without this link, comments on your own note
+          would be unreachable on mobile. Public notes only — nobody can
+          comment on a private one. */}
       {note.visibility === "public" && (
         <Pressable
           onPress={() => router.push(`/(app)/feed/note/${noteId}`)}

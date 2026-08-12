@@ -6,7 +6,7 @@ import { useAddComment, useComments, useDeleteComment, type Comment } from "../.
 import { t } from "../../i18n";
 import { theme } from "../../theme";
 
-/** Sunucu sınırı (comment.schema.ts) — istemci de aynı sınırı uyguluyor. */
+/** The server's limit (comment.schema.ts) — mirrored here on the client. */
 const MAX_LENGTH = 1000;
 
 interface NoteCommentsProps {
@@ -14,11 +14,11 @@ interface NoteCommentsProps {
 }
 
 /**
- * Notun yorumları: liste, yazma ve silme.
+ * A note's comments: the list, posting and deleting.
  *
- * Web'deki NoteInteractions'ın yorum bölümünün karşılığı, ama açılır-kapanır
- * değil. Telefonda not ekranı zaten tek bir kaydırma; gizlemek yer kazandırmaz,
- * yalnızca bir dokunuş daha ekler.
+ * The counterpart of the comment section in the web's NoteInteractions, but
+ * not collapsible. On a phone the note screen is one scroll anyway; hiding
+ * them saves no room and only adds a tap.
  */
 export function NoteComments({ noteId }: NoteCommentsProps) {
   const { data, isLoading, isError, error } = useComments(noteId);
@@ -72,8 +72,8 @@ export function NoteComments({ noteId }: NoteCommentsProps) {
             onChangeText={(value) => setDraft(value.slice(0, MAX_LENGTH))}
             placeholder={t("comments.placeholder")}
           />
-          {/* Kalan karakter yalnızca sona yaklaşınca: her zaman görünen bir
-              sayaç, kısa yorum yazan herkese sınırı hatırlatırdı. */}
+          {/* The remaining count appears only near the limit: a counter that
+              is always visible would nag everyone writing a short one. */}
           {draft.length > MAX_LENGTH - 100 && (
             <Text style={styles.remaining}>
               {t("comments.remaining", { count: MAX_LENGTH - draft.length })}
@@ -98,8 +98,8 @@ function CommentRow({ comment, noteId }: { comment: Comment; noteId: string }) {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleDelete() {
-    // İki adım: geri dönüşü olmayan işleme tek dokunuşluk yol bırakılmıyor —
-    // not silmedeki kalıbın aynısı.
+    // Two steps: no one-tap path to an irreversible action — the same pattern
+    // as deleting a note.
     if (!confirming) {
       setConfirming(true);
       return;
@@ -123,7 +123,7 @@ function CommentRow({ comment, noteId }: { comment: Comment; noteId: string }) {
 
       <Text style={styles.text}>{comment.body}</Text>
 
-      {/* Yetkiyi sunucu veriyor; burada yalnızca düğmenin görünürlüğü. */}
+      {/* The server grants permission; this only decides whether the button shows. */}
       {comment.canDelete && (
         <Pressable onPress={handleDelete} accessibilityRole="button" style={styles.delete}>
           <Text style={styles.deleteText}>

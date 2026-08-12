@@ -19,16 +19,17 @@ interface NotificationRowProps {
 }
 
 /**
- * Tek bildirim satırı.
+ * A single notification row.
  *
- * Okunmamış olmak yalnızca renkle anlatılmıyor: çerçeve vurgulu, sağda bir
- * nokta var ve `accessibilityLabel` durumu söylüyor. Web'deki satırın aynı
- * üç işareti taşıması gibi.
+ * Unread is not conveyed by colour alone: the border is highlighted, there is
+ * a dot on the right, and `accessibilityLabel` says so. The same three signals
+ * the web row carries.
  */
 export function NotificationRow({ notification, onPress }: NotificationRowProps) {
   const message = notificationMessage(notification);
 
-  // Cümle iki katmanlı: dış kalıbın {target}'ı ayrı bir anahtardan geliyor.
+  // The sentence has two layers: the outer pattern's {target} comes from its
+  // own key.
   const target = message.targetKey
     ? t(message.targetKey, message.whiskeyLabel ? { whiskey: message.whiskeyLabel } : undefined)
     : "";

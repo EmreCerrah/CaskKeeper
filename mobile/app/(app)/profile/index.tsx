@@ -49,7 +49,8 @@ export default function ProfileScreen() {
     setCloseError(null);
     try {
       await closeAccount.mutateAsync(password);
-      // Sunucu oturumu zaten düşürdü; cihazdaki token da silinmeli.
+      // The server has already dropped the session; the token on the device
+      // has to go too.
       await signOut();
       router.replace("/(auth)/sign-in");
     } catch (e) {
@@ -67,9 +68,9 @@ export default function ProfileScreen() {
             <Text style={styles.email}>{user?.email}</Text>
           </View>
 
-          {/* Panel ve öneriler ayrı bir sekme değil, buradan açılıyor: sekme
-              çubuğu dörtte kalsın diye (beşincide etiketler kırpılıyor) ve
-              çıkış düğmesi alıştığı yerde dursun diye. */}
+          {/* The dashboard and recommendations are not their own tab; they open
+              from here, so the tab bar stays at four (a fifth clips the
+              labels) and the sign-out button keeps its familiar place. */}
           <View style={styles.links}>
             <LinkRow
               icon="stats-chart-outline"
@@ -89,7 +90,7 @@ export default function ProfileScreen() {
           </View>
 
           <Section title={t("profile.edit")}>
-            {/* tone="card": bu alanlar Section'ın surface zemininde duruyor. */}
+            {/* tone="card": these fields sit on the Section's surface background. */}
             <Field
               label={t("profile.name")}
               tone="card"
@@ -117,8 +118,8 @@ export default function ProfileScreen() {
               </Pressable>
             ) : (
               <>
-                {/* Uyarı ancak kullanıcı niyetini belirtince görünüyor —
-                    geri dönüşü olmayan bir işlem için tek tıklık yol yok. */}
+                {/* The warning appears only once the user has stated their intent —
+                    no one-click path to an irreversible action. */}
                 <Text style={styles.warning}>{t("profile.closeWarning")}</Text>
                 <Field
                   label={t("profile.closePassword")}
@@ -155,7 +156,7 @@ export default function ProfileScreen() {
   );
 }
 
-/** Panelim / Öneriler satırı — ikon, etiket ve ileri oku. */
+/** A dashboard / recommendations row — icon, label and forward chevron. */
 function LinkRow({
   icon,
   label,
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     gap: 12,
-    // 48px dokunma hedefi.
+    // 48px touch target.
     minHeight: 48,
     paddingHorizontal: 14,
   },

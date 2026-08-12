@@ -4,18 +4,18 @@ import { queryKeys } from "./keys";
 
 /**
  * @file aromaWheel.ts
- * @description Aroma kategorileri — sunucudan.
+ * @description Aroma categories — from the server.
  *
- * Liste mobile KOPYALANMIYOR: etiketler veritabanına olduğu gibi metin olarak
- * yazılıyor ve istatistikler onları eşleştiriyor. Kopya olsaydı web'de bir
- * etiket değiştiğinde iki istemci farklı metin üretmeye başlar, kimse hata
- * görmez, sadece istatistikler yanlış olurdu.
+ * The list is NOT copied into the app: the tags are written to the database as
+ * literal text and the statistics match on them. With a copy, changing a tag
+ * on the web would make the two clients produce different text — nobody would
+ * see an error, the statistics would simply be wrong.
  */
 
 export interface AromaCategory {
-  /** "fruity", "smoky_peaty" … — başlığı istemci bu kimlikten çeviriyor. */
+  /** "fruity", "smoky_peaty" … — the client translates the heading from this id. */
   category: string;
-  /** Saklanan değerler. ASLA çevrilmez, olduğu gibi gönderilir. */
+  /** The stored values. NEVER translated; sent back exactly as received. */
   tags: string[];
 }
 
@@ -23,7 +23,7 @@ export function useAromaWheel() {
   return useQuery({
     queryKey: queryKeys.aromaWheel(),
     queryFn: () => apiRequest<AromaCategory[]>("/api/aroma-wheel"),
-    // Sabitten okunuyor, pratikte hiç değişmiyor.
+    // Served from a constant; in practice it never changes.
     staleTime: Infinity,
   });
 }

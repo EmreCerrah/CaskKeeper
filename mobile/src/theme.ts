@@ -1,7 +1,7 @@
 /**
  * @file theme.ts
- * @description Web'in koyu kehribar/altın temasının mobil karşılığı.
- * Tek yerde tutuluyor ki ekranlar renk değeri gömmesin.
+ * @description The mobile counterpart of the web's dark amber/gold theme.
+ * Kept in one place so no screen hardcodes a colour value.
  */
 export const theme = {
   background: "#17110c",

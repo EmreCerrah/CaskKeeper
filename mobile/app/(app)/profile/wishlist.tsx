@@ -7,11 +7,11 @@ import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 /**
- * İstek Listem — denemeyi düşündüğün viskiler.
+ * My Wishlist — the whiskies you mean to try.
  *
- * Kaldırma düğmesi burada YOK: viskiye dokununca katalog detayı açılıyor ve
- * ekleme/kaldırma tek bir yerde duruyor. İki ayrı yerde iki ayrı düğme, ikisi
- * de aynı durumu göstermek zorunda kalırdı.
+ * There is NO remove button here: tapping a whisky opens the catalogue detail,
+ * where adding and removing already live in one place. Two buttons in two
+ * places would both have to reflect the same state.
  */
 export default function WishlistScreen() {
   const router = useRouter();

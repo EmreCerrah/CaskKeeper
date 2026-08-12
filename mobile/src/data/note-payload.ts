@@ -2,14 +2,15 @@ import type { FinishLength, TastingNoteInput, Visibility } from "./tastingNotes"
 
 /**
  * @file note-payload.ts
- * @description Form durumunu sunucunun beklediği gövdeye çevirir — SAF.
+ * @description Turns form state into the body the server expects — PURE.
  *
- * tastingNotes.ts'ten ayrı: orası react-query ve API istemcisini içeri alıyor,
- * Node altında kurulamıyor. Sınanmaya değen dönüşüm burada.
+ * Kept out of tastingNotes.ts: that file pulls in react-query and the API
+ * client and cannot be loaded under Node. The transformation worth testing is
+ * here.
  *
- * Buradaki kurallar sessizce bozulabilecek türden: boş bir metin alanını "" ile
- * göndermek ile hiç göndermemek arasındaki fark, ya da puanın tam sayı
- * olmaması, sunucuda doğrulama hatasına düşer ve kullanıcı sebebini anlamaz.
+ * These rules break quietly: the difference between sending an empty text
+ * field as "" and not sending it at all, or a score that is not an integer,
+ * ends in a validation error on the server that the user cannot explain.
  */
 
 export interface NoteFormState {
@@ -28,13 +29,13 @@ export interface NoteFormState {
   isFavorite: boolean;
 }
 
-/** Boş ya da yalnızca boşluktan oluşan metni alan olarak HİÇ göndermez. */
+/** Text that is empty or only whitespace is NOT sent as a field at all. */
 function optionalText(value: string): string | undefined {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
-/** Etiketlerden boşları atar ve yinelenenleri teker — sunucuya çöp gitmesin. */
+/** Drops blank tags and de-duplicates the rest — no rubbish reaches the server. */
 function cleanTags(tags: string[]): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
@@ -52,9 +53,10 @@ function cleanTags(tags: string[]): string[] {
 export function toNotePayload(form: NoteFormState): TastingNoteInput {
   return {
     whiskey: form.whiskeyId,
-    // Sunucu z.coerce.date ile karşılıyor; ISO en güvenli biçim.
+    // The server receives this through z.coerce.date; ISO is the safest form.
     tastingDate: form.tastingDate.toISOString(),
-    // Puan 0–100 tam sayı: kaydırıcı ondalık üretebilir, sunucu reddeder.
+    // The score is an integer from 0 to 100: the slider can produce decimals
+    // and the server rejects them.
     rating: Math.round(Math.min(100, Math.max(0, form.rating))),
     noseTags: cleanTags(form.noseTags),
     noseNotes: optionalText(form.noseNotes),
@@ -69,7 +71,7 @@ export function toNotePayload(form: NoteFormState): TastingNoteInput {
   };
 }
 
-/** Bir etiketi listeye ekler ya da listeden çıkarır (seçici için). */
+/** Adds a tag to the list or removes it (used by the picker). */
 export function toggleTag(tags: string[], tag: string): string[] {
   return tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag];
 }
