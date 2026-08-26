@@ -3,20 +3,21 @@ import { setOfflineEnabled } from "@/lib/offline/preference";
 import { resetSyncThrottle } from "@/lib/offline/sync";
 
 /**
- * İstemci tarafı çıkış akışı.
+ * The client-side sign-out flow.
  *
- * Oturum çerezini düşürmenin yanında cihaza indirilmiş çevrimdışı kopyayı da
- * siler — aksi halde ortak kullanılan bir cihazda çıkış yapıldıktan sonra bile
- * önceki kullanıcının tadım notları /offline sayfasından okunabilirdi.
+ * As well as dropping the session cookie it deletes the offline copy from the
+ * device — otherwise, on a shared machine, the previous user's tasting notes
+ * would still be readable from the /offline page after signing out.
  *
- * Çıkış iki ayrı yerden tetikleniyordu (UserMenu ve MobileTabBar); temizliğin
- * birinde unutulmaması için akış burada toplandı.
+ * Sign-out was triggered from two places (UserMenu and MobileTabBar); the flow
+ * was gathered here so the cleanup could not be forgotten in one of them.
  */
 export async function logoutClient(): Promise<void> {
   await fetch("/api/auth/logout", { method: "POST" });
   await clearOfflineSnapshot();
-  // Anahtar da kapatılır: aksi halde aynı cihazda giriş yapan bir sonraki
-  // kullanıcı, hiç istemediği hâlde açık bir çevrimdışı kayıt devralırdı.
+  // The switch is turned off too: otherwise the next person to sign in on this
+  // device would inherit offline storage switched on without ever asking for
+  // it.
   setOfflineEnabled(false);
   resetSyncThrottle();
 }

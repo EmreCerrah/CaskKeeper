@@ -6,12 +6,12 @@ import { createTranslator, getDictionary, type Translator } from "./translate";
 
 /**
  * @file client.tsx
- * @description İstemci bileşenleri için dil bağlamı.
+ * @description The language context for client components.
  *
- * Sözlük istemciye serileştirilmez: yalnızca dil kodu geçirilir, sözlüğün
- * kendisi paketin içindedir. Bugün iki dilin toplam metni birkaç kilobayt;
- * büyürse sözlükler alan bazında (nav, forms, …) bölünüp sayfa başına
- * yüklenebilir.
+ * The dictionary is not serialised to the client: only the language code is
+ * passed, and the dictionary itself is in the bundle. Today both languages
+ * together come to a few kilobytes; if that grows, the dictionaries can be
+ * split by area (nav, forms, …) and loaded per page.
  */
 
 const LocaleContext = createContext<Locale>(DEFAULT_LOCALE);
@@ -30,19 +30,19 @@ export function useLocale(): Locale {
   return useContext(LocaleContext);
 }
 
-/** İstemci bileşeninde metin üretmek için: `const t = useTranslations();` */
+/** For producing text in a client component: `const t = useTranslations();` */
 export function useTranslations(): Translator {
   const locale = useLocale();
   return useMemo(() => createTranslator(getDictionary(locale)), [locale]);
 }
 
 /**
- * Dil tercihini çereze yazar.
+ * Writes the language preference to the cookie.
  *
- * httpOnly değil, çünkü hem sunucunun (ilk render) hem istemcinin okuması
- * gerekiyor; içinde kişisel bir bilgi yok. Yazdıktan sonra sunucu
- * bileşenlerinin yeni dille yeniden render edilmesi için router.refresh()
- * çağrılmalı — bunu çağıran bileşen yapar.
+ * Not httpOnly, because both the server (on the first render) and the client
+ * need to read it, and it holds nothing personal. After writing it,
+ * router.refresh() has to be called so the server components re-render in the
+ * new language — the calling component does that.
  */
 export function persistLocale(locale: Locale): void {
   if (typeof document === "undefined" || !isLocale(locale)) return;

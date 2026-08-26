@@ -1,4 +1,4 @@
-// Finish Length Enum Sabitleri
+// The finish-length enum constants
 export const FINISH_LENGTHS = [
   { id: "short", label: "Kısa (Short)", value: "short" },
   { id: "medium", label: "Orta (Medium)", value: "medium" },
@@ -7,7 +7,7 @@ export const FINISH_LENGTHS = [
 
 export type FinishLengthType = typeof FINISH_LENGTHS[number]["value"];
 
-// Aroma Kategorileri ve Tag'ler (Aroma Wheel)
+// Aroma categories and tags (the aroma wheel)
 export interface AromaCategory {
   category: string;
   label: string; // Ekranda göstermek için
@@ -15,7 +15,7 @@ export interface AromaCategory {
   tags: string[]; // Bu kategoriye ait spesifik notalar
 }
 
-// Genel viski tadım çarkı (Nose, Palate ve Finish için ortak kullanılabilir veya ayrıştırılabilir)
+// The general whisky tasting wheel (shared across nose, palate and finish, or split if needed)
 const WHSKEY_AROMA_WHEEL: AromaCategory[] = [
   {
     category: "fruity",
@@ -74,24 +74,24 @@ const WHSKEY_AROMA_WHEEL: AromaCategory[] = [
 ];
 
 /**
- * Burun, damak ve bitiş için aynı aroma çarkı kullanılır — viski tadımında
- * üçü de aynı nota kümesinden seçilir. `FlavorTagPicker` üç alan için de bunu
- * kullanır.
+ * Nose, palate and finish share one aroma wheel — in whisky tasting all three
+ * are picked from the same set of notes. `FlavorTagPicker` uses it for each of
+ * the three fields.
  */
 export const AROMA_TAG_CATEGORIES = WHSKEY_AROMA_WHEEL;
 
 // ---------------------------------------------------------------------------
-// İstatistik grafikleri için kategorik renk paleti
+// The categorical colour palette for the statistics charts
 // ---------------------------------------------------------------------------
 
 /**
- * Aroma trend grafiğinde kategori başına kullanılan renkler.
+ * The colour used for each category in the aroma trend chart.
  *
- * Sabit sırayla atanmıştır (dataviz kuralı: kategorik renkler asla döngüsel
- * seçilmez) — koyu tema kart yüzeyine (#191310) karşı doğrulanmıştır
- * (`validate_palette.js`, adjacent pairs, mode dark). "feinty_other" 9. seri
- * olarak yeni bir ton üretmek yerine nötr griyle "Diğer" olarak katlanır —
- * kendi etiketi zaten "Diğer/Feinty" olduğu için doğal bir eşleşme.
+ * Assigned in a fixed order (the dataviz rule: categorical colours are never
+ * picked cyclically) and validated against the dark theme's card surface
+ * (#191310) with `validate_palette.js`, adjacent pairs, mode dark. Rather than
+ * inventing a ninth hue, "feinty_other" folds into a neutral grey as "Other" —
+ * a natural fit, since its own label is already "Diğer/Feinty".
  */
 export const CATEGORY_CHART_COLORS: Record<string, string> = {
   fruity: "#3987e5",
@@ -105,7 +105,7 @@ export const CATEGORY_CHART_COLORS: Record<string, string> = {
   feinty_other: "#898781",
 };
 
-/** Bir aroma etiketinin ait olduğu kategori ve Türkçe etiketini bulur. */
+/** Finds the category an aroma tag belongs to, along with its Turkish label. */
 export function categoryForTag(tag: string): { category: string; label: string } | undefined {
   for (const cat of WHSKEY_AROMA_WHEEL) {
     if (cat.tags.includes(tag)) {
@@ -115,7 +115,7 @@ export function categoryForTag(tag: string): { category: string; label: string }
   return undefined;
 }
 
-/** Kategori id'sinden Türkçe etiketi döner (ör. "sweet" → "Tatlı (Sweet)"). */
+/** Returns the Turkish label for a category id (e.g. "sweet" → "Tatlı (Sweet)"). */
 export function labelForCategory(category: string): string {
   return WHSKEY_AROMA_WHEEL.find((c) => c.category === category)?.label ?? category;
 }

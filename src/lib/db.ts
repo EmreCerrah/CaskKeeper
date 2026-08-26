@@ -2,30 +2,31 @@ import mongoose from "mongoose";
 
 /**
  * @file db.ts
- * @description MongoDB bağlantısı ve bağlantı dizesinin doğrulanması.
+ * @description The MongoDB connection, and validating the connection string.
  *
- * Kontroller BİLEREK modül seviyesinde değil, `connectToDatabase()` içinde.
- * Modül seviyesinde `throw` edildiğinde `db.ts`'i import eden 50 dosya yüzünden
- * `next build` ortam değişkeni olmadan hiç başlayamıyordu — oysa build sırasında
- * veritabanına bağlanılmıyor (veri çeken tüm sayfalar `force-dynamic`).
- * Dockerfile ve CI bu yüzden sahte bir bağlantı dizesi taşımak zorunda kalıyordu.
+ * The checks live inside `connectToDatabase()` DELIBERATELY, not at module
+ * level. Throwing at module level meant `next build` could not start at all
+ * without the environment variable, because fifty files import `db.ts` — even
+ * though the build never connects to the database (every page that fetches data
+ * is `force-dynamic`). The Dockerfile and CI had to carry a fake connection
+ * string just for that.
  */
 
-/** İstemciye sızmaması için: dizedeki kimlik bilgisi hata mesajlarında maskelenir. */
+/** So it cannot leak to the client: the credentials in the string are masked in error messages. */
 function maskCredentials(uri: string): string {
   return uri.replace(/\/\/[^@]*@/, "//***:***@");
 }
 
 /**
- * Bağlantı dizesinden veritabanı adını çıkarır.
+ * Extracts the database name from the connection string.
  *
- * `new URL()` KULLANILMIYOR: replica set dizeleri birden çok host'u virgülle
- * ayırıyor (`mongodb://host1:27017,host2:27017/db`) ve WHATWG URL ayrıştırıcısı
- * bunu geçersiz sayıp hata fırlatıyor.
+ * `new URL()` is NOT used: replica set strings separate several hosts with
+ * commas (`mongodb://host1:27017,host2:27017/db`), and the WHATWG URL parser
+ * rejects that as invalid and throws.
  */
 export function extractDatabaseName(uri: string): string {
   const withoutScheme = uri.replace(/^mongodb(\+srv)?:\/\//i, "");
-  // Kimlik bilgisi varsa host kısmı son '@'den sonra başlar.
+  // When credentials are present, the host section starts after the last '@'.
   const afterCredentials = withoutScheme.slice(withoutScheme.lastIndexOf("@") + 1);
   const pathStart = afterCredentials.indexOf("/");
   if (pathStart === -1) return "";
@@ -33,9 +34,10 @@ export function extractDatabaseName(uri: string): string {
 }
 
 /**
- * Ortam değişkenini doğrular ve bağlantı dizesini döndürür.
+ * Validates the environment variable and returns the connection string.
  *
- * Bağlanmadan önce çağrılır; hatalar sessiz kalmasın diye açıkça fırlatılır.
+ * Called before connecting; errors are thrown explicitly so they do not pass
+ * silently.
  */
 export function resolveConnectionString(uri = process.env.MONGODB_URI): string {
   if (!uri) {
@@ -82,8 +84,9 @@ async function connectToDatabase() {
   try {
     cached.conn = await cached.promise;
   } catch (error) {
-    // Başarısız denemeyi saklamayalım: aksi halde ilk hatadan sonraki her istek
-    // aynı reddedilmiş promise'i alır ve bağlantı bir daha hiç denenmez.
+    // Do not keep a failed attempt: otherwise every request after the first
+    // error receives the same rejected promise and the connection is never
+    // retried.
     cached.promise = null;
     throw error;
   }

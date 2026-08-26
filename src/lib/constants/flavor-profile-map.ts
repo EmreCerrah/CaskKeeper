@@ -1,17 +1,18 @@
 /**
  * @file flavor-profile-map.ts
- * @description Katalogdaki `Whiskey.flavorProfile` alanı serbest metin İngilizce
- * terimler kullanır (ör. "oak", "honey", "peat") — kullanıcının tadım notlarında
- * seçtiği yapılandırılmış Türkçe aroma çarkı etiketlerinden (`aroma-wheel.ts`)
- * farklı bir kelime dağarcığıdır. Öneri motorunun ikisini karşılaştırabilmesi için
- * bu dosya katalog terimlerini aynı 9 aroma kategorisine eşler.
+ * @description The catalogue's `Whiskey.flavorProfile` field uses free-text
+ * English terms ("oak", "honey", "peat") — a different vocabulary from the
+ * structured Turkish aroma-wheel tags a user picks in their tasting notes
+ * (`aroma-wheel.ts`). So the recommendation engine can compare the two, this
+ * file maps the catalogue's terms onto those same nine aroma categories.
  *
- * Kaynak: mevcut kataloğun (194 viski) `flavorProfile` alanındaki tüm benzersiz
- * terimler (76 adet) taranıp viski tadım literatüründeki alışılmış gruplamalara
- * göre kategorize edildi (ör. hindistancevizi/vanilya → tatlı/Amerikan meşesi
- * notası, şeri kaskı → kuru meyve/meyvemsi, tuz/iyot/tütsü → isli/deniz karakteri).
- * Yeni bir katalog partisi eşlenmemiş bir terim getirirse `categoryForFlavorTerm`
- * sessizce `undefined` döner — öneri skoruna dahil edilmez, hata fırlatmaz.
+ * Where it came from: every unique term in the current catalogue's
+ * `flavorProfile` field — 76 of them across 194 whiskies — was collected and
+ * grouped the way whisky tasting literature usually groups them (coconut and
+ * vanilla → the sweet/American-oak note, sherry cask → dried fruit/fruity,
+ * salt, iodine and brine → the smoky/maritime character). If a new catalogue
+ * batch brings in an unmapped term, `categoryForFlavorTerm` quietly returns
+ * `undefined` — it is left out of the score rather than throwing.
  */
 
 const FLAVOR_TERM_TO_CATEGORY: Record<string, string> = {
@@ -111,9 +112,9 @@ const FLAVOR_TERM_TO_CATEGORY: Record<string, string> = {
 };
 
 /**
- * Bir katalog flavorProfile teriminin ait olduğu aroma kategorisini döner.
- * Eşlenmemiş (bilinmeyen) terimler için `undefined` döner — çağıran taraf
- * bunu sessizce yok saymalı, hataya çevirmemeli.
+ * Returns the aroma category a catalogue flavorProfile term belongs to.
+ * Unmapped (unknown) terms return `undefined` — the caller should ignore that
+ * quietly rather than turn it into an error.
  */
 export function categoryForFlavorTerm(term: string): string | undefined {
   return FLAVOR_TERM_TO_CATEGORY[term.toLowerCase().trim()];

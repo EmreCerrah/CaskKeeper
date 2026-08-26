@@ -1,15 +1,15 @@
 /**
  * @file import-logger.ts
- * @description Import pipeline için yapılandırılmış, renkli konsol logger'ı.
- * Her log satırına zaman damgası ve seviye etiketi eklenir.
- * İsteğe bağlı olarak log dosyasına da yazar.
+ * @description A structured, colourised console logger for the import
+ * pipeline. Every line carries a timestamp and a level label, and it can also
+ * write to a log file.
  */
 
 import fs from "fs";
 import path from "path";
 
 // ---------------------------------------------------------------------------
-// ANSI Renk Kodları (TTY desteği kontrolü ile güvenli)
+// ANSI colour codes (guarded by a TTY support check)
 // ---------------------------------------------------------------------------
 const isTTY = process.stdout.isTTY ?? false;
 
@@ -28,7 +28,7 @@ const c = {
 };
 
 // ---------------------------------------------------------------------------
-// Tip Tanımları
+// Type definitions
 // ---------------------------------------------------------------------------
 
 export type LogLevel = "info" | "success" | "warn" | "error" | "debug" | "section";
@@ -40,7 +40,7 @@ interface LogEntry {
 }
 
 // ---------------------------------------------------------------------------
-// ImportLogger Sınıfı
+// The ImportLogger class
 // ---------------------------------------------------------------------------
 
 export class ImportLogger {
@@ -49,14 +49,14 @@ export class ImportLogger {
   private startTime: number = Date.now();
 
   /**
-   * @param logFile - Opsiyonel log dosya yolu (örn: "logs/import-2024.log")
+   * @param logFile - An optional path for the log file (e.g. "logs/import-2024.log")
    */
   constructor(logFile?: string) {
     if (logFile) {
       const absPath = path.resolve(process.cwd(), logFile);
       fs.mkdirSync(path.dirname(absPath), { recursive: true });
       this.logFilePath = absPath;
-      // Yeni import session'ını dosyada belirt
+      // Mark the start of a new import session in the file
       fs.appendFileSync(
         absPath,
         `\n${"=".repeat(60)}\nIMPORT SESSION: ${new Date().toISOString()}\n${"=".repeat(60)}\n`
@@ -75,10 +75,10 @@ export class ImportLogger {
     const entry: LogEntry = { timestamp: ts, level, message };
     this.entries.push(entry);
 
-    // Konsol çıktısı (renkli)
+    // Console output (colourised)
     process.stdout.write((raw ?? message) + "\n");
 
-    // Dosya çıktısı (renksiz)
+    // File output (no colour)
     if (this.logFilePath) {
       const plain = `[${ts}] [${level.toUpperCase().padEnd(7)}] ${message}\n`;
       fs.appendFileSync(this.logFilePath, plain);
@@ -87,25 +87,25 @@ export class ImportLogger {
 
   // ---------- Public API ----------
 
-  /** Bilgi mesajı */
+  /** An informational message. */
   info(message: string): void {
     const formatted = `${c.gray}[${this.timestamp()}]${c.reset} ${c.blue}ℹ${c.reset}  ${message}`;
     this.write("info", message, formatted);
   }
 
-  /** Başarı mesajı */
+  /** A success message. */
   success(message: string): void {
     const formatted = `${c.gray}[${this.timestamp()}]${c.reset} ${c.green}✅${c.reset} ${c.green}${message}${c.reset}`;
     this.write("success", message, formatted);
   }
 
-  /** Uyarı mesajı */
+  /** A warning. */
   warn(message: string): void {
     const formatted = `${c.gray}[${this.timestamp()}]${c.reset} ${c.yellow}⚠️ ${c.reset} ${c.yellow}${message}${c.reset}`;
     this.write("warn", message, formatted);
   }
 
-  /** Hata mesajı */
+  /** An error. */
   error(message: string, err?: unknown): void {
     const errDetail = err instanceof Error ? ` → ${err.message}` : "";
     const full = `${message}${errDetail}`;
@@ -113,21 +113,21 @@ export class ImportLogger {
     this.write("error", full, formatted);
   }
 
-  /** Debug mesajı (yalnızca DEBUG=true ortam değişkeni varsa) */
+  /** A debug message (only when the DEBUG=true environment variable is set). */
   debug(message: string): void {
     if (!process.env.DEBUG) return;
     const formatted = `${c.gray}[${this.timestamp()}] 🔍 ${message}${c.reset}`;
     this.write("debug", message, formatted);
   }
 
-  /** Bölüm başlığı — görsel ayraç */
+  /** A section heading — a visual separator. */
   section(title: string): void {
     const line = "─".repeat(50);
     const formatted = `\n${c.bold}${c.cyan}${line}\n  ${title}\n${line}${c.reset}\n`;
     this.write("section", title, formatted);
   }
 
-  /** Güncelleme logu */
+  /** Logs an update. */
   updated(brand: string, expression: string, slug: string): void {
     this.write(
       "info",
@@ -136,7 +136,7 @@ export class ImportLogger {
     );
   }
 
-  /** Yeni kayıt logu */
+  /** Logs a new record. */
   created(brand: string, expression: string, slug: string): void {
     this.write(
       "success",
@@ -145,7 +145,7 @@ export class ImportLogger {
     );
   }
 
-  /** Atlanan kayıt logu */
+  /** Logs a skipped record. */
   skipped(brand: string, expression: string, reason: string): void {
     this.write(
       "warn",
@@ -154,7 +154,7 @@ export class ImportLogger {
     );
   }
 
-  /** Validation hata detayı */
+  /** The detail of a validation failure. */
   validationError(slug: string, issues: { path: (string | number)[]; message: string }[]): void {
     const details = issues.map((i) => `  • ${i.path.join(".")}: ${i.message}`).join("\n");
     const msg = `Validation hatası (${slug}):\n${details}`;
@@ -163,7 +163,7 @@ export class ImportLogger {
   }
 
   /**
-   * Import tamamlandığında özet tablosu çıktısı.
+   * Prints the summary table once the import finishes.
    */
   summary(opts: {
     total: number;
@@ -209,13 +209,13 @@ export class ImportLogger {
     }
   }
 
-  /** Tüm log girişlerini döner (test/raporlama için) */
+  /** Returns every log entry (for tests and reporting). */
   getEntries(): ReadonlyArray<LogEntry> {
     return this.entries;
   }
 }
 
-// Singleton export — import script'te direkt kullanım için
+// Singleton export — used directly by the import script
 export const logger = new ImportLogger(
   process.env.IMPORT_LOG_FILE // IMPORT_LOG_FILE=logs/import.log npm run seed:whiskeys
 );

@@ -2,15 +2,15 @@ import { describe, it, expect } from "vitest";
 import { AROMA_TAG_CATEGORIES } from "./aroma-wheel";
 
 /**
- * Aroma etiketleri veritabanına OLDUĞU GİBİ metin olarak yazılıyor; istatistik
- * ve öneri motoru bu metinleri eşleştiriyor. Yani bu liste veri şemasının bir
- * parçası, salt görsel bir sabit değil.
+ * Aroma tags are written to the database AS THEY ARE, as text, and the
+ * statistics and recommendation engine match on that text. This list is
+ * therefore part of the data schema, not a purely presentational constant.
  *
- * Mobil uygulama aynı listeyi /api/aroma-wheel üzerinden okuyor. Buradaki
- * kurallar bozulursa iki istemci farklı etiket üretir ve kimse hata görmez —
- * sadece istatistikler yanlış olur.
+ * The mobile app reads the same list through /api/aroma-wheel. If the rules
+ * here break, the two clients produce different tags and nobody sees an error —
+ * the statistics are simply wrong.
  */
-describe("aroma çarkı — veri bütünlüğü", () => {
+describe("the aroma wheel — data integrity", () => {
   const allTags = AROMA_TAG_CATEGORIES.flatMap((c) => c.tags);
 
   it("kategori kimlikleri benzersizdir", () => {
@@ -18,22 +18,22 @@ describe("aroma çarkı — veri bütünlüğü", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("aynı etiket iki kategoride birden geçmez", () => {
-    // Geçseydi, bir etiketin hangi kategoriye sayılacağı belirsizleşir ve
-    // aroma trend grafiği sessizce çift sayardı.
+  it("no tag appears in two categories", () => {
+    // If one did, which category it counted towards would be ambiguous and the
+    // aroma trend chart would quietly double-count it.
     const duplicates = allTags.filter((tag, i) => allTags.indexOf(tag) !== i);
     expect(duplicates).toEqual([]);
   });
 
-  it("hiçbir etiket boş ya da baş/son boşluklu değildir", () => {
-    // Saklanan değer bu; kenar boşluğu eşleşmeyi sessizce bozar.
+  it("no tag is empty or padded with whitespace", () => {
+    // This is the stored value; stray whitespace breaks matching silently.
     for (const tag of allTags) {
       expect(tag).toBe(tag.trim());
       expect(tag.length).toBeGreaterThan(0);
     }
   });
 
-  it("her kategoride en az bir etiket vardır", () => {
+  it("every category has at least one tag", () => {
     for (const category of AROMA_TAG_CATEGORIES) {
       expect(category.tags.length, `${category.category} boş`).toBeGreaterThan(0);
     }

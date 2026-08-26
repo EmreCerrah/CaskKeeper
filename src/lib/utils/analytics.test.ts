@@ -1,9 +1,9 @@
 /**
  * buildFlavorTrend testleri.
  *
- * Odak: aya göre doğru gruplama, kategori eşleme ve sıralama. Katalogda
- * olmayan (eşlenemeyen) etiketlerin sessizce yok sayılması — kullanıcı elle
- * veya eski bir sürümden serbest metin etiket girmiş olabilir.
+ * Focus: grouping by month correctly, category mapping, and ordering. Tags that
+ * are not in the catalogue and cannot be mapped are ignored quietly — a user may
+ * have entered free-text tags by hand, or from an older version.
  */
 
 import { describe, it, expect } from "vitest";
@@ -24,11 +24,11 @@ function note(overrides: {
 }
 
 describe("buildFlavorTrend", () => {
-  it("boş girdi için boş dizi döner", () => {
+  it("returns an empty array for empty input", () => {
     expect(buildFlavorTrend([])).toEqual([]);
   });
 
-  it("notları tastingDate ayına göre gruplar", () => {
+  it("groups notes by the month of tastingDate", () => {
     const trend = buildFlavorTrend([
       note({ tastingDate: "2026-06-05", noseTags: ["Bal (Honey)"] }),
       note({ tastingDate: "2026-06-20", noseTags: ["Karamel (Caramel)"] }),
@@ -40,7 +40,7 @@ describe("buildFlavorTrend", () => {
     expect(trend[1].total).toBe(1);
   });
 
-  it("kronolojik sırayla döner, girdi sırasından bağımsız", () => {
+  it("returns them chronologically, whatever order the input came in", () => {
     const trend = buildFlavorTrend([
       note({ tastingDate: "2026-07-01", noseTags: ["Bal (Honey)"] }),
       note({ tastingDate: "2026-01-01", noseTags: ["Bal (Honey)"] }),
@@ -50,7 +50,7 @@ describe("buildFlavorTrend", () => {
     expect(trend.map((t) => t.period)).toEqual(["2026-01", "2026-04", "2026-07"]);
   });
 
-  it("burun/damak/bitiş etiketlerinin hepsini aynı ay için sayar", () => {
+  it("counts the nose, palate and finish tags together for one month", () => {
     const trend = buildFlavorTrend([
       note({
         tastingDate: "2026-06-01",
@@ -67,7 +67,7 @@ describe("buildFlavorTrend", () => {
     expect(woody?.count).toBe(1);
   });
 
-  it("kataloglanmamış (eşlenemeyen) etiketleri sessizce yok sayar", () => {
+  it("quietly ignores uncatalogued tags that cannot be mapped", () => {
     const trend = buildFlavorTrend([
       note({ tastingDate: "2026-06-01", noseTags: ["Bal (Honey)", "Uydurma Etiket"] }),
     ]);
@@ -76,7 +76,7 @@ describe("buildFlavorTrend", () => {
     expect(trend[0].categories).toHaveLength(1);
   });
 
-  it("bir aydaki kategorileri sayıya göre azalan sıralar", () => {
+  it("sorts a month's categories by count, descending", () => {
     const trend = buildFlavorTrend([
       note({ tastingDate: "2026-06-01", noseTags: ["Meşe (Oak)"] }), // woody x1
       note({
@@ -93,7 +93,7 @@ describe("buildFlavorTrend", () => {
     expect(trend[0].categories[1].count).toBe(1);
   });
 
-  it("her kategori için Türkçe etiket taşır", () => {
+  it("carries the Turkish label for every category", () => {
     const trend = buildFlavorTrend([note({ tastingDate: "2026-06-01", noseTags: ["Bal (Honey)"] })]);
 
     expect(trend[0].categories[0].label).toBe("Tatlı (Sweet)");

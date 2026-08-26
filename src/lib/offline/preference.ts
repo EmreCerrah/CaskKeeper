@@ -1,13 +1,13 @@
 /**
  * @file preference.ts
- * @description "Çevrimdışı kullanım" anahtarının durumu.
+ * @description The state of the "offline access" switch.
  *
- * Bu yalnızca bir arayüz tercihidir (açık/kapalı), kişisel veri değil — bu
- * yüzden localStorage yeterli ve senkron okunabilmesi anahtarın ilk render'da
- * doğru konumda çizilmesini sağlıyor. Kullanıcı verisinin kendisi Cache API'de
- * durur (bkz. store.ts).
+ * This is an interface preference (on/off), not personal data — so
+ * localStorage is enough, and being readable synchronously is what lets the
+ * switch render in the right position on the first paint. The user data itself
+ * lives in the Cache API (see store.ts).
  *
- * Varsayılan KAPALI: hiç kimsenin verisi istemeden cihaza yazılmaz.
+ * The default is OFF: nobody's data reaches their device unasked.
  */
 
 const STORAGE_KEY = "caskkeeper:offline-enabled";
@@ -18,7 +18,7 @@ export function isOfflineEnabled(): boolean {
   try {
     return window.localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
-    // Gizli sekmede localStorage erişimi hata verebilir.
+    // Accessing localStorage can throw in a private window.
     return false;
   }
 }
@@ -29,18 +29,18 @@ export function setOfflineEnabled(enabled: boolean): void {
     if (enabled) window.localStorage.setItem(STORAGE_KEY, "1");
     else window.localStorage.removeItem(STORAGE_KEY);
   } catch {
-    // Yazılamıyorsa tercih kalıcı olmaz; yine de bu oturumda dinleyiciler
-    // güncellensin diye olay gönderilir.
+    // If it cannot be written the preference will not persist; the event is
+    // still dispatched so listeners update for this session.
   }
   window.dispatchEvent(new CustomEvent(PREFERENCE_EVENT, { detail: enabled }));
 }
 
-/** Anahtar başka bir bileşenden değiştirildiğinde haberdar olmak için. */
+/** For learning that the switch was changed from another component. */
 export function subscribeOfflinePreference(callback: (enabled: boolean) => void): () => void {
   if (typeof window === "undefined") return () => {};
 
   const onPreference = (event: Event) => callback((event as CustomEvent<boolean>).detail);
-  // Başka bir sekmede değiştirilirse storage olayı gelir.
+  // A change in another tab arrives as a storage event.
   const onStorage = (event: StorageEvent) => {
     if (event.key === STORAGE_KEY) callback(isOfflineEnabled());
   };

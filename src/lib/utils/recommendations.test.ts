@@ -1,9 +1,9 @@
 /**
  * buildCategoryPreferences / scoreByFlavorProfile testleri.
  *
- * Odak: ağırlıkların doğru normalize edilmesi (toplam 1), eşlenemeyen
- * etiketlerin/terimlerin sessizce yok sayılması ve bir viskinin aynı
- * kategoriden birden çok terime sahip olmasının skoru şişirmemesi.
+ * Focus: normalising the weights correctly so they sum to 1, quietly ignoring
+ * tags and terms that cannot be mapped, and making sure a whisky with several
+ * terms from one category does not inflate its score.
  */
 
 import { describe, it, expect } from "vitest";
@@ -24,13 +24,13 @@ function note(overrides: {
 }
 
 describe("buildCategoryPreferences", () => {
-  it("not yoksa boş harita ve toplam 0 döner", () => {
+  it("returns an empty map and a total of 0 with no notes", () => {
     const prefs = buildCategoryPreferences([]);
     expect(prefs.totalTags).toBe(0);
     expect(prefs.weights.size).toBe(0);
   });
 
-  it("ağırlıklar toplamı 1'e normalize edilir", () => {
+  it("normalises the weights so they sum to 1", () => {
     const prefs = buildCategoryPreferences([
       note({ noseTags: ["Bal (Honey)"] }), // sweet
       note({ noseTags: ["Bal (Honey)"] }), // sweet
@@ -45,7 +45,7 @@ describe("buildCategoryPreferences", () => {
     expect(sum).toBeCloseTo(1);
   });
 
-  it("eşlenemeyen etiketleri sessizce yok sayar", () => {
+  it("quietly ignores tags that cannot be mapped", () => {
     const prefs = buildCategoryPreferences([note({ noseTags: ["Uydurma Etiket"] })]);
     expect(prefs.totalTags).toBe(0);
     expect(prefs.weights.size).toBe(0);
@@ -53,14 +53,14 @@ describe("buildCategoryPreferences", () => {
 });
 
 describe("scoreByFlavorProfile", () => {
-  it("hiç kategori ortak değilse skor 0'dır", () => {
+  it("scores 0 when no category is shared", () => {
     const prefs = buildCategoryPreferences([note({ noseTags: ["Bal (Honey)"] })]); // sweet
     const result = scoreByFlavorProfile(["oak"], prefs); // woody
     expect(result.score).toBe(0);
     expect(result.matchedCategories).toEqual([]);
   });
 
-  it("tek kategori eşleşmesinde o kategorinin ağırlığını döner", () => {
+  it("returns that category's weight on a single-category match", () => {
     const prefs = buildCategoryPreferences([
       note({ noseTags: ["Bal (Honey)"] }),
       note({ noseTags: ["Meşe (Oak)"] }),
@@ -71,14 +71,14 @@ describe("scoreByFlavorProfile", () => {
     expect(result.matchedCategories).toEqual(["sweet"]);
   });
 
-  it("aynı kategoriden birden çok terim skoru şişirmez", () => {
+  it("several terms from one category do not inflate the score", () => {
     const prefs = buildCategoryPreferences([note({ noseTags: ["Bal (Honey)"] })]); // sweet: 1.0
 
     const result = scoreByFlavorProfile(["honey", "caramel", "toffee"], prefs); // hepsi sweet
     expect(result.score).toBeCloseTo(1.0);
   });
 
-  it("birden çok kategori eşleşirse ağırlıkları toplar", () => {
+  it("sums the weights when several categories match", () => {
     const prefs = buildCategoryPreferences([
       note({ noseTags: ["Bal (Honey)"] }), // sweet
       note({ noseTags: ["Meşe (Oak)"] }), // woody
@@ -90,14 +90,14 @@ describe("scoreByFlavorProfile", () => {
     expect(result.matchedCategories).toEqual(["woody", "sweet"]); // güçlü eşleşme önce
   });
 
-  it("katalogda eşlenemeyen terimleri yok sayar", () => {
+  it("ignores catalogue terms that cannot be mapped", () => {
     const prefs = buildCategoryPreferences([note({ noseTags: ["Bal (Honey)"] })]); // sweet
     const result = scoreByFlavorProfile(["honey", "bilinmeyen-terim-xyz"], prefs);
     expect(result.score).toBeCloseTo(1.0);
     expect(result.matchedCategories).toEqual(["sweet"]);
   });
 
-  it("boş flavorProfile için skor 0'dır", () => {
+  it("scores 0 for an empty flavorProfile", () => {
     const prefs = buildCategoryPreferences([note({ noseTags: ["Bal (Honey)"] })]);
     const result = scoreByFlavorProfile([], prefs);
     expect(result.score).toBe(0);

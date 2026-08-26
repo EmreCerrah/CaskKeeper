@@ -1,15 +1,16 @@
 /**
  * @file tr.ts
- * @description Türkçe arayüz metinleri — sözlüğün KAYNAK dili.
+ * @description The Turkish interface text — the SOURCE language of the
+ * dictionary.
  *
- * Anahtarlar noktalı ve İngilizce (kod İngilizce kuralı); değerler kullanıcının
- * gördüğü metin. Yeni bir anahtar önce buraya eklenir; en.ts aynı anahtar
- * kümesini taşımak zorundadır ve bir test bunu doğrular.
+ * The keys are dotted and English (the code-is-English rule); the values are
+ * what the user reads. A new key is added here first; en.ts has to carry the
+ * same set of keys, and a test enforces that.
  *
- * `{ad}` biçimindeki yer tutucular t()'ye verilen parametrelerle değiştirilir.
+ * Placeholders written as `{name}` are replaced by the params passed to t().
  */
 export const tr = {
-  // --- Gezinme -----------------------------------------------------------
+  // --- Navigation --------------------------------------------------------
   "nav.whiskies": "Viskiler",
   "nav.people": "Kişiler",
   "nav.dashboard": "Panelim",
@@ -31,21 +32,21 @@ export const tr = {
   "nav.more": "Daha fazla",
   "nav.menu": "Menü",
 
-  // --- Erişilebilirlik etiketleri ----------------------------------------
+  // --- Accessibility labels ----------------------------------------------
   "a11y.mobileNav": "Mobil gezinme",
   "a11y.closeMenu": "Menüyü kapat",
   "a11y.close": "Kapat",
   "a11y.otherPages": "Diğer sayfalar",
   "a11y.userMenu": "Kullanıcı menüsü",
 
-  // --- Dil değiştirici ---------------------------------------------------
+  // --- Language switcher -------------------------------------------------
   "locale.label": "Dil",
   "locale.tr": "Türkçe",
   "locale.en": "İngilizce",
   "locale.switchToTr": "Arayüzü Türkçeye çevir",
   "locale.switchToEn": "Arayüzü İngilizceye çevir",
 
-  // --- Çevrimdışı kullanım ------------------------------------------------
+  // --- Offline use --------------------------------------------------------
   "offline.title": "Çevrimdışı Kullanım",
   "offline.on": "Açık",
   "offline.off": "Kapalı",
@@ -73,7 +74,7 @@ export const tr = {
   "offline.noNotes": "Kayıtlı tadım notu yok.",
   "offline.emptyWishlist": "İstek listeniz boş.",
 
-  // --- Profil formu -------------------------------------------------------
+  // --- Profile form -------------------------------------------------------
   "profileForm.bioMax": "Hakkında yazısı en fazla 500 karakter olabilir",
   "profileForm.urlInvalid": "Geçerli bir URL giriniz",
   "profileForm.failed": "Profil güncellenemedi",
@@ -84,19 +85,19 @@ export const tr = {
   "profileForm.saved": "Profiliniz güncellendi.",
   "profileForm.save": "Kaydet",
 
-  // --- Aroma seçici -------------------------------------------------------
+  // --- Flavour picker -----------------------------------------------------
   "flavorPicker.removeHint": "Kaldırmak için tıklayın",
 
-  // --- Alt bilgi ----------------------------------------------------------
+  // --- Footer -------------------------------------------------------------
   "footer.tagline": "Viski tadım günlüğünüz — keşfedin, tadın, kaydedin.",
   "footer.disclaimer": "İçkinin tadını çıkarın, sorumlu tüketin.",
 
-  // --- Site üst verisi ----------------------------------------------------
+  // --- Site metadata ------------------------------------------------------
   "meta.title": "CaskKeeper — Viski Tadım Günlüğünüz",
   "meta.description":
     "Viskileri keşfedin, tadım deneyimlerinizi kaydedin, zaman içinde karşılaştırın. Premium viski tadım günlüğü.",
 
-  // --- Ortak eylemler -----------------------------------------------------
+  // --- Shared actions -----------------------------------------------------
   "common.search": "Ara",
   "common.clearSearch": "Aramayı temizle",
   "common.pagination": "Sayfalama",
@@ -106,7 +107,7 @@ export const tr = {
   "common.searching": "Aranıyor…",
   "common.offline": "Çevrimdışı",
 
-  // --- Göreli zaman -------------------------------------------------------
+  // --- Relative time ------------------------------------------------------
   "time.justNow": "az önce",
   "time.minutesAgo": "{count} dk önce",
   "time.hoursAgo": "{count} sa önce",
@@ -121,7 +122,7 @@ export const tr = {
     "Aradığınız sayfa fıçıda dinlenmeye bırakılmış olabilir. Kataloğa dönüp keşfetmeye devam edin.",
   "notFound.cta": "Kataloğa Dön",
 
-  // --- Giriş / Kayıt ------------------------------------------------------
+  // --- Sign in / Sign up --------------------------------------------------
   "auth.login.heading": "Tekrar Hoş Geldiniz",
   "auth.login.subtitle": "Tadım günlüğünüze devam etmek için giriş yapın.",
   "auth.login.noAccount": "Hesabınız yok mu?",
@@ -145,7 +146,7 @@ export const tr = {
   "auth.showPassword": "Parolayı göster",
   "auth.hidePassword": "Parolayı gizle",
 
-  // --- Viski kataloğu -----------------------------------------------------
+  // --- Whisky catalogue ---------------------------------------------------
   "catalogue.title": "Viski Kataloğu",
   "catalogue.count": "{count} viski arasından keşfedin.",
   "catalogue.empty": "Katalog şu an boş görünüyor.",
@@ -161,7 +162,7 @@ export const tr = {
   "catalogue.allCountries": "Tüm Ülkeler",
   "catalogue.limitedEdition": "Limitli Üretim",
 
-  // --- Viski detayı -------------------------------------------------------
+  // --- Whisky detail ------------------------------------------------------
   "whiskey.notFound": "Viski Bulunamadı",
   "whiskey.abv": "Alkol Oranı",
   "whiskey.age": "Yaş",
@@ -184,7 +185,7 @@ export const tr = {
   "whiskey.noNotesYet":
     "Bu viskiyi henüz tatmadınız. İlk tadım notunuzu yazmak için yukarıdaki butonu kullanın.",
 
-  // --- Karşılaştırma ------------------------------------------------------
+  // --- Comparison ---------------------------------------------------------
   "compare.title": "Viski Karşılaştırma",
   "compare.empty": "Karşılaştırma henüz boş.",
   "compare.exploreCatalogue": "Kataloğu Keşfet",
@@ -204,7 +205,7 @@ export const tr = {
   "compare.full": "En fazla {max} viski karşılaştırılabilir. Yenisini eklemek için birini çıkarın.",
   "compare.brand": "Marka",
 
-  // --- Kişiler ------------------------------------------------------------
+  // --- People -------------------------------------------------------------
   "people.title": "Kişiler",
   "people.friend": "Arkadaş",
   "people.followsYou": "Sizi takip ediyor",
@@ -220,7 +221,7 @@ export const tr = {
   "people.subtitleSuffix": "olarak görünür.",
   "people.newMembers": "Yeni Katılanlar",
 
-  // --- Sosyal listeler ----------------------------------------------------
+  // --- Social lists -------------------------------------------------------
   "social.backToProfile": "{name} profiline dön",
   "social.followersTitle": "Takipçiler",
   "social.followersHeading": "{name} — Takipçiler ({count})",
@@ -229,15 +230,15 @@ export const tr = {
   "social.noFollowers": "Henüz takipçi yok.",
   "social.noFollowing": "Henüz kimse takip edilmiyor.",
 
-  // --- Tadım notu kalıcı bağlantısı ---------------------------------------
+  // --- Tasting note permalink ---------------------------------------------
   "notePage.fallbackTitle": "Tadım notu",
   "notePage.fallbackAuthor": "Tadım",
   "notePage.notFound": "Tadım Notu Bulunamadı",
 
-  // --- Öneri eşleşmesi ----------------------------------------------------
+  // --- Recommendation match -----------------------------------------------
   "match.percent": "%{percent} eşleşme",
 
-  // --- Aroma trendi -------------------------------------------------------
+  // --- Aroma trend --------------------------------------------------------
   "trend.empty":
     "Tadım notlarınızda aroma etiketi seçtikçe zaman içindeki değişim burada görünecek.",
   "trend.barLabel": "{period}: {count} aroma etiketi",
@@ -246,7 +247,7 @@ export const tr = {
   "trend.showTable": "Tablo görünümü",
   "trend.hideTable": "Tabloyu gizle",
 
-  // --- Tadım notu kartı ---------------------------------------------------
+  // --- Tasting note card --------------------------------------------------
   "note.public": "Herkese açık",
   "note.finishShort": "Kısa bitiş",
   "note.finishMedium": "Orta bitiş",
@@ -260,7 +261,7 @@ export const tr = {
   "note.delete": "Sil",
   "note.deleteConfirm": "Silmeyi onaylamak için tekrar tıklayın",
 
-  // --- Beğeni ve yorumlar -------------------------------------------------
+  // --- Likes and comments -------------------------------------------------
   "interactions.likeFailed": "Beğeni güncellenemedi",
   "interactions.like": "Beğen",
   "interactions.unlike": "Beğeniyi kaldır",
@@ -277,7 +278,7 @@ export const tr = {
   "interactions.signInToCommentBefore": "Yorum yazmak için",
   "interactions.signInToCommentLink": "giriş yapın",
 
-  // --- Bildirimler --------------------------------------------------------
+  // --- Notifications ------------------------------------------------------
   "notifications.title": "Bildirimler",
   "notifications.unreadCount": "{count} okunmamış bildiriminiz var.",
   "notifications.allRead": "Tüm bildirimleriniz okundu.",
@@ -293,7 +294,7 @@ export const tr = {
   "notifications.like": "{target} beğendi",
   "notifications.comment": "{target} yorumladı",
 
-  // --- Panel --------------------------------------------------------------
+  // --- Dashboard ----------------------------------------------------------
   "dashboard.title": "Panelim",
   "dashboard.welcome": "Hoş geldiniz,",
   "dashboard.subtitle": "İşte tadım yolculuğunuzun özeti.",
@@ -314,7 +315,7 @@ export const tr = {
   "dashboard.recommendations": "Sizin İçin Öneriler",
   "dashboard.back": "Panelime dön",
 
-  // --- Yönetim ------------------------------------------------------------
+  // --- Admin --------------------------------------------------------------
   "admin.title": "Yönetim",
   "admin.catalogue": "Katalog",
   "admin.users": "Kullanıcılar",
@@ -373,7 +374,7 @@ export const tr = {
   "whiskeyForm.create": "Kataloğa Ekle",
   "whiskeyForm.saveChanges": "Değişiklikleri Kaydet",
 
-  // --- İstatistikler ------------------------------------------------------
+  // --- Statistics ---------------------------------------------------------
   "stats.title": "Detaylı İstatistikler",
   "stats.subtitle": "Damak zevkinizin zaman içindeki değişimi ve katalog tercihleriniz.",
   "stats.trendTitle": "Zaman İçinde Aroma Değişimi",
@@ -382,7 +383,7 @@ export const tr = {
   "stats.topDistilleries": "En Çok Tadılan Damıtımevleri",
   "stats.empty": "Henüz tadım notunuz yok.",
 
-  // --- Tadım notu formu ---------------------------------------------------
+  // --- Tasting note form --------------------------------------------------
   "noteForm.newTitle": "Yeni Tadım Notu",
   "noteForm.editTitle": "Tadım Notunu Düzenle",
   "noteForm.backToWhiskey": "Viskiye Dön",
@@ -415,7 +416,7 @@ export const tr = {
   "noteForm.saveChanges": "Değişiklikleri Kaydet",
   "noteForm.failed": "Tadım notu kaydedilemedi",
 
-  // --- Öneriler -----------------------------------------------------------
+  // --- Recommendations ----------------------------------------------------
   "recommendations.title": "Öneriler",
   "recommendations.subtitle":
     "Tadım notlarınızdaki aroma tercihlerinize göre, henüz denemediğiniz viskiler.",
@@ -423,7 +424,7 @@ export const tr = {
   "recommendations.emptyHint":
     "Tadım notlarınızda aroma etiketi seçtikçe damak profiliniz oluşur ve öneriler burada görünür.",
 
-  // --- Profil -------------------------------------------------------------
+  // --- Profile ------------------------------------------------------------
   "profile.title": "Profilim",
   "profile.memberSince": "{date} tarihinden beri üye",
   "profile.infoTitle": "Profil Bilgileri",
@@ -450,7 +451,7 @@ export const tr = {
   "profile.closeCancel": "Vazgeç",
   "profile.closeFailed": "Hesap kapatılamadı",
 
-  // --- İstek listesi ------------------------------------------------------
+  // --- Wishlist -----------------------------------------------------------
   "wishlist.title": "İstek Listem",
   "wishlist.count": "Denemeyi düşündüğünüz {count} viski.",
   "wishlist.subtitle": "Denemeyi düşündüğünüz viskileri burada toplayın.",
@@ -458,7 +459,7 @@ export const tr = {
   "wishlist.emptyHint":
     "Katalogda denemek istediğiniz bir viski bulduğunuzda, detay sayfasından ekleyin.",
 
-  // --- Favoriler ----------------------------------------------------------
+  // --- Favourites ---------------------------------------------------------
   "favorites.title": "Favorilerim",
   "favorites.count": "{count} favori tadımınız var.",
   "favorites.subtitle": "Henüz favori tadımınız yok.",
@@ -466,7 +467,7 @@ export const tr = {
   "favorites.emptyHintBefore": "Tadımlarınızdan",
   "favorites.emptyHintAfter": "kalp simgesine tıklayarak favorilerinize ekleyin.",
 
-  // --- Tadımlarım ---------------------------------------------------------
+  // --- My tastings --------------------------------------------------------
   "myTastings.title": "Tadımlarım",
   "myTastings.count": "Toplam {count} tadım seansı kaydettiniz.",
   "myTastings.subtitle": "Henüz tadım notunuz yok.",
@@ -475,7 +476,7 @@ export const tr = {
   "myTastings.emptyHintBefore": "Katalogdan bir viski seçin",
   "myTastings.emptyHintAfter": "ve ilk tadım notunuzu yazın.",
 
-  // --- Akış ---------------------------------------------------------------
+  // --- Feed ---------------------------------------------------------------
   "feed.title": "Akış",
   "feed.subtitle": "Takip ettiğiniz kişilerin en yeni herkese açık tadımları.",
   "feed.empty": "Akışınız henüz boş.",
@@ -483,7 +484,7 @@ export const tr = {
     "Diğer tutkunları takip ederek onların herkese açık tadımlarını burada görün.",
   "feed.discoverPeople": "Kişileri Keşfet",
 
-  // --- Ana sayfa ----------------------------------------------------------
+  // --- Home page ----------------------------------------------------------
   "home.eyebrow": "Premium Viski Tadım Günlüğü",
   "home.headlineBefore": "Her yudum",
   "home.headlineHighlight": "bir hatıra",
@@ -508,10 +509,10 @@ export const tr = {
     "En sevdiğiniz tadımları işaretleyin, kişisel viski hafızanızı oluşturun.",
   "people.publicNoteCount": "{count} herkese açık tadım",
 
-  // --- Alan doğrulama -----------------------------------------------------
-  // İstemci formları ile sunucu şemaları BU anahtarları paylaşır: aynı kural
-  // iki yerde tanımlı olduğu için metin de iki yerde yazılıydı ve ayrışabilirdi.
-  // İstemci t() ile, sunucu mk() ile aynı anahtara bağlanır.
+  // --- Field validation ---------------------------------------------------
+  // Client forms and server schemas share THESE keys: the same rule is defined
+  // in two places, so the text used to be written twice and could drift apart.
+  // The client binds to the key through t(), the server through mk().
   "validation.nameMin": "İsim en az 2 karakter olmalı",
   "validation.nameMax": "İsim en fazla 60 karakter olabilir",
   "validation.email": "Geçerli bir e-posta adresi giriniz",
@@ -540,9 +541,10 @@ export const tr = {
   "validation.commentRequired": "Yorum boş olamaz",
   "validation.commentMax": "Yorum en fazla 1000 karakter olabilir",
 
-  // --- Sunucu hataları ----------------------------------------------------
-  // Servis katmanı bu anahtarları FIRLATIR, metne çevirmez; çeviri isteğin
-  // dilinde handleApiError'da yapılır (bkz. lib/errors.ts).
+  // --- Server errors ------------------------------------------------------
+  // The service layer THROWS these keys rather than rendering them; the
+  // translation happens in handleApiError, in the language of the request (see
+  // lib/errors.ts).
   "errors.generic": "Bir hata oluştu",
   "errors.unexpected": "Beklenmeyen bir hata oluştu",
   "errors.invalidData": "Geçersiz veri",

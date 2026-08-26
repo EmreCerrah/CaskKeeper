@@ -2,17 +2,17 @@ import type { NextRequest } from "next/server";
 
 /**
  * @file request-ip.ts
- * @description İstemci IP'sini isteğin başlıklarından çıkarır.
+ * @description Extracts the client's IP from the request headers.
  *
- * Uygulama Vercel'in (ya da Docker kurulumunda bir ters vekilin) arkasında
- * çalışıyor, bu yüzden bağlantının kendi adresi hep vekile ait. Gerçek istemci
- * `x-forwarded-for` listesinin BAŞINDA durur.
+ * The app runs behind Vercel — or behind a reverse proxy in the Docker setup —
+ * so the connection's own address always belongs to the proxy. The real client
+ * sits at the FRONT of the `x-forwarded-for` list.
  *
- * GÜVENLİK: bu başlık istemci tarafından uydurulabilir. Vercel gelen isteğin
- * başlığını kendi değeriyle değiştirdiği için orada güvenilir; ters vekilsiz
- * doğrudan internete açılan bir kurulumda ise sahtelenebilir. Sonuç: hız
- * sınırlaması vekil arkasında sağlam, vekilsiz kurulumda atlatılabilir — bu
- * durum README'de yazılı.
+ * SECURITY: this header can be invented by the client. Vercel replaces the
+ * incoming header with its own value, so it is trustworthy there; in a setup
+ * exposed directly to the internet without a reverse proxy it can be spoofed.
+ * The consequence: rate limiting is solid behind a proxy and bypassable
+ * without one — which is written down in the README.
  */
 export function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -21,11 +21,11 @@ export function getClientIp(req: NextRequest): string {
     if (first) return first;
   }
 
-  // Vercel bunu ayrıca gönderir; bazı vekiller yalnızca bunu ayarlar.
+  // Vercel sends this as well; some proxies set only this one.
   const realIp = req.headers.get("x-real-ip")?.trim();
   if (realIp) return realIp;
 
-  // Adres hiç çözülemezse tüm bu istekler tek bir kovada toplanır. Sınırlamanın
-  // tamamen devre dışı kalmasındansa bu daha güvenli.
+  // If no address can be resolved, all such requests fall into one bucket.
+  // Safer than letting the limiting fall away entirely.
   return "unknown";
 }

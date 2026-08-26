@@ -11,15 +11,16 @@ export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];
 }
 
-/** t() imzası — sunucu ve istemci tarafında aynı. */
+/** The t() signature — identical on the server and the client. */
 export type Translator = (key: TranslationKey, params?: Record<string, string | number>) => string;
 
 /**
- * Sözlükten metin üretir. `{ad}` yer tutucuları params ile değiştirilir.
+ * Produces text from the dictionary. `{name}` placeholders are replaced from
+ * params.
  *
- * Anahtar sözlükte yoksa (tipler bunu engellemeli, ama çalışma zamanında veri
- * bozulmuş olabilir) anahtarın kendisi döner: ekranda boşluk yerine ne eksik
- * olduğu görünür.
+ * If a key is missing — the types should prevent it, but data can be corrupt at
+ * runtime — the key itself is returned, so the screen shows what is missing
+ * rather than a blank.
  */
 export function createTranslator(dictionary: Dictionary): Translator {
   return (key, params) => {

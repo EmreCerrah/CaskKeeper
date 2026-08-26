@@ -1,13 +1,14 @@
 /**
  * @file recommendations.ts
- * @description Öneri motoru için saf hesaplama fonksiyonları. Veritabanı
- * bağımlılığı yoktur — repository ham veriyi çeker, burada işlenir.
+ * @description The pure calculations behind the recommendation engine. There
+ * is no database dependency — the repository fetches the raw data and it is
+ * processed here.
  *
- * Yaklaşım: kullanıcının tadım notlarındaki aroma etiketlerinden bir "damak
- * profili" (kategori başına normalize ağırlık, toplamı 1) çıkarılır. Her aday
- * viski, `flavorProfile` alanındaki terimlerin ait olduğu benzersiz kategoriler
- * üzerinden bu profille karşılaştırılır — skor, viskinin kapsadığı kategorilerin
- * kullanıcı ağırlıklarının toplamıdır (0 ile 1 arası).
+ * The approach: a "palate profile" is derived from the aroma tags in the user's
+ * tasting notes — a normalised weight per category, summing to 1. Each
+ * candidate whisky is compared against that profile through the unique
+ * categories its `flavorProfile` terms belong to, and the score is the sum of
+ * the user's weights for the categories it covers (between 0 and 1).
  */
 
 import { categoryForTag } from "@/lib/constants/aroma-wheel";
@@ -15,16 +16,16 @@ import { categoryForFlavorTerm } from "@/lib/constants/flavor-profile-map";
 import type { NoteTagsInput } from "./analytics";
 
 export interface CategoryPreferences {
-  /** kategori id → 0-1 arası normalize ağırlık, toplamı 1 (boşsa 0) */
+  /** category id → a normalised weight from 0 to 1, summing to 1 (or 0 when empty) */
   weights: Map<string, number>;
-  /** Kullanıcının kategori eşlemesi bulunan toplam etiket sayısı */
+  /** How many of the user's tags map to a category in total */
   totalTags: number;
 }
 
 /**
- * Tadım notlarındaki tüm aroma etiketlerini kategorilere göre sayar ve
- * normalize eder. Eşlenemeyen etiketler yok sayılır (bkz. `buildFlavorTrend`
- * ile aynı davranış). Hiç etiket yoksa boş bir harita döner.
+ * Counts every aroma tag in the tasting notes by category and normalises the
+ * result. Tags that cannot be mapped are ignored (the same behaviour as
+ * `buildFlavorTrend`). With no tags at all it returns an empty map.
  */
 export function buildCategoryPreferences(notes: NoteTagsInput[]): CategoryPreferences {
   const counts = new Map<string, number>();
@@ -51,17 +52,17 @@ export function buildCategoryPreferences(notes: NoteTagsInput[]): CategoryPrefer
 }
 
 export interface FlavorMatchResult {
-  /** 0-1 arası — viskinin kapsadığı kategorilerin kullanıcı ağırlıkları toplamı */
+  /** 0 to 1 — the sum of the user's weights for the categories this whisky covers */
   score: number;
-  /** Skora katkı veren, kullanıcının damak profilinde de yer alan kategoriler */
+  /** The categories behind the score, the ones also in the user's palate profile */
   matchedCategories: string[];
 }
 
 /**
- * Bir viskinin `flavorProfile` alanını kullanıcının kategori tercihleriyle
- * karşılaştırır. Viskinin aynı kategoriden birden çok terimi olsa da (ör.
- * "honey" ve "toffee" ikisi de "sweet") kategori yalnızca bir kez sayılır —
- * geniş flavorProfile dizisine sahip viskiler haksız avantaj kazanmaz.
+ * Compares a whisky's `flavorProfile` against the user's category preferences.
+ * Even when a whisky has several terms from one category — "honey" and
+ * "toffee" are both "sweet" — the category counts once, so whiskies with a long
+ * flavorProfile array gain no unfair advantage.
  */
 export function scoreByFlavorProfile(
   flavorProfile: string[],
@@ -83,7 +84,7 @@ export function scoreByFlavorProfile(
     }
   });
 
-  // En güçlü eşleşme başta olsun — UI'da "en çok bu yüzden önerildi" sırası
+  // Strongest match first — the "mostly why this was suggested" order in the UI
   matchedCategories.sort(
     (a, b) => (preferences.weights.get(b) ?? 0) - (preferences.weights.get(a) ?? 0)
   );

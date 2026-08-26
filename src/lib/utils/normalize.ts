@@ -37,10 +37,10 @@ export const slugify = (text: string): string => {
   return normalized
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, "")  // alfanumerik olmayan karakterler kaldır
-    .replace(/\s+/g, "-")           // boşlukları tire yap
-    .replace(/-{2,}/g, "-")         // ardışık tireleri tek tireye indir
-    .replace(/^-|-$/g, "");         // baş/son tireleri kaldır
+    .replace(/[^a-z0-9\s-]/g, "")  // drop anything not alphanumeric
+    .replace(/\s+/g, "-")           // spaces become hyphens
+    .replace(/-{2,}/g, "-")         // collapse runs of hyphens into one
+    .replace(/^-|-$/g, "");         // trim leading and trailing hyphens
 };
 
 /**

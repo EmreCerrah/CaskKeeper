@@ -2,38 +2,39 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { extractDatabaseName, resolveConnectionString } from "./db";
 
 /**
- * Bağlantı dizesi doğrulaması.
+ * Validating the connection string.
  *
- * Buradaki kuralın bir maliyeti var: veritabanı adı olmayan bir dizeyle Mongoose
- * hata vermez, sessizce "test" veritabanına yazar. Atlas'a ilk geçişte veriler
- * tam bu yüzden yanlış yere gitti. Testler o sessiz hatayı gürültülü tutuyor.
+ * The rule here was paid for: given a string with no database name, Mongoose
+ * does not complain — it quietly writes to a database called "test". That is
+ * exactly how the data ended up in the wrong place on the first move to Atlas.
+ * These tests keep that silent failure loud.
  */
 
 describe("extractDatabaseName", () => {
-  it("standart dizeden adı çıkarır", () => {
+  it("extracts the name from a standard string", () => {
     expect(extractDatabaseName("mongodb://localhost:27017/caskkeeper")).toBe("caskkeeper");
   });
 
-  it("srv dizesinden query string'i ayıklar", () => {
+  it("strips the query string from an srv string", () => {
     expect(
       extractDatabaseName("mongodb+srv://user:pass@cluster.mongodb.net/caskkeeper?retryWrites=true")
     ).toBe("caskkeeper");
   });
 
-  it("replica set (çok host'lu) dizeyi ayrıştırır", () => {
-    // new URL() bu biçimde hata fırlatıyor; bu yüzden elle ayrıştırıyoruz.
+  it("parses a replica set string with several hosts", () => {
+    // new URL() throws on this shape, which is why it is parsed by hand.
     expect(
       extractDatabaseName("mongodb://host1:27017,host2:27017,host3:27017/caskkeeper?replicaSet=rs0")
     ).toBe("caskkeeper");
   });
 
-  it("parolada kodlanmış karakter olsa da host'u doğru bulur", () => {
+  it("finds the host correctly even with encoded characters in the password", () => {
     expect(extractDatabaseName("mongodb://user:p%40ss@localhost:27017/caskkeeper")).toBe(
       "caskkeeper"
     );
   });
 
-  it("ad yoksa boş döner", () => {
+  it("returns empty when there is no name", () => {
     expect(extractDatabaseName("mongodb+srv://user:pass@cluster.mongodb.net")).toBe("");
     expect(extractDatabaseName("mongodb+srv://user:pass@cluster.mongodb.net/")).toBe("");
     expect(extractDatabaseName("mongodb+srv://cluster.mongodb.net/?retryWrites=true")).toBe("");
@@ -45,32 +46,34 @@ describe("resolveConnectionString", () => {
     vi.unstubAllEnvs();
   });
 
-  it("geçerli dizeyi olduğu gibi döndürür", () => {
+  it("returns a valid string unchanged", () => {
     const uri = "mongodb+srv://user:pass@cluster.mongodb.net/caskkeeper?retryWrites=true";
     expect(resolveConnectionString(uri)).toBe(uri);
   });
 
-  it("değişken tanımlı değilse açıklayıcı hata verir", () => {
-    // Varsayılan parametre ortam değişkenini okuduğu için onu geçici kaldırıyoruz;
-    // test ortamına vitest.config.ts geçerli bir değer enjekte ediyor.
+  it("gives an explanatory error when the variable is not set", () => {
+    // The default parameter reads the environment variable, so it is removed
+    // temporarily; vitest.config.ts injects a valid value into the test
+    // environment.
     vi.stubEnv("MONGODB_URI", "");
     expect(() => resolveConnectionString()).toThrow(/MONGODB_URI/);
     expect(() => resolveConnectionString("")).toThrow(/MONGODB_URI/);
   });
 
-  it("şema yanlışsa hata verir", () => {
+  it("errors on a wrong scheme", () => {
     expect(() => resolveConnectionString("postgres://localhost:5432/db")).toThrow(/mongodb/i);
   });
 
-  it("veritabanı adı yoksa hata verir ve nedenini söyler", () => {
+  it("errors when the database name is missing, and says why", () => {
     expect(() => resolveConnectionString("mongodb+srv://user:pass@cluster.mongodb.net")).toThrow(
       /veritabanı adı içermiyor/
     );
-    // "test"e sessizce düşme tuzağı hata metninde açıkça anlatılmalı.
+    // The trap of quietly falling back to "test" has to be spelled out in the
+    // error text.
     expect(() => resolveConnectionString("mongodb://localhost:27017/")).toThrow(/'test'/);
   });
 
-  it("hata mesajında parolayı sızdırmaz", () => {
+  it("does not leak the password in the error message", () => {
     let message = "";
     try {
       resolveConnectionString("postgres://admin:sup3rs3cret@db.example.com:5432/x");
@@ -81,8 +84,8 @@ describe("resolveConnectionString", () => {
     expect(message).toContain("***");
   });
 
-  it("argüman verilmezse ortam değişkenini okur", () => {
-    // vitest.config.ts test ortamına geçerli bir MONGODB_URI enjekte ediyor.
+  it("reads the environment variable when no argument is given", () => {
+    // vitest.config.ts injects a valid MONGODB_URI into the test environment.
     expect(resolveConnectionString()).toBe(process.env.MONGODB_URI);
   });
 });

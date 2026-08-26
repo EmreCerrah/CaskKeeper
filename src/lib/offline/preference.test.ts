@@ -6,8 +6,8 @@ import {
 } from "./preference";
 
 /**
- * Anahtarın davranışı. Kritik kural: VARSAYILAN KAPALI — hiç kimsenin verisi
- * istemeden cihaza yazılmamalı. Bu testler o varsayılanın kazara değişmesini
+ * How the switch behaves. The critical rule: the DEFAULT IS OFF — nobody's data
+ * should reach their device unasked. These tests are what stop that default
  * yakalar.
  */
 
@@ -42,12 +42,12 @@ beforeEach(() => {
   });
 });
 
-describe("çevrimdışı kullanım anahtarı", () => {
-  it("varsayılan olarak KAPALIDIR", () => {
+describe("the offline access switch", () => {
+  it("is OFF by default", () => {
     expect(isOfflineEnabled()).toBe(false);
   });
 
-  it("açılıp kapatılabilir", () => {
+  it("can be switched on and off", () => {
     setOfflineEnabled(true);
     expect(isOfflineEnabled()).toBe(true);
 
@@ -55,7 +55,7 @@ describe("çevrimdışı kullanım anahtarı", () => {
     expect(isOfflineEnabled()).toBe(false);
   });
 
-  it("değişiklikte aboneleri haberdar eder", () => {
+  it("notifies its subscribers on a change", () => {
     const seen: boolean[] = [];
     const unsubscribe = subscribeOfflinePreference((v) => seen.push(v));
 
@@ -67,7 +67,7 @@ describe("çevrimdışı kullanım anahtarı", () => {
     expect(seen).toEqual([true, false]);
   });
 
-  it("localStorage erişilemezse kapalı kabul eder, çökmez", () => {
+  it("treats an inaccessible localStorage as off rather than crashing", () => {
     vi.stubGlobal("window", {
       get localStorage(): Storage {
         throw new Error("gizli sekme");

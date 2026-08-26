@@ -5,50 +5,55 @@ import { getDictionary } from "./translate";
 
 /**
  * @file untranslated.test.ts
- * @description Çevrilmemiş arayüz metni bırakılmasını engelleyen tarama.
+ * @description The scan that stops untranslated interface text being left
+ * behind.
  *
- * Bu test neden var: çeviri eksiği SESSİZ bir hatadır. Derleme geçer, sayfa
- * çalışır, yalnızca metin yanlış dilde görünür. Nitekim 2. dilimde
- * "Filtreleri temizleyip tekrar deneyin." satırı gözden kaçtı ve elle yaptığım
- * tarama da yakalayamadı, çünkü yalnızca tırnaklı metinlere bakıyordu.
+ * Why this test exists: a missing translation is a SILENT failure. The build
+ * passes, the page renders, only the text is in the wrong language. In slice 2
+ * the line "Filtreleri temizleyip tekrar deneyin." slipped through, and the
+ * scan I ran by hand missed it too, because it only looked at quoted strings.
  *
- * PENDING_TRANSLATION, henüz sırası gelmemiş dosyaların listesi. Bir dilim
- * tamamlandıkça buradan satır silinir; liste boşaldığında arayüzün tamamı
- * çevrilmiş demektir. Listedeki bir dosya temizlenirse test bunu da söyler,
- * yani liste bayatlayamaz.
+ * PENDING_TRANSLATION is the list of files whose turn had not come yet. A line
+ * is deleted from it as each slice lands; an empty list means the whole
+ * interface is translated. If a file on the list turns out to be clean the test
+ * says so too, so the list cannot go stale.
  *
- * SINIRI: tespit Türkçeye özgü harflere (çğıöşü) dayanıyor. Yalnızca ASCII
- * harf içeren Türkçe kelimeler — "Sil", "Kaydet", "Ara", "Ekle" — bu ağdan
- * geçer. Güvenilir tespit AST çözümlemesi ve "bu metin kullanıcıya görünüyor
- * mu" kararı isterdi; bu kapsam için fazla. Amaç kusursuz denetim değil,
- * çevrilmiş dosyalara yeniden Türkçe metin sızmasını yakalamak.
+ * THE LIMIT: detection rests on the letters specific to Turkish (çğıöşü).
+ * Turkish words made only of ASCII letters — "Sil", "Kaydet", "Ara", "Ekle" —
+ * pass through this net. Reliable detection would need AST analysis and a
+ * judgement about whether a string is user-visible; too much for this scope.
+ * The aim is not a perfect audit but catching Turkish text seeping back into
+ * files that were already translated.
  *
- * O sınır bir kez ısırdı: `title: "Yeni Viski"` iki dilde de aynı çıkıyordu ve
- * tarama göremedi, çünkü içinde Türkçeye özgü harf yok. Aşağıdaki ikinci test
- * bu belirli deliği kapatıyor — sabit `metadata` nesnesi artık hiçbir sayfada
- * kabul edilmiyor, başlıklar generateMetadata() ile üretilmeli.
+ * That limit bit once: `title: "Yeni Viski"` came out identical in both
+ * languages and the scan could not see it, because it contains no
+ * Turkish-specific letter. The second test below closes that particular hole —
+ * a static `metadata` object is no longer accepted on any page, and titles have
+ * to be produced through generateMetadata().
  */
 
 const ROOT = path.resolve(__dirname, "../../..");
 const SCAN_DIRS = ["src/app", "src/components"];
 
-/** Henüz çevrilmemiş dosyalar — 3. dilimin kapsamı. */
+/** Files not yet translated — the scope of slice 3. */
 const PENDING_TRANSLATION = new Set<string>([
-  // Boş: arayüzün tamamı çevrildi. Yeni bir dosya buraya eklenmemeli — çeviri
-  // ertelenecekse bile, bu liste bir borç kaydıdır ve boş kalması hedeftir.
+  // Empty: the whole interface is translated. No new file should be added here
+  // — even when a translation is being deferred, this list is a record of debt
+  // and staying empty is the point.
 ]);
 
 const TURKISH = /[çğıöşüÇĞİÖŞÜ]/;
 
 /**
- * import yolları ve teknik string'ler Türkçe harf içermez, bu yüzden ayrıca
- * dışlamak gerekmiyor: yalnızca Türkçe harf taşıyan metinler işaretlenir.
- * Bileşenlerde Türkçe harf taşıyan bir string, pratikte her zaman kullanıcıya
- * görünen metindir — sabit tablolarda duranlar dahil (ör. FINISH_LABELS).
+ * Import paths and technical strings carry no Turkish letters, so they need no
+ * separate exclusion: only text carrying a Turkish letter is flagged. In a
+ * component, a string with a Turkish letter in it is in practice always
+ * user-visible text — including the ones sitting in constant tables (e.g.
+ * FINISH_LABELS).
  */
 const STRING_LITERAL = /(["'`])((?:(?!\1)[^\\]|\\.)*)\1/g;
 
-/** Yorumları çıkarır — Türkçe yorum bu projenin kuralı, uyarı üretmemeli. */
+/** Strips comments — they are not user-visible text, so they must not be flagged. */
 function stripComments(source: string): string {
   return source
     .replace(/\{\s*\/\*[\s\S]*?\*\/\s*\}/g, "") // JSX yorumu
@@ -65,18 +70,18 @@ function walk(dir: string, acc: string[] = [], extension = ".tsx"): string[] {
   return acc;
 }
 
-/** Dosya listesini repo köküne göre, eğik çizgili yola çevirir. */
+/** Turns the file list into forward-slashed paths relative to the repo root. */
 function relativePaths(files: string[]): string[] {
   return files.map((f) => path.relative(ROOT, f).split(path.sep).join("/"));
 }
 
 /**
- * Bir dosyadaki çevrilmemiş görünen metinleri bulur.
+ * Finds the apparently untranslated text in a file.
  *
- * İki geçiş: önce string literal'ler, sonra geriye kalan JSX metni. İkincisi
- * "kalanı incele" yöntemiyle bulunuyor çünkü JSX metni tek satırda `>…<`
- * arasında durmak zorunda değil — çoğu zaman kendi satırında, bazen de
- * `{ifade}` ile aynı satırda bulunuyor.
+ * Two passes: string literals first, then whatever JSX text is left. The second
+ * works by "inspect the remainder", because JSX text does not have to sit
+ * between `>…<` on one line — most of the time it is on a line of its own, and
+ * sometimes it shares a line with an `{expression}`.
  */
 function findUntranslated(source: string): string[] {
   const found: string[] = [];
@@ -85,28 +90,28 @@ function findUntranslated(source: string): string[] {
   lines.forEach((line, index) => {
     const report = (text: string) => found.push(`${index + 1}: ${text.trim()}`);
 
-    // 1) Türkçe harf taşıyan string literal — öznitelik, sabit tablo, template
-    //    literal, doğrudan değer; hepsi.
+    // 1) A string literal carrying a Turkish letter — an attribute, a constant
+    //    table, a template literal, a direct value; all of them.
     for (const match of line.matchAll(STRING_LITERAL)) {
       if (TURKISH.test(match[2])) report(match[0]);
     }
 
-    // 2) Aynı satırda `>metin<` — DİLİ NE OLURSA OLSUN. Çevrilmiş bir dosyada
-    //    JSX metni sabit yazılmamalı. Yalnızca Türkçe harf aramak yetmiyordu:
-    //    "Favorilerim" ve "Yeni Viski" salt ASCII olduğu için ağdan geçmişti.
-    //    Marka adı çevrilmez, o yüzden ayıklanır.
+    // 2) `>text<` on one line — IN ANY LANGUAGE. In a translated file, JSX text
+    //    should never be hardcoded. Looking only for Turkish letters was not
+    //    enough: "Favorilerim" and "Yeni Viski" are pure ASCII and slipped
+    //    through. The brand name is not translated, so it is excluded.
     for (const match of line.matchAll(/>([^<>{}]*[A-Za-zÇĞİÖŞÜçğıöşü]{2,}[^<>{}]*)</g)) {
       if (match[1].replace(/CaskKeeper/g, "").trim().length > 1) report(match[1]);
     }
 
-    // 3) Çok satıra yayılan JSX metni: etiket, ifade ve string'ler
-    //    çıkarıldıktan sonra Türkçe harf kalıyorsa metin kalmış demektir.
-    //    Burada yalnızca Türkçe harf aranıyor — geniş tutulsa kod satırları da
-    //    yakalanırdı, çünkü bu artık JSX'e özgü bir kalıp değil.
+    // 3) JSX text spread across lines: once tags, expressions and strings have
+    //    been stripped, a remaining Turkish letter means text remained. Only
+    //    Turkish letters are looked for here — cast wider and it would catch
+    //    lines of code too, since this is no longer a JSX-specific pattern.
     const residue = line
       .replace(STRING_LITERAL, '""')
-      // String'ler çıkarıldıktan SONRA satır sonu yorumu atılır; önce atılsaydı
-      // "https://…" gibi değerler yorum sanılırdı.
+      // The trailing comment is dropped AFTER the strings; the other way round,
+      // values like "https://…" would be mistaken for a comment.
       .replace(/\/\/.*$/, "")
       .replace(/<[^>]*>/g, "")
       .replace(/\{[^{}]*\}/g, "");
@@ -117,14 +122,14 @@ function findUntranslated(source: string): string[] {
   return found;
 }
 
-describe("çevrilmemiş arayüz metni", () => {
+describe("untranslated interface text", () => {
   const files = relativePaths(SCAN_DIRS.flatMap((dir) => walk(path.join(ROOT, dir))));
 
-  it("taranacak dosya bulur (tarama sessizce boşa düşmemeli)", () => {
+  it("finds files to scan (the scan must not quietly come up empty)", () => {
     expect(files.length).toBeGreaterThan(50);
   });
 
-  it("çevrilmiş dosyalarda Türkçe metin kalmamıştır", () => {
+  it("leaves no Turkish text in the translated files", () => {
     const offenders: string[] = [];
 
     for (const file of files) {
@@ -136,10 +141,11 @@ describe("çevrilmemiş arayüz metni", () => {
     expect(offenders.join("\n\n")).toBe("");
   });
 
-  it("hiçbir sayfa sabit metadata başlığı kullanmaz", () => {
-    // Sabit `export const metadata = { title: "…" }` dile göre değişemez.
-    // Türkçeye özgü harf içermeyen bir başlık (ör. "Yeni Viski") karakter
-    // taramasından kaçtığı için bu ayrı kural gerekiyor.
+  it("no page uses a static metadata title", () => {
+    // A static `export const metadata = { title: "…" }` cannot vary by
+    // language. A title with no Turkish-specific letter in it ("Yeni Viski",
+    // say) escapes the character scan, which is why this separate rule is
+    // needed.
     const offenders = files
       .filter((file) => /\/(page|layout)\.tsx$/.test(file))
       .filter((file) =>
@@ -166,22 +172,23 @@ describe("çevrilmemiş arayüz metni", () => {
 });
 
 /**
- * Sunucu tarafı ayrı bir yüzey ve ayrı bir sızıntı yolu.
+ * The server is a separate surface, and a separate way for text to leak.
  *
- * Servisler kullanıcıya metin değil ÇEVİRİ ANAHTARI fırlatır; çeviri
- * handleApiError'da isteğin dilinde yapılır. Tipli constructor'lar ve mk()
- * yanlış anahtarı derleme zamanında yakalar — buradaki iki kural derlemenin
- * göremediğini kapatıyor: sözlükten silinen bir anahtar (kullanıcı ham
- * `errors.foo` görür) ve katmana geri sızan serbest Türkçe metin.
+ * Services throw a TRANSLATION KEY rather than user-facing text; the rendering
+ * happens in handleApiError, in the language of the request. The typed
+ * constructors and mk() catch a wrong key at compile time — the two rules here
+ * close what the compiler cannot see: a key deleted from the dictionary (the
+ * user then reads a raw `errors.foo`) and free Turkish text seeping back into
+ * the layer.
  */
-describe("sunucu mesajları", () => {
+describe("server messages", () => {
   const SERVER_DIRS = ["src/server/services", "src/server/validations"];
   const KEY_DIRS = ["src/server", "src/lib", "src/app", "src/components"];
 
-  /** `"errors.…"` / `"validation.…"` biçimindeki anahtar kullanımları. */
+  /** Key usages shaped like `"errors.…"` / `"validation.…"`. */
   const KEY_LITERAL = /["'](?:(errors|validation)\.[A-Za-z0-9_]+)["']/g;
 
-  it("kullanılan her hata/doğrulama anahtarı sözlükte vardır", () => {
+  it("every error/validation key in use exists in the dictionary", () => {
     const dictionary = getDictionary("tr") as Record<string, string>;
     const missing: string[] = [];
     let checked = 0;
@@ -201,12 +208,12 @@ describe("sunucu mesajları", () => {
     }
 
     expect(missing.join("\n")).toBe("");
-    // Tarama sessizce boşa düşmemeli: yol değişirse hiçbir anahtar bulunmaz ve
-    // test "geçer" — o hâlde koruduğu şey de kalmaz.
+    // The scan must not quietly come up empty: change a path and no key is
+    // found, the test "passes", and what it was guarding is gone.
     expect(checked).toBeGreaterThan(50);
   });
 
-  it("servis ve şema katmanında Türkçe kullanıcı metni kalmamıştır", () => {
+  it("no Turkish user-facing text is left in the service and schema layers", () => {
     const offenders: string[] = [];
     const serverFiles = SERVER_DIRS.flatMap((dir) => relativePaths(walk(path.join(ROOT, dir), [], ".ts")));
     expect(serverFiles.length).toBeGreaterThan(10);
@@ -215,7 +222,9 @@ describe("sunucu mesajları", () => {
       const lines = stripComments(readFileSync(path.join(ROOT, file), "utf8")).split(/\r?\n/);
 
       lines.forEach((line, index) => {
-        // console.* geliştiriciye bakar; proje kuralı gereği Türkçe kalır.
+        // console.* is for developers, not users, so it is exempt from this
+        // scan. (It is English now too, since the comments were translated —
+        // but that is not what this rule is checking.)
         if (line.includes("console.")) return;
 
         for (const match of line.matchAll(STRING_LITERAL)) {

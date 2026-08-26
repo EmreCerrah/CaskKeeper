@@ -23,7 +23,7 @@ export interface SessionPayload {
 function getSecretKey(): Uint8Array {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error("JWT_SECRET ortam değişkeni tanımlı değil");
+    throw new Error("The JWT_SECRET environment variable is not set");
   }
   return new TextEncoder().encode(secret);
 }

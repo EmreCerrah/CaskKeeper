@@ -1,8 +1,8 @@
 /**
  * @file analytics.ts
- * @description Tadım notlarından istatistik türetme yardımcıları. Veritabanı
- * bağımlılığı yoktur — repository ham veriyi çeker, burada saf fonksiyonlarla
- * işlenir (test edilmesi kolay olsun diye).
+ * @description Helpers that derive statistics from tasting notes. There is no
+ * database dependency — the repository fetches the raw data and it is processed
+ * here with pure functions, which keeps it easy to test.
  */
 
 import { categoryForTag } from "@/lib/constants/aroma-wheel";
@@ -16,9 +16,10 @@ export interface NoteTagsInput {
 }
 
 /**
- * Tadım notlarını aya göre gruplar, her ayda aroma kategorisi başına
- * etiket sayısını çıkarır. Eşlenemeyen (kataloglanmamış) etiketler yok sayılır.
- * Kronolojik sırayla döner; her ayın kategorileri sayıya göre azalan sıralanır.
+ * Groups tasting notes by month and counts the tags per aroma category within
+ * each. Tags that cannot be mapped (uncatalogued ones) are ignored. Returned in
+ * chronological order, with each month's categories sorted by count,
+ * descending.
  */
 export function buildFlavorTrend(notes: NoteTagsInput[]): FlavorTrendPointDTO[] {
   const monthMap = new Map<string, Map<string, { label: string; count: number }>>();
