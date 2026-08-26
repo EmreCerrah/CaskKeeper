@@ -184,7 +184,7 @@ describe("getPublicProfile — gizlilik", () => {
   });
 });
 
-describe("closeAccount — kalıcı hesap kapatma", () => {
+describe("closeAccount — hesap kapatma", () => {
   const PASSWORD = "dogru-parola-123";
 
   async function mockUserWithPassword(overrides: Record<string, unknown> = {}) {

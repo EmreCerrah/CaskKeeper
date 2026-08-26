@@ -14,6 +14,12 @@ export interface CreateUserInput {
   role?: "user" | "admin";
 }
 
+/** Yeniden kayıtta canlandırılan hesaba yazılanlar. Rolü reopen kendisi belirler. */
+export interface ReopenUserInput {
+  name: string;
+  passwordHash: string;
+}
+
 export interface UpdateUserInput {
   name?: string;
   bio?: string;
@@ -127,10 +133,43 @@ export class UserRepository {
     return await User.countDocuments({ role: "admin", ...ACTIVE });
   }
 
-  /** Hesabı kapatır. Kalıcıdır; geri açan bir metot bilerek yoktur. */
+  /** Hesabı kapatır. Geri açılabilir — bkz. reopen. */
   async close(id: string): Promise<boolean> {
     const result = await User.updateOne({ _id: id, ...ACTIVE }, { $set: { closedAt: new Date() } });
     return result.modifiedCount > 0;
+  }
+
+  /**
+   * Kapalı hesabı e-postasıyla bulur — ACTIVE filtresinin tam tersi.
+   *
+   * Yalnızca yeniden kayıt yolunda kullanılıyor: aynı adresle register olan
+   * biri varsa, yeni satır açmak yerine bu satır canlandırılıyor.
+   */
+  async findClosedByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({
+      email: email.toLowerCase(),
+      closedAt: { $exists: true },
+    }).lean() as IUser | null;
+  }
+
+  /**
+   * Kapalı hesabı yeni parolayla canlandırır.
+   *
+   * Rol HER ZAMAN "user"a düşer, eski hesap yönetici olsa bile. Register akışı
+   * kimlik doğrulamıyor (e-posta doğrulaması yok), dolayısıyla adresi bilen
+   * herkes bu yoldan geçebilir — yetkiyi de geri vermek, kapatılmış bir
+   * yönetici hesabını ele geçirilebilir hale getirirdi. Yetki iadesi ayrı bir
+   * karardır ve updateRole ucundan bir admin tarafından yapılır.
+   *
+   * closedAt $unset ediliyor, boş tarihe çekilmiyor: ACTIVE filtresi alanın
+   * YOKLUĞUNA bakıyor ve bileşik indeks de eksik alanı null sayıyor.
+   */
+  async reopen(id: string, data: ReopenUserInput): Promise<IUser | null> {
+    return await User.findOneAndUpdate(
+      { _id: id, closedAt: { $exists: true } },
+      { $unset: { closedAt: "" }, $set: { ...data, role: "user" } },
+      { new: true }
+    ).lean() as unknown as IUser | null;
   }
 
   async updateRole(id: string, role: "user" | "admin"): Promise<IUser | null> {

@@ -12,10 +12,16 @@ export interface IUser extends Document {
    * Hesabın kapatıldığı an. VARLIĞI kapalı demektir — ayrıca bir `status` alanı
    * tutulmaz, çünkü iki alan birbirine düşebilir.
    *
-   * Kapatma KALICIDIR; geri açma yoktur. Kayıtlar yine de silinmez: tadım
-   * notları, başkalarının notlarına yazılmış yorumlar, takipler ve bildirimler
-   * hep User'a referans veriyor, gerçek silme başkalarının verisini kırardı.
-   * Görünürlük UserRepository'deki aktif filtresiyle kapatılır.
+   * Kayıtlar silinmez: tadım notları, başkalarının notlarına yazılmış yorumlar,
+   * takipler ve bildirimler hep User'a referans veriyor, gerçek silme
+   * başkalarının verisini kırardı. Görünürlük UserRepository'deki aktif
+   * filtresiyle kapatılır.
+   *
+   * Kapatma GERİ ALINABİLİR: aynı e-postayla yeniden kayıt olan biri bu satırı
+   * yeni bir parolayla canlandırır ve geçmişi geri gelir (AuthService.register
+   * → UserRepository.reopen). Adres doğrulanmadığı için bu, hesabın adresini
+   * bilen birinin geçmişi devralabilmesi demek — bilinerek kabul edilmiş bir
+   * ürün kararı. Yetki devralınmaz; canlanan hesap "user" rolüyle döner.
    */
   closedAt?: Date;
   createdAt: Date;
@@ -36,9 +42,13 @@ const UserSchema = new Schema<IUser>(
 );
 
 /**
- * E-posta benzersizliği YALNIZCA açık hesaplar için geçerlidir: hesabını
- * kapatan biri e-postasını serbest bırakır ve aynı adresle sıfırdan yeni bir
- * hesap açılabilir.
+ * E-posta benzersizliği YALNIZCA açık hesaplar için geçerlidir.
+ *
+ * Yeniden kayıt artık yeni satır AÇMIYOR, kapalı satırı canlandırıyor; yani
+ * bugün aynı e-postadan iki satır üretilmiyor. İndeks yine de bileşik
+ * kalıyor: bu davranıştan önce kapatıp yeniden kaydolmuş kullanıcıların
+ * koleksiyonda iki satırı var ve tekil bir `{email}` indeksi onların üzerinde
+ * kurulamazdı.
  *
  * Neden bileşik indeks, kısmi (partial) indeks değil: MongoDB
  * `partialFilterExpression` içinde `$exists: false` KABUL ETMİYOR (içeride
