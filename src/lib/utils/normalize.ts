@@ -1,7 +1,8 @@
 /**
  * @file normalize.ts
- * @description Whiskey catalog için slug üretimi ve metin normalizasyon yardımcıları.
- * Brand + Expression + Distillery üçlüsünden benzersiz, URL-safe slug oluşturur.
+ * @description Slug generation and text normalisation helpers for the whisky
+ * catalogue. Builds a unique, URL-safe slug from brand + expression +
+ * distillery.
  */
 
 const TR_CHAR_MAP: Record<string, string> = {
@@ -10,10 +11,10 @@ const TR_CHAR_MAP: Record<string, string> = {
 };
 
 /**
- * Verilen metni URL-safe slug formatına dönüştürür.
- * - Türkçe ve yaygın Avrupa karakterleri ASCII karşılığına çevrilir.
- * - Unicode aksan karakterleri (é, ñ, æ, vs.) normalize edilir.
- * - Alfanumerik olmayan karakterler kaldırılır, boşluklar tire yapılır.
+ * Turns the given text into a URL-safe slug.
+ * - Turkish and common European characters are mapped to their ASCII forms.
+ * - Unicode accents (é, ñ, æ, …) are normalised away.
+ * - Non-alphanumeric characters are dropped and spaces become hyphens.
  *
  * @example slugify("Glenfiddich 18's") → "glenfiddich-18s"
  * @example slugify("Köstritzer") → "kostritzer"
@@ -21,18 +22,18 @@ const TR_CHAR_MAP: Record<string, string> = {
 export const slugify = (text: string): string => {
   if (!text || typeof text !== "string") return "";
 
-  // 1) Türkçe karakter dönüşümü
+  // 1) Turkish character mapping
   const trReplaced = text.replace(
     /[çğıöşüÇĞİÖŞÜ]/g,
     (match) => TR_CHAR_MAP[match] ?? match
   );
 
-  // 2) Unicode normalization (NFD → accents ayrışır, sonra non-ASCII kaldırılır)
+  // 2) Unicode normalisation (NFD splits the accents off, then non-ASCII is dropped)
   const normalized = trReplaced
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
-  // 3) Slug dönüşümü
+  // 3) Slug conversion
   return normalized
     .toLowerCase()
     .trim()
@@ -43,16 +44,16 @@ export const slugify = (text: string): string => {
 };
 
 /**
- * Whiskey kataloğu için benzersiz, normalize edilmiş slug üretir.
- * Lookup sırası: distillery → brand → expression(name)
+ * Builds a unique, normalised slug for the whisky catalogue.
+ * Lookup order: distillery → brand → expression (name)
  *
- * Eğer distillery verilmemişse sadece brand + name kullanılır.
- * Tüm parçalar boşsa slug "unknown-whiskey" olarak döner.
+ * Without a distillery it uses brand + name alone.
+ * If every part is empty the slug falls back to "unknown-whiskey".
  *
- * @param brand       - Whiskey markası (zorunlu)
- * @param expression  - Expression / ürün adı (zorunlu)
- * @param distillery  - Damıtmacı adı (opsiyonel — brand'den farklıysa ekle)
- * @returns           - URL-safe, benzersiz slug
+ * @param brand       - The whisky's brand (required)
+ * @param expression  - The expression / product name (required)
+ * @param distillery  - The distillery (optional — include it when it differs from the brand)
+ * @returns           - A URL-safe, unique slug
  *
  * @example
  * generateWhiskeySlug("Glenfiddich", "18 Year Old")
@@ -77,15 +78,15 @@ export const generateWhiskeySlug = (
 };
 
 /**
- * Kullanıcı girdisini güvenli bir RegExp parçasına dönüştürür.
- * Arama kutusuna yazılan `.` `*` `(` gibi karakterlerin regex olarak
- * yorumlanmasını (ve beklenmedik sonuç/ReDoS riskini) engeller.
+ * Turns user input into a safe RegExp fragment.
+ * Stops characters typed into the search box — `.`, `*`, `(` — from being read
+ * as regex, along with the surprising results and ReDoS risk that brings.
  */
 export const escapeRegex = (text: string): string =>
   text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
- * Verilen metni başlık formatına (Title Case) dönüştürür.
+ * Converts the given text to Title Case.
  * "single malt scotch" → "Single Malt Scotch"
  */
 export const toTitleCase = (text: string): string => {
@@ -98,8 +99,8 @@ export const toTitleCase = (text: string): string => {
 };
 
 /**
- * Whiskey tipini normalize edilmiş bir enum değerine eşler.
- * Bilinmeyen tipler "Other" olarak döner.
+ * Maps a whisky type onto a normalised enum value.
+ * Unknown types come back as "Other".
  */
 const KNOWN_TYPES: Record<string, string> = {
   "single malt": "Single Malt",

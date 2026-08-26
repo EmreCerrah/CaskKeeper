@@ -1,22 +1,22 @@
 /**
  * @file AuthAttemptRepository.ts
- * @description Kimlik doğrulama denemelerinin MongoDB erişim katmanı.
+ * @description The MongoDB access layer for authentication attempts.
  */
 
 import AuthAttempt from "../models/AuthAttempt";
 
 export class AuthAttemptRepository {
-  /** Bir denemeyi kaydeder. */
+  /** Records an attempt. */
   async record(key: string, at: Date = new Date()): Promise<void> {
     await AuthAttempt.create({ key, createdAt: at });
   }
 
-  /** Verilen andan sonraki denemeleri sayar. */
+  /** Counts the attempts made since the given moment. */
   async countSince(key: string, since: Date): Promise<number> {
     return AuthAttempt.countDocuments({ key, createdAt: { $gte: since } });
   }
 
-  /** Başarılı girişten sonra o anahtarın sayacını sıfırlar. */
+  /** Resets that key's counter after a successful sign-in. */
   async clear(key: string): Promise<void> {
     await AuthAttempt.deleteMany({ key });
   }

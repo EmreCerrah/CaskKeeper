@@ -1,9 +1,9 @@
 /**
- * WhiskeyService testleri.
+ * WhiskeyService tests.
  *
- * Odak: katalog kimliği — slug üretimi, kopya tespiti ve güncellemede
- * slug'ın yeniden üretilmesi. Katalog global olduğundan bu kurallar
- * bozulursa aynı viski birden çok kez girebilir.
+ * Focus: catalogue identity — slug generation, duplicate detection, and
+ * regenerating the slug on update. The catalogue is global, so if these rules
+ * break the same whisky can enter it more than once.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -57,7 +57,7 @@ beforeEach(() => {
 });
 
 describe("createWhiskey", () => {
-  it("slug üretir ve tipi normalize eder", async () => {
+  it("generates a slug and normalises the type", async () => {
     vi.mocked(whiskeyRepository.existsBySlug).mockResolvedValue(false);
     vi.mocked(whiskeyRepository.create).mockResolvedValue(buildWhiskey() as never);
 
@@ -71,7 +71,7 @@ describe("createWhiskey", () => {
     );
   });
 
-  it("aynı slug varsa kopya kaydı reddeder", async () => {
+  it("refuses a duplicate when that slug already exists", async () => {
     vi.mocked(whiskeyRepository.existsBySlug).mockResolvedValue(true);
 
     await expect(whiskeyService.createWhiskey(VALID_INPUT)).rejects.toThrow(ConflictError);
@@ -79,7 +79,7 @@ describe("createWhiskey", () => {
     expect(whiskeyRepository.create).not.toHaveBeenCalled();
   });
 
-  it("damıtımevi olmadan kayıt oluşturmayı reddeder", async () => {
+  it("refuses to create a record without a distillery", async () => {
     const { distillery, ...withoutDistillery } = VALID_INPUT;
 
     await expect(whiskeyService.createWhiskey(withoutDistillery)).rejects.toThrow(ValidationError);
@@ -87,13 +87,13 @@ describe("createWhiskey", () => {
     expect(whiskeyRepository.create).not.toHaveBeenCalled();
   });
 
-  it("geçersiz ABV değerini reddeder", async () => {
+  it("rejects an invalid ABV value", async () => {
     await expect(
       whiskeyService.createWhiskey({ ...VALID_INPUT, abv: 150 })
     ).rejects.toThrow(ValidationError);
   });
 
-  it("aynı marka ve ürün adı farklı damıtımevlerinde ayrı kayıt olabilir", async () => {
+  it("allows the same brand and product name as separate records under different distilleries", async () => {
     vi.mocked(whiskeyRepository.existsBySlug).mockResolvedValue(false);
     vi.mocked(whiskeyRepository.create).mockResolvedValue(buildWhiskey() as never);
 
@@ -119,7 +119,7 @@ describe("createWhiskey", () => {
 describe("updateWhiskeyBySlug", () => {
   const CURRENT_SLUG = "lagavulin-distillery-lagavulin-16-year-old";
 
-  it("kimlik alanları değişmezse slug'ı korur", async () => {
+  it("keeps the slug when the identity fields do not change", async () => {
     vi.mocked(whiskeyRepository.findBySlug).mockResolvedValue(buildWhiskey() as never);
     vi.mocked(whiskeyRepository.update).mockResolvedValue(buildWhiskey() as never);
 
@@ -129,10 +129,10 @@ describe("updateWhiskeyBySlug", () => {
     expect(payload).not.toHaveProperty("slug");
   });
 
-  it("ürün adı değişince slug'ı yeniden üretir", async () => {
+  it("regenerates the slug when the product name changes", async () => {
     vi.mocked(whiskeyRepository.findBySlug)
-      .mockResolvedValueOnce(buildWhiskey() as never) // mevcut kayıt
-      .mockResolvedValueOnce(null); // yeni slug boşta
+      .mockResolvedValueOnce(buildWhiskey() as never) // the existing record
+      .mockResolvedValueOnce(null); // the new slug is free
     vi.mocked(whiskeyRepository.update).mockResolvedValue(buildWhiskey() as never);
 
     await whiskeyService.updateWhiskeyBySlug(CURRENT_SLUG, { name: "16 Year Old Special" });
@@ -141,10 +141,10 @@ describe("updateWhiskeyBySlug", () => {
     expect(payload.slug).toBe("lagavulin-distillery-lagavulin-16-year-old-special");
   });
 
-  it("yeni slug başka bir kayda aitse çakışma hatası verir", async () => {
+  it("fails with a conflict when the new slug belongs to another record", async () => {
     vi.mocked(whiskeyRepository.findBySlug)
-      .mockResolvedValueOnce(buildWhiskey() as never) // mevcut kayıt
-      .mockResolvedValueOnce(buildWhiskey({ _id: "başka-kayıt" }) as never); // slug dolu
+      .mockResolvedValueOnce(buildWhiskey() as never) // the existing record
+      .mockResolvedValueOnce(buildWhiskey({ _id: "another-record" }) as never); // the slug is taken
 
     await expect(
       whiskeyService.updateWhiskeyBySlug(CURRENT_SLUG, { name: "16 Year Old Special" })
@@ -153,7 +153,7 @@ describe("updateWhiskeyBySlug", () => {
     expect(whiskeyRepository.update).not.toHaveBeenCalled();
   });
 
-  it("olmayan viski için NotFound fırlatır", async () => {
+  it("throws NotFound for a whisky that does not exist", async () => {
     vi.mocked(whiskeyRepository.findBySlug).mockResolvedValue(null);
 
     await expect(whiskeyService.updateWhiskeyBySlug("yok", { abv: 45 })).rejects.toThrow(
@@ -163,7 +163,7 @@ describe("updateWhiskeyBySlug", () => {
 });
 
 describe("deleteWhiskeyBySlug", () => {
-  it("olmayan viski için NotFound fırlatır", async () => {
+  it("throws NotFound for a whisky that does not exist", async () => {
     vi.mocked(whiskeyRepository.findBySlug).mockResolvedValue(null);
 
     await expect(whiskeyService.deleteWhiskeyBySlug("yok")).rejects.toThrow(NotFoundError);
@@ -171,7 +171,7 @@ describe("deleteWhiskeyBySlug", () => {
     expect(whiskeyRepository.delete).not.toHaveBeenCalled();
   });
 
-  it("mevcut viskiyi siler", async () => {
+  it("deletes an existing whisky", async () => {
     vi.mocked(whiskeyRepository.findBySlug).mockResolvedValue(buildWhiskey() as never);
     vi.mocked(whiskeyRepository.delete).mockResolvedValue(true);
 

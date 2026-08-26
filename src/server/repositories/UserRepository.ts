@@ -1,6 +1,6 @@
 /**
  * @file UserRepository.ts
- * @description User koleksiyonu için MongoDB erişim katmanı.
+ * @description The MongoDB access layer for the User collection.
  */
 
 import mongoose from "mongoose";
@@ -14,7 +14,7 @@ export interface CreateUserInput {
   role?: "user" | "admin";
 }
 
-/** Yeniden kayıtta canlandırılan hesaba yazılanlar. Rolü reopen kendisi belirler. */
+/** What is written to an account reopened by re-registration. reopen decides the role itself. */
 export interface ReopenUserInput {
   name: string;
   passwordHash: string;
@@ -27,9 +27,10 @@ export interface UpdateUserInput {
 }
 
 /**
- * Kapatılmamış hesaplar. Görünürlük kuralı BURADA toplanır: kapalı bir
- * kullanıcının profili, araması, takip listelerindeki satırı ve girişi bu tek
- * filtreyle kapanır — çağıran katmanların ayrıca bir şey yapması gerekmez.
+ * Accounts that have not been closed. The visibility rule is gathered HERE: a
+ * closed user's profile, their appearance in search and in follower lists, and
+ * their sign-in all shut off through this one filter — the layers above do not
+ * have to do anything of their own.
  */
 const ACTIVE = { closedAt: { $exists: false } } as const;
 
@@ -43,11 +44,12 @@ export class UserRepository {
   }
 
   /**
-   * Login için — passwordHash select:false olduğundan açıkça istenir.
+   * For sign-in — passwordHash is select:false, so it is asked for explicitly.
    *
-   * Aktif filtresi kritik: kapalı satırda e-posta durmaya devam ettiği için,
-   * aynı adresle yeni hesap açıldığında koleksiyonda o e-postadan İKİ satır
-   * bulunur. Filtre olmasa giriş yanlış satırı bulurdu.
+   * The active filter is critical: a closed row keeps its email, so where an
+   * account was closed and re-registered before that behaviour changed, the
+   * collection holds TWO rows for that address. Without the filter, sign-in
+   * would find the wrong one.
    */
   async findByEmailWithPassword(email: string): Promise<IUser | null> {
     return await User.findOne({ email: email.toLowerCase(), ...ACTIVE })
@@ -55,7 +57,7 @@ export class UserRepository {
       .lean() as IUser | null;
   }
 
-  /** Hesabı kapatmadan önce parola doğrulaması için */
+  /** For verifying the password before closing an account. */
   async findByIdWithPassword(id: string): Promise<IUser | null> {
     return await User.findOne({ _id: id, ...ACTIVE })
       .select("+passwordHash")
@@ -67,26 +69,28 @@ export class UserRepository {
   }
 
   /**
-   * Toplam kullanıcı sayısı — ilk kaydın admin olması için kullanılır.
+   * Total user count — used to make the first registration an administrator.
    *
-   * Kapalı hesaplar BİLEREK sayılır: herkes hesabını kapatsa bile bir sonraki
-   * kayıt sessizce yönetici olmamalı.
+   * Closed accounts are counted DELIBERATELY: even if everyone closed their
+   * account, the next registration should not quietly become an admin.
    */
   async count(): Promise<number> {
     return await User.countDocuments();
   }
 
   /**
-   * Yönetim panelinde kullanıcı listesi (en yeni önce).
-   * Kapalı hesaplar da döner — operatörün onları görebildiği tek yer burası.
+   * The user list in the admin panel (newest first).
+   * Closed accounts are included — this is the only window an operator has onto
+   * them.
    */
   async findAll(): Promise<IUser[]> {
     return await User.find().sort({ createdAt: -1 }).lean() as unknown as IUser[];
   }
 
   /**
-   * Verilen id'lerden yalnızca açık hesaplara ait olanları döndürür.
-   * Akış, yazar id'lerini dışarıdan aldığı için join yapmadan süzülebiliyor.
+   * Of the given ids, returns only those belonging to open accounts.
+   * The feed receives its author ids from elsewhere, so it can be filtered
+   * without a join.
    */
   async filterActiveIds(ids: mongoose.Types.ObjectId[]): Promise<mongoose.Types.ObjectId[]> {
     if (ids.length === 0) return [];
@@ -95,16 +99,16 @@ export class UserRepository {
     return (rows as unknown as { _id: mongoose.Types.ObjectId }[]).map((r) => r._id);
   }
 
-  /** Verilen id'lerden kaçının hesabı açık — takipçi/takip sayıları için */
+  /** How many of the given ids have an open account — for follower/following counts. */
   async countActiveByIds(ids: mongoose.Types.ObjectId[]): Promise<number> {
     if (ids.length === 0) return 0;
     return await User.countDocuments({ _id: { $in: ids }, ...ACTIVE });
   }
 
   /**
-   * İsme göre kullanıcı arar (büyük/küçük harf duyarsız, kısmi eşleşme).
-   * E-posta üzerinden arama bilinçli olarak desteklenmez — kullanıcıların
-   * e-postaları başkaları tarafından keşfedilebilir olmamalı.
+   * Searches users by name (case-insensitive, partial match).
+   * Searching by email is deliberately unsupported — people's email addresses
+   * should not be discoverable by others.
    */
   async searchByName(query: string, limit = 20, excludeId?: string): Promise<IUser[]> {
     const filter: Record<string, unknown> = { name: new RegExp(escapeRegex(query), "i"), ...ACTIVE };
@@ -116,7 +120,7 @@ export class UserRepository {
       .lean() as unknown as IUser[];
   }
 
-  /** Keşfet listesi: arama yapılmadığında gösterilecek kullanıcılar */
+  /** The discovery list: who to show when no search has been made. */
   async findRecent(limit = 20, excludeIds: string[] = []): Promise<IUser[]> {
     const filter: Record<string, unknown> = excludeIds.length
       ? { _id: { $nin: excludeIds }, ...ACTIVE }
@@ -128,22 +132,23 @@ export class UserRepository {
       .lean() as unknown as IUser[];
   }
 
-  /** Kaç AÇIK admin var — son admini düşürmeyi/kapatmayı engellemek için */
+  /** How many OPEN admins there are — to stop the last one being demoted or closed. */
   async countAdmins(): Promise<number> {
     return await User.countDocuments({ role: "admin", ...ACTIVE });
   }
 
-  /** Hesabı kapatır. Geri açılabilir — bkz. reopen. */
+  /** Closes the account. It can be reopened — see reopen. */
   async close(id: string): Promise<boolean> {
     const result = await User.updateOne({ _id: id, ...ACTIVE }, { $set: { closedAt: new Date() } });
     return result.modifiedCount > 0;
   }
 
   /**
-   * Kapalı hesabı e-postasıyla bulur — ACTIVE filtresinin tam tersi.
+   * Finds a closed account by its email — the exact inverse of the ACTIVE
+   * filter.
    *
-   * Yalnızca yeniden kayıt yolunda kullanılıyor: aynı adresle register olan
-   * biri varsa, yeni satır açmak yerine bu satır canlandırılıyor.
+   * Used only on the re-registration path: when somebody registers with that
+   * address, this row is reopened instead of a new one being created.
    */
   async findClosedByEmail(email: string): Promise<IUser | null> {
     return await User.findOne({
@@ -153,16 +158,18 @@ export class UserRepository {
   }
 
   /**
-   * Kapalı hesabı yeni parolayla canlandırır.
+   * Reopens a closed account with a new password.
    *
-   * Rol HER ZAMAN "user"a düşer, eski hesap yönetici olsa bile. Register akışı
-   * kimlik doğrulamıyor (e-posta doğrulaması yok), dolayısıyla adresi bilen
-   * herkes bu yoldan geçebilir — yetkiyi de geri vermek, kapatılmış bir
-   * yönetici hesabını ele geçirilebilir hale getirirdi. Yetki iadesi ayrı bir
-   * karardır ve updateRole ucundan bir admin tarafından yapılır.
+   * The role ALWAYS drops to "user", even if the old account was an
+   * administrator. Registration proves no identity (there is no email
+   * verification), so anyone who knows the address can take this path — handing
+   * privilege back as well would make a closed admin account capturable.
+   * Restoring the role is a separate decision, made by an admin through
+   * updateRole.
    *
-   * closedAt $unset ediliyor, boş tarihe çekilmiyor: ACTIVE filtresi alanın
-   * YOKLUĞUNA bakıyor ve bileşik indeks de eksik alanı null sayıyor.
+   * closedAt is $unset rather than set to an empty date: the ACTIVE filter
+   * tests for the ABSENCE of the field, and the compound index counts a missing
+   * field as null.
    */
   async reopen(id: string, data: ReopenUserInput): Promise<IUser | null> {
     return await User.findOneAndUpdate(
@@ -180,7 +187,7 @@ export class UserRepository {
   async create(data: CreateUserInput): Promise<IUser> {
     const user = new User(data);
     const saved = await user.save();
-    // passwordHash'i döndürülen objeden çıkar
+    // Strip passwordHash from the returned object
     const plain = saved.toObject() as unknown as Record<string, unknown>;
     delete plain.passwordHash;
     return plain as unknown as IUser;

@@ -1,6 +1,6 @@
 /**
  * @file WishlistRepository.ts
- * @description İstek listesi için MongoDB erişim katmanı.
+ * @description The MongoDB access layer for the wishlist.
  */
 
 import Wishlist, { IWishlistItem } from "../models/Wishlist";
@@ -13,7 +13,7 @@ export interface WishlistPaginationOptions {
 }
 
 export class WishlistRepository {
-  /** Ekler. Zaten varsa idempotent davranır; yeni kayıt oluştuysa true döner. */
+  /** Adds an entry. Idempotent if one exists; returns true when a record was created. */
   async add(userId: string, whiskeyId: string): Promise<boolean> {
     const result = await Wishlist.updateOne(
       { user: userId, whiskey: whiskeyId },
@@ -23,7 +23,7 @@ export class WishlistRepository {
     return result.upsertedCount > 0;
   }
 
-  /** Kaldırır. Silinen kayıt varsa true döner. */
+  /** Removes an entry. Returns true when a record was actually deleted. */
   async remove(userId: string, whiskeyId: string): Promise<boolean> {
     const result = await Wishlist.deleteOne({ user: userId, whiskey: whiskeyId });
     return result.deletedCount > 0;
@@ -33,7 +33,7 @@ export class WishlistRepository {
     return !!(await Wishlist.exists({ user: userId, whiskey: whiskeyId }));
   }
 
-  /** Kullanıcının istek listesi — viski bilgisi populate edilmiş, en yeni önce, sayfalı */
+  /** The user's wishlist — whisky populated, newest first, paginated. */
   async findByUser(
     userId: string,
     pagination?: WishlistPaginationOptions

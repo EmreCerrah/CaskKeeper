@@ -2,14 +2,15 @@ import { z } from "zod";
 import { mk } from "@/lib/i18n/message-key";
 
 // ---------------------------------------------------------------------------
-// Temel Whiskey Oluşturma Şeması (API endpoint'i için)
+// The basic whisky creation schema (for the API endpoint)
 // ---------------------------------------------------------------------------
 
 export const CreateWhiskeySchema = z.object({
   brand:          z.string().min(2, mk("validation.brandMin")).trim(),
   name:           z.string().min(2, mk("validation.whiskeyNameMin")).trim(),
-  // Damıtımevi zorunludur: katalog kimliğinin (slug) parçasıdır ve aynı
-  // marka/ürün adıyla farklı üreticileri ayırt etmeyi sağlar.
+  // The distillery is required: it is part of the catalogue identity (the
+  // slug) and it tells apart different producers sharing a brand and product
+  // name.
   distillery:     z.string().min(2, mk("validation.distilleryRequired")).trim(),
   type:           z.string().min(2, mk("validation.typeRequired")).trim(),
   region:         z.string().min(2, mk("validation.regionRequired")).trim(),
@@ -34,13 +35,14 @@ export const CreateWhiskeySchema = z.object({
 export type CreateWhiskeyDTO = z.infer<typeof CreateWhiskeySchema>;
 
 // ---------------------------------------------------------------------------
-// Import Pipeline Şeması (ham/dış veri için — daha toleranslı)
+// The import pipeline schema (for raw external data — more forgiving)
 // ---------------------------------------------------------------------------
 
 /**
- * Dış kaynaktan gelen ham veriyi parse etmek için kullanılan şema.
- * - abv ve age string olarak da gelebilir → coerce ile number'a dönüştürülür.
- * - Eksik zorunlu alanlar buraya kadar çıkmaz; fallback import pipeline'ında uygulanır.
+ * The schema used to parse raw data from an external source.
+ * - abv and age may arrive as strings → coerced to numbers.
+ * - Missing required fields never reach this point; the fallbacks are applied
+ *   in the import pipeline.
  */
 export const ImportWhiskeySchema = z.object({
   brand:          z.string().trim().optional(),
@@ -70,7 +72,7 @@ export const ImportWhiskeySchema = z.object({
 export type ImportWhiskeyInput = z.infer<typeof ImportWhiskeySchema>;
 
 // ---------------------------------------------------------------------------
-// Güncelleme Şeması
+// The update schema
 // ---------------------------------------------------------------------------
 
 export const UpdateWhiskeySchema = CreateWhiskeySchema.partial();

@@ -1,8 +1,9 @@
 /**
- * WishlistService testleri.
+ * WishlistService tests.
  *
- * Odak: katalogda olmayan viskiye ekleme reddi, geçersiz ObjectId için
- * veritabanına gitmeden NotFound, ve DTO dönüşümünün doğru çalışması.
+ * Focus: refusing to add a whisky that is not in the catalogue, returning
+ * NotFound for an invalid ObjectId without touching the database, and the DTO
+ * conversion being correct.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -35,7 +36,7 @@ beforeEach(() => {
 });
 
 describe("add", () => {
-  it("katalogda olmayan viskiyi eklemeyi reddeder", async () => {
+  it("refuses to add a whisky that is not in the catalogue", async () => {
     vi.mocked(whiskeyRepository.findById).mockResolvedValue(null);
 
     await expect(wishlistService.add(USER_ID, WHISKEY_ID)).rejects.toThrow(NotFoundError);
@@ -43,14 +44,14 @@ describe("add", () => {
     expect(wishlistRepository.add).not.toHaveBeenCalled();
   });
 
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(wishlistService.add(USER_ID, "invalid-id")).rejects.toThrow(NotFoundError);
 
     expect(whiskeyRepository.findById).not.toHaveBeenCalled();
     expect(wishlistRepository.add).not.toHaveBeenCalled();
   });
 
-  it("var olan viskiyi ekler", async () => {
+  it("adds a whisky that exists", async () => {
     vi.mocked(whiskeyRepository.findById).mockResolvedValue({ _id: WHISKEY_ID } as never);
     vi.mocked(wishlistRepository.add).mockResolvedValue(true);
 
@@ -60,7 +61,7 @@ describe("add", () => {
     expect(wishlistRepository.add).toHaveBeenCalledWith(USER_ID, WHISKEY_ID);
   });
 
-  it("zaten listede olan viskiyi tekrar eklemek idempotenttir", async () => {
+  it("adding a whisky already on the list is idempotent", async () => {
     vi.mocked(whiskeyRepository.findById).mockResolvedValue({ _id: WHISKEY_ID } as never);
     vi.mocked(wishlistRepository.add).mockResolvedValue(false);
 
@@ -71,13 +72,13 @@ describe("add", () => {
 });
 
 describe("remove", () => {
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(wishlistService.remove(USER_ID, "invalid-id")).rejects.toThrow(NotFoundError);
 
     expect(wishlistRepository.remove).not.toHaveBeenCalled();
   });
 
-  it("kaldırır", async () => {
+  it("removes an entry", async () => {
     vi.mocked(wishlistRepository.remove).mockResolvedValue(true);
 
     await wishlistService.remove(USER_ID, WHISKEY_ID);
@@ -87,14 +88,14 @@ describe("remove", () => {
 });
 
 describe("isWishlisted", () => {
-  it("geçersiz ObjectId için veritabanına gitmeden false döner", async () => {
+  it("returns false for an invalid ObjectId without hitting the database", async () => {
     const result = await wishlistService.isWishlisted(USER_ID, "invalid-id");
 
     expect(result).toBe(false);
     expect(wishlistRepository.exists).not.toHaveBeenCalled();
   });
 
-  it("repository sonucunu döner", async () => {
+  it("returns what the repository says", async () => {
     vi.mocked(wishlistRepository.exists).mockResolvedValue(true);
 
     const result = await wishlistService.isWishlisted(USER_ID, WHISKEY_ID);
@@ -104,7 +105,7 @@ describe("isWishlisted", () => {
 });
 
 describe("getWishlist", () => {
-  it("viski dokümanlarını WhiskeyDTO'ya çevirir", async () => {
+  it("converts the whisky documents into WhiskeyDTOs", async () => {
     const createdAt = new Date("2026-06-01");
     vi.mocked(wishlistRepository.findByUser).mockResolvedValue({
       data: [

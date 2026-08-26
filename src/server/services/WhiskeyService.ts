@@ -1,7 +1,7 @@
 /**
  * @file WhiskeyService.ts
- * @description Whiskey iş mantığı katmanı.
- * Validation, slug üretimi ve duplicate kontrolü burada yapılır.
+ * @description The whisky business-rules layer.
+ * Validation, slug generation and duplicate checking all happen here.
  */
 
 import { whiskeyRepository } from "../repositories/WhiskeyRepository";
@@ -47,17 +47,18 @@ export class WhiskeyService {
     return toWhiskeyDTO(whiskey);
   }
 
-  /** Slug ile getir; bulunamazsa hata yerine null döner (sayfa 404'ü için) */
+  /** Fetch by slug; returns null rather than throwing when missing (for the page's 404). */
   async findWhiskeyBySlug(slug: string): Promise<WhiskeyDTO | null> {
     const whiskey = await whiskeyRepository.findBySlug(slug);
     return whiskey ? toWhiskeyDTO(whiskey) : null;
   }
 
   /**
-   * Karşılaştırma için: verilen slug'ları tek sorguda getirir ve **istenen
-   * sırayı korur** — karşılaştırma tablosundaki sütun sırası URL'deki sırayla
-   * aynı kalmalı. Bulunamayan slug'lar sessizce atlanır (URL elle düzenlenmiş
-   * ya da viski katalogdan silinmiş olabilir).
+   * For the comparison page: fetches the given slugs in one query and
+   * **preserves the order asked for** — the column order in the comparison
+   * table has to match the order in the URL. Slugs that are not found are
+   * skipped quietly (the URL may have been edited by hand, or the whisky
+   * removed from the catalogue).
    */
   async getWhiskeysBySlugs(slugs: string[]): Promise<WhiskeyDTO[]> {
     if (slugs.length === 0) return [];
@@ -91,17 +92,17 @@ export class WhiskeyService {
 
     const dto = parsed.data;
 
-    // 2. Normalize type ve slug üret
+    // 2. Normalise the type and build the slug
     const normalizedType = normalizeWhiskeyType(dto.type);
     const slug = generateWhiskeySlug(dto.brand, dto.name, dto.distillery);
 
-    // 3. Duplicate kontrolü
+    // 3. Duplicate check
     const exists = await whiskeyRepository.existsBySlug(slug);
     if (exists) {
       throw new ConflictError("errors.whiskeyAlreadyExists", { slug });
     }
 
-    // 4. Kaydet
+    // 4. Save
     const created = await whiskeyRepository.create({
       ...dto,
       type: normalizedType,
@@ -122,9 +123,10 @@ export class WhiskeyService {
   }
 
   /**
-   * Slug ile güncelleme (yönetim paneli ve API için).
-   * Marka/isim/damıtımevi değişirse slug yeniden üretilir; yeni slug başka bir
-   * kayda aitse çakışma hatası verilir (sessizce üzerine yazılmaz).
+   * Update by slug (for the admin panel and the API).
+   * If the brand, name or distillery changes the slug is regenerated; if that
+   * new slug belongs to another record the update fails with a conflict rather
+   * than quietly overwriting it.
    */
   async updateWhiskeyBySlug(slug: string, data: unknown): Promise<WhiskeyDTO> {
     const parsed = UpdateWhiskeySchema.safeParse(data);
@@ -139,7 +141,7 @@ export class WhiskeyService {
 
     if (dto.type) dto.type = normalizeWhiskeyType(dto.type);
 
-    // Kimlik alanlarından biri değiştiyse slug'ı tazele
+    // Refresh the slug if any of the identity fields changed
     const identityChanged =
       (dto.brand !== undefined && dto.brand !== existing.brand) ||
       (dto.name !== undefined && dto.name !== existing.name) ||

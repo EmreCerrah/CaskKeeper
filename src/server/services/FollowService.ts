@@ -1,6 +1,7 @@
 /**
  * @file FollowService.ts
- * @description Takip etme/bırakma iş mantığı ve takipçi/takip listeleri.
+ * @description Business rules for following and unfollowing, and the
+ * follower/following lists.
  */
 
 import { followRepository } from "../repositories/FollowRepository";
@@ -17,7 +18,7 @@ export class FollowService {
     }
   }
 
-  /** followerId, targetId'yi takip eder. Kendini takip edemez; hedef var olmalı. */
+  /** followerId follows targetId. You cannot follow yourself, and the target must exist. */
   async follow(followerId: string, targetId: string): Promise<void> {
     this.assertValidId(targetId);
     if (followerId === targetId) {
@@ -40,7 +41,7 @@ export class FollowService {
     this.assertValidId(targetId);
     await followRepository.delete(followerId, targetId);
 
-    // Takip bırakıldığında bildirim de kalkar; tekrar takipte yenisi üretilir
+    // Unfollowing removes the notification too; following again produces a new one
     await notificationService.revoke({
       recipientId: targetId,
       actorId: followerId,

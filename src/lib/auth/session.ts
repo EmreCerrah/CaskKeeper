@@ -1,9 +1,9 @@
 /**
  * @file session.ts
- * @description JWT tabanlı oturum yönetimi (jose + httpOnly cookie).
- * Edge runtime uyumludur — middleware.ts de bu modülü kullanır.
- * Oturum verisi minimal tutulur (id, name, email, role); profil detayı
- * her zaman veritabanından okunur.
+ * @description JWT-based session handling (jose + an httpOnly cookie).
+ * Edge-runtime compatible — middleware.ts uses this module too.
+ * The session payload is kept minimal (id, name, email, role); profile detail
+ * is always read from the database.
  */
 
 import { SignJWT, jwtVerify } from "jose";
@@ -28,7 +28,7 @@ function getSecretKey(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-/** Oturum token'ı üretir (HS256, 7 gün geçerli). */
+/** Issues a session token (HS256, valid for seven days). */
 export async function createSessionToken(payload: SessionPayload): Promise<string> {
   return await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
@@ -37,7 +37,7 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
     .sign(getSecretKey());
 }
 
-/** Token'ı doğrular; geçersiz/süresi dolmuşsa null döner. */
+/** Verifies a token; returns null when it is invalid or expired. */
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getSecretKey());
@@ -60,11 +60,11 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
 }
 
 /**
- * `Authorization: Bearer <token>` başlığından token'ı çıkarır.
+ * Extracts the token from an `Authorization: Bearer <token>` header.
  *
- * Ayrı bir fonksiyon çünkü getSession() next/headers'a bağlı ve birim testte
- * kurulması pahalı; ayrıştırmanın kendisi saf ve sınanabilir olmalı.
- * Şema adı büyük/küçük harf duyarsız (RFC 7235).
+ * A separate function because getSession() depends on next/headers and is
+ * expensive to set up in a unit test, while the parsing itself should be pure
+ * and testable. The scheme name is case-insensitive (RFC 7235).
  */
 export function extractBearerToken(headerValue: string | null | undefined): string | null {
   if (!headerValue) return null;
@@ -74,14 +74,14 @@ export function extractBearerToken(headerValue: string | null | undefined): stri
 }
 
 /**
- * Server component / route handler içinden aktif oturumu okur.
+ * Reads the active session from inside a server component or route handler.
  *
- * İki taşıyıcı desteklenir: tarayıcı httpOnly çerez kullanır, native istemci
- * (mobil uygulama) `Authorization: Bearer` kullanır — çerez kavramı orada yok,
- * token cihazın güvenli deposunda durur.
+ * Two carriers are supported: a browser uses the httpOnly cookie, a native
+ * client (the mobile app) uses `Authorization: Bearer` — cookies are not a
+ * concept there, and the token lives in the device's secure store.
  *
- * Çerez önce denenir: web isteklerinin ezici çoğunluğu öyle geliyor ve başlığı
- * okumak gereksiz iş olurdu.
+ * The cookie is tried first: the overwhelming majority of web requests arrive
+ * that way, and reading the header would be wasted work.
  */
 export async function getSession(): Promise<SessionPayload | null> {
   const token =
@@ -91,7 +91,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   return await verifySessionToken(token);
 }
 
-/** Korumalı route handler'lar için: oturum yoksa UnauthorizedError fırlatır. */
+/** For protected route handlers: throws UnauthorizedError when there is no session. */
 export async function requireSession(): Promise<SessionPayload> {
   const session = await getSession();
   if (!session) throw new UnauthorizedError();
@@ -99,8 +99,9 @@ export async function requireSession(): Promise<SessionPayload> {
 }
 
 /**
- * Yönetici işlemleri için: oturum yoksa 401, admin değilse 403 fırlatır.
- * Rol oturum token'ından okunur; rol değişiminde token tazelenir.
+ * For administrative operations: 401 without a session, 403 without the admin
+ * role. The role is read from the session token, which is refreshed when a role
+ * changes.
  */
 export async function requireAdmin(): Promise<SessionPayload> {
   const session = await requireSession();
@@ -110,7 +111,7 @@ export async function requireAdmin(): Promise<SessionPayload> {
   return session;
 }
 
-/** Oturum cookie'sini yazar (login/register sonrası). */
+/** Writes the session cookie (after sign-in or registration). */
 export function setSessionCookie(token: string): void {
   cookies().set(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -121,7 +122,7 @@ export function setSessionCookie(token: string): void {
   });
 }
 
-/** Oturum cookie'sini siler (logout). */
+/** Deletes the session cookie (sign-out). */
 export function clearSessionCookie(): void {
   cookies().set(SESSION_COOKIE, "", {
     httpOnly: true,

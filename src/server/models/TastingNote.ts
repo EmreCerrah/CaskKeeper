@@ -7,7 +7,7 @@ export interface ITastingNote extends Document {
   user: mongoose.Types.ObjectId;
   whiskey: mongoose.Types.ObjectId;
 
-  /** Tadım seansının tarihi (not oluşturma tarihinden bağımsız) */
+  /** The date of the tasting session (independent of when the note was written). */
   tastingDate: Date;
 
   rating: number; // 0 to 100
@@ -56,11 +56,11 @@ const TastingNoteSchema = new Schema<ITastingNote>(
   { timestamps: true }
 );
 
-// Indexing for fetching user's notes for a specific whiskey efficiently
+// Indexing for fetching a user's notes for a specific whisky efficiently
 TastingNoteSchema.index({ user: 1, whiskey: 1 });
 // Indexing for public feeds
 TastingNoteSchema.index({ visibility: 1, createdAt: -1 });
-// Kullanıcının favorileri için
+// For the user's favourites
 TastingNoteSchema.index({ user: 1, isFavorite: 1 });
 
 const TastingNote: Model<ITastingNote> = mongoose.models.TastingNote || mongoose.model<ITastingNote>("TastingNote", TastingNoteSchema);

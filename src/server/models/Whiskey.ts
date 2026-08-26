@@ -1,7 +1,8 @@
 /**
  * @file Whiskey.ts
- * @description Merkezi whisky kataloğu için Mongoose modeli.
- * Import pipeline'ından gelen NormalizedWhiskeyPayload ile birebir eşleşir.
+ * @description The Mongoose model for the central whisky catalogue.
+ * Matches the NormalizedWhiskeyPayload coming out of the import pipeline
+ * one-for-one.
  */
 
 import mongoose, { Schema, Document, Model } from "mongoose";
@@ -11,20 +12,20 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 // ---------------------------------------------------------------------------
 
 export interface IWhiskey extends Document {
-  // Kimlik
+  // Identity
   brand: string;
-  name: string;           // expression / ürün adı
+  name: string;           // expression / product name
   slug: string;           // duplicate prevention & URL-safe
 
-  // Sınıflandırma
-  /** Zorunlu — katalog kimliğinin parçasıdır (slug'a girer) */
+  // Classification
+  /** Required — part of the catalogue identity, and it goes into the slug */
   distillery: string;
   type: string;
   region: string;
   country: string;
   subRegion?: string;
 
-  // Teknik
+  // Technical
   abv: number;
   age?: number;
   caskType?: string;
@@ -32,7 +33,7 @@ export interface IWhiskey extends Document {
   vintage?: number;
   limitedEdition: boolean;
 
-  // İçerik
+  // Content
   description?: string;
   flavorProfile: string[];
   awards: string[];
@@ -41,10 +42,10 @@ export interface IWhiskey extends Document {
   imageUrl?: string;
   officialUrl?: string;
   tags: string[];
-  externalId?: string;   // dış sistemdeki ID (idempotent import için)
-  source: string;        // veri kaynağı: "manual" | "whiskybase" | "api" vs.
+  externalId?: string;   // the id in the external system (keeps imports idempotent)
+  source: string;        // the data source: "manual" | "whiskybase" | "api" etc.
 
-  // Timestamps (mongoose otomatik ekler)
+  // Timestamps (Mongoose adds these itself)
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,19 +56,19 @@ export interface IWhiskey extends Document {
 
 const WhiskeySchema = new Schema<IWhiskey>(
   {
-    // Kimlik
+    // Identity
     brand:       { type: String, required: true, trim: true, index: true },
     name:        { type: String, required: true, trim: true },
     slug:        { type: String, required: true, unique: true, index: true, lowercase: true },
 
-    // Sınıflandırma
+    // Classification
     distillery:  { type: String, required: true, trim: true },
     type:        { type: String, required: true, trim: true, index: true },
     region:      { type: String, required: true, trim: true },
     country:     { type: String, required: true, trim: true, default: "Scotland" },
     subRegion:   { type: String, trim: true },
 
-    // Teknik
+    // Technical
     abv:            { type: Number, required: true, min: 0, max: 100 },
     age:            { type: Number, min: 0 },
     caskType:       { type: String, trim: true },
@@ -75,7 +76,7 @@ const WhiskeySchema = new Schema<IWhiskey>(
     vintage:        { type: Number },
     limitedEdition: { type: Boolean, default: false },
 
-    // İçerik
+    // Content
     description:   { type: String, trim: true },
     flavorProfile: { type: [String], default: [] },
     awards:        { type: [String], default: [] },
@@ -89,26 +90,26 @@ const WhiskeySchema = new Schema<IWhiskey>(
   },
   {
     timestamps: true,
-    // Lean sorgularda virtuals çalışmaz, bu yüzden toJSON/toObject'e ekleyebiliriz
+    // Virtuals do not run on lean queries, so they can be added to toJSON/toObject
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 
 // ---------------------------------------------------------------------------
-// İndeksler
+// Indexes
 // ---------------------------------------------------------------------------
 
-// Katalog kimliği: damıtımevi + marka + ürün adı birlikte benzersizdir.
-// Damıtımevi bilinçli olarak dahildir — aynı marka ve ürün adıyla farklı
-// damıtımevlerinden çıkan ürünler (bağımsız şişelemeler) ayrı kayıtlardır.
-// Bu, slug'ın türetildiği üçlüyle birebir aynıdır.
+// Catalogue identity: distillery + brand + product name are unique together.
+// The distillery is included deliberately — bottlings of the same brand and
+// product name from different distilleries (independent bottlings) are
+// separate records. This is exactly the trio the slug is derived from.
 WhiskeySchema.index({ brand: 1, name: 1, distillery: 1 }, { unique: true });
 
-// Tip + bölge bazlı filtreleme için
+// For filtering by type and region
 WhiskeySchema.index({ type: 1, region: 1 });
 
-// Metin araması için (Türkçe locale önerisi: "tr")
+// For text search (a Turkish locale, "tr", is the suggested setting)
 WhiskeySchema.index(
   { brand: "text", name: "text", description: "text", tags: "text" },
   { name: "whiskey_text_search", weights: { brand: 10, name: 8, tags: 5, description: 1 } }

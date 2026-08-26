@@ -1,8 +1,9 @@
 /**
  * @file RecommendationService.ts
- * @description Kullanıcının tadım geçmişinden çıkarılan damak profiline göre
- * katalogdan viski önerir. Henüz tadılmamış viskiler arasından, kullanıcının
- * en çok seçtiği aroma kategorilerine en çok denk düşenler sıralanır.
+ * @description Recommends whiskies from the catalogue against the palate
+ * profile derived from the user's tasting history. Among the whiskies they have
+ * not tried, the ones matching their most-chosen aroma categories rank
+ * highest.
  */
 
 import { tastingNoteRepository } from "../repositories/TastingNoteRepository";
@@ -15,10 +16,10 @@ const DEFAULT_LIMIT = 8;
 
 export class RecommendationService {
   /**
-   * Skoru sıfırdan büyük olan viskileri azalan skora göre döner.
-   * Kullanıcının kategori eşlemesi bulunan hiç etiketi yoksa (yeni kullanıcı
-   * ya da hiç aroma etiketi seçmemiş) boş liste döner — anlamsız bir öneri
-   * üretmek yerine.
+   * Returns the whiskies scoring above zero, highest first.
+   * If none of the user's tags map to a category — a new user, or one who has
+   * never picked an aroma tag — it returns an empty list rather than
+   * manufacturing a meaningless suggestion.
    */
   async getRecommendations(userId: string, limit = DEFAULT_LIMIT): Promise<RecommendationDTO[]> {
     const [tagNotes, tastedIds] = await Promise.all([

@@ -1,7 +1,8 @@
 /**
  * @file WishlistService.ts
- * @description İstek listesi iş mantığı. Kullanıcının denemeyi düşündüğü
- * viskileri işaretlemesi — envanter/stok yönetimi değildir, yalnızca bir işaret.
+ * @description Business rules for the wishlist: marking the whiskies a user
+ * intends to try. This is not inventory or stock management — it is only a
+ * mark.
  */
 
 import mongoose from "mongoose";
@@ -18,7 +19,7 @@ export class WishlistService {
     }
   }
 
-  /** İstek listesine ekler. Katalogda gerçekten var olan bir viski olmalı. */
+  /** Adds to the wishlist. The whisky has to exist in the catalogue. */
   async add(userId: string, whiskeyId: string): Promise<boolean> {
     this.assertValidWhiskeyId(whiskeyId);
 

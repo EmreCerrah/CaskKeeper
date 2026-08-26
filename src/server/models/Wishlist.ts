@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Bir kullanıcının denemeyi düşündüğü viski.
- * Bilinçli olarak sade tutulur — miktar, fiyat, konum gibi envanter alanları
- * yoktur (ürün brief'i: "envanter/stok yönetimi değil").
+ * A whisky a user intends to try.
+ * Kept deliberately plain — there are no inventory fields such as quantity,
+ * price or location (the product brief: "not inventory or stock management").
  */
 export interface IWishlistItem extends Document {
   user: mongoose.Types.ObjectId;
@@ -20,7 +20,7 @@ const WishlistSchema = new Schema<IWishlistItem>(
   { timestamps: true }
 );
 
-// Bir viski, bir kullanıcının istek listesinde yalnızca bir kez olabilir
+// A whisky can appear on a user's wishlist only once
 WishlistSchema.index({ user: 1, whiskey: 1 }, { unique: true });
 
 const Wishlist: Model<IWishlistItem> =

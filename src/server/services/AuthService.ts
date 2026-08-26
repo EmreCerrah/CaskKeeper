@@ -1,7 +1,8 @@
 /**
  * @file AuthService.ts
- * @description Kayıt ve giriş iş mantığı. Parola hash'leme (bcrypt) burada yapılır;
- * token/cookie yönetimi route katmanının sorumluluğundadır (HTTP detayı).
+ * @description Business rules for registration and sign-in. Password hashing
+ * (bcrypt) happens here; tokens and cookies belong to the route layer, being an
+ * HTTP detail.
  */
 
 import bcrypt from "bcryptjs";
@@ -14,17 +15,17 @@ const BCRYPT_ROUNDS = 12;
 
 export class AuthService {
   /**
-   * Yeni kullanıcı kaydı.
+   * Registers a new user.
    *
-   * Aynı e-postayla KAPALI bir hesap varsa yeni satır açılmaz; o hesap yeni
-   * parolayla canlandırılır ve tadım notları, yorumları, takipleri geri gelir.
-   * Hesap kapatma zaten soft delete olduğu için veriler hep duruyordu, geri
-   * dönüş yolu yoktu.
+   * If a CLOSED account exists for that email, no new row is created; that
+   * account is reopened with the new password and its tasting notes, comments
+   * and follows come back. Closing was always a soft delete, so the data had
+   * never gone — only the way back was missing.
    *
-   * Bunun bedeli açık: e-posta doğrulaması olmadığı için, kapalı bir hesabın
-   * adresini bilen herkes bu yoldan geçip o hesabın geçmişini devralabilir.
-   * Ürün kararı olarak bilerek kabul edildi. Karşılığında yetki devralınmıyor
-   * — canlanan hesabın rolünü repository "user"a düşürüyor.
+   * The cost is plain: with no email verification, anyone who knows the address
+   * of a closed account can take this path and inherit its history. Accepted
+   * knowingly as a product decision. Privilege is not inherited in exchange —
+   * the repository drops a reopened account to the "user" role.
    */
   async register(data: unknown): Promise<UserDTO> {
     const parsed = RegisterSchema.safeParse(data);
@@ -34,7 +35,7 @@ export class AuthService {
 
     const { name, email, password } = parsed.data;
 
-    // Yalnızca AÇIK hesaplar adresi meşgul eder; kapalı olan canlandırılacak.
+    // Only OPEN accounts occupy an address; a closed one is about to be reopened.
     if (await userRepository.existsByEmail(email)) {
       throw new ConflictError("errors.emailTaken");
     }
@@ -44,13 +45,14 @@ export class AuthService {
     const closed = await userRepository.findClosedByEmail(email);
     if (closed) {
       const reopened = await userRepository.reopen(String(closed._id), { name, passwordHash });
-      // Satır iki sorgu arasında yok olduysa (yarış) normal kayda düşülür.
+      // If the row vanished between the two queries (a race), fall through to
+      // the normal registration path.
       if (reopened) return toUserDTO(reopened);
     }
 
-    // Sistemdeki ilk kullanıcı otomatik olarak yönetici olur (bootstrap).
-    // Sonraki adminler mevcut bir admin tarafından atanır. Canlandırma bu
-    // yoldan geçmiyor: orası yeni bir kayıt değil.
+    // The first user in the system automatically becomes an administrator
+    // (bootstrap). Later admins are appointed by an existing one. Reopening
+    // does not pass through here: that is not a new registration.
     const isFirstUser = (await userRepository.count()) === 0;
 
     const user = await userRepository.create({
@@ -63,7 +65,7 @@ export class AuthService {
     return toUserDTO(user);
   }
 
-  /** Giriş — hatalı e-posta/parola ayrımı yapılmaz (enumeration koruması). */
+  /** Sign-in — a wrong email and a wrong password are indistinguishable (enumeration guard). */
   async login(data: unknown): Promise<UserDTO> {
     const parsed = LoginSchema.safeParse(data);
     if (!parsed.success) {
