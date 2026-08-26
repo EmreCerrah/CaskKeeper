@@ -383,7 +383,9 @@ Deleting a tasting note cascades to its likes, comments and notifications.
 ### Closing an account
 
 A user can close their account from `/profile`, confirming with their password.
-Closure is **permanent** — there is no reopening.
+Closure is a **soft delete, and it can be undone**: registering again with the
+same email address reopens the same account with the new password, and the
+history comes back with it.
 
 Nothing is deleted. Tasting notes, comments on other people's notes, likes and
 follows all remain, because every one of those records points at a `User` and
@@ -392,10 +394,19 @@ removing them would damage other people's content. What changes is visibility: a
 that the profile, search, sign-in and the discovery list all inherit. Counts are
 filtered too, so a number never disagrees with the list beside it.
 
-The email address is **released**. Registering again with it creates a new, empty
-account — it does not lead back to the old data. Uniqueness is enforced by a
-compound `{email, closedAt}` index: an open account indexes as `(email, null)`,
-so two open accounts can never share an address.
+Registering again with the address **reopens the closed account** rather than
+creating a new one: the password is replaced, the name is updated, `closedAt` is
+cleared and every note, comment, like and follow becomes visible again.
+
+This is a deliberate trade. The project has no email verification, so
+registration proves nothing about who owns the address — anyone who knows the
+address of a closed account can take over its history. The one thing that is not
+handed over is privilege: a reopened account always comes back as `user`, even
+if it was an administrator, so restoring that stays a separate decision made by
+another admin.
+
+Uniqueness is enforced by a compound `{email, closedAt}` index: an open account
+indexes as `(email, null)`, so two open accounts can never share an address.
 
 Notifications are the one exception and are deleted, matching how the app already
 discards them when a follow or like is undone.
@@ -433,7 +444,7 @@ failure, the per-field messages.
 | GET/POST | `/api/tasting-notes/[id]/comments` | List / add comments | GET —, POST ✔ |
 | DELETE | `/api/comments/[id]` | Delete a comment (author or note owner) | ✔ |
 | PATCH | `/api/users/me` | Update profile | ✔ |
-| POST | `/api/users/me/close` | Close the account permanently (body: `password`) | ✔ |
+| POST | `/api/users/me/close` | Close the account (body: `password`) | ✔ |
 | GET | `/api/users/search` | User search / discovery | — |
 | GET | `/api/users/[id]` | Public profile (follow state filled in when signed in) | — |
 | GET | `/api/users/[id]/notes` | That user's public tasting notes | — |

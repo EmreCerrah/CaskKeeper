@@ -439,11 +439,11 @@ export const en: Record<TranslationKey, string> = {
   "profile.closeDescription":
     "Closing your account hides your profile, your tasting notes and your comments.",
   "profile.closeWarning":
-    "This cannot be undone. You will not be able to reopen the account. You may register again with the same email address, but your old notes will not come back.",
+    "Your account and everything in it becomes invisible. Registering again with the same email address reopens it with your new password and brings your notes back — which also means anyone with access to that email address can reopen it.",
   "profile.closeStart": "I want to close my account",
   "profile.closePasswordLabel": "Your password",
   "profile.closePasswordHint": "Enter your password to confirm.",
-  "profile.closeConfirm": "Close my account permanently",
+  "profile.closeConfirm": "Close my account",
   "profile.closeCancel": "Cancel",
   "profile.closeFailed": "Could not close the account",
   "profile.noPublicHint":

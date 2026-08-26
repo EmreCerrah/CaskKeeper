@@ -173,15 +173,16 @@ export class UserService {
   }
 
   /**
-   * Hesabı KALICI olarak kapatır. Geri açma yoktur.
+   * Hesabı kapatır.
    *
    * Kayıtlar silinmez, görünürlükten çıkar (bkz. UserRepository'deki aktif
    * filtresi): tadım notları ve yorumlar başkalarının verisine bağlı olduğu
    * için gerçek silme onların içeriğini bozardı. Tek istisna bildirimler —
    * onlar türetilmiş veri ve siliniyor (bkz. notificationRepository.deleteByUser).
    *
-   * E-posta serbest kalır: aynı adresle sıfırdan yeni bir hesap açılabilir,
-   * ama eski veriye ulaştırmaz.
+   * GERİ ALINABİLİR: aynı e-postayla yeniden kayıt, bu hesabı yeni parolayla
+   * canlandırır ve geçmişini geri getirir (AuthService.register). Silinen
+   * bildirimler geri gelmez.
    */
   async closeAccount(userId: string, password: unknown): Promise<void> {
     if (typeof password !== "string" || password.length === 0) {
@@ -192,7 +193,8 @@ export class UserService {
     if (!user || !user.passwordHash) throw new NotFoundError("errors.userNotFound");
 
     // Parola doğrulaması: kilitsiz bırakılmış bir cihazda hesabın
-    // kapatılmasını engeller. Geri dönüşü olmayan bir işlem için asgari şart.
+    // kapatılmasını engeller. Kapatma geri alınabilir olsa da, birinin
+    // hesabını habersizce kapatabilmesi yine de kabul edilebilir değil.
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
       throw new UnauthorizedError("errors.invalidCredentials");

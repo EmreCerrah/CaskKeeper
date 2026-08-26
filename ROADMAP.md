@@ -54,7 +54,8 @@ experiences**.
 | Bilingual interface (Turkish/English) | ✅ Done | #18, #19, #22, #23 |
 | Continuous integration (`npm test` + `npm run build` on every PR) | ✅ Done | #19 |
 | Bilingual server messages | ✅ Done | #24 |
-| Account closure (permanent soft delete) | ✅ Done | #25 |
+| Account closure (soft delete) | ✅ Done | #25 |
+| Closed accounts reopen on re-registration | ✅ Done | #45 |
 | Mobile · Slice 0 — API a native client can use | ✅ Done | #27 |
 | Mobile · Slice 1 — Expo skeleton and sign-in | ✅ Done | #28 |
 | Mobile · Slice 2 — Catalogue screens | ✅ Done | #30 |
@@ -295,11 +296,11 @@ turned Turkish at exactly the moment the user got stuck.
 A user can close their account from `/profile`. There was no way to leave before
 this; the account you created was the account you kept.
 
-- [x] **Closure is permanent.** There is no reopening. A single `closedAt` field
-      on `User` carries the state — its presence means closed. No separate
-      `status` field, because two fields can disagree with each other
-- [x] **The email is released.** Registering again with the same address creates
-      a brand-new, empty account; it does not lead back to the old data
+- [x] A single `closedAt` field on `User` carries the state — its presence
+      means closed. No separate `status` field, because two fields can disagree
+      with each other
+- [x] ~~**Closure is permanent.**~~ ~~Registering again with the same address
+      creates a brand-new, empty account.~~ **Reversed in #45** — see below
 - [x] **Nothing is deleted, it is hidden.** Tasting notes, comments on other
       people's notes, likes and follows all stay in place. Deleting them would
       damage *other* users' content — every one of those records points at a
@@ -327,6 +328,39 @@ this; the account you created was the account you kept.
 > inbox when X is no longer visible anywhere. Filtering them at read time was not
 > an option either: the list is paginated, so the totals and page sizes would
 > have been wrong.
+
+### Reopening a closed account ✅ (PR #45)
+
+The closure slice above chose permanence: registering again with the same
+address gave you a new, empty account and the old data stayed out of reach.
+**That decision was reversed.** Registering with the address of a closed account
+now reopens that same row with the new password, and the tasting notes,
+comments, likes and follows come back with it. Nothing had to be recovered —
+closure was always a soft delete, only the way back was missing.
+
+- [x] `AuthService.register` looks for a closed row before creating one:
+      **active** account → `ConflictError` as before; **closed** account →
+      `UserRepository.reopen`; nothing → the existing create path
+- [x] The reopened account always comes back as **`user`**, never `admin`
+- [x] The bootstrap "first user becomes an administrator" rule does not run on
+      the reopen path — that is not a new registration
+- [x] The closure screen's copy changed with the behaviour. It used to promise
+      "your old notes will not come back"; leaving that text in place would have
+      made the app lie to the person about to close their account
+
+> **This trades security for convenience, knowingly.** There is no email
+> verification in the project, so registration proves nothing about who owns the
+> address. Anyone who knows the address of a closed account can now take over its
+> history. The counterweight is the role: an account that had `admin` comes back
+> as `user`, so a closed administrator cannot be captured through this path.
+> Restoring privilege stays a separate, deliberate act by another admin.
+
+> **This also defuses the pending Atlas index item.** Re-registration no longer
+> inserts a second row for an address, so the compound `{email, closedAt}` index
+> is not what makes re-registration work any more — it would work on the old
+> single-field `{email}` unique index too. The compound index stays because
+> accounts that closed and re-registered *before* this change already have two
+> rows, and a single-field unique index could not be built over them.
 
 > **Index change — must be run once after deploying:** `npm run db:indexes`.
 > Email uniqueness moved from `{email}` to a compound `{email, closedAt}`, which

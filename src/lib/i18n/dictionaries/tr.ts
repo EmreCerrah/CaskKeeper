@@ -442,11 +442,11 @@ export const tr = {
   "profile.closeDescription":
     "Hesabınızı kapattığınızda profiliniz, tadım notlarınız ve yorumlarınız görünmez olur.",
   "profile.closeWarning":
-    "Bu işlem geri alınamaz. Hesabınızı sonradan yeniden açamazsınız. Aynı e-posta adresiyle yeni bir hesap açabilirsiniz, ancak eski notlarınıza ulaşamazsınız.",
+    "Hesabınız ve içeriğiniz görünmez olur. Aynı e-posta adresiyle yeniden kayıt olursanız hesabınız yeni parolanızla geri açılır ve notlarınız geri gelir — bu yüzden e-posta adresinize erişimi olan biri hesabınızı geri açabilir.",
   "profile.closeStart": "Hesabımı kapatmak istiyorum",
   "profile.closePasswordLabel": "Parolanız",
   "profile.closePasswordHint": "Onaylamak için parolanızı girin.",
-  "profile.closeConfirm": "Hesabımı kalıcı olarak kapat",
+  "profile.closeConfirm": "Hesabımı kapat",
   "profile.closeCancel": "Vazgeç",
   "profile.closeFailed": "Hesap kapatılamadı",
 

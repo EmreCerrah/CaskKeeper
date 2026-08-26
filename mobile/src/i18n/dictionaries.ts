@@ -189,10 +189,10 @@ export const tr = {
   "profile.closeDescription":
     "Hesabınızı kapattığınızda profiliniz, tadım notlarınız ve yorumlarınız görünmez olur.",
   "profile.closeWarning":
-    "Bu işlem geri alınamaz. Hesabınızı sonradan yeniden açamazsınız.",
+    "Hesabınız ve içeriğiniz görünmez olur. Aynı e-posta adresiyle yeniden kayıt olursanız hesabınız geri açılır ve notlarınız geri gelir.",
   "profile.closeStart": "Hesabımı kapatmak istiyorum",
   "profile.closePassword": "Parolanız",
-  "profile.closeConfirm": "Hesabımı kalıcı olarak kapat",
+  "profile.closeConfirm": "Hesabımı kapat",
   "profile.closeCancel": "Vazgeç",
   "profile.closeFailed": "Hesap kapatılamadı",
 
@@ -431,10 +431,11 @@ export const en: Record<TranslationKey, string> = {
   "profile.dangerZone": "Close Account",
   "profile.closeDescription":
     "Closing your account hides your profile, your tasting notes and your comments.",
-  "profile.closeWarning": "This cannot be undone. You will not be able to reopen the account.",
+  "profile.closeWarning":
+    "Your account and everything in it becomes invisible. Registering again with the same email address reopens it and brings your notes back.",
   "profile.closeStart": "I want to close my account",
   "profile.closePassword": "Your password",
-  "profile.closeConfirm": "Close my account permanently",
+  "profile.closeConfirm": "Close my account",
   "profile.closeCancel": "Cancel",
   "profile.closeFailed": "Could not close the account",
 
