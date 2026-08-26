@@ -1,8 +1,8 @@
 /**
  * @file NotificationRepository.ts
- * @description Bildirimler için MongoDB erişim katmanı.
- * Tüm sorgular alıcı (recipient) bazlıdır — bir kullanıcının bildirimi
- * başka kullanıcıya sızmaz.
+ * @description The MongoDB access layer for notifications.
+ * Every query is scoped to the recipient — one person's notifications never
+ * leak to another.
  */
 
 import Notification, { INotification, NotificationType } from "../models/Notification";
@@ -35,8 +35,9 @@ export class NotificationRepository {
   }
 
   /**
-   * Bildirim listesi — en yeni önce. Eyleyen kullanıcı, ilgili tadım notu
-   * (viski adı için) ve yorum metni tek turda populate edilir.
+   * The notification list — newest first. The actor, the tasting note it
+   * refers to (for the whisky name) and the comment text are all populated in
+   * one pass.
    */
   async findByRecipient(
     recipientId: string,
@@ -71,7 +72,7 @@ export class NotificationRepository {
     return await Notification.findById(id).lean() as unknown as INotification | null;
   }
 
-  /** Tek bildirimi okundu işaretler; yalnızca alıcısı için geçerlidir. */
+  /** Marks one notification read; only valid for its recipient. */
   async markRead(id: string, recipientId: string): Promise<boolean> {
     const result = await Notification.updateOne(
       { _id: id, recipient: recipientId },
@@ -80,7 +81,7 @@ export class NotificationRepository {
     return result.matchedCount > 0;
   }
 
-  /** Kullanıcının tüm okunmamış bildirimlerini okundu işaretler; sayıyı döner. */
+  /** Marks all of a user's unread notifications read; returns how many. */
   async markAllRead(recipientId: string): Promise<number> {
     const result = await Notification.updateMany(
       { recipient: recipientId, isRead: false },
@@ -90,8 +91,8 @@ export class NotificationRepository {
   }
 
   /**
-   * Geri alınan bir eylemin bildirimini siler (takibi bırakma, beğeniyi kaldırma).
-   * tastingNoteId verilmezse yalnızca eyleyen + tür eşleşmesine bakılır.
+   * Deletes the notification for an undone action (unfollowing, unliking).
+   * Without a tastingNoteId it matches on actor and type alone.
    */
   async deleteByAction(input: {
     recipientId: string;
@@ -112,29 +113,29 @@ export class NotificationRepository {
     return result.deletedCount;
   }
 
-  /** Not silindiğinde ona bağlı bildirimleri temizler */
+  /** Clears the notifications attached to a note when it is deleted. */
   async deleteByNote(noteId: string): Promise<number> {
     const result = await Notification.deleteMany({ tastingNote: noteId });
     return result.deletedCount;
   }
 
-  /** Yorum silindiğinde ona bağlı bildirimi temizler */
+  /** Clears the notification attached to a comment when it is deleted. */
   async deleteByComment(commentId: string): Promise<number> {
     const result = await Notification.deleteMany({ comment: commentId });
     return result.deletedCount;
   }
 
   /**
-   * Hesap kapatıldığında o kişiyle ilgili bildirimleri temizler.
+   * Clears the notifications involving a person when their account closes.
    *
-   * Diğer kayıtlar gizlenirken bunlar SİLİNİYOR, çünkü bildirim zaten türetilmiş
-   * ve geçici bir veri: proje takibi bırakınca ya da beğeniyi kaldırınca da
-   * ilgili bildirimi siliyor (bkz. deleteByAction). Kapanan bir hesabın
-   * başkalarının kutusunda "X sizi takip etti" satırı bırakması, o X artık
-   * hiçbir yerde görünmezken anlamsız olurdu.
+   * Where other records are merely hidden, these are DELETED, because a
+   * notification is derived, disposable data to begin with: the project already
+   * deletes one when a follow or a like is undone (see deleteByAction). A
+   * closed account leaving "X started following you" in somebody's inbox would
+   * be meaningless when X is no longer visible anywhere.
    *
-   * Liste sayfalı olduğu için okuma anında elemek de mümkün değildi — toplam
-   * sayı ve sayfa boyutları tutmazdı.
+   * Filtering them at read time was not an option either: the list is
+   * paginated, so the totals and page sizes would have been wrong.
    */
   async deleteByUser(userId: string): Promise<number> {
     const result = await Notification.deleteMany({

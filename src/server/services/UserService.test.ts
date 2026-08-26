@@ -1,12 +1,12 @@
 /**
- * UserService testleri.
+ * UserService tests.
  *
- * Odak: rol yönetimi korumaları — yönetici kendi yetkisini kaldıramaz ve
- * sistemdeki son yöneticinin yetkisi kaldırılamaz. Bu iki kural bozulursa
- * yönetim paneline kimse erişemez hale gelir.
+ * Focus: the guards around role management — an administrator cannot remove
+ * their own privilege, and the last administrator in the system cannot lose
+ * theirs. If either rule breaks, nobody can reach the admin panel again.
  *
- * Ayrıca hesap kapatma: geri dönüşü olmadığı için parola doğrulaması ve son
- * yönetici koruması burada sınanır.
+ * Also account closure: the password check and the last-administrator guard
+ * are pinned here.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -58,7 +58,7 @@ const USER_ID = "cccccccccccccccccccccccc";
 function buildUser(overrides: Record<string, unknown> = {}) {
   return {
     _id: USER_ID,
-    name: "Test Kullanıcı",
+    name: "Test User",
     email: "test@example.com",
     role: "user",
     createdAt: new Date("2026-01-01"),
@@ -71,8 +71,8 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe("setRole — yetki korumaları", () => {
-  it("yönetici kendi yetkisini kaldıramaz", async () => {
+describe("setRole — the privilege guards", () => {
+  it("an administrator cannot remove their own privilege", async () => {
     vi.mocked(userRepository.findById).mockResolvedValue(
       buildUser({ _id: ADMIN_ID, role: "admin" }) as never
     );
@@ -82,7 +82,7 @@ describe("setRole — yetki korumaları", () => {
     expect(userRepository.updateRole).not.toHaveBeenCalled();
   });
 
-  it("sistemdeki son yöneticinin yetkisi kaldırılamaz", async () => {
+  it("the last administrator in the system cannot lose their privilege", async () => {
     vi.mocked(userRepository.findById).mockResolvedValue(
       buildUser({ _id: OTHER_ADMIN_ID, role: "admin" }) as never
     );
@@ -95,7 +95,7 @@ describe("setRole — yetki korumaları", () => {
     expect(userRepository.updateRole).not.toHaveBeenCalled();
   });
 
-  it("birden fazla yönetici varsa yetki kaldırılabilir", async () => {
+  it("privilege can be removed while more than one administrator exists", async () => {
     vi.mocked(userRepository.findById).mockResolvedValue(
       buildUser({ _id: OTHER_ADMIN_ID, role: "admin" }) as never
     );
@@ -110,7 +110,7 @@ describe("setRole — yetki korumaları", () => {
     expect(userRepository.updateRole).toHaveBeenCalledWith(OTHER_ADMIN_ID, "user");
   });
 
-  it("normal kullanıcıyı yönetici yapabilir", async () => {
+  it("can promote an ordinary user to administrator", async () => {
     vi.mocked(userRepository.findById).mockResolvedValue(buildUser() as never);
     vi.mocked(userRepository.updateRole).mockResolvedValue(
       buildUser({ role: "admin" }) as never
@@ -119,24 +119,24 @@ describe("setRole — yetki korumaları", () => {
     const result = await userService.setRole(ADMIN_ID, USER_ID, "admin");
 
     expect(result.role).toBe("admin");
-    // Yetki verirken admin sayısı kontrolüne gerek yok
+    // Granting privilege needs no admin count check
     expect(userRepository.countAdmins).not.toHaveBeenCalled();
   });
 
-  it("olmayan kullanıcı için NotFound fırlatır", async () => {
+  it("throws NotFound for a user that does not exist", async () => {
     vi.mocked(userRepository.findById).mockResolvedValue(null);
 
     await expect(userService.setRole(ADMIN_ID, USER_ID, "admin")).rejects.toThrow(NotFoundError);
   });
 
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(userService.setRole(ADMIN_ID, "gecersiz", "admin")).rejects.toThrow(NotFoundError);
 
     expect(userRepository.findById).not.toHaveBeenCalled();
   });
 });
 
-describe("getPublicProfile — gizlilik", () => {
+describe("getPublicProfile — privacy", () => {
   beforeEach(() => {
     vi.mocked(userRepository.findById).mockResolvedValue(buildUser() as never);
     vi.mocked(followRepository.countFollowers).mockResolvedValue(3);
@@ -145,21 +145,21 @@ describe("getPublicProfile — gizlilik", () => {
     vi.mocked(followRepository.exists).mockResolvedValue(false);
   });
 
-  it("herkese açık profil e-posta içermez", async () => {
+  it("a public profile carries no email address", async () => {
     const profile = await userService.getPublicProfile(USER_ID);
 
     expect(profile).not.toHaveProperty("email");
-    expect(profile.name).toBe("Test Kullanıcı");
+    expect(profile.name).toBe("Test User");
   });
 
-  it("kendi profilini görüntülemeyi işaretler", async () => {
+  it("marks viewing your own profile", async () => {
     const profile = await userService.getPublicProfile(USER_ID, USER_ID);
 
     expect(profile.isOwnProfile).toBe(true);
     expect(profile.isFollowedByViewer).toBe(false);
   });
 
-  it("takip durumunu yansıtır", async () => {
+  it("reflects the follow state", async () => {
     vi.mocked(followRepository.exists).mockResolvedValue(true);
 
     const profile = await userService.getPublicProfile(USER_ID, ADMIN_ID);
@@ -168,23 +168,24 @@ describe("getPublicProfile — gizlilik", () => {
     expect(profile.isFollowedByViewer).toBe(true);
   });
 
-  it("oturum yoksa takip durumu sorgulanmaz", async () => {
+  it("does not query the follow state when signed out", async () => {
     const profile = await userService.getPublicProfile(USER_ID);
 
     expect(profile.isFollowedByViewer).toBe(false);
     expect(followRepository.exists).not.toHaveBeenCalled();
   });
 
-  it("kapatılmış hesabın profili bulunamaz", async () => {
-    // findById aktif filtresini uyguladığı için kapalı hesap null döner;
-    // servis bunu olmayan kullanıcıdan ayırt etmez — kasıtlı.
+  it("a closed account's profile cannot be found", async () => {
+    // findById applies the active filter, so a closed account comes back null;
+    // the service does not tell that apart from a user who never existed — that
+    // is deliberate.
     vi.mocked(userRepository.findById).mockResolvedValue(null);
 
     await expect(userService.getPublicProfile(USER_ID)).rejects.toThrow(NotFoundError);
   });
 });
 
-describe("closeAccount — hesap kapatma", () => {
+describe("closeAccount", () => {
   const PASSWORD = "dogru-parola-123";
 
   async function mockUserWithPassword(overrides: Record<string, unknown> = {}) {
@@ -194,19 +195,19 @@ describe("closeAccount — hesap kapatma", () => {
     );
   }
 
-  it("doğru parolayla hesabı kapatır ve bildirimlerini temizler", async () => {
+  it("closes the account with the right password and clears its notifications", async () => {
     await mockUserWithPassword();
     vi.mocked(userRepository.close).mockResolvedValue(true);
 
     await userService.closeAccount(USER_ID, PASSWORD);
 
     expect(userRepository.close).toHaveBeenCalledWith(USER_ID);
-    // Bildirim türetilmiş veri: kapanan hesap başkalarının kutusunda satır
-    // bırakmamalı (bkz. NotificationRepository.deleteByUser).
+    // Notifications are derived data: a closed account should not leave rows
+    // in other people's inboxes (see NotificationRepository.deleteByUser).
     expect(notificationRepository.deleteByUser).toHaveBeenCalledWith(USER_ID);
   });
 
-  it("yanlış parolayla kapatmaz", async () => {
+  it("does not close with the wrong password", async () => {
     await mockUserWithPassword();
 
     await expect(userService.closeAccount(USER_ID, "yanlis-parola")).rejects.toThrow(
@@ -216,16 +217,16 @@ describe("closeAccount — hesap kapatma", () => {
     expect(userRepository.close).not.toHaveBeenCalled();
   });
 
-  it("parola verilmezse veritabanına gitmeden reddeder", async () => {
+  it("rejects without hitting the database when no password is given", async () => {
     await expect(userService.closeAccount(USER_ID, "")).rejects.toThrow(ValidationError);
 
     expect(userRepository.findByIdWithPassword).not.toHaveBeenCalled();
     expect(userRepository.close).not.toHaveBeenCalled();
   });
 
-  it("sistemdeki son yönetici hesabını kapatamaz", async () => {
-    // "Son admin düşürülemez" kuralının ikizi: kendi hesabını kapatarak da
-    // sistem yöneticisiz kalmamalı.
+  it("the last administrator in the system cannot close their account", async () => {
+    // The twin of the "the last admin cannot be demoted" rule: closing your own
+    // account must not leave the system without an administrator either.
     await mockUserWithPassword({ role: "admin" });
     vi.mocked(userRepository.countAdmins).mockResolvedValue(1);
 
@@ -234,7 +235,7 @@ describe("closeAccount — hesap kapatma", () => {
     expect(userRepository.close).not.toHaveBeenCalled();
   });
 
-  it("başka yönetici varsa yönetici hesabını kapatabilir", async () => {
+  it("an administrator can close their account while another one exists", async () => {
     await mockUserWithPassword({ role: "admin" });
     vi.mocked(userRepository.countAdmins).mockResolvedValue(2);
     vi.mocked(userRepository.close).mockResolvedValue(true);
@@ -244,7 +245,7 @@ describe("closeAccount — hesap kapatma", () => {
     expect(userRepository.close).toHaveBeenCalledWith(USER_ID);
   });
 
-  it("zaten kapatılmış hesap için NotFound fırlatır", async () => {
+  it("throws NotFound for an account that is already closed", async () => {
     vi.mocked(userRepository.findByIdWithPassword).mockResolvedValue(null);
 
     await expect(userService.closeAccount(USER_ID, PASSWORD)).rejects.toThrow(NotFoundError);

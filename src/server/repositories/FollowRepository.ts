@@ -1,6 +1,6 @@
 /**
  * @file FollowRepository.ts
- * @description Takip ilişkileri için MongoDB erişim katmanı.
+ * @description The MongoDB access layer for follow relationships.
  */
 
 import mongoose from "mongoose";
@@ -9,7 +9,7 @@ import User, { IUser } from "../models/User";
 import { userRepository } from "./UserRepository";
 
 export class FollowRepository {
-  /** Takip ilişkisi oluşturur. Zaten varsa idempotent davranır (upsert). */
+  /** Creates a follow. Idempotent if it already exists (an upsert). */
   async create(followerId: string, followingId: string): Promise<void> {
     await Follow.updateOne(
       { follower: followerId, following: followingId },
@@ -18,7 +18,7 @@ export class FollowRepository {
     );
   }
 
-  /** Takip ilişkisini kaldırır. Silinen kayıt varsa true döner. */
+  /** Removes a follow. Returns true when a record was actually deleted. */
   async delete(followerId: string, followingId: string): Promise<boolean> {
     const result = await Follow.deleteOne({ follower: followerId, following: followingId });
     return result.deletedCount > 0;
@@ -29,11 +29,11 @@ export class FollowRepository {
   }
 
   /**
-   * Takipçi sayısı — yalnızca hesabı AÇIK olanlar sayılır.
+   * Follower count — only OPEN accounts are counted.
    *
-   * Follow satırını saymak yetmiyordu: kapatılmış bir hesap listede
-   * görünmezken sayıda görünmeye devam ederdi. İki hafif sorgu, aggregation'a
-   * gerek yok.
+   * Counting the follow rows was not enough: a closed account would keep
+   * showing up in the number while being absent from the list. Two light
+   * queries; no aggregation needed.
    */
   async countFollowers(userId: string): Promise<number> {
     return await userRepository.countActiveByIds(await this.getFollowerIds(userId));
@@ -43,21 +43,22 @@ export class FollowRepository {
     return await userRepository.countActiveByIds(await this.getFollowingIds(userId));
   }
 
-  /** Akış için: kullanıcının takip ettiği kişilerin id listesi */
+  /** For the feed: the ids of the people this user follows. */
   async getFollowingIds(userId: string): Promise<mongoose.Types.ObjectId[]> {
     const docs = await Follow.find({ follower: userId }).select("following").lean();
     return (docs as Pick<IFollow, "following">[]).map((d) => d.following);
   }
 
-  /** Kullanıcıyı takip edenlerin id listesi */
+  /** The ids of the people who follow this user. */
   async getFollowerIds(userId: string): Promise<mongoose.Types.ObjectId[]> {
     const docs = await Follow.find({ following: userId }).select("follower").lean();
     return (docs as Pick<IFollow, "follower">[]).map((d) => d.follower);
   }
 
   /**
-   * Bir kullanıcının takip/takipçi ilişkilerini tek turda küme olarak döndürür.
-   * Arama sonuçlarında her satır için ayrı sorgu atmamak içindir (N+1 önlenir).
+   * Returns a user's following and follower relationships as sets, in one
+   * pass. It exists so search results do not fire a query per row (avoiding
+   * N+1).
    */
   async getRelationSets(userId: string): Promise<{ following: Set<string>; followers: Set<string> }> {
     const [followingIds, followerIds] = await Promise.all([
@@ -71,7 +72,7 @@ export class FollowRepository {
     };
   }
 
-  /** Bir kullanıcıyı takip eden kişiler (User dokümanları) */
+  /** The people following a user (as User documents). */
   async getFollowers(userId: string): Promise<IUser[]> {
     const follows = await Follow.find({ following: userId })
       .sort({ createdAt: -1 })
@@ -79,11 +80,11 @@ export class FollowRepository {
       .lean();
     const ids = (follows as Pick<IFollow, "follower">[]).map((f) => f.follower);
     if (ids.length === 0) return [];
-    // Kapatılmış hesaplar listede görünmez.
+    // Closed accounts do not appear in the list.
     return await User.find({ _id: { $in: ids }, closedAt: { $exists: false } }).lean() as unknown as IUser[];
   }
 
-  /** Bir kullanıcının takip ettiği kişiler (User dokümanları) */
+  /** The people a user follows (as User documents). */
   async getFollowing(userId: string): Promise<IUser[]> {
     const follows = await Follow.find({ follower: userId })
       .sort({ createdAt: -1 })
@@ -91,7 +92,7 @@ export class FollowRepository {
       .lean();
     const ids = (follows as Pick<IFollow, "following">[]).map((f) => f.following);
     if (ids.length === 0) return [];
-    // Kapatılmış hesaplar listede görünmez.
+    // Closed accounts do not appear in the list.
     return await User.find({ _id: { $in: ids }, closedAt: { $exists: false } }).lean() as unknown as IUser[];
   }
 }

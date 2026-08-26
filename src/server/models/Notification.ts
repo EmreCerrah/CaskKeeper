@@ -1,22 +1,23 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-/** Bildirim türleri — her biri farklı bir hedefe yönlendirir. */
+/** The notification types — each one leads somewhere different. */
 export type NotificationType = "follow" | "like" | "comment";
 
 export const NOTIFICATION_TYPES: NotificationType[] = ["follow", "like", "comment"];
 
 /**
- * Bir kullanıcıya (recipient) başka bir kullanıcının (actor) eylemi hakkında
- * gönderilen bildirim. Eylem geri alındığında (takibi bırakma, beğeniyi kaldırma,
- * yorumu silme) ilgili bildirim de silinir — böylece bildirim listesi gerçeği yansıtır.
+ * A notification sent to one user (the recipient) about another user's action
+ * (the actor). When the action is undone — unfollowing, unliking, deleting a
+ * comment — the matching notification is deleted too, so the list keeps telling
+ * the truth.
  */
 export interface INotification extends Document {
   recipient: mongoose.Types.ObjectId;
   actor: mongoose.Types.ObjectId;
   type: NotificationType;
-  /** like/comment bildirimlerinde ilgili tadım notu */
+  /** The tasting note a like/comment notification refers to. */
   tastingNote?: mongoose.Types.ObjectId;
-  /** comment bildirimlerinde ilgili yorum */
+  /** The comment a comment notification refers to. */
   comment?: mongoose.Types.ObjectId;
   isRead: boolean;
   createdAt: Date;
@@ -35,9 +36,9 @@ const NotificationSchema = new Schema<INotification>(
   { timestamps: true }
 );
 
-// Bildirim listesi: alıcıya ait, en yeni önce
+// The notification list: belonging to the recipient, newest first
 NotificationSchema.index({ recipient: 1, createdAt: -1 });
-// Okunmamış rozeti sayımı
+// Counting for the unread badge
 NotificationSchema.index({ recipient: 1, isRead: 1 });
 
 const Notification: Model<INotification> =

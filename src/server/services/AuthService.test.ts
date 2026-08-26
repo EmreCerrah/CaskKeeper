@@ -1,9 +1,9 @@
 /**
- * AuthService testleri.
+ * AuthService tests.
  *
- * Odak: ilk kullanıcının otomatik yönetici olması (bootstrap), e-posta
- * benzersizliği, parolanın asla düz metin sızmaması ve kapatılmış bir hesabın
- * yeniden kayıtla canlanması.
+ * Focus: the first user becoming an administrator (bootstrap), email
+ * uniqueness, the password never leaking in plaintext, and a closed account
+ * being reopened by re-registration.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -44,13 +44,13 @@ function buildUser(overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  // Varsayılan: o e-postayla kapatılmış bir hesap yok. Canlandırma testleri
-  // bunu kendi içinde değiştiriyor.
+  // Default: there is no closed account for that email. The reopening tests
+  // change this for themselves.
   vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(null);
 });
 
 describe("register", () => {
-  it("sistemdeki ilk kullanıcıyı yönetici yapar", async () => {
+  it("makes the first user in the system an administrator", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.count).mockResolvedValue(0);
     vi.mocked(userRepository.create).mockResolvedValue(buildUser({ role: "admin" }) as never);
@@ -62,7 +62,7 @@ describe("register", () => {
     );
   });
 
-  it("sonraki kullanıcıları normal kullanıcı yapar", async () => {
+  it("makes everyone after that an ordinary user", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.count).mockResolvedValue(1);
     vi.mocked(userRepository.create).mockResolvedValue(buildUser() as never);
@@ -74,7 +74,7 @@ describe("register", () => {
     );
   });
 
-  it("parolayı hash'leyerek saklar, düz metni asla göndermez", async () => {
+  it("stores the password hashed and never passes the plaintext on", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.count).mockResolvedValue(1);
     vi.mocked(userRepository.create).mockResolvedValue(buildUser() as never);
@@ -90,7 +90,7 @@ describe("register", () => {
     ).resolves.toBe(true);
   });
 
-  it("döndürülen kullanıcı parola hash'i içermez", async () => {
+  it("the returned user carries no password hash", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.count).mockResolvedValue(1);
     vi.mocked(userRepository.create).mockResolvedValue(buildUser() as never);
@@ -101,7 +101,7 @@ describe("register", () => {
     expect(user).not.toHaveProperty("password");
   });
 
-  it("kayıtlı e-posta için ConflictError fırlatır", async () => {
+  it("throws ConflictError for an email already registered", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(true);
 
     await expect(authService.register(VALID_REGISTRATION)).rejects.toThrow(ConflictError);
@@ -109,13 +109,13 @@ describe("register", () => {
     expect(userRepository.create).not.toHaveBeenCalled();
   });
 
-  it("kısa parolayı reddeder", async () => {
+  it("rejects a short password", async () => {
     await expect(
       authService.register({ ...VALID_REGISTRATION, password: "kisa" })
     ).rejects.toThrow(ValidationError);
   });
 
-  it("geçersiz e-postayı reddeder", async () => {
+  it("rejects an invalid email", async () => {
     await expect(
       authService.register({ ...VALID_REGISTRATION, email: "gecersiz" })
     ).rejects.toThrow(ValidationError);
@@ -123,14 +123,14 @@ describe("register", () => {
 });
 
 /**
- * Kapatma soft delete: satır ve ona bağlı bütün veri duruyor. Yeniden kayıt
- * yeni satır açmak yerine o satırı canlandırıyor, yani kullanıcı notlarına
- * geri kavuşuyor.
+ * Closing is a soft delete: the row and everything hanging off it stay. Rather
+ * than creating a new row, re-registration reopens that one — so the user gets
+ * their notes back.
  *
- * Buradaki asıl koruma rol testinde: canlandırma kimlik doğrulamıyor, o yüzden
- * yetki devralınmamalı.
+ * The real guard here is the role test: reopening proves no identity, so
+ * privilege must not come with it.
  */
-describe("register — kapatılmış hesabın canlandırılması", () => {
+describe("register — reopening a closed account", () => {
   const CLOSED_ID = "bbbbbbbbbbbbbbbbbbbbbbbb";
 
   function closedUser(overrides: Record<string, unknown> = {}) {
@@ -142,7 +142,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     });
   }
 
-  it("yeni satır açmaz, kapalı satırı canlandırır", async () => {
+  it("creates no new row and reopens the closed one", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(closedUser() as never);
     vi.mocked(userRepository.reopen).mockResolvedValue(buildUser({ _id: CLOSED_ID }) as never);
@@ -154,7 +154,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     expect(user.id).toBe(CLOSED_ID);
   });
 
-  it("hesabı YENİ parolanın hash'iyle canlandırır", async () => {
+  it("reopens the account with the hash of the NEW password", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(closedUser() as never);
     vi.mocked(userRepository.reopen).mockResolvedValue(buildUser({ _id: CLOSED_ID }) as never);
@@ -169,7 +169,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     ).resolves.toBe(true);
   });
 
-  it("adı kayıt formundaki yeni değerle günceller", async () => {
+  it("updates the name to the new value from the registration form", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(closedUser() as never);
     vi.mocked(userRepository.reopen).mockResolvedValue(buildUser({ _id: CLOSED_ID }) as never);
@@ -179,9 +179,10 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     expect(vi.mocked(userRepository.reopen).mock.calls[0][1].name).toBe(VALID_REGISTRATION.name);
   });
 
-  it("canlandırmada rol GÖNDERİLMEZ — yetkiyi repository belirler", async () => {
-    // Kapatılmış bir yönetici hesabının e-postasını bilen biri, register
-    // olarak yönetici olmamalı. Rolü servis geçirmiyor; reopen "user"a düşürüyor.
+  it("sends NO role when reopening — the repository decides the privilege", async () => {
+    // Somebody who knows the email of a closed administrator account must not
+    // become an administrator by registering. The service passes no role;
+    // reopen drops it to "user".
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(
       closedUser({ role: "admin" }) as never
@@ -193,7 +194,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     expect(vi.mocked(userRepository.reopen).mock.calls[0][1]).not.toHaveProperty("role");
   });
 
-  it("AÇIK hesap varsa canlandırmaya hiç bakmaz, ConflictError fırlatır", async () => {
+  it("never looks at reopening when an OPEN account exists, and throws ConflictError", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(true);
 
     await expect(authService.register(VALID_REGISTRATION)).rejects.toThrow(ConflictError);
@@ -202,9 +203,10 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     expect(userRepository.reopen).not.toHaveBeenCalled();
   });
 
-  it("canlandırma yolunda bootstrap yönetici mantığı çalışmaz", async () => {
-    // Koleksiyonda açık kullanıcı kalmamış olabilir; canlandırma yeni kayıt
-    // değil, dolayısıyla "ilk kullanıcı admin olur" kuralı buraya uygulanmamalı.
+  it("does not run the bootstrap-administrator rule on the reopen path", async () => {
+    // There may be no open users left in the collection; reopening is not a
+    // new registration, so "the first user becomes an admin" must not apply
+    // here.
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(closedUser() as never);
     vi.mocked(userRepository.reopen).mockResolvedValue(buildUser({ _id: CLOSED_ID }) as never);
@@ -214,7 +216,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
     expect(userRepository.count).not.toHaveBeenCalled();
   });
 
-  it("satır iki sorgu arasında kaybolursa normal kayda düşer", async () => {
+  it("falls back to normal registration if the row vanishes between the two queries", async () => {
     vi.mocked(userRepository.existsByEmail).mockResolvedValue(false);
     vi.mocked(userRepository.findClosedByEmail).mockResolvedValue(closedUser() as never);
     vi.mocked(userRepository.reopen).mockResolvedValue(null as never);
@@ -228,7 +230,7 @@ describe("register — kapatılmış hesabın canlandırılması", () => {
 });
 
 describe("login", () => {
-  it("doğru bilgilerle giriş yapar", async () => {
+  it("signs in with the correct credentials", async () => {
     const passwordHash = await bcrypt.hash(VALID_REGISTRATION.password, 4);
     vi.mocked(userRepository.findByEmailWithPassword).mockResolvedValue(
       buildUser({ passwordHash }) as never
@@ -243,7 +245,7 @@ describe("login", () => {
     expect(user).not.toHaveProperty("passwordHash");
   });
 
-  it("hatalı parolayı reddeder", async () => {
+  it("rejects a wrong password", async () => {
     const passwordHash = await bcrypt.hash(VALID_REGISTRATION.password, 4);
     vi.mocked(userRepository.findByEmailWithPassword).mockResolvedValue(
       buildUser({ passwordHash }) as never
@@ -254,10 +256,10 @@ describe("login", () => {
     ).rejects.toThrow(UnauthorizedError);
   });
 
-  it("olmayan kullanıcı için parola hatasıyla aynı mesajı verir", async () => {
+  it("gives the same message for an unknown user as for a wrong password", async () => {
     vi.mocked(userRepository.findByEmailWithPassword).mockResolvedValue(null);
 
-    // E-posta keşfini (enumeration) engellemek için ayrım yapılmaz
+    // No distinction is made, to stop email enumeration
     await expect(
       authService.login({ email: "yok@example.com", password: "herhangi" })
     ).rejects.toThrow(UnauthorizedError);

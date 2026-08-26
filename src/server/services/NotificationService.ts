@@ -1,13 +1,14 @@
 /**
  * @file NotificationService.ts
- * @description Bildirim iş mantığı.
+ * @description Business rules for notifications.
  *
- * İki kural bu katmanda zorunlu kılınır:
- *  1. Kullanıcı kendi eylemi için bildirim almaz (kendi notunu beğenmek gibi).
- *  2. Bildirim yalnızca alıcısı tarafından okunabilir/işaretlenebilir.
+ * Two rules are enforced in this layer:
+ *  1. A user is never notified about their own action (liking their own note,
+ *     for instance).
+ *  2. A notification can only be read or marked by its recipient.
  *
- * Bildirim üretimi hiçbir zaman asıl işlemi (takip, beğeni, yorum) bozmamalıdır;
- * bu yüzden `notify` çağrıları hata fırlatmaz, yalnızca loglar.
+ * Producing a notification must never break the action behind it — a follow, a
+ * like, a comment — so `notify` never throws; it logs.
  */
 
 import mongoose from "mongoose";
@@ -29,8 +30,9 @@ export interface NotifyInput {
 
 export class NotificationService {
   /**
-   * Bildirim oluşturur. Alıcı ile eyleyen aynı kişiyse hiçbir şey yapmaz.
-   * Hata fırlatmaz — bildirim yan etkidir, asıl işlemi geri almamalıdır.
+   * Creates a notification. Does nothing when the recipient and the actor are
+   * the same person. Never throws — a notification is a side effect and must
+   * not undo the action it accompanies.
    */
   async notify(input: NotifyInput): Promise<void> {
     if (input.recipientId === input.actorId) return;
@@ -38,13 +40,13 @@ export class NotificationService {
     try {
       await notificationRepository.create(input);
     } catch (error) {
-      console.error("[notification] Bildirim oluşturulamadı:", error);
+      console.error("[notification] Could not create the notification:", error);
     }
   }
 
   /**
-   * Geri alınan bir eylemin bildirimini siler (takibi bırakma, beğeniyi kaldırma).
-   * Böylece bildirim listesi artık geçerli olmayan olayları göstermez.
+   * Deletes the notification for an undone action (unfollowing, unliking), so
+   * the list stops showing events that no longer hold.
    */
   async revoke(input: NotifyInput): Promise<void> {
     if (input.recipientId === input.actorId) return;
@@ -76,7 +78,7 @@ export class NotificationService {
     return await notificationRepository.countUnread(userId);
   }
 
-  /** Tek bildirimi okundu işaretler. Başkasının bildirimi için NotFound fırlatır. */
+  /** Marks one notification read. Throws NotFound for somebody else's notification. */
   async markRead(notificationId: string, userId: string): Promise<void> {
     if (!mongoose.Types.ObjectId.isValid(notificationId)) {
       throw new NotFoundError("errors.notificationNotFound");
@@ -86,7 +88,7 @@ export class NotificationService {
     if (!updated) throw new NotFoundError("errors.notificationNotFound");
   }
 
-  /** Kullanıcının tüm bildirimlerini okundu işaretler; işaretlenen sayıyı döner. */
+  /** Marks all of a user's notifications read; returns how many were marked. */
   async markAllRead(userId: string): Promise<number> {
     return await notificationRepository.markAllRead(userId);
   }

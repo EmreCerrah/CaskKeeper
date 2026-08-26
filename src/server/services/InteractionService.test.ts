@@ -1,9 +1,9 @@
 /**
- * InteractionService testleri.
+ * InteractionService tests.
  *
- * Odak: etkileşimin yalnızca herkese açık notlara verilebilmesi, yorum silme
- * yetkisi ve kendi eylemi için bildirim üretilmemesi. Repository katmanı
- * mock'lanır; veritabanı bağlantısı kurulmaz.
+ * Focus: interaction being possible only with public notes, who may delete a
+ * comment, and no notification being produced for your own action. The
+ * repository layer is mocked; no database connection is opened.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -81,14 +81,14 @@ function buildComment(overrides: Record<string, unknown> = {}) {
     _id: COMMENT_ID,
     user: VIEWER_ID,
     tastingNote: NOTE_ID,
-    body: "Harika bir tadım notu.",
+    body: "A great tasting note.",
     createdAt: new Date("2026-07-02"),
     updatedAt: new Date("2026-07-02"),
     ...overrides,
   };
 }
 
-/** Etkileşim özeti sorguları her testte çağrılır; nötr varsayılan verelim. */
+/** The interaction summary queries run in every test; give them a neutral default. */
 function stubInteractionSummary() {
   vi.mocked(likeRepository.countByNotes).mockResolvedValue(new Map());
   vi.mocked(commentRepository.countByNotes).mockResolvedValue(new Map());
@@ -100,8 +100,8 @@ beforeEach(() => {
   stubInteractionSummary();
 });
 
-describe("like — görünürlük kuralı", () => {
-  it("herkese açık notu beğenir ve sahibine bildirim üretir", async () => {
+describe("like — the visibility rule", () => {
+  it("likes a public note and notifies its owner", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(likeRepository.create).mockResolvedValue(true);
 
@@ -113,7 +113,7 @@ describe("like — görünürlük kuralı", () => {
     );
   });
 
-  it("özel notu beğenmeyi NotFound ile reddeder", async () => {
+  it("refuses to like a private note, with NotFound", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
       buildNote({ visibility: "private" }) as never
     );
@@ -123,13 +123,13 @@ describe("like — görünürlük kuralı", () => {
     expect(likeRepository.create).not.toHaveBeenCalled();
   });
 
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(interactionService.like(VIEWER_ID, "gecersiz-id")).rejects.toThrow(NotFoundError);
 
     expect(tastingNoteRepository.findById).not.toHaveBeenCalled();
   });
 
-  it("kendi notunu beğenende bildirim üretmez", async () => {
+  it("produces no notification when someone likes their own note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(likeRepository.create).mockResolvedValue(true);
 
@@ -139,7 +139,7 @@ describe("like — görünürlük kuralı", () => {
     expect(notificationRepository.create).not.toHaveBeenCalled();
   });
 
-  it("zaten beğenilmiş notta ikinci bildirim üretmez", async () => {
+  it("produces no second notification on an already-liked note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(likeRepository.create).mockResolvedValue(false);
 
@@ -150,7 +150,7 @@ describe("like — görünürlük kuralı", () => {
 });
 
 describe("unlike", () => {
-  it("beğeni kalkınca bildirimi de siler", async () => {
+  it("deletes the notification when the like is removed", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(likeRepository.delete).mockResolvedValue(true);
 
@@ -161,7 +161,7 @@ describe("unlike", () => {
     );
   });
 
-  it("beğeni yoksa bildirim silmeye kalkmaz", async () => {
+  it("does not try to delete a notification when there was no like", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(likeRepository.delete).mockResolvedValue(false);
 
@@ -172,7 +172,7 @@ describe("unlike", () => {
 });
 
 describe("addComment", () => {
-  it("özel nota yorum yazmayı reddeder", async () => {
+  it("refuses to comment on a private note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
       buildNote({ visibility: "private" }) as never
     );
@@ -184,7 +184,7 @@ describe("addComment", () => {
     expect(commentRepository.create).not.toHaveBeenCalled();
   });
 
-  it("boş yorumu reddeder", async () => {
+  it("rejects an empty comment", async () => {
     await expect(
       interactionService.addComment(VIEWER_ID, NOTE_ID, { body: "   " })
     ).rejects.toThrow(ValidationError);
@@ -192,26 +192,26 @@ describe("addComment", () => {
     expect(tastingNoteRepository.findById).not.toHaveBeenCalled();
   });
 
-  it("1000 karakteri aşan yorumu reddeder", async () => {
+  it("rejects a comment longer than 1000 characters", async () => {
     await expect(
       interactionService.addComment(VIEWER_ID, NOTE_ID, { body: "a".repeat(1001) })
     ).rejects.toThrow(ValidationError);
   });
 
-  it("yorumu kaydeder ve not sahibine bildirim üretir", async () => {
+  it("saves the comment and notifies the note's owner", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(commentRepository.create).mockResolvedValue(buildComment() as never);
     vi.mocked(commentRepository.findByNote).mockResolvedValue([buildComment()] as never);
 
     const comment = await interactionService.addComment(VIEWER_ID, NOTE_ID, {
-      body: "Harika bir tadım notu.",
+      body: "A great tasting note.",
     });
 
-    expect(comment.body).toBe("Harika bir tadım notu.");
+    expect(comment.body).toBe("A great tasting note.");
     expect(commentRepository.create).toHaveBeenCalledWith(
       VIEWER_ID,
       NOTE_ID,
-      "Harika bir tadım notu."
+      "A great tasting note."
     );
     expect(notificationRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({ recipientId: AUTHOR_ID, actorId: VIEWER_ID, type: "comment" })
@@ -219,8 +219,8 @@ describe("addComment", () => {
   });
 });
 
-describe("deleteComment — yetki kontrolü", () => {
-  it("yorumun yazarı silebilir", async () => {
+describe("deleteComment — the permission check", () => {
+  it("the comment's author may delete it", async () => {
     vi.mocked(commentRepository.findById).mockResolvedValue(buildComment() as never);
 
     await interactionService.deleteComment(COMMENT_ID, VIEWER_ID);
@@ -229,7 +229,7 @@ describe("deleteComment — yetki kontrolü", () => {
     expect(notificationRepository.deleteByComment).toHaveBeenCalledWith(COMMENT_ID);
   });
 
-  it("not sahibi kendi notundaki yorumu silebilir", async () => {
+  it("the note's owner may delete a comment on their note", async () => {
     vi.mocked(commentRepository.findById).mockResolvedValue(buildComment() as never);
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
@@ -238,7 +238,7 @@ describe("deleteComment — yetki kontrolü", () => {
     expect(commentRepository.delete).toHaveBeenCalledWith(COMMENT_ID);
   });
 
-  it("ilgisiz kullanıcının silmesini reddeder", async () => {
+  it("refuses deletion by an unrelated user", async () => {
     vi.mocked(commentRepository.findById).mockResolvedValue(buildComment() as never);
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
@@ -249,7 +249,7 @@ describe("deleteComment — yetki kontrolü", () => {
     expect(commentRepository.delete).not.toHaveBeenCalled();
   });
 
-  it("olmayan yorum için NotFound fırlatır", async () => {
+  it("throws NotFound for a comment that does not exist", async () => {
     vi.mocked(commentRepository.findById).mockResolvedValue(null);
 
     await expect(interactionService.deleteComment(COMMENT_ID, VIEWER_ID)).rejects.toThrow(
@@ -258,8 +258,8 @@ describe("deleteComment — yetki kontrolü", () => {
   });
 });
 
-describe("getComments — görünürlük ve silme yetkisi", () => {
-  it("başkasının özel notunun yorumlarını göstermez", async () => {
+describe("getComments — visibility and deletion rights", () => {
+  it("does not show the comments on somebody else's private note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
       buildNote({ visibility: "private" }) as never
     );
@@ -267,7 +267,7 @@ describe("getComments — görünürlük ve silme yetkisi", () => {
     await expect(interactionService.getComments(NOTE_ID, VIEWER_ID)).rejects.toThrow(NotFoundError);
   });
 
-  it("kendi özel notunun yorumlarını sahibine gösterir", async () => {
+  it("shows the owner the comments on their own private note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
       buildNote({ visibility: "private" }) as never
     );
@@ -276,7 +276,7 @@ describe("getComments — görünürlük ve silme yetkisi", () => {
     await expect(interactionService.getComments(NOTE_ID, AUTHOR_ID)).resolves.toEqual([]);
   });
 
-  it("not sahibine tüm yorumlar için silme yetkisi verir", async () => {
+  it("gives the note's owner deletion rights over every comment", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(commentRepository.findByNote).mockResolvedValue([buildComment()] as never);
 
@@ -285,7 +285,7 @@ describe("getComments — görünürlük ve silme yetkisi", () => {
     expect(comment.canDelete).toBe(true);
   });
 
-  it("oturumsuz görüntüleyene silme yetkisi vermez", async () => {
+  it("gives a signed-out viewer no deletion rights", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(commentRepository.findByNote).mockResolvedValue([buildComment()] as never);
 
@@ -294,7 +294,7 @@ describe("getComments — görünürlük ve silme yetkisi", () => {
     expect(comment.canDelete).toBe(false);
   });
 
-  it("ilgisiz kullanıcıya başkasının yorumu için silme yetkisi vermez", async () => {
+  it("gives an unrelated user no deletion rights over somebody else's comment", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(commentRepository.findByNote).mockResolvedValue([buildComment()] as never);
 
@@ -304,8 +304,8 @@ describe("getComments — görünürlük ve silme yetkisi", () => {
   });
 });
 
-describe("getInteractionsFor — toplu özet", () => {
-  it("tek turda sayıları eşler, eksik notlara sıfır verir", async () => {
+describe("getInteractionsFor — the bulk summary", () => {
+  it("matches the counts in one pass and gives zero to notes with none", async () => {
     const OTHER_NOTE_ID = "111111111111111111111111";
 
     vi.mocked(likeRepository.countByNotes).mockResolvedValue(new Map([[NOTE_ID, 3]]));
@@ -328,18 +328,18 @@ describe("getInteractionsFor — toplu özet", () => {
       isLikedByViewer: false,
     });
 
-    // Not başına ayrı sorgu atılmamalı
+    // No query should be fired per note
     expect(likeRepository.countByNotes).toHaveBeenCalledOnce();
     expect(commentRepository.countByNotes).toHaveBeenCalledOnce();
   });
 
-  it("oturumsuz görüntüleyende beğeni sorgusu atmaz", async () => {
+  it("fires no like query for a signed-out viewer", async () => {
     await interactionService.getInteractionsFor([NOTE_ID]);
 
     expect(likeRepository.findLikedNoteIds).not.toHaveBeenCalled();
   });
 
-  it("boş listede hiç sorgu atmaz", async () => {
+  it("fires no query at all for an empty list", async () => {
     const summary = await interactionService.getInteractionsFor([], VIEWER_ID);
 
     expect(summary.size).toBe(0);

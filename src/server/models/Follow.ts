@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Bir kullanıcının başka bir kullanıcıyı takip etmesini temsil eder.
- * follower → following yönlüdür (follower, following'i takip eder).
+ * Represents one user following another.
+ * It is directional, follower → following (the follower follows the
+ * following).
  */
 export interface IFollow extends Document {
   follower: mongoose.Types.ObjectId;
@@ -19,7 +20,7 @@ const FollowSchema = new Schema<IFollow>(
   { timestamps: true }
 );
 
-// Aynı takip ilişkisi yalnızca bir kez var olabilir
+// The same follow relationship can exist only once
 FollowSchema.index({ follower: 1, following: 1 }, { unique: true });
 
 const Follow: Model<IFollow> =

@@ -1,7 +1,7 @@
 /**
  * @file TastingNoteRepository.ts
- * @description TastingNote koleksiyonu için MongoDB erişim katmanı.
- * Tüm sorgular kullanıcı bazlıdır — bir kullanıcının notu başka kullanıcıya sızmaz.
+ * @description The MongoDB access layer for the TastingNote collection.
+ * Every query is scoped to a user — one person's notes never leak to another.
  */
 
 import mongoose from "mongoose";
@@ -34,7 +34,7 @@ export interface UserTastingStats {
 export class TastingNoteRepository {
   // ---------- READ ----------
 
-  /** Kullanıcının notlarını getir (viski bilgisi populate edilmiş, sayfalı) */
+  /** The user's notes (whisky populated, paginated). */
   async findByUser(
     userId: string,
     filters?: TastingNoteFilterOptions,
@@ -68,14 +68,14 @@ export class TastingNoteRepository {
     return await TastingNote.findById(id).populate("whiskey").lean() as unknown as ITastingNote | null;
   }
 
-  /** Kullanıcının belirli bir viskiye yazdığı tüm notlar (detay sayfası için) */
+  /** Every note the user wrote about one whisky (for the detail page). */
   async findByUserAndWhiskey(userId: string, whiskeyId: string): Promise<ITastingNote[]> {
     return await TastingNote.find({ user: userId, whiskey: whiskeyId })
       .sort({ tastingDate: -1 })
       .lean() as unknown as ITastingNote[];
   }
 
-  /** Bir kullanıcının HERKESE AÇIK notları (başkaları görebilir) */
+  /** A user's PUBLIC notes (the ones other people can see). */
   async findPublicByUser(
     userId: string,
     pagination?: TastingNotePaginationOptions
@@ -104,8 +104,8 @@ export class TastingNoteRepository {
   }
 
   /**
-   * Birden çok kullanıcının herkese açık not sayısını tek aggregate ile döndürür.
-   * Arama/keşfet listelerinde kullanıcı başına ayrı sayım yapmamak içindir.
+   * Returns the public note counts for several users in one aggregate.
+   * It exists so search and discovery lists do not count per user.
    */
   async countPublicByUsers(userIds: string[]): Promise<Map<string, number>> {
     if (userIds.length === 0) return new Map();
@@ -121,8 +121,8 @@ export class TastingNoteRepository {
   }
 
   /**
-   * Aktivite akışı: verilen kullanıcıların HERKESE AÇIK notları,
-   * en yeni önce. Viski ve yazar bilgisi populate edilir.
+   * The activity feed: the PUBLIC notes of the given users, newest first.
+   * Whisky and author are populated.
    */
   async findFeed(
     authorIds: mongoose.Types.ObjectId[],
@@ -152,7 +152,7 @@ export class TastingNoteRepository {
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  /** Dashboard istatistikleri — tek aggregate turu */
+  /** Dashboard statistics — a single aggregate pass. */
   async getStatsByUser(userId: string): Promise<UserTastingStats> {
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
@@ -200,8 +200,9 @@ export class TastingNoteRepository {
   }
 
   /**
-   * Aroma trend analitiği için: kullanıcının notlarından yalnızca tarih ve
-   * etiket alanları (hafif sorgu — kategori eşleme uygulama katmanında yapılır).
+   * For the aroma trend analytics: only the date and tag fields from the
+   * user's notes — a light query, with the category mapping done in the
+   * application layer.
    */
   async findTagsByUser(userId: string): Promise<NoteTagsInput[]> {
     return await TastingNote.find({ user: userId })
@@ -211,8 +212,8 @@ export class TastingNoteRepository {
   }
 
   /**
-   * Kullanıcının tadım notlarına bağlı viskilerin tip/bölge/damıtımevi
-   * dağılımı — tek aggregate turunda $facet ile.
+   * The type/region/distillery distribution of the whiskies behind the user's
+   * tasting notes — via $facet, in a single aggregate pass.
    */
   async getCatalogDistributionByUser(userId: string): Promise<CatalogDistributionDTO> {
     const userObjectId = new mongoose.Types.ObjectId(userId);
@@ -258,8 +259,8 @@ export class TastingNoteRepository {
   }
 
   /**
-   * Öneri motoru için: kullanıcının şimdiye kadar not yazdığı viskilerin
-   * benzersiz id listesi — önerilerden hariç tutmak için kullanılır.
+   * For the recommendation engine: the unique ids of every whisky the user has
+   * written a note about — used to exclude them from the suggestions.
    */
   async findTastedWhiskeyIds(userId: string): Promise<string[]> {
     const ids = await TastingNote.distinct("whiskey", { user: userId });

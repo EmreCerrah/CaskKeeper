@@ -1,26 +1,27 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Kimlik doğrulama uçlarına yapılan bir deneme kaydı.
+ * A record of one attempt against the authentication endpoints.
  *
- * Neden veritabanı: Vercel sunucusuz çalıştığı için bellek içi sayaç işe
- * yaramaz — her istek başka bir örneğe düşebilir ve örnekler kısa ömürlüdür.
- * Harici bir store (Redis/KV) yerine zaten var olan MongoDB kullanılıyor;
- * ölçüldüğünde ek maliyetin, girişin kendi bcrypt maliyeti (~450 ms) yanında
- * ihmal edilebilir olduğu görüldü.
+ * Why the database: Vercel runs serverless, so an in-memory counter is useless
+ * — each request can land on a different instance, and instances are
+ * short-lived. Rather than an external store (Redis/KV), the MongoDB that is
+ * already here is used; measured, the extra cost is negligible next to
+ * sign-in's own bcrypt cost of roughly 450 ms.
  *
- * Kayıtlar TTL index ile kendiliğinden silinir; ayrıca temizlik işi gerekmez.
+ * The records delete themselves through a TTL index, so no cleanup job is
+ * needed.
  */
 export interface IAuthAttempt extends Document {
-  /** Sayacın kimliği — ör. "login:ip:1.2.3.4" veya "login:ip+email:1.2.3.4|a@b.c" */
+  /** The counter's identity — e.g. "login:ip:1.2.3.4" or "login:ip+email:1.2.3.4|a@b.c" */
   key: string;
   createdAt: Date;
 }
 
 /**
- * Kayıtların yaşayacağı süre. Pencere hesabı sorgu tarafında yapılır; bu değer
- * yalnızca çöpün ne zaman toplanacağını belirler ve en uzun pencereden büyük
- * olmalıdır.
+ * How long the records live. The window itself is worked out on the query side;
+ * this value only decides when the rubbish is collected, and has to be longer
+ * than the longest window.
  */
 export const AUTH_ATTEMPT_TTL_SECONDS = 60 * 60; // 1 saat
 
@@ -29,12 +30,12 @@ const AuthAttemptSchema = new Schema<IAuthAttempt>({
   createdAt: { type: Date, required: true, default: Date.now },
 });
 
-// Pencere içindeki denemeleri saymak için: önce anahtar, sonra zaman.
+// For counting attempts inside a window: key first, then time.
 AuthAttemptSchema.index({ key: 1, createdAt: -1 });
 
-// MongoDB kayıtları süresi dolunca kendisi siler.
-// DİKKAT: index tanımı değişirse `npm run db:indexes` bir kez çalıştırılmalı —
-// Mongoose mevcut bir TTL index'in süresini kendiliğinden güncellemez.
+// MongoDB deletes the records itself once they expire.
+// CAREFUL: if the index definition changes, `npm run db:indexes` has to be run
+// once — Mongoose does not update an existing TTL index's duration on its own.
 AuthAttemptSchema.index({ createdAt: 1 }, { expireAfterSeconds: AUTH_ATTEMPT_TTL_SECONDS });
 
 const AuthAttempt: Model<IAuthAttempt> =

@@ -3,25 +3,26 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
-  /** bcrypt hash — asla düz metin parola saklanmaz, asla DTO'ya çıkmaz */
+  /** bcrypt hash — a plaintext password is never stored and never reaches a DTO */
   passwordHash: string;
   profilePicture?: string;
   bio?: string;
   role: "user" | "admin";
   /**
-   * Hesabın kapatıldığı an. VARLIĞI kapalı demektir — ayrıca bir `status` alanı
-   * tutulmaz, çünkü iki alan birbirine düşebilir.
+   * When the account was closed. Its PRESENCE means closed — there is no
+   * separate `status` field, because two fields can disagree with each other.
    *
-   * Kayıtlar silinmez: tadım notları, başkalarının notlarına yazılmış yorumlar,
-   * takipler ve bildirimler hep User'a referans veriyor, gerçek silme
-   * başkalarının verisini kırardı. Görünürlük UserRepository'deki aktif
-   * filtresiyle kapatılır.
+   * Records are not deleted: tasting notes, comments written on other people's
+   * notes, follows and notifications all reference a User, and really deleting
+   * would break other people's data. Visibility is switched off by the active
+   * filter in UserRepository.
    *
-   * Kapatma GERİ ALINABİLİR: aynı e-postayla yeniden kayıt olan biri bu satırı
-   * yeni bir parolayla canlandırır ve geçmişi geri gelir (AuthService.register
-   * → UserRepository.reopen). Adres doğrulanmadığı için bu, hesabın adresini
-   * bilen birinin geçmişi devralabilmesi demek — bilinerek kabul edilmiş bir
-   * ürün kararı. Yetki devralınmaz; canlanan hesap "user" rolüyle döner.
+   * Closing is REVERSIBLE: registering again with the same email reopens this
+   * row with a new password and brings its history back (AuthService.register →
+   * UserRepository.reopen). The address is never verified, so this means
+   * whoever knows it can take over that history — a product decision accepted
+   * knowingly. Privilege is not taken over; a reopened account returns as
+   * "user".
    */
   closedAt?: Date;
   createdAt: Date;
@@ -42,30 +43,28 @@ const UserSchema = new Schema<IUser>(
 );
 
 /**
- * E-posta benzersizliği YALNIZCA açık hesaplar için geçerlidir.
+ * Email uniqueness applies ONLY to open accounts.
  *
- * Yeniden kayıt artık yeni satır AÇMIYOR, kapalı satırı canlandırıyor; yani
- * bugün aynı e-postadan iki satır üretilmiyor. İndeks yine de bileşik
- * kalıyor: bu davranıştan önce kapatıp yeniden kaydolmuş kullanıcıların
- * koleksiyonda iki satırı var ve tekil bir `{email}` indeksi onların üzerinde
- * kurulamazdı.
+ * Re-registration no longer CREATES a new row; it reopens the closed one, so
+ * two rows for the same address are no longer produced. The index stays
+ * compound all the same: accounts that closed and re-registered before that
+ * change already have two rows, and a single-field `{email}` index could not be
+ * built over them.
  *
- * Neden bileşik indeks, kısmi (partial) indeks değil: MongoDB
- * `partialFilterExpression` içinde `$exists: false` KABUL ETMİYOR (içeride
- * `$not`'a dönüşüyor, desteklenmiyor) — denendi, `CannotCreateIndex` verdi.
- * `status: "active"` gibi bir alanla çözülebilirdi ama o da mevcut kayıtlara
- * backfill gerektirirdi.
+ * Why a compound index rather than a partial one: MongoDB does NOT ACCEPT
+ * `$exists: false` inside `partialFilterExpression` (it turns into `$not`
+ * internally, which is unsupported) — it was tried and returned
+ * `CannotCreateIndex`. A field like `status: "active"` would have worked, but
+ * needed a backfill of the existing records.
  *
- * Bileşik indeks bunların hiçbirine ihtiyaç duymuyor: eksik alan indekste
- * null sayılır, yani AÇIK her hesap `(email, null)` anahtarını alır ve aynı
- * e-postayla ikinci bir açık hesap açılamaz. Kapalı hesaplar `(email, tarih)`
- * taşıdığı için çakışmaz. Mevcut kayıtların hiçbirinde `closedAt` yok, bu
- * yüzden bugünkü benzersizlik olduğu gibi korunur.
+ * The compound index needs neither: a missing field indexes as null, so every
+ * OPEN account takes the key `(email, null)` and no second open account can
+ * share an address. Closed accounts carry `(email, date)` and do not collide.
  *
- * `email` önde olduğundan e-posta üzerinden yapılan sorgular indeksi
- * kullanmaya devam eder.
+ * `email` comes first, so queries by email keep using the index.
  *
- * İndeks tanımı değiştiği için dağıtımdan sonra bir kez `npm run db:indexes`.
+ * The index definition changed, so run `npm run db:indexes` once after
+ * deploying.
  */
 UserSchema.index({ email: 1, closedAt: 1 }, { unique: true });
 

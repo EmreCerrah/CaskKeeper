@@ -1,7 +1,8 @@
 /**
  * @file WhiskeyRepository.ts
- * @description Whiskey koleksiyonu için MongoDB erişim katmanı.
- * Import pipeline ve API route'larının ihtiyaç duyduğu tüm CRUD + sorgu operasyonlarını kapsar.
+ * @description The MongoDB access layer for the Whiskey collection.
+ * Covers every CRUD and query operation the import pipeline and the API routes
+ * need.
  */
 
 import Whiskey, { IWhiskey } from "../models/Whiskey";
@@ -9,11 +10,11 @@ import { CreateWhiskeyDTO, UpdateWhiskeyDTO } from "../validations/whiskey.schem
 import { escapeRegex } from "@/lib/utils/normalize";
 
 // ---------------------------------------------------------------------------
-// Sorgu Tipleri
+// Query types
 // ---------------------------------------------------------------------------
 
 export interface WhiskeyFilterOptions {
-  /** Marka + isim üzerinde serbest metin araması (filtrelerle birlikte çalışır) */
+  /** Free-text search over brand and name (works alongside the filters). */
   search?: string;
   type?: string;
   region?: string;
@@ -27,7 +28,7 @@ export interface WhiskeyFilterOptions {
   maxAge?: number;
 }
 
-/** Katalog filtre seçenekleri (UI dropdown'ları için) */
+/** The catalogue's filter options (for the dropdowns in the UI). */
 export interface WhiskeyFacets {
   types: string[];
   regions: string[];
@@ -50,13 +51,13 @@ export interface PaginatedResult<T> {
 }
 
 // ---------------------------------------------------------------------------
-// Repository Sınıfı
+// The repository class
 // ---------------------------------------------------------------------------
 
 export class WhiskeyRepository {
   // ---------- READ ----------
 
-  /** Tüm whiskey'leri getir (opsiyonel filtre + sayfalama) */
+  /** Fetches whiskies (optional filters, paginated). */
   async findAll(
     filters?: WhiskeyFilterOptions,
     pagination?: WhiskeyPaginationOptions
@@ -111,31 +112,32 @@ export class WhiskeyRepository {
     };
   }
 
-  /** ID ile tek kayıt */
+  /** A single record by id. */
   async findById(id: string): Promise<IWhiskey | null> {
     return await Whiskey.findById(id).lean() as unknown as IWhiskey | null;
   }
 
-  /** Slug ile tek kayıt (URL-safe lookup) */
+  /** A single record by slug (the URL-safe lookup). */
   async findBySlug(slug: string): Promise<IWhiskey | null> {
     return await Whiskey.findOne({ slug }).lean() as unknown as IWhiskey | null;
   }
 
-  /** externalId ile kayıt (idempotent import için) */
+  /** A record by externalId (so imports stay idempotent). */
   async findByExternalId(externalId: string): Promise<IWhiskey | null> {
     return await Whiskey.findOne({ externalId }).lean() as unknown as IWhiskey | null;
   }
 
   /**
-   * Birden çok slug'ı tek sorguda getirir (karşılaştırma sayfası için).
-   * Dönüş sırası garanti edilmez — çağıran taraf istediği sıraya dizmelidir.
+   * Fetches several slugs in one query (for the comparison page).
+   * The order of the results is not guaranteed — the caller sorts them into
+   * whatever order it wants.
    */
   async findBySlugs(slugs: string[]): Promise<IWhiskey[]> {
     if (slugs.length === 0) return [];
     return await Whiskey.find({ slug: { $in: slugs } }).lean() as unknown as IWhiskey[];
   }
 
-  /** Katalogdaki mevcut tip/bölge/ülke değerleri (filtre dropdown'ları için) */
+  /** The type/region/country values actually present in the catalogue (for the filter dropdowns). */
   async getFacets(): Promise<WhiskeyFacets> {
     const [types, regions, countries] = await Promise.all([
       Whiskey.distinct("type"),
@@ -150,9 +152,9 @@ export class WhiskeyRepository {
   }
 
   /**
-   * Öneri motoru için aday viskiler: verilen id'ler hariç tüm katalog.
-   * Yalnızca skorlama için gereken alanlar seçilir (hafif sorgu).
-   * Katalog büyüklüğüne karşı bir güvenlik sınırı (`cap`) uygulanır.
+   * Candidate whiskies for the recommendation engine: the whole catalogue
+   * minus the given ids. Only the fields scoring needs are selected, keeping
+   * the query light, and a `cap` guards against the catalogue's size.
    */
   async findRecommendationCandidates(excludeIds: string[], cap = 2000): Promise<IWhiskey[]> {
     return await Whiskey.find({ _id: { $nin: excludeIds } })
@@ -160,7 +162,7 @@ export class WhiskeyRepository {
       .lean() as unknown as IWhiskey[];
   }
 
-  /** Metin araması (brand, name, description, tags) */
+  /** Text search (brand, name, description, tags). */
   async search(query: string, limit = 20): Promise<IWhiskey[]> {
     return await Whiskey.find(
       { $text: { $search: query } },
@@ -173,16 +175,16 @@ export class WhiskeyRepository {
 
   // ---------- WRITE ----------
 
-  /** Yeni kayıt oluştur */
+  /** Creates a new record. */
   async create(data: CreateWhiskeyDTO & { slug: string }): Promise<IWhiskey> {
     const whiskey = new Whiskey(data);
     return await whiskey.save() as unknown as IWhiskey;
   }
 
   /**
-   * Slug veya externalId ile upsert — duplicate import güvenliği:
-   * - Varsa: güncelle (updated döner)
-   * - Yoksa: oluştur (null döner → yeni kayıt anlamına gelir)
+   * Upserts by slug or externalId — the guard against duplicate imports:
+   * - present: update it (returns the updated record)
+   * - absent: create it (returns null, meaning a new record)
    */
   async upsertBySlug(
     slug: string,
@@ -202,18 +204,18 @@ export class WhiskeyRepository {
     return { doc: previous, isNew: previous === null };
   }
 
-  /** ID ile güncelle (slug service tarafından yeniden üretilebilir) */
+  /** Updates by id (the service may regenerate the slug). */
   async update(id: string, data: UpdateWhiskeyDTO & { slug?: string }): Promise<IWhiskey | null> {
     return await Whiskey.findByIdAndUpdate(id, { $set: data }, { new: true }).lean() as unknown as IWhiskey | null;
   }
 
-  /** ID ile sil */
+  /** Deletes by id. */
   async delete(id: string): Promise<boolean> {
     const result = await Whiskey.findByIdAndDelete(id);
     return result !== null;
   }
 
-  /** Slug var mı kontrolü (O(1) — lean+projection) */
+  /** Does this slug exist (O(1) — lean + projection). */
   async existsBySlug(slug: string): Promise<boolean> {
     return !!(await Whiskey.exists({ slug }));
   }

@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Bir tadım notuna yazılan yorum.
- * Yorum yalnızca herkese açık notlara yazılabilir — kural service katmanında.
+ * A comment written on a tasting note.
+ * Comments can only be written on public notes — the rule lives in the service
+ * layer.
  */
 export interface IComment extends Document {
   user: mongoose.Types.ObjectId;
@@ -21,7 +22,7 @@ const CommentSchema = new Schema<IComment>(
   { timestamps: true }
 );
 
-// Bir notun yorumlarını kronolojik çekmek için
+// For fetching a note's comments in chronological order
 CommentSchema.index({ tastingNote: 1, createdAt: 1 });
 
 const Comment: Model<IComment> =

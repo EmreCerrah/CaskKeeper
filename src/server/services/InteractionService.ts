@@ -1,10 +1,10 @@
 /**
  * @file InteractionService.ts
- * @description Tadım notlarına beğeni ve yorum iş mantığı.
+ * @description Business rules for likes and comments on tasting notes.
  *
- * Değişmez kural: etkileşim yalnızca **herkese açık** notlara verilebilir.
- * Özel (private) notlar kişiseldir — başkası varlığını dahi öğrenmemeli,
- * bu yüzden özel notlar için de NotFound döner.
+ * The invariant: interaction is only possible with **public** notes. Private
+ * notes are personal — nobody else should even learn that one exists, which is
+ * why a private note also returns NotFound.
  */
 
 import mongoose from "mongoose";
@@ -20,7 +20,7 @@ import { toCommentDTO, type CommentDTO, type NoteInteractionsDTO } from "@/lib/t
 import type { ITastingNote } from "../models/TastingNote";
 
 export class InteractionService {
-  // ---------- Ortak korumalar ----------
+  // ---------- Shared guards ----------
 
   private assertValidId(id: string, messageKey: TranslationKey): void {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -29,8 +29,8 @@ export class InteractionService {
   }
 
   /**
-   * Etkileşime (beğeni/yorum) açık notu döndürür.
-   * Not yoksa ya da herkese açık değilse NotFound fırlatır.
+   * Returns a note that is open to interaction (likes/comments).
+   * Throws NotFound when the note is missing or is not public.
    */
   private async getInteractableNote(noteId: string): Promise<ITastingNote> {
     this.assertValidId(noteId, "errors.tastingNoteNotFound");
@@ -43,8 +43,8 @@ export class InteractionService {
   }
 
   /**
-   * Okunabilir notu döndürür: herkese açık olan ya da isteği yapanın kendi notu.
-   * Yorumları listelemek için kullanılır.
+   * Returns a readable note: one that is public, or the requester's own.
+   * Used for listing comments.
    */
   private async getReadableNote(noteId: string, viewerId?: string): Promise<ITastingNote> {
     this.assertValidId(noteId, "errors.tastingNoteNotFound");
@@ -59,9 +59,9 @@ export class InteractionService {
     return note;
   }
 
-  // ---------- Beğeni ----------
+  // ---------- Likes ----------
 
-  /** Notu beğenir. Zaten beğenilmişse tekrar bildirim üretmez. */
+  /** Likes a note. Produces no second notification if it was already liked. */
   async like(userId: string, noteId: string): Promise<NoteInteractionsDTO> {
     const note = await this.getInteractableNote(noteId);
 
@@ -79,7 +79,7 @@ export class InteractionService {
     return await this.getInteractionsForNote(noteId, userId);
   }
 
-  /** Beğeniyi kaldırır ve ilgili bildirimi siler. */
+  /** Removes the like and deletes the matching notification. */
   async unlike(userId: string, noteId: string): Promise<NoteInteractionsDTO> {
     const note = await this.getInteractableNote(noteId);
 
@@ -97,7 +97,7 @@ export class InteractionService {
     return await this.getInteractionsForNote(noteId, userId);
   }
 
-  // ---------- Yorum ----------
+  // ---------- Comments ----------
 
   async getComments(noteId: string, viewerId?: string): Promise<CommentDTO[]> {
     const note = await this.getReadableNote(noteId, viewerId);
@@ -130,7 +130,8 @@ export class InteractionService {
       commentId: String(comment._id),
     });
 
-    // Yeni yorum kartta hemen gösterilir; yazar bilgisi henüz populate edilmedi
+    // The new comment is shown on the card straight away; the author has not
+    // been populated yet
     const created = await commentRepository.findByNote(noteId);
     const saved = created.find((c) => String(c._id) === String(comment._id));
 
@@ -138,8 +139,9 @@ export class InteractionService {
   }
 
   /**
-   * Yorumu siler. Yorumun yazarı ya da notun sahibi silebilir —
-   * not sahibinin kendi notundaki yorumları kaldırabilmesi bilinçli bir karardır.
+   * Deletes a comment. Either its author or the note's owner may do so — the
+   * owner being able to remove comments from their own note is a deliberate
+   * decision.
    */
   async deleteComment(commentId: string, userId: string): Promise<void> {
     this.assertValidId(commentId, "errors.commentNotFound");
@@ -163,17 +165,17 @@ export class InteractionService {
     await notificationRepository.deleteByComment(commentId);
   }
 
-  // ---------- Etkileşim özeti ----------
+  // ---------- Interaction summary ----------
 
-  /** Tek bir notun beğeni/yorum özeti */
+  /** The like/comment summary for a single note. */
   async getInteractionsForNote(noteId: string, viewerId?: string): Promise<NoteInteractionsDTO> {
     const summary = await this.getInteractionsFor([noteId], viewerId);
     return summary.get(noteId) ?? { likeCount: 0, commentCount: 0, isLikedByViewer: false };
   }
 
   /**
-   * Birden çok notun etkileşim özetini toplu çeker — liste ekranlarında
-   * not başına ayrı sorgu atılmaz (N+1 önlenir).
+   * Fetches the interaction summary for several notes at once — list screens
+   * do not fire a query per note (avoiding N+1).
    */
   async getInteractionsFor(
     noteIds: string[],
@@ -201,7 +203,7 @@ export class InteractionService {
     );
   }
 
-  /** Not silindiğinde beğeni, yorum ve bildirimlerini temizler. */
+  /** Clears a note's likes, comments and notifications when it is deleted. */
   async removeNoteInteractions(noteId: string): Promise<void> {
     await Promise.all([
       likeRepository.deleteByNote(noteId),
@@ -210,7 +212,7 @@ export class InteractionService {
     ]);
   }
 
-  /** Yorumun `user` alanı populate edilmiş obje ya da ObjectId olabilir. */
+  /** A comment's `user` field may be a populated object or an ObjectId. */
   private resolveAuthorId(user: unknown): string {
     if (user !== null && typeof user === "object" && "_id" in (user as Record<string, unknown>)) {
       return String((user as { _id: unknown })._id);

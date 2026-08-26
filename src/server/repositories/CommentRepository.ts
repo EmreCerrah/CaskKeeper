@@ -1,6 +1,6 @@
 /**
  * @file CommentRepository.ts
- * @description Tadım notu yorumları için MongoDB erişim katmanı.
+ * @description The MongoDB access layer for tasting note comments.
  */
 
 import mongoose from "mongoose";
@@ -14,18 +14,19 @@ export class CommentRepository {
     return saved.toObject() as unknown as IComment;
   }
 
-  /** Yorumu yazarıyla birlikte getirir (yetki kontrolü ve DTO için) */
+  /** Fetches a comment with its author (for the permission check and the DTO). */
   async findById(id: string): Promise<IComment | null> {
     return await Comment.findById(id).lean() as unknown as IComment | null;
   }
 
   /**
-   * Bir notun yorumları, eskiden yeniye, yazar bilgisi populate edilmiş.
+   * A note's comments, oldest first, with the author populated.
    *
-   * Hesabını kapatmış yazarların yorumları elenir. `populate` üst belgeyi
-   * filtrelemediği için `closedAt` de select edilip eleme burada yapılır;
-   * alan DTO'ya çıkmaz (bkz. toCommentDTO). Sorgu sayfalı olmadığından
-   * populate sonrası elemek sayıları bozmuyor.
+   * Comments by authors who closed their account are dropped. `populate` does
+   * not filter the parent document, so `closedAt` is selected as well and the
+   * filtering happens here; the field never reaches the DTO (see
+   * toCommentDTO). The query is not paginated, so filtering after populate
+   * does not disturb any counts.
    */
   async findByNote(noteId: string): Promise<IComment[]> {
     const comments = await Comment.find({ tastingNote: noteId })
@@ -41,8 +42,9 @@ export class CommentRepository {
   }
 
   /**
-   * Birden çok notun yorum sayısını tek aggregate ile döndürür (N+1 önlenir).
-   * Kapatılmış hesapların yorumları sayılmaz — gösterilen listeyle uyuşmalı.
+   * Returns the comment counts for several notes in one aggregate (avoiding
+   * N+1). Comments from closed accounts are not counted — the number has to
+   * agree with the list shown.
    */
   async countByNotes(noteIds: string[]): Promise<Map<string, number>> {
     if (noteIds.length === 0) return new Map();
@@ -63,7 +65,7 @@ export class CommentRepository {
     return result !== null;
   }
 
-  /** Not silindiğinde yorumlarını temizler */
+  /** Clears a note's comments when the note is deleted. */
   async deleteByNote(noteId: string): Promise<number> {
     const result = await Comment.deleteMany({ tastingNote: noteId });
     return result.deletedCount;

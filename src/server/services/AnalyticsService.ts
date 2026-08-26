@@ -1,8 +1,9 @@
 /**
  * @file AnalyticsService.ts
- * @description Kullanıcının tadım geçmişinden türetilen detaylı istatistikler
- * (aroma trendi, katalog dağılımı). Panel'deki hızlı özetten (TastingNoteService.
- * getDashboardStats) ayrı tutulur — burası daha ağır, isteğe bağlı analiz sayfası içindir.
+ * @description The detailed statistics derived from a user's tasting history
+ * (the aroma trend, the catalogue distribution). Kept apart from the quick
+ * summary on the dashboard (TastingNoteService.getDashboardStats) — this is the
+ * heavier work, for the optional analysis page.
  */
 
 import { tastingNoteRepository } from "../repositories/TastingNoteRepository";

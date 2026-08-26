@@ -1,6 +1,6 @@
 /**
  * @file LikeRepository.ts
- * @description Tadım notu beğenileri için MongoDB erişim katmanı.
+ * @description The MongoDB access layer for tasting note likes.
  */
 
 import mongoose from "mongoose";
@@ -8,7 +8,7 @@ import Like, { ILike } from "../models/Like";
 import { ACTIVE_AUTHOR_STAGES } from "./active-author";
 
 export class LikeRepository {
-  /** Beğeni ekler. Zaten varsa idempotent davranır; yeni kayıt oluştuysa true döner. */
+  /** Adds a like. Idempotent if one exists; returns true when a record was created. */
   async create(userId: string, noteId: string): Promise<boolean> {
     const result = await Like.updateOne(
       { user: userId, tastingNote: noteId },
@@ -18,7 +18,7 @@ export class LikeRepository {
     return result.upsertedCount > 0;
   }
 
-  /** Beğeniyi kaldırır. Silinen kayıt varsa true döner. */
+  /** Removes a like. Returns true when a record was actually deleted. */
   async delete(userId: string, noteId: string): Promise<boolean> {
     const result = await Like.deleteOne({ user: userId, tastingNote: noteId });
     return result.deletedCount > 0;
@@ -33,9 +33,9 @@ export class LikeRepository {
   }
 
   /**
-   * Birden çok notun beğeni sayısını tek aggregate ile döndürür.
-   * Liste ekranlarında not başına ayrı sayım yapmamak içindir (N+1 önlenir).
-   * Hesabını kapatmış kullanıcıların beğenileri sayılmaz.
+   * Returns the like counts for several notes in one aggregate.
+   * It exists so list screens do not count per note (avoiding N+1).
+   * Likes from users who closed their account are not counted.
    */
   async countByNotes(noteIds: string[]): Promise<Map<string, number>> {
     if (noteIds.length === 0) return new Map();
@@ -52,8 +52,8 @@ export class LikeRepository {
   }
 
   /**
-   * Verilen notlardan kullanıcının beğendiklerinin id kümesi.
-   * Liste ekranlarında kalp ikonunu doldurmak için tek sorguda çözülür.
+   * The set of ids, among the given notes, that this user has liked.
+   * Resolved in a single query so list screens can fill in the heart icon.
    */
   async findLikedNoteIds(userId: string, noteIds: string[]): Promise<Set<string>> {
     if (noteIds.length === 0) return new Set();
@@ -65,7 +65,7 @@ export class LikeRepository {
     return new Set((docs as Pick<ILike, "tastingNote">[]).map((d) => String(d.tastingNote)));
   }
 
-  /** Not silindiğinde beğenilerini temizler */
+  /** Clears a note's likes when the note is deleted. */
   async deleteByNote(noteId: string): Promise<number> {
     const result = await Like.deleteMany({ tastingNote: noteId });
     return result.deletedCount;

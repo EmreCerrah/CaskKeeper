@@ -1,6 +1,6 @@
 /**
  * @file UserService.ts
- * @description Kullanıcı profili iş mantığı.
+ * @description Business rules for user profiles.
  */
 
 import mongoose from "mongoose";
@@ -27,9 +27,9 @@ export class UserService {
   }
 
   /**
-   * Herkese açık profil verisini derler.
-   * @param userId    Görüntülenen profilin sahibi
-   * @param viewerId  İsteği yapan kullanıcı (giriş yapmamışsa undefined)
+   * Assembles the public profile data.
+   * @param userId    Whose profile is being viewed
+   * @param viewerId  Who is asking (undefined when signed out)
    */
   async getPublicProfile(userId: string, viewerId?: string): Promise<PublicProfileDTO> {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -68,13 +68,14 @@ export class UserService {
     };
   }
 
-  // ---------- Keşfet / Arama ----------
+  // ---------- Discovery / Search ----------
 
   /**
-   * İsme göre kullanıcı arar. Arama boşsa keşfet listesi (en yeni üyeler)
-   * döner. Takip ilişkileri ve not sayıları toplu sorgularla çözülür.
+   * Searches users by name. With an empty search it returns the discovery list
+   * (the newest members). Follow relationships and note counts are resolved in
+   * batched queries.
    *
-   * @param viewerId Giriş yapmış kullanıcı — kendisi sonuçlara dahil edilmez
+   * @param viewerId The signed-in user — they are left out of their own results
    */
   async searchUsers(query: string, viewerId?: string, limit = 20): Promise<UserSearchResultDTO[]> {
     const trimmed = query.trim();
@@ -86,7 +87,7 @@ export class UserService {
     return await this.decorateUsers(users, viewerId);
   }
 
-  /** Kullanıcı listesine takip ilişkisi ve not sayısı bilgisini ekler. */
+  /** Adds follow relationships and note counts to a list of users. */
   private async decorateUsers(users: IUser[], viewerId?: string): Promise<UserSearchResultDTO[]> {
     if (users.length === 0) return [];
 
@@ -117,18 +118,19 @@ export class UserService {
     });
   }
 
-  // ---------- Yönetim ----------
+  // ---------- Administration ----------
 
-  /** Yönetim panelindeki kullanıcı listesi */
+  /** The user list in the admin panel. */
   async listUsers(): Promise<UserDTO[]> {
     const users = await userRepository.findAll();
     return users.map(toUserDTO);
   }
 
   /**
-   * Bir kullanıcının rolünü değiştirir (yalnızca admin çağırmalı).
-   * İki koruma: yönetici kendi rolünü düşüremez ve sistemdeki son admin
-   * yetkisini kaybedemez — aksi halde kimse yönetime erişemez.
+   * Changes a user's role (only an admin should call this).
+   * Two guards: an administrator cannot demote themselves, and the last admin
+   * in the system cannot lose the role — otherwise nobody could reach the admin
+   * area again.
    */
   async setRole(actorId: string, targetId: string, role: "user" | "admin"): Promise<UserDTO> {
     if (!mongoose.Types.ObjectId.isValid(targetId)) {
@@ -160,7 +162,7 @@ export class UserService {
       throw new ValidationError("errors.invalidProfile", parsed.error.flatten().fieldErrors);
     }
 
-    // Boş string'leri alanı temizleme talebi olarak yorumla
+    // Treat empty strings as a request to clear the field
     const { name, bio, profilePicture } = parsed.data;
     const update: Record<string, string | undefined> = {};
     if (name !== undefined) update.name = name;
@@ -173,16 +175,17 @@ export class UserService {
   }
 
   /**
-   * Hesabı kapatır.
+   * Closes the account.
    *
-   * Kayıtlar silinmez, görünürlükten çıkar (bkz. UserRepository'deki aktif
-   * filtresi): tadım notları ve yorumlar başkalarının verisine bağlı olduğu
-   * için gerçek silme onların içeriğini bozardı. Tek istisna bildirimler —
-   * onlar türetilmiş veri ve siliniyor (bkz. notificationRepository.deleteByUser).
+   * Records are not deleted, they leave visibility (see the active filter in
+   * UserRepository): tasting notes and comments hang off other people's data,
+   * so really deleting them would damage that content. Notifications are the
+   * one exception — they are derived data and are deleted (see
+   * notificationRepository.deleteByUser).
    *
-   * GERİ ALINABİLİR: aynı e-postayla yeniden kayıt, bu hesabı yeni parolayla
-   * canlandırır ve geçmişini geri getirir (AuthService.register). Silinen
-   * bildirimler geri gelmez.
+   * REVERSIBLE: registering again with the same email reopens this account
+   * with a new password and brings its history back (AuthService.register).
+   * The deleted notifications do not come back.
    */
   async closeAccount(userId: string, password: unknown): Promise<void> {
     if (typeof password !== "string" || password.length === 0) {
@@ -192,16 +195,17 @@ export class UserService {
     const user = await userRepository.findByIdWithPassword(userId);
     if (!user || !user.passwordHash) throw new NotFoundError("errors.userNotFound");
 
-    // Parola doğrulaması: kilitsiz bırakılmış bir cihazda hesabın
-    // kapatılmasını engeller. Kapatma geri alınabilir olsa da, birinin
-    // hesabını habersizce kapatabilmesi yine de kabul edilebilir değil.
+    // Password check: stops an account being closed from an unlocked device.
+    // Closing is reversible now, but somebody being able to close another
+    // person's account behind their back still is not acceptable.
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
       throw new UnauthorizedError("errors.invalidCredentials");
     }
 
-    // "Son yönetici düşürülemez" kuralının ikizi: kendi hesabını kapatarak da
-    // sistemi yöneticisiz bırakamamalı.
+    // The twin of the "the last administrator cannot be demoted" rule: nobody
+    // should be able to leave the system without an admin by closing their own
+    // account either.
     if (user.role === "admin" && (await userRepository.countAdmins()) <= 1) {
       throw new ForbiddenError("errors.cannotCloseLastAdmin");
     }

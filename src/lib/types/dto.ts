@@ -1,9 +1,10 @@
 /**
  * @file dto.ts
- * @description API kontratını oluşturan DTO tipleri ve Mongoose → DTO dönüştürücüleri.
- * Server component'ler ve API route'lar istemciye her zaman bu düz (serializable)
- * tipleri döndürür — Mongoose dokümanları asla UI katmanına sızmaz.
- * Bu ayrım ileride Spring Boot backend'e geçişi kolaylaştırır.
+ * @description The DTO types that make up the API contract, and the Mongoose →
+ * DTO converters. Server components and API routes always return these plain,
+ * serialisable types to the client — Mongoose documents never leak into the UI
+ * layer. That boundary is what would make a later move to a Spring Boot backend
+ * a matter of reimplementing the layers behind it.
  */
 
 import type { IWhiskey } from "@/server/models/Whiskey";
@@ -12,7 +13,7 @@ import type { IUser } from "@/server/models/User";
 import type { IComment } from "@/server/models/Comment";
 import type { INotification, NotificationType } from "@/server/models/Notification";
 
-/** Listelerde/kartlarda gösterilen minimal kullanıcı bilgisi (herkese açık) */
+/** The minimal user information shown in lists and on cards (public). */
 export interface PublicUserDTO {
   id: string;
   name: string;
@@ -20,7 +21,7 @@ export interface PublicUserDTO {
 }
 
 // ---------------------------------------------------------------------------
-// DTO Tipleri
+// DTO types
 // ---------------------------------------------------------------------------
 
 export interface WhiskeyDTO {
@@ -48,14 +49,15 @@ export interface WhiskeyDTO {
 }
 
 /**
- * Bir tadım notunun etkileşim özeti.
- * Yalnızca herkese açık görünümlerde (akış, profil, not sayfası) doldurulur —
- * alan yoksa etkileşim çubuğu gösterilmez, "0 beğeni" yanılgısı oluşmaz.
+ * The interaction summary for a tasting note.
+ * Populated only in public views (the feed, a profile, the note page) — when
+ * the field is absent the interaction bar is not rendered at all, so nothing
+ * misreads as "0 likes".
  */
 export interface NoteInteractionsDTO {
   likeCount: number;
   commentCount: number;
-  /** İsteği yapan kullanıcı bu notu beğenmiş mi (giriş yapmamışsa false) */
+  /** Has the requester liked this note (false when signed out). */
   isLikedByViewer: boolean;
 }
 
@@ -65,7 +67,7 @@ export interface CommentDTO {
   author: PublicUserDTO;
   body: string;
   createdAt: string; // ISO
-  /** İsteği yapan kullanıcı bu yorumu silebilir mi (yazarı ya da not sahibi) */
+  /** May the requester delete this comment (its author, or the note's owner). */
   canDelete: boolean;
 }
 
@@ -75,11 +77,11 @@ export interface NotificationDTO {
   actor: PublicUserDTO;
   isRead: boolean;
   createdAt: string; // ISO
-  /** like/comment bildirimlerinde ilgili tadım notu */
+  /** The tasting note a like/comment notification refers to. */
   tastingNoteId?: string;
-  /** Bildirim metninde gösterilen viski adı ("Lagavulin 16") */
+  /** The whisky name shown in the notification text ("Lagavulin 16"). */
   whiskeyLabel?: string;
-  /** comment bildiriminde yorumun kısaltılmış metni */
+  /** The shortened comment text on a comment notification. */
   commentExcerpt?: string;
 }
 
@@ -96,11 +98,11 @@ export interface TastingNoteDTO {
   id: string;
   userId: string;
   whiskeyId: string;
-  /** Populate edilmişse dolu gelir */
+  /** Filled in when populated. */
   whiskey?: WhiskeyDTO;
-  /** Akış ve herkese açık profillerde notu yazan kullanıcı (populate edilmişse) */
+  /** Who wrote the note, in the feed and on public profiles (when populated). */
   author?: PublicUserDTO;
-  /** Beğeni/yorum özeti — yalnızca herkese açık görünümlerde doldurulur */
+  /** The like/comment summary — populated only in public views. */
   interactions?: NoteInteractionsDTO;
   tastingDate: string; // ISO
   rating: number;
@@ -127,16 +129,16 @@ export interface UserDTO {
   role: "user" | "admin";
   createdAt: string; // ISO
   /**
-   * Hesap kapatıldıysa kapatılma anı. Yalnızca yönetim listesinde dolar —
-   * kapalı hesaplar başka hiçbir sorgudan dönmüyor.
+   * When the account was closed, if it was. Populated only in the admin list —
+   * closed accounts are not returned by any other query.
    */
   closedAt?: string; // ISO
 }
 
 /**
- * Kullanıcı arama / keşfet listesindeki bir satır.
- * Takip ilişkisi çift yönlü tutulur: her iki taraf da birbirini takip
- * ediyorsa arayüzde "Arkadaş" olarak gösterilir.
+ * A row in the user search / discovery list.
+ * The follow relationship is carried in both directions: when each follows the
+ * other, the interface shows them as a "Friend".
  */
 export interface UserSearchResultDTO {
   id: string;
@@ -144,15 +146,15 @@ export interface UserSearchResultDTO {
   profilePicture?: string;
   bio?: string;
   publicNoteCount: number;
-  /** İsteği yapan kullanıcı bu kişiyi takip ediyor mu */
+  /** Does the requester follow this person. */
   isFollowedByViewer: boolean;
-  /** Bu kişi isteği yapan kullanıcıyı takip ediyor mu */
+  /** Does this person follow the requester. */
   isFollowingViewer: boolean;
   /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
   isMutual: boolean;
 }
 
-/** Başka kullanıcıların görebildiği herkese açık profil (e-posta içermez) */
+/** The public profile other users can see (it carries no email address). */
 export interface PublicProfileDTO {
   id: string;
   name: string;
@@ -162,13 +164,13 @@ export interface PublicProfileDTO {
   followerCount: number;
   followingCount: number;
   publicNoteCount: number;
-  /** İsteği yapan kullanıcı bu profili takip ediyor mu (giriş yapmışsa) */
+  /** Does the requester follow this profile (when signed in). */
   isFollowedByViewer: boolean;
-  /** Bu profil, isteği yapan kullanıcıyı takip ediyor mu */
+  /** Does this profile follow the requester. */
   isFollowingViewer: boolean;
   /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
   isMutual: boolean;
-  /** Görüntülenen profil, isteği yapan kullanıcının kendisi mi */
+  /** Is the profile being viewed the requester's own. */
   isOwnProfile: boolean;
 }
 
@@ -182,13 +184,13 @@ export interface DashboardStatsDTO {
 }
 
 // ---------------------------------------------------------------------------
-// Detaylı İstatistikler (Faz 3 · Dilim A)
+// Detailed statistics (Phase 3 · Slice A)
 // ---------------------------------------------------------------------------
 
 export interface FlavorTrendCategoryDTO {
-  /** Aroma çarkı kategori id'si (ör. "fruity") — grafik rengini seçmek için */
+  /** The aroma wheel category id (e.g. "fruity") — used to pick the chart colour. */
   category: string;
-  /** Türkçe kategori etiketi (ör. "Meyvemsi (Fruity)") */
+  /** The Turkish category label (e.g. "Meyvemsi (Fruity)"). */
   label: string;
   count: number;
 }
@@ -208,7 +210,7 @@ export interface DistributionItemDTO {
 export interface CatalogDistributionDTO {
   byType: DistributionItemDTO[];
   byRegion: DistributionItemDTO[];
-  /** En çok tadılan ilk 8 damıtımevi */
+  /** The eight most-tasted distilleries. */
   byDistillery: DistributionItemDTO[];
 }
 
@@ -218,29 +220,29 @@ export interface AnalyticsDTO {
 }
 
 // ---------------------------------------------------------------------------
-// İstek Listesi (Faz 3 · Dilim C)
+// Wishlist (Phase 3 · Slice C)
 // ---------------------------------------------------------------------------
 
 export interface WishlistItemDTO {
   whiskey: WhiskeyDTO;
-  /** İstek listesine eklendiği tarih (ISO) */
+  /** When it was added to the wishlist (ISO). */
   addedAt: string;
 }
 
 // ---------------------------------------------------------------------------
-// Öneri Motoru (Faz 3 · Dilim B)
+// Recommendation engine (Phase 3 · Slice B)
 // ---------------------------------------------------------------------------
 
 export interface RecommendationDTO {
   whiskey: WhiskeyDTO;
-  /** 0-1 arası eşleşme skoru — damak profilinin bu viskiyi ne kadar kapsadığı */
+  /** Match score between 0 and 1 — how much of this whisky the palate profile covers. */
   score: number;
-  /** Skora katkı veren kategoriler, en güçlüsü önce (UI'da "neden önerildi") */
+  /** The categories behind the score, strongest first (the "why this" in the UI). */
   matchedCategories: { category: string; label: string }[];
 }
 
 // ---------------------------------------------------------------------------
-// Dönüştürücüler
+// Converters
 // ---------------------------------------------------------------------------
 
 type LeanDoc = { _id: unknown; [key: string]: unknown };
@@ -272,7 +274,7 @@ export function toWhiskeyDTO(doc: IWhiskey | LeanDoc): WhiskeyDTO {
   };
 }
 
-/** Bir referans alanının populate edilip edilmediğini, verilen anahtara göre anlar */
+/** Works out whether a reference field was populated, by looking for the given key. */
 function isPopulatedRef(ref: unknown, key: string): ref is LeanDoc {
   return ref !== null && typeof ref === "object" && key in (ref as Record<string, unknown>);
 }
@@ -288,7 +290,7 @@ export function toPublicUserDTO(doc: IUser | LeanDoc): PublicUserDTO {
 
 export function toTastingNoteDTO(doc: ITastingNote | LeanDoc): TastingNoteDTO {
   const n = doc as ITastingNote;
-  // whiskey ve user alanları populate edilmiş (obje) veya ObjectId olabilir
+  // The whiskey and user fields may be populated (an object) or an ObjectId
   const whiskeyRef = n.whiskey as unknown;
   const whiskeyPopulated = isPopulatedRef(whiskeyRef, "slug");
 
@@ -319,7 +321,7 @@ export function toTastingNoteDTO(doc: ITastingNote | LeanDoc): TastingNoteDTO {
 }
 
 /**
- * @param canDelete Silme yetkisi service katmanında hesaplanır (yazar ya da not sahibi)
+ * @param canDelete Deletion rights are worked out in the service layer (the author, or the note's owner)
  */
 export function toCommentDTO(doc: IComment | LeanDoc, canDelete = false): CommentDTO {
   const c = doc as IComment;
@@ -346,7 +348,7 @@ export function toNotificationDTO(doc: INotification | LeanDoc): NotificationDTO
   const actorRef = n.actor as unknown;
   const actorPopulated = isPopulatedRef(actorRef, "name");
 
-  // tastingNote populate edildiğinde içindeki whiskey de populate edilir
+  // When tastingNote is populated, the whiskey inside it is populated too
   const noteRef = n.tastingNote as unknown;
   const notePopulated = isPopulatedRef(noteRef, "whiskey");
   const whiskeyRef = notePopulated ? (noteRef as LeanDoc).whiskey : undefined;

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { mk } from "@/lib/i18n/message-key";
 
 // ---------------------------------------------------------------------------
-// Kayıt / Giriş
+// Registration / sign-in
 // ---------------------------------------------------------------------------
 
 export const RegisterSchema = z.object({
@@ -24,7 +24,7 @@ export const LoginSchema = z.object({
 export type LoginDTO = z.infer<typeof LoginSchema>;
 
 // ---------------------------------------------------------------------------
-// Profil Güncelleme
+// Profile update
 // ---------------------------------------------------------------------------
 
 export const UpdateProfileSchema = z.object({

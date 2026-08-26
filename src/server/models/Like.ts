@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Bir kullanıcının bir tadım notunu beğenmesi.
- * Beğeni yalnızca herkese açık notlara verilebilir — kural service katmanında.
+ * One user liking one tasting note.
+ * Likes can only be given to public notes — the rule lives in the service
+ * layer.
  */
 export interface ILike extends Document {
   user: mongoose.Types.ObjectId;
@@ -19,7 +20,7 @@ const LikeSchema = new Schema<ILike>(
   { timestamps: true }
 );
 
-// Bir kullanıcı aynı notu yalnızca bir kez beğenebilir
+// A user can like the same note only once
 LikeSchema.index({ user: 1, tastingNote: 1 }, { unique: true });
 
 const Like: Model<ILike> = mongoose.models.Like || mongoose.model<ILike>("Like", LikeSchema);

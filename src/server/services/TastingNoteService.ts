@@ -1,7 +1,7 @@
 /**
  * @file TastingNoteService.ts
- * @description Tadım notu iş mantığı. Sahiplik kontrolü (bir kullanıcı yalnızca
- * kendi notunu görebilir/değiştirebilir/silebilir) bu katmanda zorunlu kılınır.
+ * @description Business rules for tasting notes. Ownership — a user may only
+ * read, edit and delete their own note — is enforced in this layer.
  */
 
 import mongoose from "mongoose";
@@ -46,7 +46,7 @@ export class TastingNoteService {
     return { ...result, data: result.data.map(toTastingNoteDTO) };
   }
 
-  /** Not sahibi değilse NotFound gibi davranmayız — Forbidden ayrımı loglama için değerli. */
+  /** A non-owner does not get a NotFound: the Forbidden distinction is worth having in the logs. */
   async getNoteForUser(noteId: string, userId: string): Promise<TastingNoteDTO> {
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       throw new NotFoundError("errors.tastingNoteNotFound");
@@ -59,13 +59,13 @@ export class TastingNoteService {
     return toTastingNoteDTO(note);
   }
 
-  /** Viski detay sayfası: kullanıcının bu viskiye ait tüm tadım seansları */
+  /** The whisky detail page: all of the user's tasting sessions for that whisky. */
   async getNotesForWhiskey(userId: string, whiskeyId: string): Promise<TastingNoteDTO[]> {
     const notes = await tastingNoteRepository.findByUserAndWhiskey(userId, whiskeyId);
     return notes.map(toTastingNoteDTO);
   }
 
-  /** Herkese açık profilde gösterilen notlar (yalnızca public) */
+  /** The notes shown on a public profile (public ones only). */
   async getPublicNotesByUser(
     userId: string,
     pagination?: TastingNotePaginationOptions,
@@ -79,13 +79,13 @@ export class TastingNoteService {
   }
 
   /**
-   * Aktivite akışı: kullanıcının takip ettiği kişilerin herkese açık notları.
-   * Takip edilen kimse yoksa boş liste döner.
+   * The activity feed: the public notes of the people this user follows.
+   * Returns an empty list when they follow nobody.
    */
   async getFeed(userId: string, pagination?: TastingNotePaginationOptions): Promise<PaginatedNotes> {
     const followingIds = await followRepository.getFollowingIds(userId);
-    // Hesabını kapatmış kişilerin notları akıştan düşer. findFeed yazar
-    // id'lerini dışarıdan aldığı için süzmek bir join gerektirmiyor.
+    // Notes by people who closed their account drop out of the feed. findFeed
+    // takes its author ids from outside, so filtering needs no join.
     const activeIds = await userRepository.filterActiveIds(followingIds);
     const result = await tastingNoteRepository.findFeed(activeIds, pagination);
     return {
@@ -95,8 +95,9 @@ export class TastingNoteService {
   }
 
   /**
-   * Tek bir tadım notunun herkese açık görünümü (kalıcı bağlantı sayfası).
-   * Not herkese açık değilse yalnızca sahibi görebilir; başkası için NotFound.
+   * The public view of a single tasting note (the permalink page).
+   * A note that is not public is visible only to its owner; anyone else gets
+   * NotFound.
    */
   async getPublicNote(noteId: string, viewerId?: string): Promise<TastingNoteDTO> {
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
@@ -113,9 +114,10 @@ export class TastingNoteService {
 
     const dto = toTastingNoteDTO(note);
 
-    // findById yazarı populate etmez — kart başlığı için ayrıca çekilir.
-    // Yazar hesabını kapatmışsa findById null döner; not da görünmemeli,
-    // yoksa gizlenmiş bir profilin yazısı kalıcı bağlantıdan okunabilirdi.
+    // findById does not populate the author — it is fetched separately for the
+    // card header. If the author closed their account findById returns null,
+    // and the note must disappear too: otherwise a hidden profile's writing
+    // would still be readable through the permalink.
     const author = await userRepository.findById(authorId);
     if (!author) throw new NotFoundError("errors.tastingNoteNotFound");
     dto.author = toPublicUserDTO(author);
@@ -124,7 +126,7 @@ export class TastingNoteService {
     return dto;
   }
 
-  /** Not listesine beğeni/yorum özetini toplu olarak ekler (N+1 önlenir). */
+  /** Adds the like/comment summary to a list of notes in bulk (avoiding N+1). */
   private async withInteractions(
     notes: TastingNoteDTO[],
     viewerId?: string
@@ -171,7 +173,7 @@ export class TastingNoteService {
       throw new ValidationError("errors.invalidTastingNote", parsed.error.flatten().fieldErrors);
     }
 
-    // Katalogda gerçekten var olan bir viskiye not yazılabilir
+    // A note can only be written against a whisky that exists in the catalogue
     const whiskey = await whiskeyRepository.findById(parsed.data.whiskey);
     if (!whiskey) throw new NotFoundError("errors.whiskeyNotInCatalogue");
 
@@ -185,7 +187,7 @@ export class TastingNoteService {
       throw new ValidationError("errors.invalidTastingNote", parsed.error.flatten().fieldErrors);
     }
 
-    // Sahiplik kontrolü
+    // Ownership check
     await this.getNoteForUser(noteId, userId);
 
     const updated = await tastingNoteRepository.update(noteId, parsed.data);
@@ -194,13 +196,14 @@ export class TastingNoteService {
   }
 
   async deleteNote(noteId: string, userId: string): Promise<void> {
-    // Sahiplik kontrolü
+    // Ownership check
     await this.getNoteForUser(noteId, userId);
 
     const deleted = await tastingNoteRepository.delete(noteId);
     if (!deleted) throw new NotFoundError("errors.tastingNoteNotFound");
 
-    // Nota bağlı beğeni, yorum ve bildirimler artık öksüz kalmamalı
+    // The likes, comments and notifications hanging off the note must not be
+    // left orphaned
     await interactionService.removeNoteInteractions(noteId);
   }
 }

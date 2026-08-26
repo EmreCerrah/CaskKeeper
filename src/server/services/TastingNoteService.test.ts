@@ -1,9 +1,9 @@
 /**
- * TastingNoteService testleri.
+ * TastingNoteService tests.
  *
- * Odak: sahiplik kontrolü — bir kullanıcının notu başkasına sızmamalı,
- * başkası tarafından değiştirilememeli veya silinememeli. Repository
- * katmanı mock'lanır; veritabanı bağlantısı kurulmaz.
+ * Focus: ownership — one user's note must not leak to another, nor be edited
+ * or deleted by them. The repository layer is mocked; no database connection is
+ * opened.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -41,8 +41,8 @@ vi.mock("../repositories/FollowRepository", () => ({
   },
 }));
 
-// Not silindiğinde beğeni/yorum/bildirim temizliği çağrılır — burada
-// yalnızca çağrıldığı doğrulanır, davranışı InteractionService.test.ts'de test edilir.
+// Deleting a note triggers the like/comment/notification cleanup — here we only
+// check that it is called; its behaviour is tested in InteractionService.test.ts.
 vi.mock("./InteractionService", () => ({
   interactionService: {
     getInteractionsFor: vi.fn().mockResolvedValue(new Map()),
@@ -65,7 +65,7 @@ const OTHER_USER_ID = "bbbbbbbbbbbbbbbbbbbbbbbb";
 const NOTE_ID = "cccccccccccccccccccccccc";
 const WHISKEY_ID = "dddddddddddddddddddddddd";
 
-/** Repository'den dönecek örnek not dokümanı */
+/** A sample note document as the repository would return it. */
 function buildNote(overrides: Record<string, unknown> = {}) {
   return {
     _id: NOTE_ID,
@@ -89,8 +89,8 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe("getNoteForUser — sahiplik kontrolü", () => {
-  it("not sahibine notu döndürür", async () => {
+describe("getNoteForUser — the ownership check", () => {
+  it("returns the note to its owner", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
     const note = await tastingNoteService.getNoteForUser(NOTE_ID, OWNER_ID);
@@ -99,7 +99,7 @@ describe("getNoteForUser — sahiplik kontrolü", () => {
     expect(note.userId).toBe(OWNER_ID);
   });
 
-  it("başka kullanıcının notuna erişimi reddeder", async () => {
+  it("refuses access to another user's note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
     await expect(tastingNoteService.getNoteForUser(NOTE_ID, OTHER_USER_ID)).rejects.toThrow(
@@ -107,7 +107,7 @@ describe("getNoteForUser — sahiplik kontrolü", () => {
     );
   });
 
-  it("olmayan not için NotFound fırlatır", async () => {
+  it("throws NotFound for a note that does not exist", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(null);
 
     await expect(tastingNoteService.getNoteForUser(NOTE_ID, OWNER_ID)).rejects.toThrow(
@@ -115,7 +115,7 @@ describe("getNoteForUser — sahiplik kontrolü", () => {
     );
   });
 
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(tastingNoteService.getNoteForUser("gecersiz-id", OWNER_ID)).rejects.toThrow(
       NotFoundError
     );
@@ -124,8 +124,8 @@ describe("getNoteForUser — sahiplik kontrolü", () => {
   });
 });
 
-describe("updateNote — sahiplik kontrolü", () => {
-  it("başka kullanıcının notunu güncellemeyi reddeder", async () => {
+describe("updateNote — the ownership check", () => {
+  it("refuses to update another user's note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
     await expect(
@@ -135,7 +135,7 @@ describe("updateNote — sahiplik kontrolü", () => {
     expect(tastingNoteRepository.update).not.toHaveBeenCalled();
   });
 
-  it("sahibi için güncellemeyi uygular", async () => {
+  it("applies the update for the owner", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(tastingNoteRepository.update).mockResolvedValue(
       buildNote({ rating: 95 }) as never
@@ -147,15 +147,15 @@ describe("updateNote — sahiplik kontrolü", () => {
     expect(tastingNoteRepository.update).toHaveBeenCalledOnce();
   });
 
-  it("geçersiz puanı reddeder", async () => {
+  it("rejects an invalid score", async () => {
     await expect(
       tastingNoteService.updateNote(NOTE_ID, OWNER_ID, { rating: 150 })
     ).rejects.toThrow(ValidationError);
   });
 });
 
-describe("deleteNote — sahiplik kontrolü", () => {
-  it("başka kullanıcının notunu silmeyi reddeder", async () => {
+describe("deleteNote — the ownership check", () => {
+  it("refuses to delete another user's note", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
 
     await expect(tastingNoteService.deleteNote(NOTE_ID, OTHER_USER_ID)).rejects.toThrow(
@@ -165,7 +165,7 @@ describe("deleteNote — sahiplik kontrolü", () => {
     expect(tastingNoteRepository.delete).not.toHaveBeenCalled();
   });
 
-  it("sahibi için silme işlemini yapar", async () => {
+  it("performs the deletion for the owner", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(tastingNoteRepository.delete).mockResolvedValue(true);
 
@@ -174,7 +174,7 @@ describe("deleteNote — sahiplik kontrolü", () => {
     expect(tastingNoteRepository.delete).toHaveBeenCalledWith(NOTE_ID);
   });
 
-  it("silinen notun beğeni, yorum ve bildirimlerini temizler", async () => {
+  it("clears the deleted note's likes, comments and notifications", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(tastingNoteRepository.delete).mockResolvedValue(true);
 
@@ -183,7 +183,7 @@ describe("deleteNote — sahiplik kontrolü", () => {
     expect(interactionService.removeNoteInteractions).toHaveBeenCalledWith(NOTE_ID);
   });
 
-  it("silme başarısız olursa etkileşimleri temizlemez", async () => {
+  it("does not clear the interactions when the deletion fails", async () => {
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(buildNote() as never);
     vi.mocked(tastingNoteRepository.delete).mockResolvedValue(false);
 
@@ -194,7 +194,7 @@ describe("deleteNote — sahiplik kontrolü", () => {
 });
 
 describe("createNote", () => {
-  it("katalogda olmayan viskiye not yazmayı reddeder", async () => {
+  it("refuses to write a note against a whisky not in the catalogue", async () => {
     vi.mocked(whiskeyRepository.findById).mockResolvedValue(null);
 
     await expect(
@@ -209,7 +209,7 @@ describe("createNote", () => {
     expect(tastingNoteRepository.create).not.toHaveBeenCalled();
   });
 
-  it("notu oturumdaki kullanıcıya bağlar", async () => {
+  it("attaches the note to the signed-in user", async () => {
     vi.mocked(whiskeyRepository.findById).mockResolvedValue({ _id: WHISKEY_ID } as never);
     vi.mocked(tastingNoteRepository.create).mockResolvedValue(buildNote() as never);
 
@@ -223,17 +223,17 @@ describe("createNote", () => {
     expect(tastingNoteRepository.create).toHaveBeenCalledWith(OWNER_ID, expect.anything());
   });
 
-  it("eksik zorunlu alanları reddeder", async () => {
+  it("rejects missing required fields", async () => {
     await expect(
       tastingNoteService.createNote(OWNER_ID, { rating: 80 })
     ).rejects.toThrow(ValidationError);
   });
 });
 
-describe("kapatılmış hesapların görünürlüğü", () => {
-  it("akış yalnızca hesabı açık yazarların notlarını sorar", async () => {
-    // Takip kayıtları duruyor; süzme yazar id'leri üzerinden yapılıyor, bu
-    // yüzden findFeed'in join atmasına gerek kalmıyor.
+describe("the visibility of closed accounts", () => {
+  it("the feed asks only for notes by authors whose accounts are open", async () => {
+    // The follow records stay; the filtering happens on the author ids, so
+    // findFeed does not need a join.
     vi.mocked(followRepository.getFollowingIds).mockResolvedValue([
       OWNER_ID,
       OTHER_USER_ID,
@@ -252,9 +252,10 @@ describe("kapatılmış hesapların görünürlüğü", () => {
     expect(tastingNoteRepository.findFeed).toHaveBeenCalledWith([OWNER_ID], undefined);
   });
 
-  it("yazarı hesabını kapatmışsa herkese açık not bulunamaz", async () => {
-    // findById aktif filtresini uyguladığından kapalı yazar null döner.
-    // Not, gizlenmiş bir profilin yazısı olarak kalıcı bağlantıdan okunmamalı.
+  it("a public note cannot be found once its author closes their account", async () => {
+    // findById applies the active filter, so a closed author comes back null.
+    // The note must not stay readable through the permalink as the writing of a
+    // hidden profile.
     vi.mocked(tastingNoteRepository.findById).mockResolvedValue(
       buildNote({ visibility: "public" }) as never
     );

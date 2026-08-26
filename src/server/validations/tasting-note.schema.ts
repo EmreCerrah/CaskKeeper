@@ -4,8 +4,9 @@ import { mk } from "@/lib/i18n/message-key";
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
 /**
- * Tadım notu oluşturma şeması.
- * `user` alanı istemciden ASLA alınmaz — service katmanı oturumdan ekler.
+ * The schema for creating a tasting note.
+ * The `user` field is NEVER taken from the client — the service layer adds it
+ * from the session.
  */
 export const CreateTastingNoteSchema = z.object({
   whiskey: z.string().regex(objectIdRegex, mk("validation.whiskeyIdInvalid")),
@@ -36,7 +37,7 @@ export const CreateTastingNoteSchema = z.object({
 
 export type CreateTastingNoteDTO = z.infer<typeof CreateTastingNoteSchema>;
 
-/** Güncellemede viski değiştirilemez — not, viskiye bağlı bir seans kaydıdır. */
+/** The whisky cannot change on update — a note is a session recorded against one whisky. */
 export const UpdateTastingNoteSchema = CreateTastingNoteSchema.omit({ whiskey: true }).partial();
 
 export type UpdateTastingNoteDTO = z.infer<typeof UpdateTastingNoteSchema>;

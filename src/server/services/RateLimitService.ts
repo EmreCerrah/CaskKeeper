@@ -3,25 +3,26 @@ import { authAttemptRepository } from "../repositories/AuthAttemptRepository";
 
 /**
  * @file RateLimitService.ts
- * @description Kimlik doğrulama uçlarında deneme sınırlaması.
+ * @description Attempt limiting on the authentication endpoints.
  *
- * Neden gerekli: `/api/auth/login` ve `/api/auth/register` sınırsız deneme
- * kabul ediyordu. Parola tahmini bir yana, her başarısız giriş sunucuda ~450 ms
- * bcrypt hesabı yakıyor — sınırsız uç, doğrudan bir maliyet ve erişilebilirlik
- * sorunu.
+ * Why it is needed: `/api/auth/login` and `/api/auth/register` accepted
+ * unlimited attempts. Password guessing aside, every failed sign-in burns about
+ * 450 ms of bcrypt on the server — an unlimited endpoint is a direct cost and
+ * availability problem.
  *
- * Neden iki ayrı sayaç: yalnızca IP'ye bakmak ortak ağ arkasındaki masum
- * kullanıcıları birlikte cezalandırır; yalnızca e-postaya bakmak ise saldırganın
- * bir hesabı kasten kilitlemesine izin verir. İkisi birden sayılıyor.
+ * Why two separate counters: keying on IP alone punishes innocent users sharing
+ * a network; keying on email alone lets an attacker lock somebody out
+ * deliberately. Both are counted.
  *
- * Kalıcı kilit YOK: sınır aşılınca yalnızca pencerenin dolması beklenir. Kalıcı
- * kilit, hedef hesaba servis dışı bırakma saldırısı yapmayı mümkün kılardı.
+ * There is NO permanent lock: once the limit is hit you simply wait out the
+ * window. A permanent lock would make denial of service against a chosen
+ * account possible.
  */
 
 export interface RateLimitRule {
-  /** Pencere içinde izin verilen deneme sayısı. */
+  /** How many attempts are allowed inside the window. */
   limit: number;
-  /** Pencere uzunluğu (saniye). */
+  /** The length of the window, in seconds. */
   windowSeconds: number;
 }
 
@@ -29,7 +30,7 @@ export const LOGIN_PER_IP_AND_EMAIL: RateLimitRule = { limit: 5, windowSeconds: 
 export const LOGIN_PER_IP: RateLimitRule = { limit: 20, windowSeconds: 15 * 60 };
 export const REGISTER_PER_IP: RateLimitRule = { limit: 5, windowSeconds: 60 * 60 };
 
-/** Sayaç anahtarları. E-posta büyük/küçük harf farkından etkilenmemeli. */
+/** The counter keys. Email must not be affected by letter case. */
 export function loginIpEmailKey(ip: string, email: string): string {
   return `login:ip+email:${ip}|${email.trim().toLowerCase()}`;
 }
@@ -42,11 +43,12 @@ export function registerIpKey(ip: string): string {
 
 export class RateLimitService {
   /**
-   * Bir kuralı uygular: sınır aşıldıysa TooManyRequestsError fırlatır, aşılmadıysa
-   * denemeyi kaydeder.
+   * Applies one rule: throws TooManyRequestsError when the limit is exceeded,
+   * otherwise records the attempt.
    *
-   * Veritabanı hatasında GEÇİRİR (fail-open) — Mongo'daki anlık bir sorun
-   * kimseyi uygulamanın kapısında bırakmamalı. Sessiz kalmaması için loglanır.
+   * On a database error it LETS THE REQUEST THROUGH (fail-open) — a momentary
+   * problem in Mongo should not leave people locked out at the door. It is
+   * logged so the failure does not pass silently.
    */
   private async enforce(key: string, rule: RateLimitRule): Promise<void> {
     const since = new Date(Date.now() - rule.windowSeconds * 1000);
@@ -55,7 +57,7 @@ export class RateLimitService {
     try {
       used = await authAttemptRepository.countSince(key, since);
     } catch (error) {
-      console.error("[rate-limit] Sayaç okunamadı, istek geçiriliyor:", error);
+      console.error("[rate-limit] Could not read the counter, letting the request through:", error);
       return;
     }
 
@@ -70,26 +72,26 @@ export class RateLimitService {
     }
   }
 
-  /** Giriş denemesinden ÖNCE çağrılır. */
+  /** Called BEFORE a sign-in attempt. */
   async checkLogin(ip: string, email: string): Promise<void> {
     await this.enforce(loginIpKey(ip), LOGIN_PER_IP);
     await this.enforce(loginIpEmailKey(ip, email), LOGIN_PER_IP_AND_EMAIL);
   }
 
   /**
-   * Başarılı girişten SONRA çağrılır: o kullanıcının sayacı sıfırlanır.
-   * IP sayacı bilerek sıfırlanmaz — aynı IP'den farklı hesaplara yapılan
-   * taramayı tek bir doğru giriş temizleyememeli.
+   * Called AFTER a successful sign-in: that user's counter is reset.
+   * The IP counter is deliberately left alone — one correct sign-in should not
+   * clear a sweep across different accounts from the same address.
    */
   async clearLogin(ip: string, email: string): Promise<void> {
     try {
       await authAttemptRepository.clear(loginIpEmailKey(ip, email));
     } catch (error) {
-      console.error("[rate-limit] Sayaç temizlenemedi:", error);
+      console.error("[rate-limit] Could not clear the counter:", error);
     }
   }
 
-  /** Kayıt denemesinden ÖNCE çağrılır. */
+  /** Called BEFORE a registration attempt. */
   async checkRegister(ip: string): Promise<void> {
     await this.enforce(registerIpKey(ip), REGISTER_PER_IP);
   }

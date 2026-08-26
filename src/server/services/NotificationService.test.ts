@@ -1,8 +1,8 @@
 /**
- * NotificationService testleri.
+ * NotificationService tests.
  *
- * Odak: kendine bildirim üretilmemesi, bildirim üretiminin asıl işlemi
- * bozmaması ve bir bildirimin yalnızca alıcısı tarafından okunabilmesi.
+ * Focus: never notifying yourself, notification creation never breaking the
+ * action behind it, and a notification being readable only by its recipient.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 describe("notify", () => {
-  it("bildirimi oluşturur", async () => {
+  it("creates the notification", async () => {
     await notificationService.notify({
       recipientId: RECIPIENT_ID,
       actorId: ACTOR_ID,
@@ -41,7 +41,7 @@ describe("notify", () => {
     expect(notificationRepository.create).toHaveBeenCalledOnce();
   });
 
-  it("kullanıcının kendi eylemi için bildirim üretmez", async () => {
+  it("produces no notification for a user's own action", async () => {
     await notificationService.notify({
       recipientId: ACTOR_ID,
       actorId: ACTOR_ID,
@@ -51,7 +51,7 @@ describe("notify", () => {
     expect(notificationRepository.create).not.toHaveBeenCalled();
   });
 
-  it("bildirim kaydı başarısız olsa da hata fırlatmaz", async () => {
+  it("does not throw even when saving the notification fails", async () => {
     vi.mocked(notificationRepository.create).mockRejectedValue(new Error("db down"));
 
     await expect(
@@ -65,7 +65,7 @@ describe("notify", () => {
 });
 
 describe("revoke", () => {
-  it("geri alınan eylemin bildirimini siler", async () => {
+  it("deletes the notification for an undone action", async () => {
     await notificationService.revoke({
       recipientId: RECIPIENT_ID,
       actorId: ACTOR_ID,
@@ -77,7 +77,7 @@ describe("revoke", () => {
     );
   });
 
-  it("silme başarısız olsa da hata fırlatmaz", async () => {
+  it("does not throw even when the deletion fails", async () => {
     vi.mocked(notificationRepository.deleteByAction).mockRejectedValue(new Error("db down"));
 
     await expect(
@@ -90,8 +90,8 @@ describe("revoke", () => {
   });
 });
 
-describe("markRead — sahiplik kontrolü", () => {
-  it("alıcısı için okundu işaretler", async () => {
+describe("markRead — the ownership check", () => {
+  it("marks it read for its recipient", async () => {
     vi.mocked(notificationRepository.markRead).mockResolvedValue(true);
 
     await notificationService.markRead(NOTIFICATION_ID, RECIPIENT_ID);
@@ -99,8 +99,8 @@ describe("markRead — sahiplik kontrolü", () => {
     expect(notificationRepository.markRead).toHaveBeenCalledWith(NOTIFICATION_ID, RECIPIENT_ID);
   });
 
-  it("başkasının bildirimi için NotFound fırlatır", async () => {
-    // Repository sorgusu recipient ile kısıtlıdır; eşleşme yoksa false döner
+  it("throws NotFound for somebody else's notification", async () => {
+    // The repository query is scoped to the recipient; no match returns false
     vi.mocked(notificationRepository.markRead).mockResolvedValue(false);
 
     await expect(
@@ -108,7 +108,7 @@ describe("markRead — sahiplik kontrolü", () => {
     ).rejects.toThrow(NotFoundError);
   });
 
-  it("geçersiz ObjectId için veritabanına gitmeden NotFound fırlatır", async () => {
+  it("throws NotFound for an invalid ObjectId without hitting the database", async () => {
     await expect(
       notificationService.markRead("gecersiz-id", RECIPIENT_ID)
     ).rejects.toThrow(NotFoundError);
@@ -118,7 +118,7 @@ describe("markRead — sahiplik kontrolü", () => {
 });
 
 describe("list", () => {
-  it("bildirimleri okunmamış sayısıyla birlikte döndürür", async () => {
+  it("returns the notifications together with the unread count", async () => {
     vi.mocked(notificationRepository.findByRecipient).mockResolvedValue({
       data: [
         {
