@@ -70,6 +70,10 @@ experiences**.
 | Mobile · Slice 9 — Notifications | ✅ Done | #40 |
 | Mobile · English route names | ✅ Done | #42 |
 | Web · English route names and query parameters | ✅ Done | #43 |
+| Mobile · English code comments | ✅ Done | #44 |
+| Web · English code comments — server layer | ✅ Done | #46 |
+| Web · English code comments — lib layer | ✅ Done | #47 |
+| Web · English code comments — UI, routes and scripts | ✅ Done | #48 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -812,6 +816,64 @@ were not, and they were the first thing a newcomer would trip over. Mobile first
 
 ---
 
+## Interlude — English comments ✅ (PRs #44, #46, #47, #48)
+
+The routes were only half of it. Every comment in the codebase was Turkish,
+which meant the *reasoning* — the part a comment exists to carry — was the one
+thing a newcomer could not read.
+
+The request that opened this started from a wrong premise: that class and file
+names were Turkish too. They were not. Measuring first turned a large imagined
+rename into two real jobs — the route folders (#42, #43) and the comments — and
+the second was done a layer at a time:
+
+- [x] Mobile: `mobile/app` and `mobile/src` (#44)
+- [x] Web: `src/server` — models, repositories, services (#46)
+- [x] Web: `src/lib` — i18n, offline, utils, types (#47)
+- [x] Web: `src/app` (pages, 33 API routes, manifest), `src/components`,
+      `middleware.ts` and the two scripts (#48)
+
+Nothing Turkish is left in a comment. The scan still returns a handful of hits,
+and all of them are English comments *quoting* Turkish data — `"5 Ağustos 2026"`
+in the date helper, `"Tatlı (Sweet)"` in the aroma wheel — plus the `×` in a
+pixel dimension.
+
+> **The tool mattered more than the translation.** The batches ran through a
+> small block-keyed driver: each entry pairs an exact Turkish block with its
+> English replacement, matching is line-ending agnostic (`\r?\n`), and an
+> already-translated pair is skipped so a batch can be re-run safely. The
+> decisive part is that a pattern which fails to match is **reported, not
+> skipped** — it caught 13 misses on its first run that a silent `sed` would
+> have left behind, and no batch after that ended with an unexplained miss.
+
+> **Translating forced a reading of every comment, and that was the real yield.**
+> Five comments turned out to be describing a system that no longer existed:
+>
+> - `api/whiskeys/compare/route.ts` justified its `slug` parameter with "page
+>   URLs are Turkish, API paths English" — a rationale #43 had already voided
+> - `api/users/me/close/route.ts` and `CloseAccountCard.tsx` both called account
+>   closure permanent and irreversible, which #45 had made false
+> - `middleware.ts` pointed the role check at `yonetim/layout.tsx`, a path #43
+>   deleted
+> - `untranslated.test.ts` asserted that Turkish comments are the project's rule
+> - `profile/page.tsx` said the user menu jumps to its `#cevrimdisi` anchor;
+>   the menus embed the toggle inline and nothing had linked there for a while
+>
+> Each was corrected rather than translated faithfully. A stale comment survives
+> a rename precisely because nobody reads it — the translation was the first
+> thing in months that made someone read them all.
+
+> **The dead anchor went with it.** `id="cevrimdisi"` was the last Turkish
+> fragment of a URL to survive #43, and it was unreachable. Removing it took the
+> wrapper `div` too, which existed only to carry `scroll-mt` for the anchor.
+
+> **CRLF, again.** A `sed` pass rewrote three files from CRLF to LF and inflated
+> their diff to 219 lines for about 15 real changes. Reverted, and the rest of
+> the work went through the Node driver, which preserves the file's own line
+> endings.
+
+---
+
 ## What's Next
 
 ### Mobile · offline writing — not built
@@ -1058,9 +1120,11 @@ Model        Mongoose schemas
   a Java/Spring Boot backend easier.
 - Validation is **Zod**; error classes live in `src/lib/errors.ts` and routes
   return consistent responses through `handleApiError`.
-- **The interface is Turkish and English**; code, variables and file names are
-  English, comments in code are Turkish. Documentation is English — the
-  interface addresses users, the docs address contributors.
+- **The interface is Turkish and English; everything else is English** — code,
+  variables, file names, route folders, query parameters, comments and
+  documentation. The interface addresses users, so it is translated; the
+  codebase addresses contributors, so it is not. Comments were Turkish until
+  PRs #44, #46, #47 and #48.
 - **No user-facing text is written in a service, a schema or a route.** They
   carry translation keys; `handleApiError` turns them into sentences in the
   language of the request. The error classes only accept a `TranslationKey`, so
