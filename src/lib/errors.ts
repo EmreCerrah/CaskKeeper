@@ -1,22 +1,24 @@
 /**
  * @file errors.ts
- * @description Uygulama genelinde kullanılan tipli hata sınıfları.
- * Service katmanı bu hataları fırlatır; API route'lar handleApiError ile
- * tutarlı HTTP yanıtlarına dönüştürür.
+ * @description The typed error classes used across the application.
+ * The service layer throws them; API routes turn them into consistent HTTP
+ * responses through handleApiError.
  *
- * Mesaj YERİNE ÇEVİRİ ANAHTARI taşınır. Sebebi: iş kuralı katmanı isteğin
- * dilini bilmez ve bilmemeli — dil bir HTTP meselesidir, handleApiError'da
- * çözülür (bkz. api-response.ts). Anahtarın tipi sözlükten türediği için
- * serbest metin fırlatmak DERLEME HATASI verir; arayüz İngilizceyken sunucudan
- * Türkçe cümle dönmesi böylece bir daha mümkün olmaz.
+ * They carry a TRANSLATION KEY rather than a message. The reason: the
+ * business-rules layer does not know the language of the request, and should
+ * not — language is an HTTP concern, resolved in handleApiError (see
+ * api-response.ts). The key's type is derived from the dictionary, so throwing
+ * free text is a COMPILE ERROR; a Turkish sentence can never again come back
+ * from the server while the interface is in English.
  *
- * `import type` bilinçli: sözlük runtime'a girmez, bu yüzden bu modülü kullanan
- * session.ts Edge runtime'da (middleware) çalışmaya devam eder.
+ * The `import type` is deliberate: the dictionary never enters the runtime, so
+ * session.ts — which uses this module — keeps working in the Edge runtime
+ * (middleware).
  */
 
 import type { TranslationKey } from "@/lib/i18n/translate";
 
-/** `{slug}` gibi yer tutucuların değerleri — çeviri sırasında yerleştirilir. */
+/** The values for placeholders like `{slug}` — filled in during translation. */
 export type MessageParams = Record<string, string | number>;
 
 export class AppError extends Error {
@@ -31,8 +33,8 @@ export class AppError extends Error {
     code = "INTERNAL_ERROR",
     messageParams?: MessageParams
   ) {
-    // Error.message anahtarın kendisini taşır: log ve stack trace'te hangi
-    // hatanın fırlatıldığı, çeviriye bakmadan okunabilir kalır.
+    // Error.message carries the key itself: in a log or a stack trace, which
+    // error was thrown stays readable without consulting the dictionary.
     super(messageKey);
     this.name = "AppError";
     this.status = status;
@@ -81,7 +83,7 @@ export class ConflictError extends AppError {
 }
 
 export class TooManyRequestsError extends AppError {
-  /** İstemcinin kaç saniye sonra tekrar deneyebileceği — Retry-After başlığına yazılır. */
+  /** How many seconds until the client may retry — written to the Retry-After header. */
   readonly retryAfterSeconds: number;
 
   constructor(

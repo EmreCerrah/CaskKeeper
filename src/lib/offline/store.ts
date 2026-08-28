@@ -2,26 +2,25 @@ import type { TastingNoteDTO, WishlistItemDTO } from "@/lib/types/dto";
 
 /**
  * @file store.ts
- * @description Kullanıcının kendi isteğiyle indirdiği çevrimdışı kopyanın
- * cihazda saklanması.
+ * @description Storing the offline copy the user asked for on their device.
  *
- * Depolama için Cache API kullanılır; IndexedDB sarmalayıcısı yazılmamıştır —
- * saklanan şey iki JSON yükünden ibaret olduğu için ayrı bir soyutlama gereksiz
- * kod olurdu. Veri, varlık önbelleğinden AYRI bir kovada tutulur: çıkışta
- * yalnızca kişisel veri silinir, önbelleğe alınmış statik varlıklar kalır.
+ * The Cache API does the storing; no IndexedDB wrapper was written — what is
+ * kept is two JSON payloads, so a separate abstraction would be code for its
+ * own sake. The data lives in a bucket SEPARATE from the asset cache: signing
+ * out deletes only the personal data, and the cached static assets stay.
  */
 
-/** Kişisel veri kovası — çıkışta tamamen silinir. */
+/** The personal-data bucket — wiped entirely on sign-out. */
 const DATA_CACHE = "caskkeeper-offline-v1";
 
 /**
- * Statik varlık kovası. public/sw.js içindeki CACHE_VERSION ile AYNI olmalıdır;
- * service worker düz JS olduğu için buradan import edemiyor. Biri değişirse
- * diğeri de değiştirilmeli.
+ * The static asset bucket. It has to MATCH CACHE_VERSION in public/sw.js; the
+ * service worker is plain JS and cannot import from here. Change one and you
+ * must change the other.
  */
 const SHELL_CACHE = "caskkeeper-v1";
 
-/** Çevrimdışı sayfanın adresi — service worker gezinme hatasında bunu sunar. */
+/** The offline page's address — the service worker serves it when navigation fails. */
 export const OFFLINE_PAGE = "/offline";
 
 const KEY_NOTES = "/__offline/tasting-notes";
@@ -29,10 +28,10 @@ const KEY_WISHLIST = "/__offline/wishlist";
 const KEY_META = "/__offline/meta";
 
 export interface OfflineSnapshotMeta {
-  /** Kopyanın kime ait olduğu — çevrimdışı sayfada açıkça gösterilir. */
+  /** Whose copy this is — stated plainly on the offline page. */
   userId: string;
   userName: string;
-  /** ISO tarih */
+  /** An ISO date. */
   syncedAt: string;
   noteCount: number;
   wishlistCount: number;
@@ -44,7 +43,7 @@ export interface OfflineSnapshot {
   wishlist: WishlistItemDTO[];
 }
 
-/** Tarayıcı Cache API'yi destekliyor mu (SSR sırasında da false döner). */
+/** Does the browser support the Cache API (also false during SSR). */
 export function isOfflineStorageSupported(): boolean {
   return typeof caches !== "undefined";
 }
@@ -65,7 +64,7 @@ async function readJson<T>(cache: Cache, key: string): Promise<T | null> {
   }
 }
 
-/** Kullanıcının tadım notlarını ve istek listesini cihaza yazar. */
+/** Writes the user's tasting notes and wishlist to the device. */
 export async function saveOfflineSnapshot(input: {
   userId: string;
   userName: string;
@@ -94,14 +93,14 @@ export async function saveOfflineSnapshot(input: {
   return meta;
 }
 
-/** Yalnızca üst bilgi — "son senkron" göstergesi için yeterli. */
+/** The header alone — enough for the "last synced" indicator. */
 export async function getSnapshotMeta(): Promise<OfflineSnapshotMeta | null> {
   if (!isOfflineStorageSupported()) return null;
   const cache = await caches.open(DATA_CACHE);
   return readJson<OfflineSnapshotMeta>(cache, KEY_META);
 }
 
-/** Kayıtlı kopyanın tamamı. Eksik/bozuk kayıtta null döner. */
+/** The whole stored copy. Returns null when it is missing or corrupt. */
 export async function readOfflineSnapshot(): Promise<OfflineSnapshot | null> {
   if (!isOfflineStorageSupported()) return null;
 
@@ -116,19 +115,19 @@ export async function readOfflineSnapshot(): Promise<OfflineSnapshot | null> {
   return { meta, notes, wishlist };
 }
 
-/** Kişisel veriyi siler. Çıkışta ve "sil" butonunda çağrılır. */
+/** Deletes the personal data. Called on sign-out and by the "delete" button. */
 export async function clearOfflineSnapshot(): Promise<void> {
   if (!isOfflineStorageSupported()) return;
   await caches.delete(DATA_CACHE);
 }
 
 /**
- * Çevrimdışı sayfanın kendisini ve bağlı olduğu JS/CSS dosyalarını önbelleğe
- * alır. Bunlar kullanıcıdan bağımsız olduğu için kişisel veri kovasına değil
- * varlık kovasına yazılır — çıkışta silinmezler.
+ * Caches the offline page itself along with the JS and CSS it depends on.
+ * None of it is user-specific, so it goes to the asset bucket rather than the
+ * personal one and survives sign-out.
  *
- * Sayfanın HTML'i alınmadan bağlantısız açılamaz; script/link etiketleri de
- * çözülmeden sayfa boş ekran olarak gelir.
+ * Without the page's HTML it cannot open with no connection; without resolving
+ * its script and link tags the page arrives as a blank screen.
  */
 export async function cacheOfflineShell(): Promise<void> {
   if (!isOfflineStorageSupported()) return;
@@ -157,7 +156,7 @@ export async function cacheOfflineShell(): Promise<void> {
           const asset = await fetch(url);
           if (asset.ok) await cache.put(url, asset);
         } catch {
-          // Tek bir varlığın alınamaması senkronun tamamını başarısız saymaz.
+          // One asset failing to fetch does not fail the whole sync.
         }
       })
   );

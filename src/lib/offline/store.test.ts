@@ -9,13 +9,13 @@ import {
 } from "./store";
 
 /**
- * Cache API tarayıcıya ait olduğu için test ortamında yok; bellek içi bir
- * karşılığı kuruluyor. Amaç depolama davranışını doğrulamak: kopyanın kime ait
- * olduğu kaydediliyor mu, eksik kayıtta güvenli tarafa mı düşüyor, silme
- * gerçekten temizliyor mu.
+ * The Cache API belongs to the browser and does not exist in the test
+ * environment, so an in-memory stand-in is built. The aim is to pin the storage
+ * behaviour: is it recorded whose copy this is, does a missing record fall to
+ * the safe side, does deleting really clear things.
  *
- * Bu kurallar önemli çünkü hatası sessiz: yanlış kullanıcının verisi
- * gösterilirse ya da silme çalışmazsa uygulama hata vermeden yanlış davranır.
+ * These rules matter because their failures are silent: show the wrong user's
+ * data, or fail to delete, and the app misbehaves without erroring.
  */
 class FakeCache {
   private store = new Map<string, string>();
@@ -29,7 +29,7 @@ class FakeCache {
     return body === undefined ? undefined : new Response(body);
   }
 
-  /** Testin bozuk kayıt senaryosunu kurabilmesi için. */
+  /** So the test can set up the corrupt-record scenario. */
   setRaw(key: string, body: string) {
     this.store.set(key, body);
   }
@@ -67,12 +67,12 @@ async function seed() {
   });
 }
 
-describe("çevrimdışı kopya deposu", () => {
-  it("test ortamında sahte Cache API destekli görünür", () => {
+describe("the offline copy store", () => {
+  it("reports the fake Cache API as supported in the test environment", () => {
     expect(isOfflineStorageSupported()).toBe(true);
   });
 
-  it("kopyayı kaydeder ve aynısını geri okur", async () => {
+  it("saves the copy and reads the same thing back", async () => {
     await seed();
 
     const snapshot = await readOfflineSnapshot();
@@ -82,7 +82,7 @@ describe("çevrimdışı kopya deposu", () => {
     expect(snapshot!.wishlist[0].whiskey.id).toBe("w1");
   });
 
-  it("kopyanın kime ait olduğunu ve sayıları kaydeder", async () => {
+  it("records whose copy it is, and the counts", async () => {
     const meta = await seed();
 
     expect(meta.userId).toBe("u1");
@@ -92,12 +92,12 @@ describe("çevrimdışı kopya deposu", () => {
     expect(Number.isNaN(Date.parse(meta.syncedAt))).toBe(false);
   });
 
-  it("kayıt yokken null döner, hata fırlatmaz", async () => {
+  it("returns null with no record rather than throwing", async () => {
     expect(await readOfflineSnapshot()).toBeNull();
     expect(await getSnapshotMeta()).toBeNull();
   });
 
-  it("silme sonrası hiçbir şey okunamaz", async () => {
+  it("nothing can be read after deletion", async () => {
     await seed();
     await clearOfflineSnapshot();
 
@@ -105,7 +105,7 @@ describe("çevrimdışı kopya deposu", () => {
     expect(await getSnapshotMeta()).toBeNull();
   });
 
-  it("kayıtlardan biri eksikse yarım veri göstermez", async () => {
+  it("shows no half data when one of the records is missing", async () => {
     await seed();
     const cache = caches_.get("caskkeeper-offline-v1")!;
     cache.delete("/__offline/wishlist");
@@ -113,7 +113,7 @@ describe("çevrimdışı kopya deposu", () => {
     expect(await readOfflineSnapshot()).toBeNull();
   });
 
-  it("bozuk JSON'da çökmez", async () => {
+  it("does not crash on corrupt JSON", async () => {
     await seed();
     const cache = caches_.get("caskkeeper-offline-v1")!;
     cache.setRaw("/__offline/tasting-notes", "{bozuk");
@@ -121,11 +121,12 @@ describe("çevrimdışı kopya deposu", () => {
     expect(await readOfflineSnapshot()).toBeNull();
   });
 
-  it("kişisel veriyi varlık önbelleğinden ayrı kovada tutar", async () => {
+  it("keeps personal data in a bucket separate from the asset cache", async () => {
     await seed();
 
     expect(caches_.has("caskkeeper-offline-v1")).toBe(true);
-    // Statik varlıklar çıkışta silinmemeli; bu yüzden ayrı kovadalar.
+    // Static assets must survive sign-out, which is why they are in their own
+    // bucket.
     expect(caches_.has("caskkeeper-v1")).toBe(false);
   });
 });

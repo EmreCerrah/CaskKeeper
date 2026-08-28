@@ -4,19 +4,19 @@ import { createTranslator, getDictionary, type Translator } from "./translate";
 
 /**
  * @file server.ts
- * @description Sunucu bileşenleri için dil çözümlemesi.
+ * @description Resolving the language for server components.
  *
- * cookies()/headers() kullandığı için bu modülü içe aktaran her sayfa dinamik
- * render edilir. Uygulamadaki sayfalar zaten `force-dynamic`; TEK İSTİSNA
- * /offline — orası statik kalmalı, bu yüzden orada bu modül KULLANILMAZ,
- * dil istemci tarafında okunur.
+ * It uses cookies()/headers(), so every page importing this module is rendered
+ * dynamically. The app's pages are `force-dynamic` anyway; the ONE EXCEPTION is
+ * /offline — that has to stay static, so this module is NOT used there and the
+ * language is read on the client instead.
  */
 
 export function getLocale(): Locale {
   return resolveLocale(cookies().get(LOCALE_COOKIE)?.value, headers().get("accept-language"));
 }
 
-/** Sunucu bileşeninde metin üretmek için: `const t = getTranslations();` */
+/** For producing text in a server component: `const t = getTranslations();` */
 export function getTranslations(): Translator {
   return createTranslator(getDictionary(getLocale()));
 }

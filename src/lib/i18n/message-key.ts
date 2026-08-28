@@ -2,14 +2,14 @@ import type { TranslationKey } from "./translate";
 
 /**
  * @file message-key.ts
- * @description Zod mesajlarını çeviri anahtarına bağlayan sarmalayıcı.
+ * @description The wrapper that ties Zod messages to translation keys.
  *
- * Zod `min(2, message)` imzası düz `string` ister, dolayısıyla anahtar yazımını
- * kendiliğinden denetlemez. `mk()` araya girip anahtarı tip sistemine
- * doğrulatır: sözlükte olmayan bir anahtar derleme hatası verir.
+ * Zod's `min(2, message)` signature takes a plain `string`, so it cannot check
+ * the spelling of a key by itself. `mk()` steps in and has the type system
+ * verify it: a key that is not in the dictionary is a compile error.
  *
- * Çeviri burada YAPILMAZ — şemalar modül seviyesinde bir kez kurulur, oysa dil
- * her isteğe göre değişir. Anahtar `fieldErrors` içinde taşınır ve
- * handleApiError isteğin dilinde metne çevirir.
+ * No translation happens here — schemas are built once at module level, while
+ * the language changes per request. The key travels inside `fieldErrors` and
+ * handleApiError renders it in the language of the request.
  */
 export const mk = (key: TranslationKey): string => key;

@@ -1,19 +1,19 @@
 /**
  * @file comparison.ts
- * @description Viski karşılaştırma için saf yardımcılar. Karşılaştırma durumu
- * kalıcı değildir — URL query parametrelerinde tutulur (paylaşılabilir link,
- * geri tuşu uyumlu, yeni model gerekmez).
+ * @description Pure helpers for whisky comparison. The comparison state is not
+ * persisted — it lives in the URL's query parameters, which makes the link
+ * shareable, keeps the back button working, and needs no new model.
  */
 
-/** Aynı anda karşılaştırılabilecek en fazla viski sayısı. */
+/** The most whiskies that can be compared at once. */
 export const MAX_COMPARE_ITEMS = 3;
 
 /**
- * URL'deki `whisky` parametresini temiz bir slug listesine çevirir.
+ * Turns the URL's `whisky` parameter into a clean list of slugs.
  *
- * Next.js tekrar eden query parametrelerini `string | string[]` olarak verir;
- * ikisi de desteklenir. Yinelenen slug'lar atılır ve liste üst sınıra kırpılır —
- * URL elle düzenlenmiş olabilir, bu yüzden girdiye güvenilmez.
+ * Next.js hands repeated query parameters over as `string | string[]`; both are
+ * handled. Duplicates are dropped and the list is trimmed to the limit — the
+ * URL may have been edited by hand, so the input is not trusted.
  */
 export function parseCompareSlugs(param: string | string[] | undefined): string[] {
   const raw = param === undefined ? [] : Array.isArray(param) ? param : [param];
@@ -35,11 +35,12 @@ export function parseCompareSlugs(param: string | string[] | undefined): string[
 }
 
 /**
- * Karşılaştırılan tüm viskilerde ortak olan aroma terimlerini bulur (kesişim).
+ * Finds the aroma terms shared by every whisky being compared (the
+ * intersection).
  *
- * Tek viski varken kesişim anlamsızdır — karşılaştırılacak bir şey yoktur —
- * bu yüzden boş küme döner. Terimler kataloğun aynı kelime dağarcığından
- * geldiği için birebir string eşleşmesi yeterlidir.
+ * With a single whisky an intersection is meaningless — there is nothing to
+ * compare against — so it returns an empty set. The terms all come from the
+ * catalogue's own vocabulary, so exact string matching is enough.
  */
 export function findSharedFlavors(flavorProfiles: string[][]): Set<string> {
   if (flavorProfiles.length < 2) return new Set();
@@ -56,8 +57,8 @@ export function findSharedFlavors(flavorProfiles: string[][]): Set<string> {
 }
 
 /**
- * Verilen slug listesinden karşılaştırma sayfasının bağlantısını üretir.
- * Boş listede parametresiz yol döner (temiz URL).
+ * Builds the comparison page's link from a list of slugs.
+ * An empty list returns the bare path, keeping the URL clean.
  */
 export function buildCompareHref(slugs: string[], basePath = "/compare"): string {
   if (slugs.length === 0) return basePath;

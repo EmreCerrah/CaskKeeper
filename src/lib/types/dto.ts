@@ -150,7 +150,7 @@ export interface UserSearchResultDTO {
   isFollowedByViewer: boolean;
   /** Does this person follow the requester. */
   isFollowingViewer: boolean;
-  /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
+  /** A mutual follow — shown as a "Friend" badge in the interface. */
   isMutual: boolean;
 }
 
@@ -168,7 +168,7 @@ export interface PublicProfileDTO {
   isFollowedByViewer: boolean;
   /** Does this profile follow the requester. */
   isFollowingViewer: boolean;
-  /** Karşılıklı takip — arayüzde "Arkadaş" rozeti */
+  /** A mutual follow — shown as a "Friend" badge in the interface. */
   isMutual: boolean;
   /** Is the profile being viewed the requester's own. */
   isOwnProfile: boolean;

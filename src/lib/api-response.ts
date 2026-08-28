@@ -33,12 +33,12 @@ export function createErrorResponse(error: unknown, message: string, status: num
 }
 
 /**
- * Zod'un alan bazlı hatalarını çevirir.
+ * Translates Zod's per-field errors.
  *
- * `fieldErrors` biçimi `{ email: ["validation.email"], … }` — şemalardaki
- * mesajlar mk() ile anahtar olarak yazıldığı için değerler de çevrilmeli.
- * Anahtar olmayan bir metin gelirse createTranslator onu olduğu gibi döndürür,
- * yani dışarıdan gelen beklenmedik bir mesaj kaybolmaz.
+ * `fieldErrors` looks like `{ email: ["validation.email"], … }` — the messages
+ * in the schemas are written as keys through mk(), so the values need
+ * translating too. If something arrives that is not a key, createTranslator
+ * returns it unchanged, so an unexpected message from elsewhere is not lost.
  */
 function translateDetails(details: unknown, t: Translator): unknown {
   if (details === null || typeof details !== "object" || Array.isArray(details)) return details;
@@ -52,13 +52,15 @@ function translateDetails(details: unknown, t: Translator): unknown {
 }
 
 /**
- * Service katmanından fırlatılan tipli hataları tutarlı HTTP yanıtlarına çevirir.
- * Bilinmeyen hatalar 500 olarak döner; iç detaylar istemciye sızdırılmaz.
+ * Turns the typed errors thrown by the service layer into consistent HTTP
+ * responses. Unknown errors come back as 500; internal detail never leaks to
+ * the client.
  *
- * Metnin dili BURADA çözülür: servisler yalnızca çeviri anahtarı taşır
- * (bkz. lib/errors.ts), dil ise isteğe ait bir bilgidir — çerez ya da
- * Accept-Language. Böylece iş kuralı katmanı dilden habersiz kalır ve
- * İngilizce arayüz kullanan biri hata anında Türkçe metinle karşılaşmaz.
+ * The language of the text is resolved HERE: services carry only a translation
+ * key (see lib/errors.ts), while the language belongs to the request — a cookie
+ * or Accept-Language. That keeps the business-rules layer unaware of language,
+ * and means somebody on an English interface does not meet Turkish text at the
+ * moment something goes wrong.
  */
 export function handleApiError(error: unknown) {
   const t = createTranslator(getDictionary(getLocale()));
@@ -68,7 +70,7 @@ export function handleApiError(error: unknown) {
     return createErrorResponse(translateDetails(error.details, t) ?? error.code, message, error.status);
   }
   if (error instanceof TooManyRequestsError) {
-    // İstemcinin ne zaman tekrar deneyebileceğini bilmesi için standart başlık.
+    // The standard header telling the client when it may retry.
     const response = createErrorResponse(error.code, t(error.messageKey, error.messageParams), error.status);
     response.headers.set("Retry-After", String(error.retryAfterSeconds));
     return response;

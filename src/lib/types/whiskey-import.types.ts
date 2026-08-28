@@ -1,16 +1,17 @@
 /**
  * @file whiskey-import.types.ts
- * @description Import pipeline için tip tanımları.
- * Dış kaynak (API / JSON) formatından MongoDB dokümanına dönüşüm adımlarını modeller.
+ * @description The type definitions for the import pipeline.
+ * They model each step from the external format (an API or a JSON file) to a
+ * MongoDB document.
  */
 
 // ---------------------------------------------------------------------------
-// 1. RAW INPUT FORMAT — Dış kaynak (API / JSON dosyası) verisi
+// 1. RAW INPUT FORMAT — data from an external source (an API or a JSON file)
 // ---------------------------------------------------------------------------
 
 /**
- * Import kaynağından beklenen ham veri formatı.
- * Tüm alanlar opsiyoneldir; fallback değerleri import pipeline'ında uygulanır.
+ * The raw shape expected from an import source.
+ * Every field is optional; the fallbacks are applied in the import pipeline.
  *
  * @example
  * {
@@ -30,19 +31,19 @@
  * }
  */
 export interface RawWhiskeyInput {
-  // Kimlik alanları
+  // Identity fields
   brand?: string;
   expression?: string; // ürün adı / expression — "name" alias da kabul edilir
   name?: string;       // "expression" ile aynı anlam, geriye dönük uyumluluk için
   distillery?: string;
 
-  // Sınıflandırma
+  // Classification
   type?: string;
   region?: string;
   country?: string;
   subRegion?: string;
 
-  // Teknik
+  // Technical
   abv?: number | string;
   age?: number | string;
   caskType?: string;
@@ -50,7 +51,7 @@ export interface RawWhiskeyInput {
   vintage?: number | string;
   limitedEdition?: boolean;
 
-  // İçerik
+  // Content
   description?: string;
   flavorProfile?: string[];
   awards?: string[];
@@ -64,7 +65,7 @@ export interface RawWhiskeyInput {
 }
 
 // ---------------------------------------------------------------------------
-// 2. NORMALIZED PAYLOAD — Validation'dan geçmiş, MongoDB'ye yazılmaya hazır veri
+// 2. NORMALISED PAYLOAD — validated data, ready to be written to MongoDB
 // ---------------------------------------------------------------------------
 
 export interface NormalizedWhiskeyPayload {
@@ -93,7 +94,7 @@ export interface NormalizedWhiskeyPayload {
 }
 
 // ---------------------------------------------------------------------------
-// 3. IMPORT SONUÇ TİPLERİ
+// 3. IMPORT RESULT TYPES
 // ---------------------------------------------------------------------------
 
 export type ImportAction = "created" | "updated" | "skipped" | "failed";
@@ -121,14 +122,14 @@ export interface ImportSummary {
 // ---------------------------------------------------------------------------
 
 export interface ImportConfig {
-  /** Dry-run modunda MongoDB'ye yazılmaz, sadece loglanır */
+  /** In dry-run mode nothing is written to MongoDB, only logged. */
   dryRun?: boolean;
-  /** Mevcut kayıtlar güncellenmez, sadece yeniler eklenir */
+  /** Existing records are left alone; only new ones are added. */
   insertOnly?: boolean;
-  /** Validation başarısız olan kayıtları atla (true) ya da dur (false) */
+  /** Skip records that fail validation (true), or stop (false). */
   skipInvalid?: boolean;
-  /** Kayıt başına batch delay (ms) — rate limiting için */
+  /** Delay per record in ms — for rate limiting. */
   delayMs?: number;
-  /** Veri kaynağı etiketi */
+  /** A label for the data source. */
   source?: string;
 }

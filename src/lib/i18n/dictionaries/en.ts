@@ -2,10 +2,11 @@ import type { TranslationKey } from "./tr";
 
 /**
  * @file en.ts
- * @description İngilizce arayüz metinleri.
+ * @description The English interface text.
  *
- * Tip, tr.ts'teki anahtar kümesine bağlıdır: eksik ya da fazla anahtar derleme
- * hatası verir. Böylece "çevrilmemiş metin" sessizce üretime gitmez.
+ * Its type is tied to the set of keys in tr.ts: a missing or extra key is a
+ * compile error. That is what stops "untranslated text" reaching production
+ * quietly.
  */
 export const en: Record<TranslationKey, string> = {
   // --- Navigation --------------------------------------------------------

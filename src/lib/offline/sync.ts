@@ -3,21 +3,23 @@ import { cacheOfflineShell, saveOfflineSnapshot, type OfflineSnapshotMeta } from
 
 /**
  * @file sync.ts
- * @description Çevrimdışı kopyanın sunucudan çekilip cihaza yazılması.
+ * @description Fetching the offline copy from the server and writing it to the
+ * device.
  *
- * Anahtar açıkken bu iş üç yerden tetiklenir: uygulama açılışı, sekmeye geri
- * dönüş ve veriyi değiştiren her işlem (not ekleme/düzenleme/silme, favori,
- * istek listesi). Böylece kopya pratikte güncel kalır.
+ * While the switch is on, three things trigger this: the app starting, the tab
+ * regaining focus, and any operation that changes the data (writing, editing or
+ * deleting a note, favouriting, the wishlist). In practice that keeps the copy
+ * current.
  *
- * SINIR: tarayıcı kapalıyken arka planda senkron yapılamaz. Uygulama
- * kapatıldıktan sonra kopya o anki haliyle donar.
+ * THE LIMIT: nothing syncs in the background while the browser is closed. Once
+ * the app is shut, the copy freezes as it was.
  */
 
-/** Tek seferde saklanacak azami kayıt — cihazda sınırsız veri biriktirmemek için. */
+/** The most records stored at once — so the device does not accumulate data without bound. */
 const MAX_ITEMS = 500;
 const PAGE_SIZE = 100;
 
-/** Art arda gelen tetiklemelerin sunucuyu dövmesini engelleyen asgari aralık. */
+/** The minimum gap that stops back-to-back triggers hammering the server. */
 const MIN_INTERVAL_MS = 30_000;
 
 const DATA_CHANGED_EVENT = "caskkeeper:offline-data-changed";
@@ -26,7 +28,7 @@ interface PagedEnvelope<T> {
   data: { data: T[]; totalPages: number };
 }
 
-/** Sayfalı bir ucun tüm sayfalarını MAX_ITEMS sınırına kadar toplar. */
+/** Collects every page of a paginated endpoint, up to the MAX_ITEMS limit. */
 async function fetchAllPages<T>(path: string): Promise<T[]> {
   const collected: T[] = [];
   let page = 1;
@@ -54,16 +56,16 @@ let inFlight: Promise<OfflineSnapshotMeta> | null = null;
 export interface SyncOptions {
   userId: string;
   userName: string;
-  /** Kullanıcı elle "şimdi güncelle" dediğinde aralık kuralı atlanır. */
+  /** When the user asks to "sync now" by hand, the interval rule is skipped. */
   force?: boolean;
 }
 
 /**
- * Kullanıcının notlarını ve istek listesini indirip cihaza yazar.
+ * Downloads the user's notes and wishlist and writes them to the device.
  *
- * Aynı anda birden fazla tetikleme gelirse (ör. açılış + veri değişikliği)
- * tek bir istek çalışır; ayrıca MIN_INTERVAL_MS içinde tekrar çağrılırsa
- * atlanır — `force` ile bu kural devre dışı bırakılır.
+ * If several triggers arrive at once — startup plus a data change, say — only
+ * one request runs; and a call inside MIN_INTERVAL_MS is skipped, unless
+ * `force` waives that rule.
  */
 export async function syncOfflineSnapshot(
   options: SyncOptions
@@ -78,7 +80,7 @@ export async function syncOfflineSnapshot(
       fetchAllPages<TastingNoteDTO>("/api/tasting-notes"),
       fetchAllPages<WishlistItemDTO>("/api/wishlist"),
     ]);
-    // Sayfanın kendisi önbelleğe alınmazsa bağlantısızken açılamaz.
+    // Without caching the page itself, it cannot open with no connection.
     await cacheOfflineShell();
     return saveOfflineSnapshot({
       userId: options.userId,
@@ -98,8 +100,8 @@ export async function syncOfflineSnapshot(
 }
 
 /**
- * Kullanıcının verisini değiştiren işlemlerden sonra çağrılır. Anahtar kapalıysa
- * dinleyici zaten yoktur ve hiçbir şey olmaz.
+ * Called after any operation that changes the user's data. With the switch off
+ * there is no listener, so nothing happens.
  */
 export function notifyOfflineDataChanged(): void {
   if (typeof window === "undefined") return;
@@ -112,7 +114,7 @@ export function subscribeOfflineDataChanged(callback: () => void): () => void {
   return () => window.removeEventListener(DATA_CHANGED_EVENT, callback);
 }
 
-/** Testler ve anahtar kapatıldığında aralık sayacını sıfırlar. */
+/** Resets the interval counter — for tests, and when the switch is turned off. */
 export function resetSyncThrottle(): void {
   lastSyncAt = 0;
 }
