@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
-import { queryKeys } from "./keys";
+import { mutationKeys, queryKeys } from "./keys";
 import { addToWishlist, removeFromWishlist, type WishlistPage } from "./wishlist-cache";
 import type { Whiskey } from "./whiskeys";
 
@@ -47,7 +47,7 @@ export function useIsWishlisted(whiskeyId: string) {
 }
 
 /**
- * Add / remove — OPTIMISTIC.
+ * Add / remove — OPTIMISTIC, and it survives being offline.
  *
  * The web button waits for the server; this one does not, for the same reason
  * as the like button: a bookmark that waits after a tap feels broken. If the
@@ -55,19 +55,24 @@ export function useIsWishlisted(whiskeyId: string) {
  *
  * Adding to the list needs the whisky itself, so the caller passes it — the
  * detail screen already has it in hand.
+ *
+ * There is no `mutationFn` here: it comes from the key, registered in
+ * mutation-defaults.ts. That indirection is what lets a tap made in aeroplane
+ * mode be replayed after the app has been closed and reopened — a function
+ * cannot be written to disk, a key can. The optimistic handlers below stay
+ * where they are; they run on the tap, not on the replay.
+ *
+ * Replaying is safe in any order or multiplicity: the server's add is an
+ * upsert and its remove a delete, so add/remove/add lands on the right state
+ * and no duplicate can raise a conflict.
  */
 export function useToggleWishlist() {
-  const { token } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ whiskey, wishlisted }: { whiskey: Whiskey; wishlisted: boolean }) =>
-      apiRequest<WishlistStatus>(`/api/wishlist/${whiskey.id}`, {
-        method: wishlisted ? "DELETE" : "POST",
-        token,
-      }),
+    mutationKey: mutationKeys.wishlist.toggle(),
 
-    onMutate: async ({ whiskey, wishlisted }) => {
+    onMutate: async ({ whiskey, wishlisted }: { whiskey: Whiskey; wishlisted: boolean }) => {
       const statusKey = queryKeys.wishlist.status(whiskey.id);
       const listKey = queryKeys.wishlist.list();
 

@@ -34,7 +34,16 @@ export default function RootLayout() {
   useEffect(startFocusManager, []);
 
   return (
-    <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={persistOptions}
+      // Writes made offline are replayed on their own when the connection or
+      // the foreground returns, because QueryClient.mount() subscribes to both
+      // managers. Neither fires on a cold start, though: the queue has just
+      // come off the disk and the app may already be online. This is the one
+      // moment nothing else covers.
+      onSuccess={() => queryClient.resumePausedMutations()}
+    >
       <SafeAreaProvider>
         <AuthProvider>
           <StatusBar style="light" />
