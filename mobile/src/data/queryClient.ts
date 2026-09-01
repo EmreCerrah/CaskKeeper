@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ApiError } from "../api/response";
+import { registerMutationDefaults } from "./mutation-defaults";
 
 /**
  * @file queryClient.ts
@@ -16,7 +17,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export function createQueryClient(): QueryClient {
-  return new QueryClient({
+  const client = new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: FIVE_MINUTES,
@@ -37,4 +38,12 @@ export function createQueryClient(): QueryClient {
       },
     },
   });
+
+  // Here rather than at the call site so it cannot be forgotten. A write that
+  // survives being offline carries a mutationKey INSTEAD of its function, so a
+  // client without this registration would hand the user a button that throws
+  // on tap — and only for the writes that were meant to be the robust ones.
+  registerMutationDefaults(client);
+
+  return client;
 }

@@ -113,6 +113,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // The next person to sign in on this phone must not inherit them — on the
     // web, logout-client.ts deletes the offline copy for the same reason.
     // Order matters: the copy on disk first, then the in-memory cache.
+    //
+    // Both lines now carry a second load: writes made offline are queued as
+    // paused mutations, which live in the same persisted blob and in the same
+    // client. Dropping them here is what stops a tap made by one user from
+    // being replayed under the next one's token — the queued function reads
+    // the token when it runs, not when it was tapped (mutation-defaults.ts).
+    // The cost is accepted: an unsent write does not survive signing out.
     await clearPersistedCache();
     queryClient.clear();
 
