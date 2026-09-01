@@ -70,7 +70,9 @@ export default function WhiskeyDetailScreen() {
         onPress={() =>
           router.push({
             pathname: "/(app)/my-tastings/new",
-            params: { whiskeyId: whiskey.id, whiskeyLabel: `${whiskey.brand} ${whiskey.name}` },
+            // Brand and name separately: a note waiting to be sent is drawn
+            // from them, and the card puts the two in different places.
+            params: { whiskeyId: whiskey.id, whiskeyBrand: whiskey.brand, whiskeyName: whiskey.name },
           })
         }
       />

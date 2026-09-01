@@ -2,7 +2,13 @@ import type { QueryClient } from "@tanstack/react-query";
 import { apiRequest } from "../api/client";
 import { readToken } from "../auth/storage";
 import { mutationKeys } from "./keys";
-import { wishlistToggleRequest, type WishlistToggleVariables } from "./offline-writes";
+import {
+  createNoteRequest,
+  wishlistToggleRequest,
+  type CreateNoteVariables,
+  type WishlistToggleVariables,
+} from "./offline-writes";
+import type { TastingNote } from "./tastingNotes";
 
 /**
  * @file mutation-defaults.ts
@@ -31,6 +37,17 @@ export function registerMutationDefaults(queryClient: QueryClient): void {
       const { path, method } = wishlistToggleRequest(variables);
       return await apiRequest<{ wishlisted: boolean }>(path, {
         method,
+        token: await readToken(),
+      });
+    },
+  });
+
+  queryClient.setMutationDefaults(mutationKeys.tastingNotes.create(), {
+    mutationFn: async (variables: CreateNoteVariables) => {
+      const { path, method, body } = createNoteRequest(variables);
+      return await apiRequest<TastingNote>(path, {
+        method,
+        body,
         token: await readToken(),
       });
     },

@@ -1,17 +1,42 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../../src/components/Button";
 import { NoteCard } from "../../../src/components/tasting/NoteCard";
-import { useMyNotes } from "../../../src/data/tastingNotes";
+import { useDiscardPendingNote, useMyNotes, type TastingNote } from "../../../src/data/tastingNotes";
 import { t } from "../../../src/i18n";
 import { theme } from "../../../src/theme";
 
 export default function MyTastingsScreen() {
   const router = useRouter();
   const { data, isLoading, isError, error, refetch, isRefetching } = useMyNotes();
+  const discardNote = useDiscardPendingNote();
 
   const notes = data?.data ?? [];
+
+  /**
+   * A note the server has never seen has no page to open: the detail screen
+   * fetches by id, and this id does not exist yet. Rather than let the tap
+   * land on an error, each local state answers for itself.
+   */
+  function openNote(note: TastingNote) {
+    if (note.localStatus === "pending") {
+      Alert.alert(t("notes.pending"), t("notes.pendingHint"));
+      return;
+    }
+
+    if (note.localStatus === "failed") {
+      Alert.alert(t("notes.failed"), note.localError ?? t("notes.saveFailed"), [
+        { text: t("notes.keep"), style: "cancel" },
+        // The only way out of a note that can never be sent. Without it the row
+        // would sit in the list for good.
+        { text: t("notes.discard"), style: "destructive", onPress: () => discardNote(note.id) },
+      ]);
+      return;
+    }
+
+    router.push(`/(app)/my-tastings/${note.id}`);
+  }
 
   return (
     <SafeAreaView style={styles.flex} edges={["top"]}>
@@ -44,9 +69,7 @@ export default function MyTastingsScreen() {
           contentContainerStyle={styles.list}
           onRefresh={refetch}
           refreshing={isRefetching}
-          renderItem={({ item }) => (
-            <NoteCard note={item} onPress={() => router.push(`/(app)/my-tastings/${item.id}`)} />
-          )}
+          renderItem={({ item }) => <NoteCard note={item} onPress={() => openNote(item)} />}
           ListEmptyComponent={
             <View style={styles.center}>
               <Text style={styles.empty}>{t("notes.empty")}</Text>
