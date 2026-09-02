@@ -83,6 +83,42 @@ Killing the server too early leaves the file half-written, which produces the
 same misleading wall. CI never sees this: with no `.expo` directory the check
 falls back to loose route typing.
 
+## Building an APK for a real phone
+
+**The app never talks to MongoDB.** It speaks HTTP to the CaskKeeper server, and
+that server is what holds the Atlas connection. So "make it use the live data"
+means one thing: build it against the live API. No database credential goes near
+the phone, which is the point — anything shipped inside an APK can be read out
+of it.
+
+`EXPO_PUBLIC_API_URL` is **inlined at build time**, not read at startup. `.env`
+supplies it during development; `eas.json` supplies it for builds, so a build
+never depends on whatever address happened to be in your `.env` that day.
+
+| Profile | Output | For |
+|---|---|---|
+| `preview` | **APK** | Installing on your own phone |
+| `production` | AAB | The Play Store, which does not accept an APK |
+
+Building locally would need JDK 17 and the Android SDK. EAS builds it in the
+cloud instead and hands back a download link:
+
+```bash
+cd mobile
+npx eas-cli login
+npx eas-cli build --platform android --profile preview
+```
+
+The first run asks to create the Android credentials (a keystore) and keeps
+them, so later builds are one command. When it finishes, open the link on the
+phone and install — Android will ask you to allow installing from that browser,
+because the app is not coming from the Play Store.
+
+> **Cleartext HTTP is still enabled** in `app.json` for development against a
+> local `http://` server. The live API is HTTPS and does not need it, so a build
+> meant for daily use is safer without it — that means moving `app.json` to
+> `app.config.js` so the flag can depend on the profile.
+
 ## How it is put together
 
 ```
