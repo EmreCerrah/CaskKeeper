@@ -2,7 +2,15 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { useQueryClient } from "@tanstack/react-query";
 import { apiRequest, ApiError } from "../api/client";
 import { clearPersistedCache } from "../data/persist";
-import { clearToken, readToken, writeToken } from "./storage";
+import { decideCache } from "./cache-owner";
+import {
+  clearCacheOwner,
+  clearToken,
+  readCacheOwner,
+  readToken,
+  writeCacheOwner,
+  writeToken,
+} from "./storage";
 
 /**
  * @file AuthContext.tsx
@@ -68,6 +76,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       try {
         const me = await apiRequest<SessionUser>("/api/auth/me", { token: stored });
+        // Claim the cache for whoever is actually signed in. On an app updated
+        // from a version that did not record an owner this is the moment the
+        // existing user takes ownership of their own data — without it their
+        // next sign-in would look like a stranger's and clear it.
+        await writeCacheOwner(me.id);
         if (!cancelled) {
           setToken(stored);
           setUser(me);
@@ -85,16 +98,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signIn = useCallback(async (email: string, password: string) => {
-    const result = await apiRequest<TokenResponse>("/api/auth/token", {
-      method: "POST",
-      body: { email, password },
-    });
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      const result = await apiRequest<TokenResponse>("/api/auth/token", {
+        method: "POST",
+        body: { email, password },
+      });
 
-    await writeToken(result.token);
-    setToken(result.token);
-    setUser(result.user);
-  }, []);
+      // BEFORE the token is set, because setting it enables every query and
+      // they would read whatever is still in the cache.
+      //
+      // Only when the person arriving is not the one the cache belongs to.
+      // Clearing unconditionally would be simpler and would cost the same user
+      // — returning after their token expired — a note they wrote offline and
+      // that is still queued. Keeping it is what finally sends that note.
+      if (decideCache(await readCacheOwner(), result.user.id) === "discard") {
+        await clearPersistedCache();
+        queryClient.clear();
+      }
+
+      await writeToken(result.token);
+      await writeCacheOwner(result.user.id);
+      setToken(result.token);
+      setUser(result.user);
+    },
+    [queryClient]
+  );
 
   const signUp = useCallback(
     async (name: string, email: string, password: string) => {
@@ -108,6 +137,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await clearToken();
+    // Nothing is left for it to name.
+    await clearCacheOwner();
 
     // The persistent cache on the device holds the user's OWN tasting notes.
     // The next person to sign in on this phone must not inherit them — on the
