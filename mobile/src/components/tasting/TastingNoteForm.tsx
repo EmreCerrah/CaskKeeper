@@ -14,7 +14,12 @@ interface TastingNoteFormProps {
   initial: NoteFormState;
   submitLabel: string;
   busy: boolean;
-  error: string | null;
+  /**
+   * Optional: the new-note screen leaves as soon as the note is queued, so a
+   * refusal has no form left to appear on and lands on the note's card. The
+   * edit screen waits for the server and still shows its errors here.
+   */
+  error?: string | null;
   onSubmit: (form: NoteFormState) => void;
 }
 

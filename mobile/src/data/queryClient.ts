@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ApiError } from "../api/response";
 import { registerMutationDefaults } from "./mutation-defaults";
+import { isRetryableStatus } from "./offline-writes";
 
 /**
  * @file queryClient.ts
@@ -35,6 +36,21 @@ export function createQueryClient(): QueryClient {
         // On mobile, hitting the network every time a screen regains focus
         // drains the battery; the data counts as fresh for staleTime anyway.
         refetchOnWindowFocus: false,
+      },
+
+      mutations: {
+        // Writes are not retried by default. That is the wrong answer once a
+        // write can be replayed hours later: the reply then arrives without a
+        // user watching, and a single flaky response would put a permanent
+        // "failed" on a note that only needed asking twice.
+        //
+        // Only what a second attempt could fix — the server was unreachable
+        // (status 0) or answered 5xx. A refusal about the request itself is
+        // final, and retrying a 401 with the same expired token is pointless.
+        retry: (failureCount, error) => {
+          if (failureCount >= 2) return false;
+          return error instanceof ApiError && isRetryableStatus(error.status);
+        },
       },
     },
   });

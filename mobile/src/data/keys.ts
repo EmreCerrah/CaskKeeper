@@ -83,4 +83,7 @@ export const mutationKeys = {
   wishlist: {
     toggle: () => ["wishlist", "toggle"] as const,
   },
+  tastingNotes: {
+    create: () => ["tastingNotes", "create"] as const,
+  },
 } as const;

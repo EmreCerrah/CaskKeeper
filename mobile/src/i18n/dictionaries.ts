@@ -94,6 +94,11 @@ export const tr = {
   "notes.delete": "Notu sil",
   "notes.deleteConfirm": "Silmek için tekrar dokunun",
   "notes.deleteFailed": "Not silinemedi",
+  "notes.pending": "Bekliyor",
+  "notes.pendingHint": "Bu not cihazınızda duruyor; bağlantı gelince gönderilecek.",
+  "notes.failed": "Gönderilemedi",
+  "notes.keep": "Dursun",
+  "notes.discard": "Vazgeç",
   "notes.favorite": "Favori",
   "notes.public": "Herkese açık",
 
@@ -338,6 +343,11 @@ export const en: Record<TranslationKey, string> = {
   "notes.delete": "Delete note",
   "notes.deleteConfirm": "Tap again to delete",
   "notes.deleteFailed": "Could not delete the note",
+  "notes.pending": "Waiting",
+  "notes.pendingHint": "This note is on your device; it will be sent when you are back online.",
+  "notes.failed": "Not sent",
+  "notes.keep": "Keep",
+  "notes.discard": "Discard",
   "notes.favorite": "Favourite",
   "notes.public": "Public",
 
