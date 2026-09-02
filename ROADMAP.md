@@ -74,6 +74,9 @@ experiences**.
 | Web · English code comments — server layer | ✅ Done | #46 |
 | Web · English code comments — lib layer | ✅ Done | #47 |
 | Web · English code comments — UI, routes and scripts | ✅ Done | #48 |
+| Mobile · Slice 10a — Offline writing: the queue, and the wishlist | ✅ Done | #50 |
+| Mobile · Slice 10b — Offline writing: tasting notes | ✅ Done | #51 |
+| Mobile · Cached data no longer carries into the next session | ✅ Done | #52 |
 
 \* No separate PR was opened for Slice 3; the `feat/interactions` branch was
 fast-forward merged into `main` locally and pushed together with a catalogue
@@ -571,7 +574,8 @@ needs already existed; **nothing on the server changed.**
       followed users; the client does not filter again — a second filter is one
       that can be forgotten, and that day it leaks
 - [x] The public note view has no editing. Editing your own note lives in
-      `tadimlarim/[id]`; this screen can be showing someone else's
+      `my-tastings/[id]` (`tadimlarim/[id]` when this slice landed, renamed in
+      #42); this screen can be showing someone else's
 
 > **The fiddly part earned its own module.** The feed is paginated
 > (`useInfiniteQuery`), so an optimistic like has to find the right note across
@@ -778,6 +782,81 @@ the social layer on the phone. **Nothing on the server changed.**
 > like or comment deletes the matching notification — the documented cascade,
 > measured rather than trusted.
 
+### Slice 10 — Offline writing ✅ (PRs #50, #51, #52)
+
+Reading worked offline since slice 5; writing did not. This closed the last
+feature gap.
+
+**The scope was wrong before it was measured.** This document described the work
+as "notes, likes, comments, wishlist add/remove and mark-as-read" — a list taken
+from the mutations, without checking the read side. A write is only possible if
+the screen that starts it opens offline, and `persist-rules.ts` deliberately
+keeps the feed, other people's profiles, comments and notifications off the
+device. Those screens do not open without a connection, so those writes can
+never begin. Seven became two:
+
+- [x] Wishlist add/remove (#50) — the queue itself, on a write needing no UI change
+- [x] A new tasting note (#51) — optimistic insert, the pending card, refusals
+- [x] Cached data bound to the user it belongs to (#52)
+
+> **Most of the machine was already in the library.** Read from `query-core`
+> rather than assumed: `QueryClient.mount()` already resumes paused mutations on
+> both the online and the focus manager, and `defaultShouldDehydrateMutation` is
+> `state.isPaused`, so paused writes were already reaching the disk. The gap was
+> only after a restart — `dehydrateMutation` stores the key, the variables and
+> the state, but not the function, which cannot be serialised. Hydration rebuilds
+> each mutation through `mutationCache.build`, which applies whatever
+> `setMutationDefaults` holds for its key. So the whole feature came down to
+> giving these two writes a `mutationKey` and registering their functions.
+
+> **The blocking bug was in the screen, not the queue.** `new.tsx` awaited
+> `mutateAsync`. Offline a mutation PAUSES rather than fails, so that promise
+> never settles: the form would have spun forever on a note the user had already
+> written. It now queues and leaves, and the list is patched optimistically.
+
+> **No collapsing logic for repeated toggles.** `WishlistRepository.add` is an
+> upsert and `remove` a delete, so replaying add/remove/add in order lands on the
+> right state and cannot raise a conflict. A module and its tests were planned
+> and then not written.
+
+Three decisions worth keeping:
+
+- The dashboard and statistics are **not** invalidated while a note is queued.
+  Offline they cannot be refetched, and an optimistic total would be a second
+  claim to walk back. The pending row in the list is the honest signal.
+- A note that can never be sent is **kept**, with the reason on its card. The
+  words are the user's. Tapping it offers to discard — the only way out of a row
+  that would otherwise stay for good.
+- Mutations retry, but only what a second attempt could fix: the server
+  unreachable, or 5xx. A refusal about the request is final, and retrying a 401
+  with the same expired token is pointless.
+
+**#52 came out of reading the code, not from a report.** The cache was emptied
+only on an explicit sign-out; an expiring token was cleared quietly and signing
+in touched nothing. On a shared phone that left one person's notes in the cache
+the next person read from — and because a queued write takes its token when it
+is REPLAYED, their unsent note could be posted into the newcomer's account. The
+cache now carries the id of the user it belongs to and is cleared on sign-in
+only when that id is not the one arriving.
+
+Clearing on every suspicion would have been simpler and would have punished the
+innocent case. Keeping it for the same user is also what finally sends a note
+that outlived their token — the 401 behaviour slices 10a and 10b wanted and
+could not reach on their own.
+
+> **Known limit.** A 401 for anyone who does not come back marks the note as
+> failed. The text survives on the card, but sending it again is the user's job:
+> carrying a queued write across a fresh sign-in would mean the queue surviving
+> sign-out, which it deliberately does not.
+
+> **Not verified on a device.** The unit tests drive the real TanStack machinery
+> through pause → dehydrate → hydrate → resume, and were checked against a
+> deliberately broken key to prove they were not passing vacuously. The aeroplane
+> mode round on a real phone, and the two-account round for #52, are still
+> outstanding.
+
+---
+
 ## Interlude — English routes ✅ (PRs #42, #43)
 
 Class, type and function names were English from the start; the route folders
@@ -876,25 +955,9 @@ pixel dimension.
 
 ## What's Next
 
-### Mobile · offline writing — not built
-
-The last mobile slice, and the only feature gap left. Reading works offline;
-writing does not.
-
-The scope grew as the slices landed. It is no longer just "save a tasting note
-with no connection" — it now has to cover every write the app learned along the
-way: notes, likes, comments, wishlist add/remove and mark-as-read. Several of
-those are already optimistic, so their cache transformations exist and are
-tested; what is missing is a durable mutation queue, a replay order, and an
-answer for what happens when the server rejects a replayed write.
-
-The optimistic paths make this both easier and more delicate: the UI already
-shows the intended result, so a queued write that later fails would have to
-walk back a change the user has been looking at for hours.
-
-
-Every planned phase is finished. What remains is hardening rather than features —
-items to close before going live, or immediately after. In priority order:
+Every planned phase is finished, and with slice 10 the last feature gap is
+closed. What remains is hardening rather than features — items to close before
+going live, or immediately after. In priority order:
 
 | # | Work | Why | Size |
 |---|---|---|---|
@@ -911,7 +974,7 @@ Details in the technical debt section below.
 
 ### Open items
 
-#### 1. The offline copy outlives the session on a shared device — *accepted*
+#### 1. The web's offline copy outlives the session on a shared device — *accepted*
 While the offline switch is on, the copy stays on the device until the user turns
 it off or signs out. A user who walks away without signing out leaves a readable
 copy behind at `/offline`. **Deliberately accepted** — the switch is off by
@@ -919,6 +982,15 @@ default and never enables itself, the page names whose copy it is and when it wa
 synced, turning it off deletes the copy instantly, and `logout-client.ts` wipes
 the copy *and* resets the switch on sign-out. Revisit if the product ever stores
 anything more sensitive than tasting notes.
+
+**The mobile app no longer works this way (#52), and the two now differ.** There
+the cache records the id of the user it belongs to and is cleared when somebody
+else signs in. The web records `userId` in the snapshot meta but never compares
+it to the current session, so between a second user signing in and their first
+sync, `/offline` still shows the previous user's copy. The web has no offline
+writing, so nothing can be posted to the wrong account — this is exposure, not
+corruption, which is why it stays accepted rather than becoming a defect. The fix
+is the same shape as #52 if it is ever wanted.
 
 #### 2. Remaining `next@14` security advisories — *medium, limited exposure*
 `npm audit` still reports HIGH for `next` and for the `postcss@8.4.31` that Next

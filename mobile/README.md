@@ -75,7 +75,7 @@ then type-check:
 
 ```bash
 npx expo start          # leave it running
-grep -o "akis\|katalog\|profil" .expo/types/router.d.ts | sort -u
+grep -o "catalogue\|feed\|my-tastings\|profile" .expo/types/router.d.ts | sort -u
 npm run typecheck
 ```
 
@@ -92,14 +92,17 @@ app/                 Expo Router — file-based, like the web app's App Router
   (auth)/            sign-in, sign-up
   (app)/
     _layout.tsx      bottom tab bar
-    katalog/         list + whisky detail
-    profil.tsx       account, sign out
+    catalogue/       list + whisky detail
+    my-tastings/     your notes, and the form for a new one
+    feed/            feed, people, a note, a profile, notifications
+    profile/         account, dashboard, statistics, wishlist
 src/
   api/
     client.ts        the single door to the API
     response.ts      envelope handling, kept pure so it can be tested
   auth/
-    storage.ts       token in expo-secure-store
+    storage.ts       token in expo-secure-store, and who the cache belongs to
+    cache-owner.ts   whether to keep the cache when somebody signs in — pure
     AuthContext.tsx  session state
   data/              the only way screens reach the API — see below
   i18n/              flat tr/en dictionaries, device language
@@ -130,6 +133,10 @@ because it is a privacy boundary rather than a performance tweak.
 
 Signing out deletes the stored copy, for the same reason the web wipes its
 offline copy: the next person to sign in on that device must not inherit it.
+**Signing in does too, when the person arriving is not the one the cache belongs
+to.** That second rule exists because the first one is easy to walk around — a
+token expires after seven days and is cleared quietly on the next launch, with
+nobody having signed out — so the cache records whose it is (`cache-owner.ts`).
 
 > Known limit: offline, tapping a note in My Tastings fails, because single-note
 > details are deliberately not stored. The list card already shows the whisky,
@@ -142,8 +149,38 @@ writes itself is "could not reach the server" — when there is no server, there
 is no server message either.
 
 **Only pure modules are unit tested.** React Native and Expo modules run on a
-device and cannot be instantiated under Node, so the logic worth protecting —
-envelope handling and language resolution — lives in files with no Expo imports.
+device and cannot be instantiated under Node, so anything worth protecting is
+split into a file with no Expo imports — which is why the storage rule, the
+cache transformations, the request shapes and the cache-owner decision each
+live on their own and have tests.
+
+### Writing
+
+**Two writes work with no connection: a new tasting note, and adding to or
+removing from the wishlist.** They are the only ones whose screen opens offline
+— the catalogue and your own note list are on the device, the feed and
+notifications are not, so liking, commenting, following and marking a
+notification read cannot even be started.
+
+There is no queue of our own. A mutation fired with no connection PAUSES, and
+TanStack writes paused mutations to disk with the query cache; what it cannot
+write is the function, so each of these two carries a `mutationKey` and
+registers its function in `src/data/mutation-defaults.ts`. That is the whole
+mechanism — after a restart the key is what finds the function again.
+
+The token is read from the secure store when the write RUNS, not when it was
+tapped, so a note sent an hour later goes out with the token valid then.
+
+A note appears in My Tastings immediately, marked **Waiting**, and is not
+tappable — the detail screen fetches by id and the server has no id for it yet.
+If it is refused for something a second attempt cannot fix, the note is **kept**
+with the reason on its card; tapping then offers to discard it. The dashboard
+and statistics are deliberately left alone until the note is real.
+
+> Known limit: a note refused with a 401 is marked failed and has to be written
+> again — unless the same user signs back in, in which case the queue survives
+> and the note is sent.
+
 
 ## Notes
 

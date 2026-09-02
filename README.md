@@ -588,14 +588,20 @@ Current status, planned work and tracked technical debt live in
 - **Phase 2 — Community:** complete
 - **Phase 3 — Advanced features:** complete
 - **Mobile optimisation:** complete
+- **Native app (Expo, `mobile/`):** complete — the last gap, writing with no
+  connection, closed in slices 10a and 10b
 
 Known gaps, deliberately recorded rather than hidden:
 
-- **The offline copy survives on the device until sign-out.** If a user turns the
-  switch on and then walks away without signing out, someone else on that device
-  could read the copy from `/offline`. Accepted deliberately: the switch is
-  off by default, the page names whose copy it is, turning the switch off deletes
-  it instantly, and signing out both deletes it and resets the switch.
+- **The web's offline copy survives on the device until sign-out.** If a user
+  turns the switch on and then walks away without signing out, someone else on
+  that device could read the copy from `/offline`. Accepted deliberately: the
+  switch is off by default, the page names whose copy it is, turning the switch
+  off deletes it instantly, and signing out both deletes it and resets the
+  switch. The native app no longer behaves this way — it records which user the
+  cached data belongs to and clears it when somebody else signs in — so the two
+  now differ; the web has no offline writing, so nothing there can reach the
+  wrong account.
 - **Repository-layer integration tests are missing.** Repositories are mocked in
   the current suite, so the queries themselves — filters, aggregations, populates
   — are not covered.
